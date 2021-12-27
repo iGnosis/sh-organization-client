@@ -8,13 +8,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PrivateComponent } from './layouts/private/private.component';
 import { PublicComponent } from './layouts/public/public.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
+import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
+import { PatientsComponent } from './pages/home/patients/patients.component';
+import { PatientDetailsComponent } from './pages/home/patient-details/patient-details.component';
+import { ActivitiesComponent } from './pages/home/activities/activities.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     PrivateComponent,
     PublicComponent,
-    SignInComponent
+    SignInComponent,
+    DashboardComponent,
+    PatientsComponent,
+    PatientDetailsComponent,
+    ActivitiesComponent
   ],
   imports: [
     BrowserModule,

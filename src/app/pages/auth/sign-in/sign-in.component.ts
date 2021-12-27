@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core'
+import { Router } from '@angular/router'
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants'
 import { GraphqlService } from 'src/app/services/graphql/graphql.service'
 
@@ -14,7 +15,7 @@ export class SignInComponent implements OnInit {
   public password = ''
   error: any = {}
 
-  constructor() { 
+  constructor(private router: Router) { 
   }
 
   ngOnInit(): void {
@@ -27,11 +28,16 @@ export class SignInComponent implements OnInit {
         this.error.noUserFound = true
       } else {
         this.error.noUserFound = false
+        this.next()
       }
     }else {
       this.error.noUserFound = true;
     }
     console.log(result)
+  }
+
+  next() {
+    this.router.navigate(['/app/dashboard'])
   }
 
 }
