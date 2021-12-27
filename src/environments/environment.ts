@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  cognitoUserPoolID: 'us-east-1_INWkmpaSb',
+  cognitoClientID: '4pc04vcpfodcgac8nk5svm911i'
 };
 
 /*
