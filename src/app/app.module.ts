@@ -12,6 +12,8 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { PatientDetailsComponent } from './pages/home/patient-details/patient-details.component';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
+import { NgChartsModule } from 'ng2-charts';
+import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,8 @@ import { ActivitiesComponent } from './pages/home/activities/activities.componen
     DashboardComponent,
     PatientsComponent,
     PatientDetailsComponent,
-    ActivitiesComponent
+    ActivitiesComponent,
+    ActivePatientsComponent
   ],
   imports: [
     BrowserModule,
@@ -30,6 +33,7 @@ import { ActivitiesComponent } from './pages/home/activities/activities.componen
     NgbModule,
     FormsModule,
     ReactiveFormsModule,
+    NgChartsModule,
   ],
   providers: [
   ],
