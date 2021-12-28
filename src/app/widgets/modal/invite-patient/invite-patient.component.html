@@ -1,0 +1,56 @@
+<div class="card">
+    <div class="card-header">
+        Add New Patient Details
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Enter Patient Details</h5>
+        <div class="card-text">
+            <div class="form-group">
+                <label for="name">Patient Name</label>
+                <input type="text" class="form-control" id="name">
+            </div>
+            <div class="form-group">
+                <label for="email">Patient's Email address</label>
+                <input type="email" class="form-control" id="email" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+                <label for="email-caretaker">Caretaker Email address</label>
+                <input type="email" class="form-control" id="email-caretaker" placeholder="name@example.com">
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Medical Conditions</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="a" id="defaultCheck1">
+                    <label class="form-check-label" for="defaultCheck1">
+                        Epilepsy and Seizures
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="b" id="defaultCheck2">
+                    <label class="form-check-label" for="defaultCheck2">
+                        Stroke
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="c" id="defaultCheck3">
+                    <label class="form-check-label" for="defaultCheck3">
+                        ALS: Amyotrophic Lateral Sclerosis
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="d" id="defaultCheck4">
+                    <label class="form-check-label" for="defaultCheck4">
+                        Alzheimer’s Disease and Dementia
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="e" id="defaultCheck5">
+                    <label class="form-check-label" for="defaultCheck5">
+                        Parkinson’s Disease
+                    </label>
+                </div>
+            </div>
+        </div>
+        <a (click)="null" class="btn btn-outline-primary">Send Invite</a>
+    </div>
+</div>

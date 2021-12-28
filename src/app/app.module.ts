@@ -14,6 +14,7 @@ import { PatientDetailsComponent } from './pages/home/patient-details/patient-de
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
+import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { ActivePatientsComponent } from './widgets/dashboard/active-patients/act
     PatientsComponent,
     PatientDetailsComponent,
     ActivitiesComponent,
-    ActivePatientsComponent
+    ActivePatientsComponent,
+    InvitePatientComponent
   ],
   imports: [
     BrowserModule,
