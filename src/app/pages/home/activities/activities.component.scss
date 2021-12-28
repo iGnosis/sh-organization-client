@@ -1,0 +1,28 @@
+.activities {
+    overflow: auto;
+    white-space: nowrap;
+    
+    .card {
+        width: 20vw;
+        display: inline-block;
+        margin: 16px;
+        white-space: initial;
+        
+        &::after {
+            content: "➡️";
+            position: absolute;
+            font-size: 2rem;
+            right: -33px;
+            top: 60px;
+        }
+        
+        &:last-of-type::after {
+            display: none;
+        }
+        .card-img-top {
+            width: 100%;
+            height: auto;
+            
+        }
+    }
+}
