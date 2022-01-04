@@ -17,7 +17,7 @@ const routes: Routes = [
   { path: 'app', component: PrivateComponent, children: [
     { path: 'dashboard', component: DashboardComponent},
     { path: 'patients', component: PatientsComponent},
-    { path: 'patient-details', component: PatientDetailsComponent},
+    { path: 'patient-details/:id', component: PatientDetailsComponent},
     { path: 'activities', component: ActivitiesComponent}
   ]}
 ];

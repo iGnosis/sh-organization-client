@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { Patient } from 'src/app/types/patient';
 
 @Component({
   selector: 'app-patients',
@@ -7,9 +11,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PatientsComponent implements OnInit {
 
-  constructor() { }
+  patients?: Array<Patient>
 
-  ngOnInit(): void {
+  constructor(private router: Router) { }
+  
+  async ngOnInit() {
+    this.reloadPatientList(null)
   }
 
+  async reloadPatientList(filters:any) {
+    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS)
+    this.patients = response.user
+    console.log(this.patients)
+  }
+
+  openPatientDetails(patient: Patient) {
+    console.log(patient.id)
+    this.router.navigate(['app/patient-details', patient.id])
+  }
 }

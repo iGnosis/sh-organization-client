@@ -1,1 +1,127 @@
-<p>patient-details works!</p>
+<div class="patient-details">
+    <div class="container mt-3" *ngIf="details">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-1">
+                        <img class="profile_pic" src="https://s.gravatar.com/avatar/1da04b0aae7bbfe04b46ccdca2430845?s=80">
+                    </div>
+                    <div class="col-md-4">
+                        <h2>{{details.firstName}} {{details.lastName}}</h2>
+                        <p>Status: {{ details.status }}</p>
+                    </div>
+                    <div class="col-md-7 text-right">
+                        <div class="btn btn-outline-primary">Contact</div>
+                    </div>
+                </div>
+                
+            </div>
+            <ul ngbNav #nav="ngbNav" class="nav-tabs">
+                <li ngbNavItem>
+                    <a ngbNavLink>Details</a>
+                    <ng-template ngbNavContent>
+                        <div class="row">
+                            <div class="col">
+                                <h4>Patient Details</h4>
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td>First Name</td>
+                                            <td>{{details.firstName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Name</td>
+                                            <td>{{details.lastName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Username/Email</td>
+                                            <td>{{details.username}}</td>
+                                        </tr>
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Phone Number</td>
+                                            <td>{{details.user_profile.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Active</td>
+                                            <td>{{details.lastActive}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>{{details.status}}</td>
+                                        </tr>
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Date of Birth</td>
+                                            <td>{{details.user_profile.dob}}</td>
+                                        </tr>
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Gender</td>
+                                            <td>{{details.user_profile.gender}}</td>
+                                        </tr>
+                                        <!-- <tr *ngIf="details.user_profile">
+                                            <td>Medical Conditions</td>
+                                            <td>{{details.user_profile.medicalConditions}}</td>
+                                        </tr> -->
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Onboarded On</td>
+                                            <td>{{details.user_profile.onboardedOn}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <h4>Caretakers</h4>
+                                <table class="table">
+                                    <tbody *ngFor="let caretaker of details.userRelationsByTo">
+                                        <tr>
+                                            <td>First Name</td>
+                                            <td>{{caretaker.userFrom!.firstName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Name</td>
+                                            <td>{{caretaker.userFrom!.lastName}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Username/Email</td>
+                                            <td>{{caretaker.userFrom!.username}}</td>
+                                        </tr>
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Phone Number</td>
+                                            <td>{{caretaker.userFrom!.user_profile!.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Last Active</td>
+                                            <td>{{caretaker.userFrom!.lastActive}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td>{{caretaker.userFrom!.status}}</td>
+                                        </tr>
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Gender</td>
+                                            <td>{{caretaker.userFrom!.user_profile!.gender}}</td>
+                                        </tr>
+                                        <!-- <tr *ngIf="details.user_profile">
+                                            <td>Medical Conditions</td>
+                                            <td>{{details.user_profile.medicalConditions}}</td>
+                                        </tr> -->
+                                        <tr *ngIf="details.user_profile">
+                                            <td>Onboarded On</td>
+                                            <td>{{caretaker.userFrom!.user_profile!.onboardedOn}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </ng-template>
+                </li>
+                <li ngbNavItem>
+                    <a ngbNavLink>Sessions</a>
+                    <ng-template ngbNavContent>Second content</ng-template>
+                </li>
+            </ul>
+        </div>
+        <div class="card mt-3">
+            <div class="p-3" [ngbNavOutlet]="nav"></div>
+        </div>
+    </div>
+</div>
