@@ -1,4 +1,4 @@
-<div class="text-center mt-5">
+<!-- <div class="text-center mt-5">
     <div class="mw-500 bg-white p-5">
         <img style="width: 150px;" src="assets/images/logo.png">
         <div style="height: 60px;">&nbsp;</div>
@@ -19,6 +19,54 @@
         </div>
         <div>
             <button class="btn btn-primary" (click)="onSignIn()">Sign In</button>
+        </div>
+    </div>
+</div> -->
+<div>
+    <div class="d-flex justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7 min-h-lg-screen d-flex flex-column justify-content-center py-lg-16 px-lg-20 position-relative">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="bg-surface-secondary rounded-md-4 shadow-md-6 p-5 p-md-10">
+                        <div class="text-center mb-5 mb-md-10">
+                            <span class="d-inline-block d-lg-block h1 mb-lg-6 me-3">
+                                <img src="assets/images/logo.png" style="height: 75px; width: auto;">
+                            </span>
+                            <p class="mt-2">
+                                Please sign in to access your account
+                            </p>
+                        </div>
+                        <div class="alert bg-danger text-white m-5" role="alert">
+                            Invalid Email/Password Combination
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="email">Email address</label>
+                            <input type="email" [(ngModel)]="email" class="form-control form-control-muted" id="email">
+                        </div>
+                        <div class="mb-5">
+                            <label class="form-label" for="password">Password</label>
+                            <input type="password" [(ngModel)]="password" class="form-control form-control-muted" id="password" autocomplete="current-password">
+                        </div>
+                        <div class="mb-5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="check_example" id="check_example">
+                                <label class="form-check-label" for="check_example">
+                                    Keep me logged in
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <a (click)="onSignIn()" class="btn btn-primary w-full">
+                                Sign in
+                            </a>
+                        </div>
+                        <div class="mt-7 text-center">
+                            <a role="button" (click)="forgotPassword()" class="text-warning text-sm font-semibold">Forgot Password?</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

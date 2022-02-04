@@ -1,7 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+// Import the default variables and function
+@import "@webpixels/css/core/functions";
 
-$primary: #000066;
-$success: #007F6E;
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+// Your theme's variables
+@import "./app/variables";
+
+// Webpixels' CSS
+@import "@webpixels/css/base";
+@import "@webpixels/css/forms";
+@import "@webpixels/css/components";
+@import "@webpixels/css/utilities";
 

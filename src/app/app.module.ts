@@ -15,6 +15,7 @@ import { ActivitiesComponent } from './pages/home/activities/activities.componen
 import { NgChartsModule } from 'ng2-charts';
 import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
 import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
+import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-pa
     PatientDetailsComponent,
     ActivitiesComponent,
     ActivePatientsComponent,
-    InvitePatientComponent
+    InvitePatientComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
