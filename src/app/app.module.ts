@@ -16,6 +16,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
 import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
+import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-pas
     ActivitiesComponent,
     ActivePatientsComponent,
     InvitePatientComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    SetPasswordComponent
   ],
   imports: [
     BrowserModule,

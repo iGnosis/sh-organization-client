@@ -22,7 +22,7 @@ export class SignInComponent implements OnInit {
   }
 
   async onSignIn() {
-    const result = await GraphqlService.client.request(GqlConstants.SEARCH_USER, {username: this.email, password: this.password})
+    const result = await GraphqlService.client.request(GqlConstants.SEARCH_USER, {email: this.email, password: this.password})
     if(result && Array.isArray(result.user)) {
       if(result.user.length == 0) {
         this.error.noUserFound = true

@@ -1,19 +1,18 @@
 
 export const GqlConstants = {
-  SEARCH_USER: `query SignIn($username:String, $password:String) {
-    user(where: {_and: {username: {_eq: $username}, password: {_eq: $password}}, role: {_eq: "provider"}}) {
+  SEARCH_USER: `query SignIn($email:String, $password:String) {
+    user(where: {_and: {email: {_eq: $email}, password: {_eq: $password}}, type: {_eq: provider}}) {
       firstName
       lastName
       password
-      role
-      username
+      email
     }
   }`,
   
   GET_ALL_PATIENTS: `query MyQuery {
-    user(where: {role: {_eq: "patient"}}) {
+    user(where: {type: {_eq: patient}}) {
       id
-      username
+      email
       user_profile {
         dob
         gender
@@ -39,7 +38,6 @@ export const GqlConstants = {
         endedAt
       }
       status
-      username
       sessions_aggregate {
         aggregate {
           count
@@ -63,7 +61,7 @@ export const GqlConstants = {
           lastName
           lastActive
           status
-          username
+          email
           user_profile {
             createdAt
             dob

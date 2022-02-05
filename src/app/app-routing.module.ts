@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PrivateComponent } from './layouts/private/private.component';
 import { PublicComponent } from './layouts/public/public.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
+import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
@@ -14,7 +15,8 @@ const routes: Routes = [
   { path: '', redirectTo: 'public/auth/sign-in', pathMatch: 'full'},
   { path: 'public', component: PublicComponent, children: [
     { path: 'auth/sign-in', component: SignInComponent},
-    { path: 'auth/forgot-password', component: ForgotPasswordComponent}
+    { path: 'auth/forgot-password', component: ForgotPasswordComponent},
+    { path: 'auth/set-password', component: SetPasswordComponent}
   ]},
   { path: 'app', component: PrivateComponent, children: [
     { path: 'dashboard', component: DashboardComponent},
