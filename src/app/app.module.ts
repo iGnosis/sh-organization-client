@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,10 @@ import { ActivePatientsComponent } from './widgets/dashboard/active-patients/act
 import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
+import { PatientAddComponent } from './pages/home/patient-add/patient-add.component';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { PrivateGuard } from './guards/private-guard';
+import { PublicGuard } from './guards/public-guard';
 
 @NgModule({
   declarations: [
@@ -31,7 +36,8 @@ import { SetPasswordComponent } from './pages/auth/set-password/set-password.com
     ActivePatientsComponent,
     InvitePatientComponent,
     ForgotPasswordComponent,
-    SetPasswordComponent
+    SetPasswordComponent,
+    PatientAddComponent
   ],
   imports: [
     BrowserModule,
@@ -40,8 +46,12 @@ import { SetPasswordComponent } from './pages/auth/set-password/set-password.com
     FormsModule,
     ReactiveFormsModule,
     NgChartsModule,
+    HttpClientModule,
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
+    PrivateGuard,
+    PublicGuard
   ],
   bootstrap: [AppComponent]
 })
