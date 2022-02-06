@@ -1,0 +1,70 @@
+<!-- Header -->
+<header class="px-3 px-lg-7 pt-7">
+    <div class="container-xl">
+        <div>
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                    <!-- Title -->
+                    <h1 class="h2 mb-0 ls-tight">Add New Patient</h1>
+                </div>
+            </div>
+            <!-- Nav -->
+            <ul class="nav nav-tabs overflow-x mt-2">
+                <li class="nav-item">
+                    <a role="button" (click)="null" class="nav-link font-regular active">Patient</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!-- Main content -->
+<main class="px-3 px-lg-7 py-7">
+    
+    <!-- Container -->
+    <div class="container-xl mt-5">
+        <div class="row">
+            <div class="col-6 offset-3">
+                <h5 class="mb-5">Account Information</h5>
+                
+                <div class="mb-3">
+                    <label for="identifier" class="form-label">Identifier</label>
+                    <input type="email" class="form-control" id="identifier" aria-describedby="identifierHelp">
+                    <div id="identifierHelp" class="form-text">Hint: You can use the Identifier from your EHR</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Medical Conditions</label>
+                    <ng-multiselect-dropdown
+                    placeholder="Medical Conditions"
+                    [settings]="dropdownSettings"
+                    [data]="medicalConditionsList"
+                    [(ngModel)]="selectedMedicalConditions"
+                    ></ng-multiselect-dropdown>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Preferred Genre</label>
+                    <ng-multiselect-dropdown
+                    placeholder="Preferred Genre"
+                    [settings]="dropdownSettings"
+                    [data]="availableGenres"
+                    [(ngModel)]="selectedGenres"
+                    ></ng-multiselect-dropdown>
+                </div>
+                <div class="mb-5">
+                    <label for="exampleInputPassword1" class="form-label">Care Plans</label>
+                    <ng-multiselect-dropdown
+                    placeholder="Care Plans"
+                    [settings]="dropdownSettings"
+                    [data]="availableCarePlans"
+                    [(ngModel)]="selectedCarePlans"
+                    ></ng-multiselect-dropdown>
+                </div>
+
+                <div class="mt-3 d-grid gap-2">
+                    <button routerLink="/app/patients" class="btn btn-primary btn-block">Add Patient</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
