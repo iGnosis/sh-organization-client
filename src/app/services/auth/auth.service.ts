@@ -16,6 +16,10 @@ export class AuthService {
     return this.http.post(this.baseURL+'/auth/login', details)
   }
 
+  requestResetLink(email: string) {
+    return this.http.post(this.baseURL+'/auth/request-password-reset-link', {email})
+  }
+
   reset(code: string, password: string) {
     return this.http.post(this.baseURL+'/auth/reset-password', {code, password})
   }
