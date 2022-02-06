@@ -1,7 +1,9 @@
+import { HttpClient } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants'
-import { GraphqlService } from 'src/app/services/graphql/graphql.service'
+import { AuthService } from 'src/app/services/auth/auth.service'
+import { JwtService } from 'src/app/services/jwt/jwt.service'
+import { UserService } from 'src/app/services/user/user.service'
 
 @Component({
   selector: 'app-sign-in',
@@ -13,31 +15,31 @@ export class SignInComponent implements OnInit {
 
   public email = ''
   public password = ''
-  error: any = {}
+  errors = []
 
-  constructor(private router: Router) { 
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private jwtService: JwtService,
+    private userService: UserService) { 
   }
 
   ngOnInit(): void {
   }
 
   async onSignIn() {
-    const result = await GraphqlService.client.request(GqlConstants.SEARCH_USER, {email: this.email, password: this.password})
-    if(result && Array.isArray(result.user)) {
-      if(result.user.length == 0) {
-        this.error.noUserFound = true
-      } else {
-        this.error.noUserFound = false
-        this.next()
-      }
-    }else {
-      this.error.noUserFound = true;
-    }
-    console.log(result)
+    this.errors = []
+    this.authService.login({email: this.email, password: this.password}).subscribe((data:any) => {
+      this.jwtService.setToken(data.token)
+      this.userService.set(data.user)
+      this.next()
+    }, (error) => {
+      this.errors = error.error.message
+    })
   }
 
   next() {
-    this.router.navigate(['/app/dashboard'])
+    this.router.navigate(['/app/patients'])
   }
 
   forgotPassword() {
