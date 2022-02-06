@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
     { path: 'auth/sign-in', component: SignInComponent},
     { path: 'auth/forgot-password', component: ForgotPasswordComponent},
-    { path: 'auth/set-password', component: SetPasswordComponent}
+    { path: 'auth/set-password/:code', component: SetPasswordComponent}
   ]},
   { path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard],children: [
     { path: 'dashboard', component: DashboardComponent},

@@ -16,5 +16,7 @@ export class AuthService {
     return this.http.post(this.baseURL+'/auth/login', details)
   }
 
-
+  reset(code: string, password: string) {
+    return this.http.post(this.baseURL+'/auth/reset-password', {code, password})
+  }
 }
