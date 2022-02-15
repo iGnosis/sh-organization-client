@@ -11,17 +11,19 @@ import { PublicComponent } from './layouts/public/public.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
-import { PatientDetailsComponent } from './pages/home/patient-details/patient-details.component';
+import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { NgChartsModule } from 'ng2-charts';
 import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
 import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
-import { PatientAddComponent } from './pages/home/patient-add/patient-add.component';
+import { PatientAddComponent } from './pages/home/patients/patient-add/patient-add.component';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { PrivateGuard } from './guards/private-guard';
 import { PublicGuard } from './guards/public-guard';
+import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
+import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +39,9 @@ import { PublicGuard } from './guards/public-guard';
     InvitePatientComponent,
     ForgotPasswordComponent,
     SetPasswordComponent,
-    PatientAddComponent
+    PatientAddComponent,
+    CreateCareplanComponent,
+    CarePlanComponent
   ],
   imports: [
     BrowserModule,

@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment'
 export class GraphqlService {
 
   public static client: GraphQLClient = new GraphQLClient(environment.gqlEndpoint, { headers: {
-    'x-hasura-admin-secret': '8iPKaAmmeV7Ed' // Shit practice. Only for the POC...
+    'Authorization': 'Bearer ' + localStorage.getItem('token')
   }})
   public static publicClient: GraphQLClient = new GraphQLClient(environment.gqlEndpoint, {})
 

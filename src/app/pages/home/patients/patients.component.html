@@ -20,18 +20,24 @@
         </div>
       </div>
       <!-- Nav -->
+      {{ selectedMedicalConditions | json }}
       <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
-          <a href="#" class="nav-link font-regular active">All</a>
+          <a 
+            (click)="selectedMedicalConditions = allMedicalConditions" 
+            class="nav-link font-regular active"
+            [ngClass]="{'active': selectedMedicalConditions.length > 1}"
+            >All
+          </a>
         </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link font-regular">Starred</a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link font-regular">Scheduled</a>
-        </li>
-        <li class="nav-item">
-          <a href="#" class="nav-link font-regular">Labelled</a>
+        <li class="nav-item" *ngFor="let condition of allMedicalConditions">
+          <a 
+            role="button" 
+            (click)="selectDataSegment(condition)"
+            [ngClass]="{'active': selectedMedicalConditions.length == 1 && selectedMedicalConditions[0] == condition}"
+            class="nav-link font-regular">
+            {{condition}}
+          </a>
         </li>
       </ul>
     </div>
@@ -75,16 +81,16 @@
                   <label class="form-check-label" for="flexCheckAll"></label>
                 </div>
               </th>
-              <th scope="col">Name</th>
-              <th scope="col">Industry</th>
-              <th scope="col">Location</th>
-              <th scope="col">Owner</th>
-              <th scope="col">Created at</th>
+              <th scope="col">Identifier</th>
+              <th scope="col">Medical Condition</th>
+              <th scope="col">Last Session</th>
+              <th scope="col"># Sessions</th>
+              <th scope="col">Primary Therapist</th>
               <th></th>
             </tr>
           </thead>
           <tbody class="bg-light">
-            <tr>
+            <tr *ngFor="let patient of patients">
               <td class="text-lg" scope="col">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="" id="flexCheckRow1">
@@ -92,442 +98,28 @@
                 </div>
               </td>
               <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-1.png" class="avatar avatar-xs rounded-circle me-2">
                 <a class="text-heading font-semibold" href="#">
-                  Dribbble
+                  {{patient.identifier}}
                 </a>
               </td>
               <td>
-                <span>Design</span>
+                <span class="badge bg-soft-primary m-2" *ngFor="let condition of patient.medicalConditions | keyvalue">{{condition.key}}</span>
               </td>
               <td>
-                <a class="text-current" href="mailto:">Los Angeles</a>
+                <span *ngFor="let session of patient.sessions">
+                  {{ session.createdAt | date:'short'}} 
+                  <!-- Hacky shit. Expects the API to only return 1 result here. -->
+                </span>
               </td>
               <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Robert Fox</a>
+                {{ patient.sessions_aggregate?.aggregate?.count || 0}}
               </td>
               <td>
-                Jan 14, 202
+                {{ patient.primaryTherapistUser?.firstName}} {{ patient.primaryTherapistUser?.lastName}}
               </td>
               <td class="text-end">
                 <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow2">
-                  <label class="form-check-label" for="flexCheckRow2"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-2.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Netguru
-                </a>
-              </td>
-              <td>
-                <span>Retail</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">New York</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1610271340738-726e199f0258?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Darlene Robertson</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow3">
-                  <label class="form-check-label" for="flexCheckRow3"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-3.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Figma
-                </a>
-              </td>
-              <td>
-                <span>Technology</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">San Francisco</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1610878722345-79c5eaf6a48c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Theresa Webb</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow4">
-                  <label class="form-check-label" for="flexCheckRow4"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-4.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Mailchimp
-                </a>
-              </td>
-              <td>
-                <span>E-commerce</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">Bucharest</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1612422656768-d5e4ec31fac0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Kristin Watson</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow5">
-                  <label class="form-check-label" for="flexCheckRow5"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-5.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Webpixels
-                </a>
-              </td>
-              <td>
-                <span>Web Development</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">Cluj</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1608976328267-e673d3ec06ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Cody Fisher</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow6">
-                  <label class="form-check-label" for="flexCheckRow6"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-1.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Dribbble
-                </a>
-              </td>
-              <td>
-                <span>Design</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">Los Angeles</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Robert Fox</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow7">
-                  <label class="form-check-label" for="flexCheckRow7"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-2.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Netguru
-                </a>
-              </td>
-              <td>
-                <span>Retail</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">New York</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1610271340738-726e199f0258?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Darlene Robertson</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow8">
-                  <label class="form-check-label" for="flexCheckRow8"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-3.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Figma
-                </a>
-              </td>
-              <td>
-                <span>Technology</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">San Francisco</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1610878722345-79c5eaf6a48c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Theresa Webb</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow9">
-                  <label class="form-check-label" for="flexCheckRow9"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-4.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Mailchimp
-                </a>
-              </td>
-              <td>
-                <span>E-commerce</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">Bucharest</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1612422656768-d5e4ec31fac0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Kristin Watson</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </a>
-                  <div class="dropdown-menu dropdown-menu-end">
-                    <a href="#!" class="dropdown-item">
-                      Action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Another action
-                    </a>
-                    <a href="#!" class="dropdown-item">
-                      Something else here
-                    </a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckRow10">
-                  <label class="form-check-label" for="flexCheckRow10"></label>
-                </div>
-              </td>
-              <td>
-                <img alt="..." src="https://preview.webpixels.io/web/img/other/logos/logo-5.png" class="avatar avatar-xs rounded-circle me-2">
-                <a class="text-heading font-semibold" href="#">
-                  Webpixels
-                </a>
-              </td>
-              <td>
-                <span>Web Development</span>
-              </td>
-              <td>
-                <a class="text-current" href="mailto:">Cluj</a>
-              </td>
-              <td>
-                <img alt="..." src="https://images.unsplash.com/photo-1608976328267-e673d3ec06ce?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80" class="avatar avatar-xs rounded-circle me-2">
-                <!-- Link -->
-                <a class="text-current" href="#">Cody Fisher</a>
-              </td>
-              <td>
-                Jan 14, 202
-              </td>
-              <td class="text-end">
-                <div class="dropdown">
-                  <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a class="text-muted" (click)="null" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-three-dots-vertical"></i>
                   </a>
                   <div class="dropdown-menu dropdown-menu-end">

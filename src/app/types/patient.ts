@@ -1,18 +1,19 @@
 import { Profile } from "./profile";
+import { Session } from "./session";
+import { Therapist } from "./therapist";
 
 export class Patient {
     id?: string;
-    username?: string;
-    role?: string;
+    identifier?: string;
+    medicalConditions: any;
+    preferredGenres: any;
     createdAt?: Date;
     updatedAt?: Date;
-    lastActive?: Date;
-    firstName?: string;
-    lastName?: string;
-    type?: string;
-    status?: string;
-    user_profile?: Profile;
-    userRelationsByTo?: Array<PatientFrom>;
+    onboardedBy?: Therapist;
+    primaryTherapist?: Therapist;
+    sessions?: Array<Session>;
+    sessions_aggregate: any;
+    primaryTherapistUser?: Therapist;
 }
 
 

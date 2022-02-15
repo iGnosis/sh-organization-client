@@ -1,0 +1,147 @@
+<div class="container">
+    <div class="row p-2">
+        <div class="col">
+            <div class="form-group mb-5">
+                <label for="careplanname">Care Plan Name</label>
+                <input type="text" [(ngModel)]="careplan.name" class="form-control" id="careplanname" placeholder="Care Plan Name">
+            </div>
+            <div class="row mb-5">
+                <div class="col">
+                    <div class="form-group">
+                        <label for="careplanname">Difficulty Level</label>
+                        <select [(ngModel)]="careplan.difficultyLevel" class="form-control">
+                            <option value="easy">Easy</option>
+                            <option value="easy">Intermediate</option>
+                            <option value="easy">Hard</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="careplanname">Suggested for Medical Conditions</label>
+                        <label for="exampleInputPassword1" class="form-label">Medical Conditions</label>
+                        <ng-multiselect-dropdown
+                        placeholder="Medical Conditions"
+                        [settings]="dropdownSettings"
+                        [data]="medicalConditionsList"
+                        [(ngModel)]="careplan.medicalConditions"
+                        ></ng-multiselect-dropdown>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label for="careplanname">Tags</label>
+                        <input type="text" class="form-control" id="careplanname" placeholder="Care Plan Name">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <hr>
+    
+    <div class="row bg-light">
+        
+        <div class="col-6">
+            <div class="p-2">
+                <h3>All Activities</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-nowrap table-spaced">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Difficulty Level</th>
+                            <th scope="col">Estimated Time</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr role="button" [ngClass]="{'bg-success-400': activity.selected}" (click)="addActivityToCarePlan(activity)" *ngFor="let activity of activitiesList">
+                            <td data-label="Name">
+                                <i class="bi bi-plus-circle text-md" *ngIf="!activity.selected"></i>
+                                <i class="bi bi-check2-square text-success text-md" *ngIf="activity.selected"></i>
+                                <a class="text-heading font-semibold" (click)="null">
+                                    {{activity.name}}
+                                </a>
+                            </td>
+                            <td data-label="Difficulty Level">
+                                {{activity.difficulty}}
+                            </td>
+                            <td data-label="Estimated Time">
+                                <span>{{activity.duration}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-6 bg-gray-200">
+            <div class="p-2">
+                <h3>Selected Activities</h3>
+            </div>
+            <div class="table-responsive">
+                <div *ngIf="!careplan.careplan_activities || careplan.careplan_activities.length == 0" class="text-center p-5">
+                    Please start by selecting some activities from "All Activities"
+                </div>
+                <table *ngIf="careplan.careplan_activities && careplan.careplan_activities.length > 0" class="table table-hover table-nowrap table-spaced">
+                    <thead class="thead-light bg-light">
+                        <tr>
+                            <th scope="col">&nbsp;</th>
+                            <th scope="col">Activity</th>
+                            <th scope="col">Repetitions</th>
+                            <th scope="col">Estimted Duration</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-light" [ngClass]="{'bg-success-400': activity.activityByActivity?.selected}" *ngFor="let activity of careplan.careplan_activities">
+                            <td data-label="Difficulty Level">
+                                <h3 
+                                class="bi bi-circle-fill" 
+                                [ngClass]="{'text-success': activity.activityByActivity?.difficulty == 'Easy', 'text-info': activity.activityByActivity?.difficulty == 'Moderate', 'text-danger': activity.activityByActivity?.difficulty == 'Hard'}"
+                                >
+                            </h3>
+                        </td>
+                        <td data-label="Repetitions">
+                            <a class="text-heading font-semibold" (click)="null">
+                                {{activity.activityByActivity?.name}}
+                            </a>
+                        </td>
+                        <td class="reps-col" data-label="Difficulty Level">
+                            <span>
+                                <i class="bi bi-plus" role="button" (click)="incrementReps(activity)"></i>
+                            </span>
+                            <span class="border p-2">
+                                {{ activity.reps || 0 }}
+                            </span>
+                            <span>
+                                <i role="button" class="bi bi-dash" (click)="decrementReps(activity)"></i>
+                            </span>
+                        </td>
+                        <td data-label="Estimated Time">
+                            <span>{{(activity.reps || 1 ) * (activity.activityByActivity?.duration || 0)}}</span>
+                        </td>
+                    </tr>
+                </tbody>
+            
+            </table>
+            <table *ngIf="careplan.careplan_activities && careplan.careplan_activities.length > 0" class="table table-hover table-nowrap table-spaced">
+                <thead class="thead-light bg-light">
+                    <tr>
+                        <th scope="col">TOTAL SESSION TIME</th>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col">&nbsp;</th>
+                        <th scope="col">{{careplan.estimatedDuration}}</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="text-center">
+    <button class="btn btn-primary" disabled="true">Save Care Plan</button>
+</div>
+</div>
