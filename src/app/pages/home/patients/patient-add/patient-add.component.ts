@@ -3,6 +3,8 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { CreateCareplanComponent } from 'src/app/components/careplan/create-careplan/create-careplan.component';
+import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
+import { ToastService } from 'src/app/services/toast/toast.service';
 import { PatientService } from '../patient.service';
 
 @Component({
@@ -28,7 +30,9 @@ export class PatientAddComponent implements OnInit {
   constructor(
     private patientService: PatientService, 
     private router: Router,
+    private careplanService: CarePlanService,
     private modalService: NgbModal,
+    private toastService: ToastService,
     private route: ActivatedRoute) { }
  
   ngOnInit(): void {
@@ -87,5 +91,19 @@ export class PatientAddComponent implements OnInit {
   
   async openCreateCarePlanModal() {
     const modalRef = this.modalService.open(CreateCareplanComponent, {windowClass: 'lg-modal'});
+  }
+
+  async updateCarePlan(event:any){
+    let rowsAffected = 0
+    if(event.checked) {
+      const careplans = event.items.map((x:any) => { return {careplan: x.id}})
+      careplans.forEach((x:any) => x.patient = this.id)
+      rowsAffected = await this.careplanService.attachCarePlan(careplans)
+      this.toastService.show(`Assigned ${rowsAffected} Care Plan(s) to the Patient`)
+    } else if(this.id) {
+      const careplans = event.items.map((x:any) =>  x.id)
+      rowsAffected = await this.careplanService.detachCarePlan(this.id, careplans)
+      this.toastService.show(`Removed ${rowsAffected} Care Plan(s) from the Patient`)
+    }
   }
 }

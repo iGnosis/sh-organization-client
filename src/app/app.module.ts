@@ -25,6 +25,7 @@ import { PublicGuard } from './guards/public-guard';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
+import { ToastsComponent } from './components/toasts/toasts.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { CareplansListComponent } from './components/careplan/careplans-list/car
     PatientAddComponent,
     CreateCareplanComponent,
     CarePlanComponent,
-    CareplansListComponent
+    CareplansListComponent,
+    ToastsComponent
   ],
   imports: [
     BrowserModule,

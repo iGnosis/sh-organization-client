@@ -5,7 +5,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 col-12 mb-3 mb-md-0">
                     <!-- Title -->
-                    <h1 class="h2 mb-0 ls-tight">Add New Patient</h1>
+                    <h1 class="h2 mb-0 ls-tight">{{ identifier || 'Add New Patient' }}</h1>
                 </div>
             </div>
             <!-- Nav -->
@@ -64,7 +64,7 @@
                 <div class="text-end">
                     <button (click)="openCreateCarePlanModal()" class="btn btn-outline-primary mb-3">Create New Care Plan</button>
                 </div>
-                <app-careplans-list></app-careplans-list>
+                <app-careplans-list (selected)="updateCarePlan($event)"></app-careplans-list>
             </div>
         </div>
     </div>
