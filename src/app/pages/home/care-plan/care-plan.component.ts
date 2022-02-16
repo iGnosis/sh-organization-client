@@ -17,7 +17,6 @@ export class CarePlanComponent implements OnInit {
   async ngOnInit() {
     this.careplans = await this.careplanService.getAll()
     console.log(this.careplans);
-    
   }
 
   async reloadCarePlans(filters:any) {
@@ -28,5 +27,9 @@ export class CarePlanComponent implements OnInit {
   selectDataSegment(condition: string) {
     this.selectedMedicalConditions = [condition]
     this.reloadCarePlans({})
+  }
+
+  onCarePlansSelected(careplans: any) {
+    console.log(careplans)
   }
 }

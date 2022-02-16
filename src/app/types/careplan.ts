@@ -17,6 +17,7 @@ export class CarePlan {
     careplan_activities?: Array<ActivityByActivity>;
     careplan_activities_aggregate?: any;
     user_careplans_aggregate?: any;
+    selected?: boolean;
 }
 
 export class ActivityByActivity {

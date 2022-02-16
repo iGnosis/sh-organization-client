@@ -10,11 +10,11 @@
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
           <div class="mx-n1">
-            <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+            <a routerLink="/app/care-plans/new" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
               <span class=" pe-2">
                 <i class="bi bi-plus "></i>
               </span>
-              <span>Add Patient</span>
+              <span>Create New Care Plan</span>
             </a>
           </div>
         </div>
@@ -55,76 +55,8 @@
   </div>
   <!-- Container -->
   <div class="container-xl mt-5">
-    <div class="rounded-top bg-light p-5">
-      <div class="row">
-        <div class="col">
-          <h6>Care Plans</h6>
-        </div>
-        <div class="col text-end">
-          <span class="me-3">1-10 of 67 </span>
-          
-          <span role="button" class="me-1"> < </span>
-          <span role="button"> > </span>
-          <!-- <i class="fa fa-less-than me-1"></i>
-            <i class="fa fa-greater-than"></i> -->
-          </div>
-        </div>
-      </div>
-      <div class="table-responsive">
-        <table class="table table-hover table-nowrap">
-          <thead class="thead-light  bg-secondary">
-            <tr>
-              <th class="text-lg" scope="col">
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="flexCheckAll">
-                  <label class="form-check-label" for="flexCheckAll"></label>
-                </div>
-              </th>
-              <th scope="col">Name</th>
-              <th scope="col">Estimated Duration</th>
-              <th scope="col"># Activities</th>
-              <th scope="col">Difficulty</th>
-              <th scope="col"># Active Patients</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody class="bg-light">
-            <tr *ngFor="let careplan of careplans">
-              <td>
-                <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="">
-                  <label class="form-check-label" for="flexCheckAll"></label>
-                </div>
-              </td>
-              <td>
-                {{ careplan.name }}
-              </td>
-              <td>
-                {{ careplan.estimatedDuration }}
-              </td>
-              <td>
-                {{ careplan.careplan_activities_aggregate?.aggregate?.count}}
-              </td>
-              <td>
-                {{ careplan.difficultyLevel }}
-              </td>
-              <td>
-                {{ careplan.user_careplans_aggregate?.aggregate?.count}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="row mx-1 p-5 bg-light">
-        <div class="col">
-          Showing 10 items out of 67 results found
-        </div>
-        <div class="col text-end">
-          <span role="button" class="me-1"> < </span>
-          <span role="button"> > </span>
-        </div>
-      </div>
-    </div>
+    <app-careplans-list (selected)="onCarePlansSelected($event)"></app-careplans-list>
+  </div>
   </main>
   
   

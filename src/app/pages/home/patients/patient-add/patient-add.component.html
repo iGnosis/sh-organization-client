@@ -43,7 +43,7 @@
                     [(ngModel)]="selectedMedicalConditions"
                     ></ng-multiselect-dropdown>
                 </div>
-                <div class="mb-3">
+                <div class="mb-5">
                     <label for="exampleInputPassword1" class="form-label">Preferred Genre</label>
                     <ng-multiselect-dropdown
                     placeholder="Preferred Genre"
@@ -52,18 +52,9 @@
                     [(ngModel)]="selectedGenres"
                     ></ng-multiselect-dropdown>
                 </div>
-                <div class="mb-5">
-                    <label for="exampleInputPassword1" class="form-label">Care Plans</label>
-                    <ng-multiselect-dropdown
-                    placeholder="Care Plans"
-                    [settings]="dropdownSettings"
-                    [data]="availableCarePlans"
-                    [(ngModel)]="selectedCarePlans"
-                    ></ng-multiselect-dropdown>
-                </div>
 
-                <div class="mt-3 d-grid gap-2">
-                    <button (click)="addPatient()" class="btn btn-primary btn-block">Add Patient</button>
+                <div class="mt-5 d-grid gap-2">
+                    <button (click)="addPatient()" class="btn btn-primary btn-block mt-5">Add Patient</button>
                 </div>
 
             </div>
@@ -71,9 +62,9 @@
         <div *ngIf="stage == 2" class="row">
             <div class="col">
                 <div class="text-end">
-                    <button (click)="openCreateCarePlanModal()" class="btn btn-outline-primary">Create New Care Plan</button>
+                    <button (click)="openCreateCarePlanModal()" class="btn btn-outline-primary mb-3">Create New Care Plan</button>
                 </div>
-                <!-- <app-careplan-list></app-careplan-list> -->
+                <app-careplans-list></app-careplans-list>
             </div>
         </div>
     </div>

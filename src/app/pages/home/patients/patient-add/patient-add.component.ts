@@ -86,7 +86,6 @@ export class PatientAddComponent implements OnInit {
   }
   
   async openCreateCarePlanModal() {
-    const modalRef = this.modalService.open(CreateCareplanComponent);
-    modalRef.componentInstance.name = 'World';
+    const modalRef = this.modalService.open(CreateCareplanComponent, {windowClass: 'lg-modal'});
   }
 }

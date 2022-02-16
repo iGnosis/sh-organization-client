@@ -24,6 +24,7 @@ import { PrivateGuard } from './guards/private-guard';
 import { PublicGuard } from './guards/public-guard';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
+import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
     SetPasswordComponent,
     PatientAddComponent,
     CreateCareplanComponent,
-    CarePlanComponent
+    CarePlanComponent,
+    CareplansListComponent
   ],
   imports: [
     BrowserModule,
