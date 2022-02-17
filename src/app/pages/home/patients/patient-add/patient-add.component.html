@@ -64,7 +64,7 @@
                 <div class="text-end">
                     <button (click)="openCreateCarePlanModal()" class="btn btn-outline-primary mb-3">Create New Care Plan</button>
                 </div>
-                <app-careplans-list (selected)="updateCarePlan($event)"></app-careplans-list>
+                <app-careplans-list *ngIf="showCarePlans" (selected)="updateCarePlan($event)"></app-careplans-list>
             </div>
         </div>
     </div>

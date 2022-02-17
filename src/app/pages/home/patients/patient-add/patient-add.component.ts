@@ -19,6 +19,7 @@ export class PatientAddComponent implements OnInit {
   dropdownSettings:IDropdownSettings = {}
   availableGenres: any = []
   selectedGenres: any = []
+  showCarePlans = true
 
   availableCarePlans: any = []
   selectedCarePlans: any = []
@@ -90,7 +91,19 @@ export class PatientAddComponent implements OnInit {
   }
   
   async openCreateCarePlanModal() {
-    const modalRef = this.modalService.open(CreateCareplanComponent, {windowClass: 'lg-modal'});
+    const modalRef = this.modalService.open(CreateCareplanComponent, {windowClass: 'lg-modal'})
+                                          .result.then(success => {
+                                            this.reloadCarePlans()
+                                          }, failure => {
+                                            this.reloadCarePlans()
+                                          })
+  }
+
+  reloadCarePlans() {
+    this.showCarePlans = false
+      setTimeout(() => {
+        this.showCarePlans = true
+      }, 300)
   }
 
   async updateCarePlan(event:any){
