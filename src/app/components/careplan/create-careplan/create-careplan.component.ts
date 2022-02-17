@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
+import { ToastService } from 'src/app/services/toast/toast.service';
 import { Activity } from 'src/app/types/activity';
 import { ActivityByActivity, CarePlan, CarePlanDifficulty } from 'src/app/types/careplan';
 
@@ -31,10 +32,16 @@ export class CreateCareplanComponent implements OnInit {
   activitiesList: Array<Activity> = []
 
   careplan:CarePlan = {
-    careplan_activities: []
+    careplan_activities: [],
+    // name: 'test '+ Math.random(),
+    // difficultyLevel: CarePlanDifficulty.easy,
+    // medicalConditions: ['Parkinson\'s']
   }
 
-  constructor(private carePlanService: CarePlanService, private activityService: ActivityService) { }
+  constructor(
+    private carePlanService: CarePlanService, 
+    private toastService: ToastService,
+    private activityService: ActivityService) { }
 
   async ngOnInit() {
     this.activitiesList = await this.activityService.getAll()
@@ -102,6 +109,31 @@ export class CreateCareplanComponent implements OnInit {
     })
     
     this.careplan.estimatedDuration = totalDuration
+  }
+
+  async createCarePlan() {
+    // console.log(this.careplan);
+    // return
+    // https://medium.com/@captaindaylight/get-a-subset-of-an-object-9896148b9c72
+    const careplan = (({name,medicalConditions,difficultyLevel, estimatedDuration}) => ({name,medicalConditions,difficultyLevel, estimatedDuration}))(this.careplan)
+    const result = await this.carePlanService.create(careplan)
+    if(result.id) {
+      this.toastService.show('Careplan created.')
+    }
+
+    // add all the activities to the careplan
+    const activities = this.careplan.careplan_activities?.map(x => {
+      return {
+        activity: x.activityByActivity?.id,
+        reps: x.reps,
+        careplan: result.id
+      }
+    })
+    
+    const m2mResult = await this.carePlanService.attachActivities(activities)
+    if(m2mResult) {
+      this.toastService.show(`Added ${m2mResult} activities to the Care Plan`)
+    }
   }
 
 }

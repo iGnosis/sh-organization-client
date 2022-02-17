@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'graphql-request';
+import { CarePlan } from 'src/app/types/careplan';
 import { GraphqlService } from '../graphql/graphql.service';
 
 @Injectable({
@@ -69,5 +70,31 @@ export class CarePlanService {
     }`
     const response = await GraphqlService.client.request(mutation, {careplans, patient})
     return response.delete_patient_careplan.affected_rows
+  }
+
+
+  async create(careplan: CarePlan) {
+    console.log(careplan)
+    const mutation = gql`mutation InsertCarePlan($careplan: careplan_insert_input!) {
+      insert_careplan_one(object: $careplan) {
+        id
+      }
+    }`
+    const response = await GraphqlService.client.request(mutation, {careplan})
+    return response.insert_careplan_one
+  }
+
+  async attachActivities(careplanActivities:any) {
+    const mutation = gql`mutation AddActivityToCarePlan($objects:[careplan_activity_insert_input!]!) {
+      insert_careplan_activity(objects: $objects) {
+        affected_rows
+      }
+    }`
+    const response = await GraphqlService.client.request(mutation, {objects: careplanActivities})
+    return response.insert_careplan_activity.affected_rows
+  }
+
+  async detachActivities(careplanId: string, activityIds: Array<string>) {
+    
   }
 }

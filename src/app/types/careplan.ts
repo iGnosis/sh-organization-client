@@ -28,6 +28,6 @@ export class ActivityByActivity {
 
 export enum CarePlanDifficulty {
     easy = 'Easy',
-    medium = 'Medium',
-    difficult = 'Difficult'
+    moderate = 'Moderate',
+    hard = 'Hard'
 }

@@ -15,7 +15,7 @@
                 <div class="col">
                     <div class="form-group">
                         <label for="careplanname">Difficulty Level</label>
-                        <select [(ngModel)]="careplan.difficultyLevel" class="form-control">
+                        <select [(ngModel)]="careplan.difficultyLevel" class="form-control" [value]="careplan.difficultyLevel">
                             <option value="easy">Easy</option>
                             <option value="easy">Intermediate</option>
                             <option value="easy">Hard</option>
@@ -148,6 +148,6 @@
 </div>
 <hr>
 <div class="text-center">
-    <button class="btn btn-primary" disabled="true">Save Care Plan</button>
+    <button class="btn btn-primary" (click)="createCarePlan()">Save Care Plan</button>
 </div>
 </div>
