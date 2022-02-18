@@ -41,6 +41,7 @@ jobs:
       - name: npm install and npm run build
         run: |
           npm install
+          npm install --only=dev
           npm install -g @angular/cli
           npm run build
 
