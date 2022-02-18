@@ -31,15 +31,16 @@ jobs:
       - name: Set env to staging
         if: endsWith(github.ref, '/stage')
         run: |
-          echo "::set-env name=ENVIRONMENT::stage"
-          echo "::set-env name=NODE_ENV::stage"
+          echo "ENVIRONMENT=stage" >> $GITHUB_ENV
+          echo "NODE_ENV=stage" >> $GITHUB_ENV
       - name: Set env to production
         if: endsWith(github.ref, '/main')
         run: |
-          echo "::set-env name=ENVIRONMENT::production"
-          echo "::set-env name=NODE_ENV::production"
+          echo "ENVIRONMENT=production" >> $GITHUB_ENV
+          echo "NODE_ENV=production" >> $GITHUB_ENV          
       - name: npm install and npm run build
         run: |
+          echo $NODE_ENV
           npm install
           npm run build
 
