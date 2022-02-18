@@ -40,8 +40,8 @@ jobs:
           echo "NODE_ENV=production" >> $GITHUB_ENV          
       - name: npm install and npm run build
         run: |
-          npm config set -g production false
-          npm install        
+          # Include the devDependencies irrespective of the NODE_ENV
+          npm install --include dev
           npm install -g @angular/cli
           npm run build
 
