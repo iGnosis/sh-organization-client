@@ -1,28 +1,64 @@
 
 export const GqlConstants = {
-  SEARCH_USER: `query SignIn($username:String, $password:String) {
-    user(where: {_and: {username: {_eq: $username}, password: {_eq: $password}}, role: {_eq: "provider"}}) {
+  SEARCH_USER: `query SignIn($email:String, $password:String) {
+    user(where: {_and: {email: {_eq: $email}, password: {_eq: $password}}, type: {_eq: provider}}) {
       firstName
       lastName
       password
-      role
-      username
+      email
     }
   }`,
   
-  GET_ALL_PATIENTS: `query MyQuery {
-    user(where: {role: {_eq: "patient"}}) {
-      id
-      username
-      user_profile {
-        dob
-        gender
+  GET_ALL_PATIENTS: `query PatientList($conditions: [String!]) {
+    patient_aggregate(where: {medicalConditions: {_has_keys_any: $conditions}}) {
+      aggregate {
+        count
       }
-      type
-      status
-      firstName
-      lastName
-      lastActive
+    }
+    patient(limit: 10, offset: 0, where: {medicalConditions: {_has_keys_any: $conditions}}) {
+      createdAt
+      id
+      identifier
+      medicalConditions
+      preferredGenres
+      sessions(order_by: {createdAt: desc}, limit: 1, offset: 0) {
+        createdAt
+      }
+      sessions_aggregate {
+        aggregate {
+          count
+        }
+      }
+      primaryTherapistUser {
+        firstName
+        lastName
+      }
+    }
+  }`,
+  
+  GET_CAREPLANS: `query GetCarePlans {
+    careplan {
+      createdAt
+      careplan_activities_aggregate {
+        aggregate {
+          count
+        }
+      }
+      user_careplans_aggregate {
+        aggregate {
+          count
+        }
+      }
+      name
+      createdBy
+      id
+      tags
+    }
+  }`,
+  
+  INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $preferredGenres:jsonb) {
+    insert_patient_one(object: {identifier: $identifier, medicalConditions: $medicalConditions, preferredGenres: $preferredGenres}) {
+      id
     }
   }`,
   
@@ -39,7 +75,6 @@ export const GqlConstants = {
         endedAt
       }
       status
-      username
       sessions_aggregate {
         aggregate {
           count
@@ -63,7 +98,7 @@ export const GqlConstants = {
           lastName
           lastActive
           status
-          username
+          email
           user_profile {
             createdAt
             dob

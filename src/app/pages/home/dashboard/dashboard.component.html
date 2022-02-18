@@ -1,114 +1,105 @@
-<div class="container mt-5">
-    <!-- <div class="row"> -->
-        <!-- <div class="col-md-4">
-            <div class="card dashboard-widget">
-                <div class="card-header bg-primary text-white">
-                    Patients Lagging Behind
+<!-- Header -->
+<header class="px-3 px-lg-7 pt-7">
+    <div class="container-xl">
+        <div>
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                    <!-- Title -->
+                    <h1 class="h2 mb-0 ls-tight">Application</h1>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <a>Cras justo odio</a>
-                    </li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                </ul>
-            </div> 
-        </div>
-        <div class="col-md-4">
-            <div class="card dashboard-widget">
-                <div class="card-header bg-primary text-white">
-                    Patients showing an Improvement (8) 😊
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card dashboard-widget">
-                <div class="card-header bg-primary text-white">
-                    Patients showing a decline (4) 😊
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Cras justo odio</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Cras justo odio</li>
-                </ul>
-            </div>
-        </div> -->
-    <!-- </div> -->
-    
-    <div class="row">
-        <div class="col">
-            <div class="card text-center">
-                <div class="card-header">
-                    Active Patients
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">18</h5>
-                  <p class="card-text text-success">+4 since last week</p>
-                  <pmc-active-patients></pmc-active-patients>
-                  <a href="#" class="btn btn-secondary mt-4">See All</a>
+                <!-- Actions -->
+                <div class="col-md-6 col-12 text-md-end">
+                    <div class="mx-n1">
+                        <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                            <span class=" pe-2">
+                                <i class="bi bi-pencil"></i>
+                            </span>
+                            <span>Edit</span>
+                        </a>
+                        <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
+                            <span class=" pe-2">
+                                <i class="bi bi-eye"></i>
+                            </span>
+                            <span>View</span>
+                        </a>
+                        <a href="#" class="btn d-inline-flex btn-sm btn-primary mx-1">
+                            <span class=" pe-2">
+                                <i class="bi bi-cloud-download"></i>
+                            </span>
+                            <span>Download</span>
+                        </a>
+                    </div>
                 </div>
             </div>
+            <!-- Nav -->
+            <ul class="nav nav-tabs overflow-x mt-2">
+                <li class="nav-item">
+                    <a href="#" class="nav-link font-regular active">Components</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link font-regular">Pages</a>
+                </li>
+            </ul>
         </div>
-        <div class="col">
-            <div class="card text-center">
-                <div class="card-header">
-                    Improving Performance
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">12</h5>
-                  <p class="card-text text-success">+2 since last week</p>
-                  <pmc-active-patients></pmc-active-patients>
-                  <a href="#" class="btn btn-secondary mt-4">See All</a>
+    </div>
+</header>
+<!-- Main content -->
+<main class="px-3 px-lg-7 py-7">
+    <!-- Container -->
+    <div class="container-xl">
+        <div class="row">
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        Active Patients
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">18</h5>
+                      <p class="card-text text-success">+4 since last week</p>
+                      <pmc-active-patients></pmc-active-patients>
+                      <a href="#" class="btn btn-secondary mt-4">See All</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-center">
-                <div class="card-header">
-                    Reducing Performance
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title">6</h5>
-                  <p class="card-text text-success">-2 since last week</p>
-                  <pmc-active-patients></pmc-active-patients>
-                  <a href="#" class="btn btn-secondary mt-4">See All</a>
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        Improving Performance
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">12</h5>
+                      <p class="card-text text-success">+2 since last week</p>
+                      <pmc-active-patients></pmc-active-patients>
+                      <a href="#" class="btn btn-secondary mt-4">See All</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card text-center">
-                <div class="card-header">
-                    New Patients
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        Reducing Performance
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">6</h5>
+                      <p class="card-text text-success">-2 since last week</p>
+                      <pmc-active-patients></pmc-active-patients>
+                      <a href="#" class="btn btn-secondary mt-4">See All</a>
+                    </div>
                 </div>
-                <div class="card-body">
-                  <h5 class="card-title">4</h5>
-                  <p class="card-text text-danger">-1 since last week</p>
-                  <pmc-active-patients></pmc-active-patients>
-                  <a href="#" class="btn btn-secondary mt-4">See All</a>
+            </div>
+            <div class="col">
+                <div class="card text-center">
+                    <div class="card-header">
+                        New Patients
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">4</h5>
+                      <p class="card-text text-danger">-1 since last week</p>
+                      <pmc-active-patients></pmc-active-patients>
+                      <a href="#" class="btn btn-secondary mt-4">See All</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</main>

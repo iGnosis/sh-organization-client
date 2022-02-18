@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/invite-patient.component';
 
@@ -9,12 +10,17 @@ import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/inv
 })
 export class PrivateComponent implements OnInit {
 
-  constructor(private modalService: NgbModal) { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
   }
 
-  invitePatient() {
-    const modalRef = this.modalService.open(InvitePatientComponent)
+  // invitePatient() {
+  //   const modalRef = this.modalService.open(InvitePatientComponent)
+  // }
+
+  logout() {
+    localStorage.clear()
+    this.router.navigate(['/'])
   }
 }

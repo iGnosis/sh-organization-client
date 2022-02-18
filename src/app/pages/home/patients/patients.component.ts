@@ -12,6 +12,8 @@ import { Patient } from 'src/app/types/patient';
 export class PatientsComponent implements OnInit {
 
   patients?: Array<Patient>
+  allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
+  selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
 
   constructor(private router: Router) { }
   
@@ -20,13 +22,18 @@ export class PatientsComponent implements OnInit {
   }
 
   async reloadPatientList(filters:any) {
-    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS)
-    this.patients = response.user
+    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, {conditions: this.selectedMedicalConditions})
+    this.patients = response.patient
     console.log(this.patients)
   }
 
   openPatientDetails(patient: Patient) {
     console.log(patient.id)
     this.router.navigate(['app/patient-details', patient.id])
+  }
+
+  selectDataSegment(condition: string) {
+    this.selectedMedicalConditions = [condition]
+    this.reloadPatientList({})
   }
 }

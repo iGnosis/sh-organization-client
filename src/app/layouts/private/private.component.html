@@ -1,21 +1,77 @@
-<div class="body">
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
-      <!-- Point Motion -->
-      <img src="assets/images/logo.png" style="max-height:48px;">
-    </a>
-    <div class="navbar-nav mr-auto">
-      <a class="nav-item nav-link active" routerLink="/app/dashboard">Dashboard</a>
-      <a class="nav-item nav-link active" routerLink="/app/patients">Patients</a>
-      <a class="nav-item nav-link active" routerLink="/app/activities">Activities</a>
-    </div>
-    <ul class="nav navbar-nav navbar-right">
-      <li>
-        <div class="btn-nav"><a class="btn btn-primary btn-small navbar-btn" (click)="invitePatient()">Onboard New Patient</a>
-        </div>
-      </li>
-    </ul>
+<div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+  <!-- Vertical Navbar -->
+  <nav class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-dark bg-primary border-end-lg" id="navbarVertical">
+      <div class="container-fluid">
+          <!-- Toggler -->
+          <button class="navbar-toggler ms-n2" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarCollapse" aria-controls="sidebarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+          </button>
+          <!-- Brand -->
+          <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
+            <img src="assets/images/logo-white.png">
+          </a>
+          <!-- User menu (mobile) -->
+          <div class="navbar-user d-lg-none">
+              <!-- Dropdown -->
+              <div class="dropdown">
+              </div>
+          </div>
+          <!-- Collapse -->
+          <div class="collapse navbar-collapse" id="sidebarCollapse">
+              <!-- Navigation -->
+              <ul class="navbar-nav">
+                  <li class="nav-item">
+                      <a class="nav-link disabled" role="button" (click)="null">
+                          <i class="bi bi-house"></i> Dashboard 🔒
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" routerLink="/app/patients">
+                          <i class="bi bi-people"></i> Patients
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link" routerLink="/app/care-plans">
+                          <i class="bi bi-plus-circle"></i> Care Plans
+                      </a>
+                  </li>
+              </ul>
+              <!-- Divider -->
+              <hr class="navbar-divider my-5 opacity-20">
+              <!-- Navigation -->
+              <ul class="navbar-nav mb-md-4">
+                  <li class="nav-item">
+                      <a class="nav-link  disabled" href="#">
+                          <i class="bi bi-search"></i> Search 🔒
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a class="nav-link disabled" href="#">
+                          <i class="bi bi-bell"></i> Notifications 🔒
+                          <span class="badge bg-soft-danger text-danger rounded-pill d-inline-flex align-items-center ms-auto">0</span>
+                      </a>
+                  </li>
+              </ul>
+              <!-- Push content down -->
+              <div class="mt-auto"></div>
+              <!-- User (md) -->
+              <ul class="navbar-nav mb-5">
+                  <li class="nav-item">
+                      <a class="nav-link  disabled" href="#">
+                          <i class="bi bi-person"></i> Account 🔒
+                      </a>
+                  </li>
+                  <li class="nav-item">
+                      <a role="button" class="nav-link" (click)="logout()">
+                          <i class="bi bi-box-arrow-left"></i> Logout
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
   </nav>
-  <!-- <div style="height: 90px;">&nbsp;</div> -->
-  <router-outlet></router-outlet>
+  <!-- Main content -->
+  <div class="h-screen flex-grow-1 overflow-y-lg-auto">
+    <router-outlet></router-outlet>
+  </div>
 </div>

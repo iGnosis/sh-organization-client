@@ -1,0 +1,72 @@
+<!-- Header -->
+<header class="px-3 px-lg-7 pt-7">
+    <div class="container-xl">
+        <div>
+            <div class="row align-items-center">
+                <div class="col-md-6 col-12 mb-3 mb-md-0">
+                    <!-- Title -->
+                    <h1 class="h2 mb-0 ls-tight">{{ identifier || 'Add New Patient' }}</h1>
+                </div>
+            </div>
+            <!-- Nav -->
+            <ul class="nav nav-tabs overflow-x mt-2">
+                <li class="nav-item">
+                    <a role="button" (click)="null" class="nav-link font-regular" [ngClass]="{'active': stage == 1}">1. Patient Details</a>
+                </li>
+                <li class="nav-item">
+                    <a role="button" (click)="null" class="nav-link font-regular" [ngClass]="{'active': stage == 2}">2. Assign Care Plans</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</header>
+<!-- Main content -->
+<main class="px-3 px-lg-7 py-7">
+    
+    <!-- Container -->
+    <div class="container-xl mt-5">
+        <div *ngIf="stage == 1" class="row">
+            <div class="col-6 offset-3">
+                <h5 class="mb-5">Account Information</h5>
+                
+                <div class="mb-3">
+                    <label for="identifier" class="form-label">Identifier</label>
+                    <input type="text" [(ngModel)]="identifier" class="form-control" id="identifier" aria-describedby="identifierHelp">
+                    <div id="identifierHelp" class="form-text">Hint: You can use the Identifier from your EHR</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Medical Conditions</label>
+                    <ng-multiselect-dropdown
+                    placeholder="Medical Conditions"
+                    [settings]="dropdownSettings"
+                    [data]="medicalConditionsList"
+                    [(ngModel)]="selectedMedicalConditions"
+                    ></ng-multiselect-dropdown>
+                </div>
+                <div class="mb-5">
+                    <label for="exampleInputPassword1" class="form-label">Preferred Genre</label>
+                    <ng-multiselect-dropdown
+                    placeholder="Preferred Genre"
+                    [settings]="dropdownSettings"
+                    [data]="availableGenres"
+                    [(ngModel)]="selectedGenres"
+                    ></ng-multiselect-dropdown>
+                </div>
+
+                <div class="mt-5 d-grid gap-2">
+                    <button (click)="addPatient()" class="btn btn-primary btn-block mt-5">Add Patient</button>
+                </div>
+
+            </div>
+        </div>
+        <div *ngIf="stage == 2" class="row">
+            <div class="col">
+                <div class="text-end">
+                    <button (click)="openCreateCarePlanModal()" class="btn btn-outline-primary mb-3">Create New Care Plan</button>
+                </div>
+                <app-careplans-list *ngIf="showCarePlans" (selected)="updateCarePlan($event)"></app-careplans-list>
+            </div>
+        </div>
+    </div>
+</main>
+

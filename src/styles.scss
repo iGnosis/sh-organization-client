@@ -1,7 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
+// Import the default variables and function
+@import "@webpixels/css/core/functions";
 
-$primary: #000066;
-$success: #007F6E;
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+// Your theme's variables
+@import "./app/variables";
 
+// Webpixels' CSS
+@import "@webpixels/css/base";
+@import "@webpixels/css/forms";
+@import "@webpixels/css/components";
+@import "@webpixels/css/utilities";
+
+
+// Should not be global... or should be...?
+label.form-label {
+    color: #425466;
+    font-weight: 500;
+}
+
+.lg-modal .modal-dialog {
+    max-width: 90vw;
+}
+
+.multiselect-dropdown .dropdown-btn {
+    background: #FFF;
+    box-shadow: 0px 1px 2px rgba(50, 50, 71, 0.08);
+    padding: 12px !important;
+    border: unset !important;
+    .selected-item-container .selected-item {
+        background: #2F51AE !important;
+    }
+    .dropdown-multiselect__caret::before {
+        top: 90% !important;
+    }
+}
+
+.multiselect-item-checkbox input[type="checkbox"] + div::before, .multiselect-item-checkbox input[type="checkbox"]:checked + div::before {
+    border: 2px solid #2F51AE !important;
+    color: #2F51AE !important;
+    background: #2F51AE !important;
+}

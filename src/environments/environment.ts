@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   cognitoUserPoolID: 'us-east-1_INWkmpaSb',
   cognitoClientID: '4pc04vcpfodcgac8nk5svm911i',
-  gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql'
+  gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
+  servicesEndpoint: 'http://localhost:9000'
 };
 
 /*
