@@ -8,7 +8,7 @@ export const GqlConstants = {
       email
     }
   }`,
-  
+
   GET_ALL_PATIENTS: `query PatientList($conditions: [String!]) {
     patient_aggregate(where: {medicalConditions: {_has_keys_any: $conditions}}) {
       aggregate {
@@ -35,7 +35,7 @@ export const GqlConstants = {
       }
     }
   }`,
-  
+
   GET_CAREPLANS: `query GetCarePlans {
     careplan {
       createdAt
@@ -55,13 +55,13 @@ export const GqlConstants = {
       tags
     }
   }`,
-  
+
   INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $preferredGenres:jsonb) {
     insert_patient_one(object: {identifier: $identifier, medicalConditions: $medicalConditions, preferredGenres: $preferredGenres}) {
       id
     }
   }`,
-  
+
   GET_PATIENT_DETAILS: `query GetUserDetails($user:uuid!) {
     user_by_pk(id: $user) {
       createdAt
@@ -107,8 +107,17 @@ export const GqlConstants = {
             phone
           }
         }
-      }}}`
-      
-      
-    } as const
-    
+      }}}`,
+
+  GET_SESSIONS: `query GetSessions {
+    session {
+      id
+      createdAt
+      updatedAt
+      patientByPatient {
+        identifier
+      }
+    }
+  }`
+
+} as const

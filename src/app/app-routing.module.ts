@@ -15,6 +15,7 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientAddComponent } from './pages/home/patients/patient-add/patient-add.component';
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
+import { SessionsDetailsComponent } from './pages/home/patients/sessions/sessions-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'public/auth/sign-in', pathMatch: 'full'},
@@ -31,7 +32,9 @@ const routes: Routes = [
     { path: 'patients/:id', component: PatientDetailsComponent},
     { path: 'care-plans', component: CarePlanComponent},
     { path: 'care-plans/new', component: CreateCareplanComponent},
-    { path: 'activities', component: ActivitiesComponent}
+    { path: 'activities', component: ActivitiesComponent},
+    { path: 'sessions', component: SessionsDetailsComponent},
+    { path: 'sessions/:id', component: SessionsDetailsComponent}
   ]}
 ];
 

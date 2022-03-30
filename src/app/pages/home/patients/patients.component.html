@@ -23,16 +23,16 @@
       <!-- {{ selectedMedicalConditions | json }} -->
       <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
-          <a 
-            (click)="selectedMedicalConditions = allMedicalConditions" 
+          <a
+            (click)="selectedMedicalConditions = allMedicalConditions"
             class="nav-link font-regular active"
             [ngClass]="{'active': selectedMedicalConditions.length > 1}"
             >All
           </a>
         </li>
         <li class="nav-item" *ngFor="let condition of allMedicalConditions">
-          <a 
-            role="button" 
+          <a
+            role="button"
             (click)="selectDataSegment(condition)"
             [ngClass]="{'active': selectedMedicalConditions.length == 1 && selectedMedicalConditions[0] == condition}"
             class="nav-link font-regular">
@@ -45,7 +45,7 @@
 </header>
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-  
+
   <div class="container-xl mb-5">
     <div class="input-group input-group-sm input-group-inline">
       <span class="input-group-text pe-2">
@@ -63,7 +63,7 @@
         </div>
         <div class="col text-end">
           <span class="me-3">1-10 of 67 </span>
-          
+
           <span role="button" class="me-1"> < </span>
           <span role="button"> > </span>
           <!-- <i class="fa fa-less-than me-1"></i>
@@ -107,7 +107,7 @@
               </td>
               <td>
                 <span *ngFor="let session of patient.sessions">
-                  {{ session.createdAt | date:'short'}} 
+                  {{ session.createdAt | date:'short'}}
                   <!-- Hacky shit. Expects the API to only return 1 result here. -->
                 </span>
               </td>
@@ -150,5 +150,3 @@
       </div>
     </div>
   </main>
-  
-  
