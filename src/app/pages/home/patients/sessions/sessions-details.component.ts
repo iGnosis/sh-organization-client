@@ -5,8 +5,8 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { IChart, ChartSessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Session } from 'src/app/types/session';
-
 
 @Component({
   selector: 'app-sessions-details',
@@ -27,14 +27,6 @@ export class SessionsDetailsComponent implements OnInit {
   // data that is passed into Chart init functions
   // so we can render the charts
   chartData?: ChartSessionData
-
-  colorMapping = {
-    'sit': 'rgb(53,76,168)',
-    'stand': 'rgb(20,13,99)',
-    'right-way-halleluhia': 'lightpink',
-    'side-way-halleluhia': 'lightcyan',
-    'left-way-halleluhia': 'lightgreen'
-  }
 
   constructor(private route: ActivatedRoute, private chartService: ChartService) { }
 
@@ -105,7 +97,7 @@ export class SessionsDetailsComponent implements OnInit {
       reactionData.push(avgReactionTime)
 
       // building background color
-      backgroundColor.push('rgb(20,13,99)')
+      backgroundColor.push('#000066')
     }
 
     const data = {
@@ -121,6 +113,7 @@ export class SessionsDetailsComponent implements OnInit {
     const config = {
       type: 'bar',
       data: data,
+      plugins: [ChartDataLabels],
       options: {
         beginAtZero: true,
         responsive: true,
@@ -135,7 +128,11 @@ export class SessionsDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}ms`
+              callback: (value: number) => `${value}ms`,
+              font: {
+                size: 14
+              },
+              color: '#000066'
             }
           },
           x: {
@@ -146,10 +143,25 @@ export class SessionsDetailsComponent implements OnInit {
                 size: 18
               },
               padding: 12
+            },
+            ticks: {
+              font: {
+                size: 14
+              },
+              color: '#000066'
             }
           }
         },
         plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'start',
+            offset: 10,
+            color: 'white',
+            font: {
+              size: 14
+            }
+          },
           title: {
             display: true,
             align: 'center',
@@ -178,7 +190,6 @@ export class SessionsDetailsComponent implements OnInit {
     // building chartjs DS
     const labels = new Set()
     const achievementData = []
-    const backgroundColor = []
 
     for (const activity in chartData[firstSessionId]) {
       const activityDetails = chartData[firstSessionId][activity].events
@@ -195,17 +206,15 @@ export class SessionsDetailsComponent implements OnInit {
 
       achievementData.push(success / (activityDetails.length))
 
-      // building background color
-      backgroundColor.push('rgb(20,13,99)')
     }
 
     const data = {
       labels: [...labels],
       datasets: [{
         data: [...achievementData],
-        backgroundColor: 'rgb(20,13,99)',
-        borderColor: 'rgb(20,13,99)',
-        pointBackgroundColor: 'rgb(20,13,99)',
+        backgroundColor: '#000066',
+        borderColor: '#000066',
+        pointBackgroundColor: '#000066',
         radius: 6,
         tension: 0.1,
         fill: false,
@@ -232,7 +241,11 @@ export class SessionsDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}%`
+              callback: (value: number) => `${value}%`,
+              font: {
+                size: 14
+              },
+              color: '#000066'
             }
           },
           x: {
@@ -243,6 +256,12 @@ export class SessionsDetailsComponent implements OnInit {
                 size: 18
               },
               padding: 12
+            },
+            ticks: {
+              font: {
+                size: 14
+              },
+              color: '#000066'
             }
           }
         },
