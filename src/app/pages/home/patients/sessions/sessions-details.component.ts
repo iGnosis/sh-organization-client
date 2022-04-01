@@ -42,7 +42,7 @@ export class SessionsDetailsComponent implements OnInit {
         console.log('chartData:', this.chartData)
 
         // init reaction time chart
-        this.initReactionChart(this.chartData)
+        // this.initReactionChart(this.chartData)
 
         // init achievement chart
         this.initAchievementChart(this.chartData)
