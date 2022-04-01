@@ -204,7 +204,14 @@ export class SessionsDetailsComponent implements OnInit {
         }
       }
 
-      achievementData.push(success / (activityDetails.length))
+      success = success / (activityDetails.length)
+
+      // work-around for calibration
+      if (activityDetails[0].activityName === 'Calibration') {
+        success = success * 2
+      }
+
+      achievementData.push(success)
 
     }
 
