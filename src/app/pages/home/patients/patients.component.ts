@@ -16,7 +16,7 @@ export class PatientsComponent implements OnInit {
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
 
   constructor(private router: Router) { }
-  
+
   async ngOnInit() {
     this.reloadPatientList(null)
   }
