@@ -1,121 +1,375 @@
-Commented out..
-<!-- <div class="patient-details">
-    <div class="container mt-3" *ngIf="details">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-1">
-                        <img class="profile_pic" src="https://s.gravatar.com/avatar/1da04b0aae7bbfe04b46ccdca2430845?s=80">
-                    </div>
-                    <div class="col-md-4">
-                        <h2>{{details.firstName}} {{details.lastName}}</h2>
-                        <p>Status: {{ details.status }}</p>
-                    </div>
-                    <div class="col-md-7 text-right">
-                        <div class="btn btn-outline-primary">Contact</div>
-                    </div>
-                </div>
-                
-            </div>
-            <ul ngbNav #nav="ngbNav" class="nav-tabs">
-                <li ngbNavItem>
-                    <a ngbNavLink>Details</a>
-                    <ng-template ngbNavContent>
-                        <div class="row">
-                            <div class="col">
-                                <h4>Patient Details</h4>
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td>First Name</td>
-                                            <td>{{details.firstName}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Last Name</td>
-                                            <td>{{details.lastName}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Username/Email</td>
-                                            <td>{{details.username}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Phone Number</td>
-                                            <td>{{details.user_profile.phone}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Last Active</td>
-                                            <td>{{details.lastActive}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Status</td>
-                                            <td>{{details.status}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Date of Birth</td>
-                                            <td>{{details.user_profile.dob}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Gender</td>
-                                            <td>{{details.user_profile.gender}}</td>
-                                        </tr>
-                                       
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Onboarded On</td>
-                                            <td>{{details.user_profile.onboardedOn}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col">
-                                <h4>Caretakers</h4>
-                                <table class="table">
-                                    <tbody *ngFor="let caretaker of details.userRelationsByTo">
-                                        <tr>
-                                            <td>First Name</td>
-                                            <td>{{caretaker.userFrom!.firstName}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Last Name</td>
-                                            <td>{{caretaker.userFrom!.lastName}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Username/Email</td>
-                                            <td>{{caretaker.userFrom!.username}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Phone Number</td>
-                                            <td>{{caretaker.userFrom!.user_profile!.phone}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Last Active</td>
-                                            <td>{{caretaker.userFrom!.lastActive}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Status</td>
-                                            <td>{{caretaker.userFrom!.status}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Gender</td>
-                                            <td>{{caretaker.userFrom!.user_profile!.gender}}</td>
-                                        </tr>
-                                        <tr *ngIf="details.user_profile">
-                                            <td>Onboarded On</td>
-                                            <td>{{caretaker.userFrom!.user_profile!.onboardedOn}}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </ng-template>
-                </li>
-                <li ngbNavItem>
-                    <a ngbNavLink>Sessions</a>
-                    <ng-template ngbNavContent>Second content</ng-template>
-                </li>
-            </ul>
+<!-- Header -->
+<header class="px-3 px-lg-7 pt-7">
+  <div class="container-xl">
+    <div>
+      <div class="row align-items-center">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
+          <!-- Title -->
+          <h1 class="h2 mb-0 ls-tight">IG58M</h1>
         </div>
-        <div class="card mt-3">
-            <div class="p-3" [ngbNavOutlet]="nav"></div>
+        <!-- Actions -->
+        <div class="col-md-6 col-12 text-md-end">
+          <div class="mx-n1">
+            <a routerLink="#!" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+              <span>Export Report</span>
+            </a>
+            <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+              <span class="pe-2">
+                <i class="bi bi-play-btn"></i>
+              </span>
+              <span>Start New Session</span>
+            </a>
+          </div>
         </div>
+      </div>
+      <!-- Nav -->
+      <ul class="nav nav-tabs overflow-x mt-2">
+        <li class="nav-item">
+          <a class="nav-link font-regular active">All
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link font-regular">Starred
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link font-regular">Labbeled
+          </a>
+        </li>
+      </ul>
     </div>
-</div> -->
+  </div>
+</header>
+
+<!-- Charts -->
+<div class="container mt-8">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <!-- Title -->
+          <h3 class="h4">Insert Chart 1 here</h3>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <!-- Title -->
+          <h3 class="h4">Insert Chart 2 here</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Search Bar -->
+<div class="container-xl mb-5 mt-5">
+  <div class="input-group input-group-sm input-group-inline">
+    <span class="input-group-text pe-2">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" class="form-control" placeholder="Search session details" aria-label="Search"
+      aria-describedby="">
+  </div>
+</div>
+
+<!-- Filters dropdowns -->
+<div class="container">
+  <div class="row">
+    <div class="col-sm">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Session Plan
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <form>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">First option</label>
+              </div>
+            </div>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">Second option</label>
+              </div>
+            </div>
+            <div class="dropdown-item">
+              <button class="btn btn-sm btn-primary w-full">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Activity Type
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <form>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">First option</label>
+              </div>
+            </div>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">Second option</label>
+              </div>
+            </div>
+            <div class="dropdown-item">
+              <button class="btn btn-sm btn-primary w-full">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Time
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <form>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">First option</label>
+              </div>
+            </div>
+            <div class="dropdown-item py-1 d-flex align-items-center">
+              <div class="text-lg">
+                <input class="form-check-input" type="checkbox" id="flexCheck1" value="" aria-label="...">
+              </div>
+              <div class="ms-3 me-5">
+                <label for="flexCheck1">Second option</label>
+              </div>
+            </div>
+            <div class="dropdown-item">
+              <button class="btn btn-sm btn-primary w-full">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm">
+      Date
+    </div>
+    <div class="col-sm">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          Performance
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="#">High Performance (&gt;75%)</a></li>
+          <li><a class="dropdown-item" href="#">Avg Performance (&lt;75%)</a></li>
+          <li><a class="dropdown-item" href="#">Low Performance (&lt;50%)</a></li>
+          <li><a class="dropdown-item" href="#">Poor Performance (&lt;25%)</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Session table -->
+<div class="container-xl mt-5">
+  <div class="rounded-top bg-light p-5">
+    <div class="row">
+      <div class="col">
+        <h6>Sessions</h6>
+      </div>
+      <div class="col text-end">
+        <span class="me-3">1-10 of 36</span>
+        <span role="button" class="me-1">&#60;</span>
+        <span role="button">&#62;</span>
+      </div>
+    </div>
+
+    <!-- Put a divider -->
+    <hr>
+
+    <!-- Put action icons that'd act on selected rows -->
+    <ul class="nav nav-pills">
+      <li class="nav-item">
+        <button (click)="this.toogleRowsCheck()" class="nav-link">
+          <i class="bi bi-check-square me-2"></i>Check all
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link">
+          <i class="bi bi-trash me-2"></i>Delete
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link">
+          <i class="bi bi-bookmark-plus me-2"></i>Label
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link">
+          <i class="bi bi-archive me-2"></i>Archive
+        </button>
+      </li>
+    </ul>
+
+  </div>
+  <div class="table-responsive">
+    <table class="table table-hover table-nowrap">
+      <thead class="thead-light">
+        <tr>
+          <th class="text-lg" scope="col">
+            <div class="form-check">
+              <input (click)="this.toogleRowsCheck()" class="form-check-input" type="checkbox" value=""
+                id="flexCheckAll">
+              <label class="form-check-label" for="flexCheckAll"></label>
+            </div>
+          </th>
+          <th></th>
+          <th scope="col">Session Plan</th>
+          <th scope="col">Activity Type</th>
+          <th scope="col">Time</th>
+          <th scope="col">Date</th>
+          <th scope="col">Performance</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- Checkbox & Star button -->
+          <td class="text-lg" scope="col">
+            <div class="form-check">
+              <input class="form-check-input row-check-input" type="checkbox" value="" id="flexCheckRow1">
+              <label class="form-check-label" for="flexCheckRow1"></label>
+            </div>
+          </td>
+
+          <td class="text-lg" scope="col">
+            <i class="bi bi-star"></i>
+          </td>
+
+          <td>
+            <a class="text-heading font-semibold" href="/app/sessions/123">
+              Music and Movement
+            </a>
+          </td>
+          <td>
+            <span>Physical</span>
+          </td>
+          <td>
+            <span>45 minutes</span>
+          </td>
+          <td>
+            <span>Jan 20, 2022</span>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="me-2">95%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 95%"
+                    aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="dropdown">
+              <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a href="#!" class="dropdown-item">
+                  Edit Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Archive Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Delete Session Entry
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Checkbox & Star button -->
+          <td class="text-lg" scope=" col">
+            <div class="form-check">
+              <input class="form-check-input row-check-input" type="checkbox" value="" id="flexCheckRow1">
+              <label class="form-check-label" for="flexCheckRow1"></label>
+            </div>
+          </td>
+
+          <td class="text-lg" scope=" col">
+            <i class="bi bi-star"></i>
+          </td>
+
+          <td>
+            <a class="text-heading font-semibold" href="#">
+              Cognitive Skills
+            </a>
+          </td>
+          <td>
+            <span>Problem Solving</span>
+          </td>
+          <td>
+            <span>30 minutes</span>
+          </td>
+          <td>
+            <span>Jan 24, 2022</span>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="me-2">50%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 50%"
+                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="dropdown">
+              <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a href="#!" class="dropdown-item">
+                  Edit Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Archive Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Delete Session Entry
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

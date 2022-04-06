@@ -1,0 +1,276 @@
+<!-- <div *ngIf="showSessionsTable" class="patient-sessions">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>SessionID</th>
+        <th>Identifer</th>
+        <th>CreatedAt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let session of sessions">
+        <th scope="row"><a href="/app/sessions/{{session.id}}">{{session.id}}</a></th>
+        <th>{{session.patientByPatient?.identifier}}</th>
+        <th>{{session.createdAt | date:'long'}}</th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="showCharts" class="session-details-charts">
+  <div class="container mt-3 row">
+    <div class="chart-2 col">
+      <canvas id="achievementChart" width="400" height="400"></canvas>
+    </div>
+    <div class="chart-1 col">
+      <canvas id="reactionTimeChart" width="400" height="400"></canvas>
+    </div>
+  </div>
+</div> -->
+
+<div class="container pt-5">
+  <!-- Outer card -->
+  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col">
+              <div class="container max-w-screen-xl">
+                <div class="row row-grid align-items-center">
+                  <div class="col">
+                    <p class="lead">
+                      Session
+                    </p>
+                    <h1 class="ls-tight font-bolder display-6 mb-5">
+                      Mind-Body Connection
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Session Duration</span>
+                      <span class="h3 font-bold mb-0">45 minutes</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #8CDFB3;">
+                        <i class="bi bi-hourglass-split"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Average reaction time</span>
+                      <span class="h3 font-bold mb-0">500 milliseconds</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #FFADBA">
+                        <i class="bi bi-clock-history"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Session Completion</span>
+                      <span class="h3 font-bold mb-0">21 minutes</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color:#FAB592;
+">
+                        <i class="bi bi-hourglass-split"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <span class="h5 me-2">75%</span>
+                  <div class="progress progress-sm">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 75%" aria-valuenow="75"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Total Achievement Ratio</span>
+                      <span class="h3 font-bold mb-0">40%</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle invert-vertically"
+                        style="background-color: #7895FF;">
+                        <i class="bi bi-file-bar-graph"></i>
+                      </div>
+                    </div>
+                  </div>
+                  <hr>
+                  <span class="h5 me-2">40%</span>
+                  <div class="progress progress-sm">
+                    <div class="progress-bar bg-primary" role="progressbar" style="width: 40%" aria-valuenow="40"
+                      aria-valuemin="0" aria-valuemax="100"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card shadow-2">
+            <!-- Image -->
+            <div class="p-2">
+              <img alt="..."
+                src="https://images.unsplash.com/photo-1612892483236-52d32a0e0ac1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=400&q=80"
+                class="card-img">
+            </div>
+            <div class="card-body">
+              <div class="info mb-7">
+                <h2 class="h4">Identifer: IG558M</h2>
+                <span class="d-block text-muted text-sm font-semibold">Session Date: Jan 12, 2022</span>
+              </div>
+              <div class="info mb-7">
+                <h2 class="h4">Condition</h2>
+                <span class="d-block text-muted text-sm font-semibold">Alzheimers</span>
+              </div>
+              <div class="info">
+                <h2 class="h4">Severity</h2>
+                <span class="d-block text-muted text-sm font-semibold">Moderate</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance Analysis -->
+  <div class="card shadow-inset shadow-6 mt-8 mb-12">
+    <div class="container mb-8">
+      <h1 class="ls-tight font-bolder display-6 mb-7 p-2">Performance Analysis</h1>
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card">
+            <!-- Image -->
+            <div class="p-2">
+              <img alt="..."
+                src="https://images.unsplash.com/photo-1612892483236-52d32a0e0ac1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&h=400&q=80"
+                class="card-img">
+            </div>
+            <div class="card-body pb-0">
+              <div class="container align-items-center">
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Activity
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    Warm Up
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Prompt
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    Visual, Auditory
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Total Time
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    3:47
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Reps. Completed
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    10
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Correct Motion
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    5
+                  </div>
+                </div>
+                <hr>
+                <div class="mb-4">
+                  <span>Progress</span>
+                  <div class="d-flex align-items-center">
+                    <div style="width: 85%;">
+                      <div class="progress progress-sm shadow-none">
+                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%" aria-valuenow="65"
+                          aria-valuemin="0" aria-valuemax="100"></div>
+                      </div>
+                    </div>
+                    <div class="col px-0 text-end">
+                      <a href="#" class="text-heading text-sm">65%</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          Hello
+        </div>
+        <div class="col-lg-4">
+          Hello
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="card mb-5">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-10">
+          <h3 class="h4">No notes added yet.</h3>
+          <p class="mt-4 mb-6">
+            Create notes of patient to keep track of patient observations
+          </p>
+        </div>
+        <div class="col mt-6">
+          <a href="/app/patients/dd8e4b79-0497-4093-ab3a-c2feeb2fac45/notes" class="btn btn-sm btn-primary">
+            <i class="bi bi-plus-square-fill"></i>
+            Add Notes
+            <span>&gt;</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
