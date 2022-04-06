@@ -118,6 +118,14 @@ export const GqlConstants = {
         identifier
       }
     }
+  }`,
+
+  CREATE_SESSION: `mutation CreateSession($patient: uuid = "", $careplan: uuid = "") {
+    insert_session(objects: {patient: $patient, careplan: $careplan}) {
+      returning {
+        id
+      }
+    }
   }`
 
 } as const
