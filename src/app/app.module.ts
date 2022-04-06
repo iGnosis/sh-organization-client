@@ -26,7 +26,7 @@ import { CreateCareplanComponent } from './components/careplan/create-careplan/c
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
 import { ToastsComponent } from './components/toasts/toasts.component';
-import { SessionsDetailsComponent } from './pages/home/patients/sessions/sessions-details.component';
+import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
 
 @NgModule({
   declarations: [

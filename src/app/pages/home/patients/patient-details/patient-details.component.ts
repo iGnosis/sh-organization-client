@@ -10,6 +10,7 @@ import { Patient } from 'src/app/types/patient';
   styleUrls: ['./patient-details.component.scss']
 })
 export class PatientDetailsComponent implements OnInit {
+  isRowsChecked = false
   id?: string
   details?: Patient
 
@@ -19,11 +20,24 @@ export class PatientDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.id = params.get('id') || ''
       if (this.id) {
-        const response = await GraphqlService.client.request(GqlConstants.GET_PATIENT_DETAILS, {user: this.id})
+        const response = await GraphqlService.client.request(GqlConstants.GET_PATIENT_DETAILS, { user: this.id })
         this.details = response.user_by_pk
         console.log(this.details)
       }
     })
   }
 
+  toogleRowsCheck() {
+    const formCheckinputs = document.querySelectorAll('.row-check-input')
+    if (this.isRowsChecked) {
+      formCheckinputs.forEach(arr => {
+        arr.removeAttribute('checked')
+      })
+    } else {
+      formCheckinputs.forEach(arr => {
+        arr.setAttribute('checked', '')
+      })
+    }
+    this.isRowsChecked = !this.isRowsChecked
+  }
 }

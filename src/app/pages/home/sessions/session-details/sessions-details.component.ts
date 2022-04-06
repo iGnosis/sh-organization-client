@@ -15,6 +15,8 @@ import { Session } from 'src/app/types/session';
 })
 export class SessionsDetailsComponent implements OnInit {
 
+  showCharts = false
+
   // holds current sessionId
   sessionId?: string
 
@@ -42,14 +44,14 @@ export class SessionsDetailsComponent implements OnInit {
         console.log('chartData:', this.chartData)
 
         // init reaction time chart
-        // this.initReactionChart(this.chartData)
+        this.initReactionChart(this.chartData)
 
         // init achievement chart
         this.initAchievementChart(this.chartData)
 
       } else {
         this.showSessionsTable = true
-        this.fetchSessions()
+        // this.fetchSessions()
       }
     })
   }

@@ -15,27 +15,32 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientAddComponent } from './pages/home/patients/patient-add/patient-add.component';
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
-import { SessionsDetailsComponent } from './pages/home/patients/sessions/sessions-details.component';
+import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
+
 
 const routes: Routes = [
-  { path: '', redirectTo: 'public/auth/sign-in', pathMatch: 'full'},
-  { path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
-    { path: 'auth/sign-in', component: SignInComponent},
-    { path: 'auth/forgot-password', component: ForgotPasswordComponent},
-    { path: 'auth/set-password/:code', component: SetPasswordComponent}
-  ]},
-  { path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard],children: [
-    { path: 'dashboard', component: DashboardComponent},
-    { path: 'patients', component: PatientsComponent},
-    { path: 'patients/new', component: PatientAddComponent},
-    { path: 'patients/:id/care-plan', component: PatientAddComponent},
-    { path: 'patients/:id', component: PatientDetailsComponent},
-    { path: 'care-plans', component: CarePlanComponent},
-    { path: 'care-plans/new', component: CreateCareplanComponent},
-    { path: 'activities', component: ActivitiesComponent},
-    { path: 'sessions', component: SessionsDetailsComponent},
-    { path: 'sessions/:id', component: SessionsDetailsComponent}
-  ]}
+  { path: '', redirectTo: 'public/auth/sign-in', pathMatch: 'full' },
+  {
+    path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
+      { path: 'auth/sign-in', component: SignInComponent },
+      { path: 'auth/forgot-password', component: ForgotPasswordComponent },
+      { path: 'auth/set-password/:code', component: SetPasswordComponent }
+    ]
+  },
+  {
+    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard], children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'patients', component: PatientsComponent },
+      { path: 'patients/new', component: PatientAddComponent },
+      { path: 'patients/:id/care-plan', component: PatientAddComponent },
+      { path: 'patients/:id', component: PatientDetailsComponent },
+      { path: 'care-plans', component: CarePlanComponent },
+      { path: 'care-plans/new', component: CreateCareplanComponent },
+      { path: 'activities', component: ActivitiesComponent },
+      { path: 'sessions', component: SessionsDetailsComponent },
+      { path: 'sessions/:id', component: SessionsDetailsComponent }
+    ]
+  }
 ];
 
 @NgModule({
