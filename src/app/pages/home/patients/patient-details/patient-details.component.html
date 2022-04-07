@@ -286,17 +286,17 @@
             <span>{{ session.createdAt | date }}</span>
           </td>
           <td>
-            <div *ngIf="session.performance" class="d-flex align-items-center">
-              <span class="me-2">{{session.performance}}%</span>
+            <div *ngIf="session.performanceRatio" class="d-flex align-items-center">
+              <span class="me-2">{{session.performanceRatio}}%</span>
               <div>
                 <div class="progress">
                   <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar"
-                    style="width: {{ session.performance }}%">
+                    style="width: {{ session.performanceRatio }}%">
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="!session.performance">
+            <div *ngIf="!session.performanceRatio">
               <span>In Progress</span>
             </div>
           </td>

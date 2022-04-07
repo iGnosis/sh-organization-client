@@ -59,7 +59,7 @@ export class PatientDetailsComponent implements OnInit {
       {
         patientId: this.patientId,
         limit: this.itemsPerPage,
-        offset // get this from UI. offset = pageNumberToView * 10 (10 items at a time)
+        offset
       }
     )
     console.log('fetchSessions:', sessions)
@@ -70,14 +70,16 @@ export class PatientDetailsComponent implements OnInit {
     // Array of sessions
     sessions = sessions.session
 
+    const sessionIds = sessions.map((session: Session) => session.id)
+    console.log('fetchSessions:sessionIds:', sessionIds)
+
     sessions.forEach((val: Session) => {
       // work out time duration
       if (val.createdAt && val.endedAt) {
         const createdAtMilliSec: number = new Date(val.createdAt).getTime()
         const endedAtMilliSec: number = new Date(val.endedAt).getTime()
         const seconds = (endedAtMilliSec - createdAtMilliSec) / 1000
-        const timeDuration = this.secondsToString(seconds)
-        val.timeDuration = timeDuration
+        val.timeDuration = this.secondsToString(seconds)
       }
     })
     this.sessionDetails = sessions
@@ -133,5 +135,4 @@ export class PatientDetailsComponent implements OnInit {
     this.currentPage = pageNumber
     this.fetchSessions(pageNumber * this.itemsPerPage)
   }
-
 }
