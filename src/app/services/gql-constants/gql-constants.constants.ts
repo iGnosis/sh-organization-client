@@ -109,16 +109,25 @@ export const GqlConstants = {
         }
       }}}`,
 
-  GET_SESSIONS: `query GetSessions {
-    session {
-      id
-      createdAt
-      updatedAt
-      patientByPatient {
-        identifier
+  GET_SESSIONS: `query GetSessions($offset: Int, $limit: Int, $patientId: uuid) {
+      session_aggregate(where: {patient: {_eq: $patientId}}) {
+        aggregate {
+          count
+        }
+      }
+      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}}) {
+        id
+        createdAt
+        endedAt
+        careplanByCareplan {
+          name
+        }
+        patientByPatient {
+          identifier
+        }
       }
     }
-  }`,
+  `,
 
   CREATE_SESSION: `mutation CreateSession($patient: uuid = "", $careplan: uuid = "") {
     insert_session(objects: {patient: $patient, careplan: $careplan}) {

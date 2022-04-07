@@ -1,32 +1,91 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { Patient } from 'src/app/types/patient';
+import { Session } from 'src/app/types/session';
 import { environment } from 'src/environments/environment';
-
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss']
 })
 export class PatientDetailsComponent implements OnInit {
+
+  itemsPerPage = 10
+  currentPage = 1
   isRowsChecked = false
+
   patientId?: string
   details?: Patient
+  totalSessionsCount?: number
+  sessionDetails?: Array<Session>
 
-  constructor(private route: ActivatedRoute) { }
+  // sessionDetails = [
+  //   {
+  //     id: '2d01273f-d40b-42d7-bfdb-76843668accb', // sessionId
+  //     carePlan: 'Music and Movement',
+  //     activityType: 'Physical',
+  //     timeDuration: '20 minutes',
+  //     createdDate: 'Jan 20, 2022',
+  //     performance: 70
+  //   },
+  //   {
+  //     id: '2d01273f-1234-42d7-bfdb-76843668accb', // sessionId
+  //     carePlan: 'Cognitive Skills',
+  //     activityType: 'Memory',
+  //     timeDuration: '15 minutes',
+  //     createdDate: 'Jan 24, 2022',
+  //     performance: 45
+  //   }
+  // ]
+
+
+  constructor(private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
         console.log('patientId:', this.patientId);
-        // const response = await GraphqlService.client.request(GqlConstants.GET_PATIENT_DETAILS, { user: this.id })
-        // this.details = response.user_by_pk
-        // console.log(this.details)
+        this.fetchSessions(0)
       }
     })
+  }
+
+  async fetchSessions(offset: number) {
+    // we need to show sessions of a patient.
+    let sessions = await GraphqlService.client.request(GqlConstants.GET_SESSIONS,
+      {
+        patientId: this.patientId,
+        limit: this.itemsPerPage,
+        offset // get this from UI. offset = pageNumberToView * 10 (10 items at a time)
+      }
+    )
+    console.log('fetchSessions:', sessions)
+    const totalSessionsCount = sessions.session_aggregate.aggregate.count
+    console.log('fetchSessions:totalSessionsCount:', totalSessionsCount)
+    this.totalSessionsCount = totalSessionsCount
+
+    // Array of sessions
+    sessions = sessions.session
+
+    sessions.forEach((val: Session) => {
+      // work out time duration
+      if (val.createdAt && val.endedAt) {
+        const createdAtMilliSec: number = new Date(val.createdAt).getTime()
+        const endedAtMilliSec: number = new Date(val.endedAt).getTime()
+        const seconds = (endedAtMilliSec - createdAtMilliSec) / 1000
+        const timeDuration = this.secondsToString(seconds)
+        val.timeDuration = timeDuration
+      }
+    })
+    this.sessionDetails = sessions
+  }
+
+  secondsToString(seconds: number): string {
+    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
+    return `${numMinutes} minutes`
   }
 
   async createNewSessionAndRedirect() {
@@ -68,4 +127,11 @@ export class PatientDetailsComponent implements OnInit {
     }
     this.isRowsChecked = !this.isRowsChecked
   }
+
+  pageChanged(pageNumber: any) {
+    console.log('pageChanged:', pageNumber)
+    this.currentPage = pageNumber
+    this.fetchSessions(pageNumber * this.itemsPerPage)
+  }
+
 }

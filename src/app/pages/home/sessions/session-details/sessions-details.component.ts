@@ -3,10 +3,11 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { IChart, ChartSessionData } from 'src/app/types/chart';
+import { ChartSessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Session } from 'src/app/types/session';
+
 
 @Component({
   selector: 'app-sessions-details',
@@ -39,15 +40,15 @@ export class SessionsDetailsComponent implements OnInit {
         this.showSessionsTable = false
 
         const results = await this.getChartData(this.sessionId)
-        this.chartData = this.transformifyData(results)
+        this.chartData = this.chartService.transformifyData(results)
 
         console.log('chartData:', this.chartData)
 
         // init reaction time chart
-        this.initReactionChart(this.chartData)
+        // this.initReactionChart(this.chartData)
 
         // init achievement chart
-        this.initAchievementChart(this.chartData)
+        // this.initAchievementChart(this.chartData)
 
       } else {
         this.showSessionsTable = true
@@ -62,11 +63,11 @@ export class SessionsDetailsComponent implements OnInit {
     })
   }
 
-  async fetchSessions() {
-    const response = await GraphqlService.client.request(GqlConstants.GET_SESSIONS)
-    console.log('fetchSessions:response:', response)
-    this.sessions = response.session
-  }
+  // async fetchSessions() {
+  //   const response = await GraphqlService.client.request(GqlConstants.GET_SESSIONS)
+  //   console.log('fetchSessions:response:', response)
+  //   this.sessions = response.session
+  // }
 
   initReactionChart(chartData: ChartSessionData) {
     // pick the first session
@@ -294,52 +295,5 @@ export class SessionsDetailsComponent implements OnInit {
       // @ts-ignore: TypeScript headache - fix later
       new Chart(ctx, config)
     }
-  }
-
-  // here, we do things that are painful to do with plain SQL.
-  transformifyData(chartResults: IChart[]): ChartSessionData {
-    let patientObject: any = {}
-
-    // build session
-    for (const item of chartResults) {
-      if (item.session) {
-        patientObject[item.session] = {}
-      }
-    }
-
-    // build activity
-    for (const sessionId in patientObject) {
-      // console.log(session)
-      for (const item of chartResults) {
-        if (sessionId == item.session && item.activity) {
-          patientObject[sessionId][item.activity] = {}
-        }
-      }
-    }
-
-    // build events
-    for (const sessionId in patientObject) {
-      for (const activityId in patientObject[sessionId]) {
-        for (const item of chartResults) {
-          if (sessionId == item.session && activityId == item.activity) {
-
-            if (patientObject[sessionId][activityId].events == undefined) {
-              patientObject[sessionId][activityId]['events'] = []
-            }
-
-            patientObject[sessionId][activityId]['events'].push({
-              activityName: item.activity_name,
-              taskName: item.task_name,
-              reactionTime: item.reaction_time,
-              createdAt: item.created_at,
-              score: item.score
-            })
-
-          }
-        }
-      }
-    }
-    console.log('tranformifyData:', patientObject)
-    return patientObject
   }
 }
