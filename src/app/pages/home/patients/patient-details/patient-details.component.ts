@@ -163,7 +163,7 @@ export class PatientDetailsComponent implements OnInit {
         data: [86, 48, 100, 79, 0, 100, 0],
         backgroundColor: '#000066',
         fill: true,
-        label: 'Day'
+        label: 'Completion Ratio'
       }]
     }
 
