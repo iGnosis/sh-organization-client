@@ -264,13 +264,13 @@ export class PatientDetailsComponent implements OnInit {
           },
           {
             'id': '30th', data: {
-              'mindBodyConnection': 45,
+              'mindBodyConnection': 90,
               'cognitiveSkillsII': 93,
             }
           },
           {
             'id': '31st', data: {
-              'mindBodyConnection': 57,
+              'mindBodyConnection': 78,
               'cognitiveSkillsII': 90,
             }
           }
@@ -389,10 +389,10 @@ export class PatientDetailsComponent implements OnInit {
     this.fetchSessions(pageNumber * this.itemsPerPage)
   }
 
-  changeSessionsChart(selectedSessionChart: string) {
-    // const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
-    console.log('changeFinancials:', selectedSessionChart)
-    // this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
-    // this.achievementChart.update()
+  changeSessionsChart() {
+    const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
+    console.log('changeFinancials:', sessionVal)
+    this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
+    this.achievementChart.update()
   }
 }
