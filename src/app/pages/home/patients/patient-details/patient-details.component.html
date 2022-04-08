@@ -56,7 +56,27 @@
       <div class="card">
         <div class="card-body">
           <!-- Title -->
-          <h3 class="h4">Insert Chart 2 here</h3>
+          <!-- <select id="sessionVal" (change)="changeSessionsChart()">
+            <option value="mindBodyConnection">Mind-Body Connection</option>
+            <option value="cognitiveSkillsII">Cognitive Skills II</option>
+          </select> -->
+
+          <div class="card-header">
+            <h2 style="color: #000066;">Achievement Ratio</h2><br>
+            <h5 style="color: #000066;">20 Mar - 26 Mar. 2022</h5><br>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selectedSessionChart }}
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <li><a class="dropdown-item" (change)="changeSessionsChart('cognitiveSkillsII')">Cognitive Skills II</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <canvas id="achievementChart" width="500" height="500"></canvas>
         </div>
       </div>
     </div>
@@ -286,17 +306,17 @@
             <span>{{ session.createdAt | date }}</span>
           </td>
           <td>
-            <div *ngIf="session.performanceRatio" class="d-flex align-items-center">
-              <span class="me-2">{{session.performanceRatio}}%</span>
+            <div *ngIf="session.totalPerformanceRatio" class="d-flex align-items-center">
+              <span class="me-2">{{session.totalPerformanceRatio}}%</span>
               <div>
                 <div class="progress">
-                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar"
-                    style="width: {{ session.performanceRatio }}%">
+                  <div class="progress-bar rounded-pill" role="progressbar"
+                    style="width: {{ session.totalPerformanceRatio }}%; background-color: #A6B7D4">
                   </div>
                 </div>
               </div>
             </div>
-            <div *ngIf="!session.performanceRatio">
+            <div *ngIf="!session.totalPerformanceRatio">
               <span>In Progress</span>
             </div>
           </td>

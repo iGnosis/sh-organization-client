@@ -5,7 +5,7 @@ export class Session {
   updatedAt?: Date;
   activityType?: string;
   timeDuration?: string;
-  performanceRatio?: number;
+  totalPerformanceRatio?: number;
   patientByPatient?: {
     identifier?: string;
   };
