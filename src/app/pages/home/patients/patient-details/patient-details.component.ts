@@ -7,6 +7,7 @@ import { Patient } from 'src/app/types/patient';
 import { Session } from 'src/app/types/session';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-patient-details',
@@ -19,6 +20,7 @@ export class PatientDetailsComponent implements OnInit {
   currentPage = 1
   isRowsChecked = false
   achievementChart: any
+  engagementChart: any
   selectedSessionChart: any
 
   patientId?: string
@@ -62,6 +64,7 @@ export class PatientDetailsComponent implements OnInit {
         // init dummy charts
         this.selectedSessionChart = 'Mind - Body Connection'
         this.initAchievementChart()
+        this.initEngagementChart()
       }
     })
   }
@@ -150,6 +153,94 @@ export class PatientDetailsComponent implements OnInit {
       const sessionId = session.insert_session.returning[0].id
       console.log('createSessionAndRedirect:sessionId', sessionId)
       return sessionId
+    }
+  }
+
+  initEngagementChart() {
+    const data = {
+      labels: ['28th', '29th', '30th', '31st', '1st', '2nd', '3rd'],
+      datasets: [{
+        data: [86, 48, 100, 79, 0, 100, 0],
+        backgroundColor: '#000066',
+        fill: true,
+        label: 'Day'
+      }]
+    }
+
+    const config = {
+      type: 'bar',
+      data: data,
+      plugins: [ChartDataLabels],
+      options: {
+        beginAtZero: true,
+        responsive: true,
+        scales: {
+          y: {
+            title: {
+              display: true,
+              text: 'Session Completion',
+              font: {
+                size: 18
+              },
+              padding: 12
+            },
+            ticks: {
+              callback: (value: number) => `${value}%`,
+              font: {
+                size: 14
+              },
+              color: '#000066'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Day',
+              font: {
+                size: 18
+              },
+              padding: 12
+            },
+            ticks: {
+              font: {
+                size: 14
+              },
+              color: '#000066'
+            }
+          }
+        },
+        plugins: {
+          // hide Label 'success ratio'
+          legend: {
+            display: false
+          },
+          datalabels: {
+            anchor: 'end',
+            align: 'start',
+            offset: 10,
+            color: 'white',
+            font: {
+              size: 14
+            }
+          },
+          title: {
+            display: false,
+            align: 'center',
+            text: 'Reaction Time',
+            fullSize: true,
+            font: {
+              size: 28
+            }
+          }
+        }
+      }
+    }
+
+    // @ts-ignore: TypeScript headache - fix later
+    const ctx = document.getElementById('engagementChart').getContext('2d')
+    if (ctx) {
+      // @ts-ignore: TypeScript headache - fix later
+      this.engagementChart = new Chart(ctx, config)
     }
   }
 
