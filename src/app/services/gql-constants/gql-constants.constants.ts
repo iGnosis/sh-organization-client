@@ -56,6 +56,18 @@ export const GqlConstants = {
     }
   }`,
 
+  GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
+    patient_by_pk(id: $patientId) {
+      createdAt
+      patient_careplans {
+        careplanByCareplan {
+          name
+          id
+        }
+      }
+    }
+  }`,
+
   INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $preferredGenres:jsonb) {
     insert_patient_one(object: {identifier: $identifier, medicalConditions: $medicalConditions, preferredGenres: $preferredGenres}) {
       id

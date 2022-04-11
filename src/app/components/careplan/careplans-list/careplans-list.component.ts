@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { CarePlan } from 'src/app/types/careplan';
-
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants'
 @Component({
   selector: 'app-careplans-list',
   templateUrl: './careplans-list.component.html',
@@ -9,21 +10,42 @@ import { CarePlan } from 'src/app/types/careplan';
 })
 export class CareplansListComponent implements OnInit {
   careplans: Array<CarePlan> = []
+  @Input() patientId = ''
   @Input() options = {}
   @Output() selected = new EventEmitter<any>()
 
   constructor(private careplanService: CarePlanService) { }
 
   async ngOnInit() {
-    this.careplans = await this.careplanService.getAll()
+    let assignedCareplans = await GraphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
+      { patientId: this.patientId }
+    )
+    console.log('assignedCareplans:', assignedCareplans)
+    assignedCareplans = assignedCareplans.patient_by_pk.patient_careplans
+
+    const assignedCareplansIds = assignedCareplans.map((careplan: any) => careplan.careplanByCareplan.id)
+    console.log('assignedCareplansIds:', assignedCareplansIds)
+
+    const allCareplans = await this.careplanService.getAll()
+    console.log('allCareplans:', allCareplans)
+    allCareplans.forEach((careplan: any) => {
+      if (assignedCareplansIds.includes(careplan.id)) {
+        careplan.selected = true
+      }
+    })
+    this.careplans = allCareplans
   }
 
-  onCarePlanSelected(event:any, careplan: any) {
-    this.selected.emit({checked: event.target.checked, items: [careplan]})
+  async getSelectedCarePlans() {
+
+  }
+
+  onCarePlanSelected(event: any, careplan: any) {
+    this.selected.emit({ checked: event.target.checked, items: [careplan] })
   }
 
   onSelectAllChanged(event: any) {
-    this.selected.emit({checked: event.target.checked, items: this.careplans})
+    this.selected.emit({ checked: event.target.checked, items: this.careplans })
     this.careplans.forEach(cp => cp.selected = event.target.checked)
   }
 
