@@ -398,4 +398,8 @@ export class PatientDetailsComponent implements OnInit {
     this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
     this.achievementChart.update()
   }
+
+  openSessionDetailsPage(sessionId: string) {
+    this.router.navigate(['/app/sessions/', sessionId])
+  }
 }

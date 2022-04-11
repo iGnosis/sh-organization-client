@@ -279,7 +279,7 @@
           itemsPerPage,
           currentPage,
           totalItems: totalSessionsCount
-        }">
+        }" (click)="openSessionDetailsPage(session.id!)">
           <!-- Checkbox & Star button -->
           <td class="text-lg" scope="col">
             <div class="form-check">
@@ -293,9 +293,9 @@
           </td>
 
           <td>
-            <a class="text-heading font-semibold" href="/app/sessions/{{session.id}}">
+            <span class="text-heading font-semibold">
               {{ session.careplanByCareplan?.name }}
-            </a>
+            </span>
           </td>
           <td>
             <!-- <span>{{ session.activityType }}</span> -->
