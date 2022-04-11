@@ -17,14 +17,18 @@ export class CareplansListComponent implements OnInit {
   constructor(private careplanService: CarePlanService) { }
 
   async ngOnInit() {
-    let assignedCareplans = await GraphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
-      { patientId: this.patientId }
-    )
-    console.log('assignedCareplans:', assignedCareplans)
-    assignedCareplans = assignedCareplans.patient_by_pk.patient_careplans
+    let assignedCareplansIds: Array<string> = []
 
-    const assignedCareplansIds = assignedCareplans.map((careplan: any) => careplan.careplanByCareplan.id)
-    console.log('assignedCareplansIds:', assignedCareplansIds)
+    if (this.patientId) {
+      let assignedCareplans = await GraphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
+        { patientId: this.patientId }
+      )
+      console.log('assignedCareplans:', assignedCareplans)
+      assignedCareplans = assignedCareplans.patient_by_pk.patient_careplans
+
+      assignedCareplansIds = assignedCareplans.map((careplan: any) => careplan.careplanByCareplan.id)
+      console.log('assignedCareplansIds:', assignedCareplansIds)
+    }
 
     const allCareplans = await this.careplanService.getAll()
     console.log('allCareplans:', allCareplans)
