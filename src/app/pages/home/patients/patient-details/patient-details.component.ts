@@ -299,6 +299,9 @@ export class PatientDetailsComponent implements OnInit {
         },
         scales: {
           y: {
+            // set max percentage for chart
+            max: 100,
+            // set min percentage for chart
             beginAtZero: true,
             title: {
               display: true,
