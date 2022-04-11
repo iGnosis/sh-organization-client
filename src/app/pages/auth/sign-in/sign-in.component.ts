@@ -18,10 +18,10 @@ export class SignInComponent implements OnInit {
   errors = []
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private authService: AuthService,
     private jwtService: JwtService,
-    private userService: UserService) { 
+    private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class SignInComponent implements OnInit {
 
   async onSignIn() {
     this.errors = []
-    this.authService.login({email: this.email, password: this.password}).subscribe((data:any) => {
+    this.authService.login({ email: this.email, password: this.password }).subscribe((data: any) => {
       this.jwtService.setToken(data.token)
       this.userService.set(data.user)
       this.next()
