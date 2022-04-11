@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { Patient } from 'src/app/types/patient';
 
 @Component({
@@ -16,11 +15,9 @@ export class PatientsComponent implements OnInit {
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
 
-  constructor(private router: Router, private jwtService: JwtService) { }
+  constructor(private router: Router) { }
 
   async ngOnInit() {
-    // workaround for JWT not being read on initialization
-    this.jwtService.getToken()
     this.reloadPatientList(null)
   }
 
