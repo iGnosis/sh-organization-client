@@ -21,15 +21,14 @@ export class PatientsComponent implements OnInit {
     this.reloadPatientList(null)
   }
 
-  async reloadPatientList(filters:any) {
-    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, {conditions: this.selectedMedicalConditions})
+  async reloadPatientList(filters: any) {
+    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { conditions: this.selectedMedicalConditions })
     this.patients = response.patient
     console.log(this.patients)
   }
 
-  openPatientDetails(patient: Patient) {
-    console.log(patient.id)
-    this.router.navigate(['app/patient-details', patient.id])
+  openPatientDetailsPage(patientId: string) {
+    this.router.navigate(['/app/patients/', patientId])
   }
 
   selectDataSegment(condition: string) {

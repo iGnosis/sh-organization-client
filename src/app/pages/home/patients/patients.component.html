@@ -87,7 +87,7 @@
           </tr>
         </thead>
         <tbody class="bg-light">
-          <tr *ngFor="let patient of patients">
+          <tr *ngFor="let patient of patients" (click)="openPatientDetailsPage(patient.id!)">
             <td class="text-lg" scope="col">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="" id="flexCheckRow1">
@@ -95,9 +95,9 @@
               </div>
             </td>
             <td>
-              <a class="text-heading font-semibold" href="/app/patients/{{patient.id}}">
+              <span class="text-heading font-semibold">
                 {{patient.identifier}}
-              </a>
+              </span>
             </td>
             <td>
               <span class="badge bg-soft-primary m-2"
