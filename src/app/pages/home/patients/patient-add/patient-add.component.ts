@@ -91,6 +91,12 @@ export class PatientAddComponent implements OnInit {
     }
 
     const response = await this.patientService.insertPatient(patient)
+      .catch((error) => {
+        if (error.message.includes('Uniqueness violation')) {
+          this.toastService.showDanger('Identifier already in use, please use a different identifier.')
+        }
+      })
+
     console.log(response);
     this.id = response.insert_patient_one.id
     this.router.navigate([`/app/patients/${this.id}/care-plan`])
