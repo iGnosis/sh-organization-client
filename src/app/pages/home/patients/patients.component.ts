@@ -15,14 +15,14 @@ export class PatientsComponent implements OnInit {
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"]
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private graphqlService: GraphqlService) { }
 
   async ngOnInit() {
     this.reloadPatientList(null)
   }
 
   async reloadPatientList(filters: any) {
-    const response = await GraphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { conditions: this.selectedMedicalConditions })
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { conditions: this.selectedMedicalConditions })
     this.patients = response.patient
     console.log(this.patients)
   }

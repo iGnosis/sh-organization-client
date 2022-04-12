@@ -51,7 +51,8 @@ export class PatientDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private analyticsService: AnalyticsService
+    private analyticsService: AnalyticsService,
+    private graphqlService: GraphqlService
   ) { }
 
   ngOnInit() {
@@ -71,7 +72,7 @@ export class PatientDetailsComponent implements OnInit {
 
   async fetchSessions(offset: number) {
     // we need to show sessions of a patient.
-    let sessions = await GraphqlService.client.request(GqlConstants.GET_SESSIONS,
+    let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
       {
         patientId: this.patientId,
         limit: this.itemsPerPage,
@@ -141,7 +142,7 @@ export class PatientDetailsComponent implements OnInit {
   }
 
   async createNewSession() {
-    const session = await GraphqlService.client.request(GqlConstants.CREATE_SESSION, { patient: this.patientId, careplan: '4e2aa726-b07f-4f44-a4fd-fc228c93bfc7' })
+    const session = await this.graphqlService.client.request(GqlConstants.CREATE_SESSION, { patient: this.patientId, careplan: '4e2aa726-b07f-4f44-a4fd-fc228c93bfc7' })
     if (
       session &&
       session.insert_session &&

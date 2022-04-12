@@ -8,7 +8,7 @@ import { GraphqlService } from '../graphql/graphql.service';
 })
 export class CarePlanService {
 
-  constructor() { }
+  constructor(private graphqlService: GraphqlService) { }
 
   async getAll() {
     const query = gql`query GetCarePlans {
@@ -37,28 +37,28 @@ export class CarePlanService {
       }
     }`
 
-    const response = await GraphqlService.client.request(query)
+    const response = await this.graphqlService.client.request(query)
     return response.careplan
   }
 
   /**
-   * 
+   *
    * @param user userId of the user
    * @param careplan  careplanID of the careplan
    */
-  async attachCarePlan(careplans:any) {
+  async attachCarePlan(careplans: any) {
     const mutation = gql`mutation AttachCarePlan($obj:[patient_careplan_insert_input!]!) {
       insert_patient_careplan(objects: $obj) {
         affected_rows
       }
     }`
-    const response = await GraphqlService.client.request(mutation, {obj: careplans})
+    const response = await this.graphqlService.client.request(mutation, { obj: careplans })
     return response.insert_patient_careplan.affected_rows
   }
 
 
   /**
-   * 
+   *
    * @param patient id of the patient
    * @param careplans  Array of careplan ids
    */
@@ -68,7 +68,7 @@ export class CarePlanService {
         affected_rows
       }
     }`
-    const response = await GraphqlService.client.request(mutation, {careplans, patient})
+    const response = await this.graphqlService.client.request(mutation, { careplans, patient })
     return response.delete_patient_careplan.affected_rows
   }
 
@@ -80,21 +80,21 @@ export class CarePlanService {
         id
       }
     }`
-    const response = await GraphqlService.client.request(mutation, {careplan})
+    const response = await this.graphqlService.client.request(mutation, { careplan })
     return response.insert_careplan_one
   }
 
-  async attachActivities(careplanActivities:any) {
+  async attachActivities(careplanActivities: any) {
     const mutation = gql`mutation AddActivityToCarePlan($objects:[careplan_activity_insert_input!]!) {
       insert_careplan_activity(objects: $objects) {
         affected_rows
       }
     }`
-    const response = await GraphqlService.client.request(mutation, {objects: careplanActivities})
+    const response = await this.graphqlService.client.request(mutation, { objects: careplanActivities })
     return response.insert_careplan_activity.affected_rows
   }
 
   async detachActivities(careplanId: string, activityIds: Array<string>) {
-    
+
   }
 }
