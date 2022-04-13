@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChartSessionData, IChart } from 'src/app/types/chart';
+import { SessionData, IChart } from 'src/app/types/chart';
 import { environment } from '../../../environments/environment'
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class ChartService {
   }
 
   // here, we do things that are painful to do with plain SQL.
-  transformifyData(chartResults: IChart[]): ChartSessionData {
+  transformifyData(chartResults: IChart[]): SessionData {
     let patientObject: any = {}
 
     // build session

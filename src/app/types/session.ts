@@ -6,10 +6,12 @@ export class Session {
   activityType?: string;
   timeDuration?: string;
   totalPerformanceRatio?: number;
+  avgReactionTime?: number;
   patientByPatient?: {
     identifier?: string;
   };
   careplanByCareplan?: {
     name?: string
-  }
+  };
+  sessionAnalytics: any; // Fix this later...
 }

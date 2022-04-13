@@ -10,7 +10,7 @@ export class IChart {
     task_name?: string
 }
 
-export class ChartSessionData {
+export class SessionData {
     [key: string]: Session
 }
 

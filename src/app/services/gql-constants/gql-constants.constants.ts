@@ -136,6 +136,7 @@ export const GqlConstants = {
         }
         patientByPatient {
           identifier
+          medicalConditions
         }
       }
     }

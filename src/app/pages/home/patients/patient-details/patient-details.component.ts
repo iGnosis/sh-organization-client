@@ -111,12 +111,16 @@ export class PatientDetailsComponent implements OnInit {
         if (val.id && val.id in sessionAnalytics) {
           let performanceRatio = 0
           let totalEventsPerSession = 0
+          let avgReactionTime = 0
 
           const session = sessionAnalytics[val.id]
+          val.sessionAnalytics = session
+
           for (const activity in session) {
             for (const event of session[activity].events) {
               // console.log('event:', event)
               performanceRatio += event.score * 100
+              avgReactionTime += event.reactionTime
               totalEventsPerSession++
             }
           }
@@ -128,6 +132,7 @@ export class PatientDetailsComponent implements OnInit {
           const dummyTimeDurations = [10, 15, 20, 25, 30]
           const time = dummyTimeDurations[Math.floor(Math.random() * dummyTimeDurations.length)]
           val.timeDuration = `${time} minutes`
+          val.avgReactionTime = avgReactionTime / totalEventsPerSession
         }
       })
 
@@ -154,6 +159,11 @@ export class PatientDetailsComponent implements OnInit {
       console.log('createSessionAndRedirect:sessionId', sessionId)
       return sessionId
     }
+  }
+
+  goToLink(url: string) {
+    console.log(`goToLink:Redirecting user to ${url}...`)
+    window.open(url, '_blank')
   }
 
   initEngagementChart() {
@@ -367,11 +377,6 @@ export class PatientDetailsComponent implements OnInit {
     return `${numMinutes} minutes`
   }
 
-  goToLink(url: string) {
-    console.log(`goToLink:Redirecting user to ${url}...`)
-    window.open(url, '_blank')
-  }
-
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input')
     if (this.isRowsChecked) {
@@ -399,7 +404,7 @@ export class PatientDetailsComponent implements OnInit {
     this.achievementChart.update()
   }
 
-  openSessionDetailsPage(sessionId: string) {
-    this.router.navigate(['/app/sessions/', sessionId])
+  openSessionDetailsPage(sessionId: string, sessionDetails: any) {
+    this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
   }
 }

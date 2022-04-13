@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { ChartService } from 'src/app/services/chart/chart.service';
-import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { ChartSessionData } from 'src/app/types/chart';
+import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Session } from 'src/app/types/session';
-
+import { Activity, ActivityEvent } from 'src/app/types/activity';
+import { min } from 'rxjs';
+import { createImmediatelyInvokedArrowFunction } from 'typescript';
 
 @Component({
   selector: 'app-sessions-details',
@@ -15,61 +13,126 @@ import { Session } from 'src/app/types/session';
   styleUrls: ['./sessions-details.component.scss']
 })
 export class SessionsDetailsComponent implements OnInit {
-
-  showCharts = false
-
-  // holds current sessionId
   sessionId?: string
-
-  // holds the user sessions, so we can show them on a table
-  sessions?: Session[]
-
-  // works out whether to show session table or not
-  showSessionsTable?: Boolean
+  patientConditions: String = ''
+  sessionDetails?: any
+  activityDetails?: Array<Activity>
 
   // data that is passed into Chart init functions
   // so we can render the charts
-  chartData?: ChartSessionData
+  // chartData?: ChartSessionData
 
-  constructor(private route: ActivatedRoute, private chartService: ChartService) { }
+  constructor(private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
+
+      this.route.queryParamMap.subscribe((params: ParamMap) => {
+        this.sessionDetails = JSON.parse(params.get('sessionDetails')!)
+      })
+
       this.sessionId = params.get('id') || ''
-      if (this.sessionId) {
-        this.showSessionsTable = false
 
-        const results = await this.getChartData(this.sessionId)
-        this.chartData = this.chartService.transformifyData(results)
+      if (this.sessionId && this.sessionDetails) {
+        console.log(this.sessionId, this.sessionDetails)
+        this.initPatientConditions()
 
-        console.log('chartData:', this.chartData)
-
+        // const results = await this.getChartData(this.sessionId)
+        // this.chartData = this.chartService.transformifyData(results)
+        // console.log('chartData:', this.chartData)
         // init reaction time chart
         // this.initReactionChart(this.chartData)
-
         // init achievement chart
         // this.initAchievementChart(this.chartData)
 
-      } else {
-        this.showSessionsTable = true
-        // this.fetchSessions()
+        for (const activityId in this.sessionDetails.sessionAnalytics) {
+
+          const activity = {
+            id: activityId,
+            createdAt: 1,
+            name: '',
+            prompt: 'Visual, Auditory',
+            duration: 0,
+            reps: 10,
+            correctMotions: 8,
+            achievementRatio: 80,
+            reactionTime: 4000,
+          }
+
+          const activityEvents: Array<ActivityEvent> = this.sessionDetails.sessionAnalytics[activityId].events
+          console.log(activityId, activityEvents)
+
+          if (!activityEvents || !Array.isArray(activityEvents) || !activityEvents.length) {
+            return
+          }
+
+          if (activityEvents[0].activityName && activityEvents[0].createdAt) {
+            activity.name = activityEvents[0].activityName
+            activity.createdAt = activityEvents[0].createdAt
+          }
+
+          // work out event duration
+
+          // edge case -- handle later
+          if (activityEvents.length === 1) {
+            activity.duration = 60000 / 1000
+          } else {
+            const minTime = activityEvents[0].createdAt
+            const maxTime = activityEvents[activityEvents.length - 1].createdAt
+            if (minTime && maxTime) {
+              activity.duration = (maxTime - minTime) / 1000 // duration in seconds
+            }
+          }
+
+          let totalNumEvents = 0
+          for (const event of activityEvents) {
+            // build this below JSON struct and append it to the array
+            totalNumEvents++
+          }
+        }
+
+        this.activityDetails = [
+          {
+            id: '1234',
+            createdAt: 1,
+            name: 'Sit To Stand',
+            prompt: 'Visual, Auditory',
+            duration: 100,
+            reps: 10,
+            correctMotions: 8,
+            achievementRatio: 80,
+            reactionTime: 4000,
+          },
+          {
+            id: '8901',
+            createdAt: 1,
+            name: 'Hallel.',
+            prompt: 'Visual, Auditory',
+            duration: 200,
+            reps: 8,
+            correctMotions: 7,
+            achievementRatio: 90,
+            reactionTime: 3600,
+          }
+        ]
       }
     })
   }
 
-  async getChartData(sessionId: string): Promise<any> {
-    return new Promise((resolve, _) => {
-      this.chartService.getChartData(sessionId).subscribe(data => resolve(data))
-    })
+  initPatientConditions() {
+    const conditions = this.sessionDetails.patientByPatient.medicalConditions
+    for (const condition in conditions) {
+      if (conditions[condition] === true) {
+        this.patientConditions += `${condition}, `
+      }
+    }
+
+    if (this.patientConditions) {
+      this.patientConditions = this.patientConditions.slice(0, this.patientConditions.length - 2)
+    }
   }
 
-  // async fetchSessions() {
-  //   const response = await GraphqlService.client.request(GqlConstants.GET_SESSIONS)
-  //   console.log('fetchSessions:response:', response)
-  //   this.sessions = response.session
-  // }
-
-  initReactionChart(chartData: ChartSessionData) {
+  initReactionChart(chartData: SessionData) {
     // pick the first session
     const sessionIds = Object.keys(chartData)
     const firstSessionId = sessionIds[0]
@@ -186,7 +249,7 @@ export class SessionsDetailsComponent implements OnInit {
     }
   }
 
-  initAchievementChart(chartData: ChartSessionData) {
+  initAchievementChart(chartData: SessionData) {
     // pick the first session
     const sessionIds = Object.keys(chartData)
     const firstSessionId = sessionIds[0]
@@ -296,4 +359,10 @@ export class SessionsDetailsComponent implements OnInit {
       new Chart(ctx, config)
     }
   }
+
+  secondsToString(seconds: number): string {
+    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
+    return `${numMinutes} minutes`
+  }
+
 }
