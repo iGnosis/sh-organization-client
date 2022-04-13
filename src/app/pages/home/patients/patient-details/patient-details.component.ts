@@ -377,7 +377,7 @@ export class PatientDetailsComponent implements OnInit {
             caretSize: 15,
             callbacks: {
               label: function (tooltipItem: any) {
-                console.log('tooltipItem:', tooltipItem)
+                // console.log('tooltipItem:', tooltipItem)
                 const careplanName = tooltipItem.dataset.careplanNames[tooltipItem.dataIndex]
                 const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex]
                 return `${careplanName} - ${successRatio.toFixed(2)}%`
