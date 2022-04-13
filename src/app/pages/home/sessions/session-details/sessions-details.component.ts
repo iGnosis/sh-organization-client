@@ -31,7 +31,7 @@ export class SessionsDetailsComponent implements OnInit {
   // so we can render the charts
   chartData?: ChartSessionData
 
-  constructor(private route: ActivatedRoute, private chartService: ChartService) { }
+  constructor(private route: ActivatedRoute, private chartService: ChartService, private graphqlService: GraphqlService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {

@@ -14,13 +14,13 @@ export class CareplansListComponent implements OnInit {
   @Input() options = {}
   @Output() selected = new EventEmitter<any>()
 
-  constructor(private careplanService: CarePlanService) { }
+  constructor(private careplanService: CarePlanService, private graphqlService: GraphqlService) { }
 
   async ngOnInit() {
     let assignedCareplansIds: Array<string> = []
 
     if (this.patientId) {
-      let assignedCareplans = await GraphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
+      let assignedCareplans = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
         { patientId: this.patientId }
       )
       console.log('assignedCareplans:', assignedCareplans)
