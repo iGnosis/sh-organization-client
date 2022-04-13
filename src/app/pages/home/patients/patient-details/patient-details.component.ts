@@ -260,26 +260,22 @@ export class PatientDetailsComponent implements OnInit {
         data: [
           {
             'id': '28th', data: {
-              'mindBodyConnection': 55,
-              'cognitiveSkillsII': 45,
+              'allSessions': 55
             }
           },
           {
             'id': '29th', data: {
-              'mindBodyConnection': 86,
-              'cognitiveSkillsII': 50,
+              'allSessions': 86
             }
           },
           {
             'id': '30th', data: {
-              'mindBodyConnection': 90,
-              'cognitiveSkillsII': 93,
+              'allSessions': 90
             }
           },
           {
             'id': '31st', data: {
-              'mindBodyConnection': 78,
-              'cognitiveSkillsII': 90,
+              'allSessions': 78
             }
           }
         ],
@@ -303,7 +299,7 @@ export class PatientDetailsComponent implements OnInit {
         // making object array readable for ChartJS
         parsing: {
           xAxisKey: 'id',
-          yAxisKey: 'data.mindBodyConnection'
+          yAxisKey: 'data.allSessions'
         },
         scales: {
           y: {
