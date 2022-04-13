@@ -4,8 +4,6 @@ import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent } from 'src/app/types/activity';
-import { min } from 'rxjs';
-import { createImmediatelyInvokedArrowFunction } from 'typescript';
 
 @Component({
   selector: 'app-sessions-details',
