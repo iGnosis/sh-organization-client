@@ -79,6 +79,7 @@ export class PatientDetailsComponent implements OnInit {
         offset
       }
     )
+    console.log('offset:', offset)
     console.log('fetchSessions:', sessions)
     const totalSessionsCount = sessions.session_aggregate.aggregate.count
     console.log('fetchSessions:totalSessionsCount:', totalSessionsCount)
@@ -387,10 +388,10 @@ export class PatientDetailsComponent implements OnInit {
     this.isRowsChecked = !this.isRowsChecked
   }
 
-  pageChanged(pageNumber: any) {
+  async pageChanged(pageNumber: any) {
     console.log('pageChanged:', pageNumber)
+    await this.fetchSessions((pageNumber - 1) * this.itemsPerPage)
     this.currentPage = pageNumber
-    this.fetchSessions(pageNumber * this.itemsPerPage)
   }
 
   changeSessionsChart() {
