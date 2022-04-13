@@ -128,12 +128,7 @@ export class PatientDetailsComponent implements OnInit {
           performanceRatio = performanceRatio / totalEventsPerSession
           performanceRatio = Math.round(performanceRatio * 100) / 100
           val.totalPerformanceRatio = performanceRatio
-
-          // set a dummy time duration
-          const dummyTimeDurations = [10, 15, 20, 25, 30]
-          const time = dummyTimeDurations[Math.floor(Math.random() * dummyTimeDurations.length)]
-          val.timeDuration = `${time} minutes`
-          val.avgReactionTime = avgReactionTime / totalEventsPerSession
+          val.avgReactionTime = parseFloat((avgReactionTime / totalEventsPerSession).toFixed(2))
         }
       })
 

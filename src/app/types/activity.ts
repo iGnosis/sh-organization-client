@@ -6,6 +6,7 @@ export class Activity {
   prompt?: string;
   details?: any;
   duration?: number; // duration in seconds
+  durationInStr?: string; // duration in human friendly string
   reps?: number;
   correctMotions?: number;
   reactionTime?: number; // time in milliseconds

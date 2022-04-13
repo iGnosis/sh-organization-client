@@ -14,7 +14,7 @@ export class SessionsDetailsComponent implements OnInit {
   sessionId?: string
   patientConditions: String = ''
   sessionDetails?: any
-  activityDetails?: Array<Activity>
+  activityDetails: Array<Activity> = []
 
   // data that is passed into Chart init functions
   // so we can render the charts
@@ -51,6 +51,7 @@ export class SessionsDetailsComponent implements OnInit {
             name: '',
             prompt: 'Visual, Auditory',
             duration: 0,
+            durationInStr: '',
             reps: 10,
             correctMotions: 8,
             achievementRatio: 80,
@@ -69,8 +70,6 @@ export class SessionsDetailsComponent implements OnInit {
             activity.createdAt = activityEvents[0].createdAt
           }
 
-          // work out event duration
-
           // edge case -- handle later
           if (activityEvents.length === 1) {
             activity.duration = 60000 / 1000
@@ -79,40 +78,30 @@ export class SessionsDetailsComponent implements OnInit {
             const maxTime = activityEvents[activityEvents.length - 1].createdAt
             if (minTime && maxTime) {
               activity.duration = (maxTime - minTime) / 1000 // duration in seconds
+              activity.durationInStr = this.secondsToTime(activity.duration)
             }
           }
 
           let totalNumEvents = 0
+          let incorrectMotions = 0
+          let totalReactionTime = 0
           for (const event of activityEvents) {
             // build this below JSON struct and append it to the array
+            if (event.reactionTime) {
+              totalReactionTime += event.reactionTime
+            }
+            if (event.score === 0) {
+              incorrectMotions++
+            }
             totalNumEvents++
           }
-        }
 
-        this.activityDetails = [
-          {
-            id: '1234',
-            createdAt: 1,
-            name: 'Sit To Stand',
-            prompt: 'Visual, Auditory',
-            duration: 100,
-            reps: 10,
-            correctMotions: 8,
-            achievementRatio: 80,
-            reactionTime: 4000,
-          },
-          {
-            id: '8901',
-            createdAt: 1,
-            name: 'Hallel.',
-            prompt: 'Visual, Auditory',
-            duration: 200,
-            reps: 8,
-            correctMotions: 7,
-            achievementRatio: 90,
-            reactionTime: 3600,
-          }
-        ]
+          activity.reps = totalNumEvents
+          activity.correctMotions = totalNumEvents - incorrectMotions
+          activity.achievementRatio = parseFloat(((activity.correctMotions / totalNumEvents) * 100).toFixed(2))
+          activity.reactionTime = parseFloat((totalReactionTime / totalNumEvents).toFixed(2))
+          this.activityDetails.push(activity)
+        }
       }
     })
   }
@@ -358,9 +347,10 @@ export class SessionsDetailsComponent implements OnInit {
     }
   }
 
-  secondsToString(seconds: number): string {
-    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
-    return `${numMinutes} minutes`
+  secondsToTime(seconds: number) {
+    const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
+    const m = Math.floor(seconds % 3600 / 60).toString().padStart(2, '0')
+    const s = Math.floor(seconds % 60).toString().padStart(2, '0')
+    return `${h}:${m}:${s}`;
   }
-
 }
