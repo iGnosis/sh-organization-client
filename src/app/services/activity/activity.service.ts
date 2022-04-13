@@ -7,7 +7,7 @@ import { GraphqlService } from '../graphql/graphql.service';
 })
 export class ActivityService {
 
-  constructor() { }
+  constructor(private graphqlService: GraphqlService) { }
 
   async getAll() {
     const query = gql`query GetActivities {
@@ -22,7 +22,7 @@ export class ActivityService {
       }
     }`
 
-    const response = await GraphqlService.client.request(query)
+    const response = await this.graphqlService.client.request(query)
     return response.activity
   }
 }
