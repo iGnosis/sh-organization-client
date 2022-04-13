@@ -4,6 +4,7 @@ import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent } from 'src/app/types/activity';
+import { Session } from 'src/app/types/session';
 
 @Component({
   selector: 'app-sessions-details',
@@ -39,9 +40,9 @@ export class SessionsDetailsComponent implements OnInit {
         // this.chartData = this.chartService.transformifyData(results)
         // console.log('chartData:', this.chartData)
         // init reaction time chart
-        // this.initReactionChart(this.chartData)
+        this.initReactionChart(this.sessionDetails)
         // init achievement chart
-        // this.initAchievementChart(this.chartData)
+        this.initAchievementChart(this.sessionDetails)
 
         for (const activityId in this.sessionDetails.sessionAnalytics) {
 
@@ -59,7 +60,6 @@ export class SessionsDetailsComponent implements OnInit {
           }
 
           const activityEvents: Array<ActivityEvent> = this.sessionDetails.sessionAnalytics[activityId].events
-          console.log(activityId, activityEvents)
 
           if (!activityEvents || !Array.isArray(activityEvents) || !activityEvents.length) {
             return
@@ -119,23 +119,27 @@ export class SessionsDetailsComponent implements OnInit {
     }
   }
 
-  initReactionChart(chartData: SessionData) {
+  initReactionChart(chartData: Session) {
     // pick the first session
-    const sessionIds = Object.keys(chartData)
-    const firstSessionId = sessionIds[0]
+    const sessionId = chartData.id
+
+    if (!sessionId) return
 
     // building chartjs DS
     const labels = new Set()
     const reactionData = []
-    const backgroundColor = []
 
-    for (const activity in chartData[firstSessionId]) {
-      const activityDetails = chartData[firstSessionId][activity].events
+    console.log('initReactionChart:chartData:sessionAnalytics', chartData.sessionAnalytics)
 
+    // for (const activity in chartData.sessionAnalytics) {
+    //   console.log('activity:', activity)
+    // }
+
+    for (const activity in chartData.sessionAnalytics) {
+      const activityDetails = chartData.sessionAnalytics[activity].events
       if (!activityDetails) continue
 
       let totalReactionTime = 0
-
       for (const eventDetail of activityDetails) {
         labels.add(eventDetail.activityName)
 
@@ -148,16 +152,16 @@ export class SessionsDetailsComponent implements OnInit {
       let avgReactionTime = totalReactionTime / activityDetails.length
       avgReactionTime = parseFloat(avgReactionTime.toFixed(2))
       reactionData.push(avgReactionTime)
-
-      // building background color
-      backgroundColor.push('#000066')
     }
+
+    console.log('initReactionChart:labels:', labels)
+    console.log('initReactionChart:reactionData:', reactionData)
 
     const data = {
       labels: [...labels],
       datasets: [{
         data: [...reactionData],
-        backgroundColor,
+        backgroundColor: '#000066',
         fill: true,
         label: 'activities'
       }]
@@ -216,15 +220,19 @@ export class SessionsDetailsComponent implements OnInit {
             }
           },
           title: {
-            display: true,
+            display: false,
             align: 'center',
             text: 'Reaction Time',
             fullSize: true,
             font: {
               size: 28
             }
+          },
+          legend: {
+            // don't show label
+            display: false
           }
-        }
+        },
       }
     }
 
@@ -236,16 +244,19 @@ export class SessionsDetailsComponent implements OnInit {
     }
   }
 
-  initAchievementChart(chartData: SessionData) {
+  initAchievementChart(chartData: Session) {
     // pick the first session
-    const sessionIds = Object.keys(chartData)
-    const firstSessionId = sessionIds[0]
+    const sessionId = chartData.id
+    if (!sessionId) return
+
     // building chartjs DS
     const labels = new Set()
     const achievementData = []
 
-    for (const activity in chartData[firstSessionId]) {
-      const activityDetails = chartData[firstSessionId][activity].events
+    for (const activity in chartData.sessionAnalytics) {
+      console.log('initAchievementChart:activity:', activity)
+
+      const activityDetails = chartData.sessionAnalytics[activity].events
 
       if (!activityDetails) continue
 
@@ -265,8 +276,10 @@ export class SessionsDetailsComponent implements OnInit {
       }
 
       achievementData.push(success)
-
     }
+
+    console.log('initAchievementChart:labels', labels)
+    console.log('initAchievementChart:achievementData', achievementData)
 
     const data = {
       labels: [...labels],
@@ -326,14 +339,9 @@ export class SessionsDetailsComponent implements OnInit {
           }
         },
         plugins: {
-          title: {
-            display: true,
-            align: 'center',
-            text: 'Achievement Ratio',
-            fullSize: true,
-            font: {
-              size: 28
-            }
+          legend: {
+            // don't show label
+            display: false
           }
         }
       }
