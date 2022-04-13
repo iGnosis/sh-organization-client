@@ -1,13 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { Patient } from 'src/app/types/patient';
 import { Session } from 'src/app/types/session';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { ChartService } from 'src/app/services/chart/chart.service';
+import { AchievementRatio } from 'src/app/types/chart';
 
 @Component({
   selector: 'app-patient-details',
@@ -21,7 +23,8 @@ export class PatientDetailsComponent implements OnInit {
   isRowsChecked = false
   achievementChart: any
   engagementChart: any
-  selectedSessionChart: any
+  startDate?: Date
+  endDate?: Date
 
   patientId?: string
   details?: Patient
@@ -52,7 +55,8 @@ export class PatientDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private analyticsService: AnalyticsService,
-    private graphqlService: GraphqlService
+    private graphqlService: GraphqlService,
+    private chartService: ChartService
   ) { }
 
   ngOnInit() {
@@ -62,9 +66,16 @@ export class PatientDetailsComponent implements OnInit {
         console.log('patientId:', this.patientId);
         this.fetchSessions(0)
 
+        // TODO: remove this when events are being sent properly from activity site.
+        this.startDate = new Date('2022-01-01T08:10:35.797Z')
+        this.endDate = new Date('2022-04-01T08:10:35.797Z')
+
+        // by default, get data for past 7 days
+        // this.endDate = new Date()
+        // this.startDate = new Date(new Date().setDate(new Date().getDate() - 7))
+        this.initAchievementChart(this.startDate.toISOString(), this.endDate.toISOString())
+
         // init dummy charts
-        this.selectedSessionChart = 'Mind - Body Connection'
-        this.initAchievementChart()
         this.initEngagementChart()
       }
     })
@@ -252,12 +263,14 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 
-  initAchievementChart() {
+  initAchievementChart(startDate: string, endDate: string) {
+
     const data = {
-      labels: ['28th', '29th', '30th', '31st'],
+      labels: [],
       datasets: [{
-        // data: [60, 82, 75, 80, 68, 77, 90],
-        data: [
+        data: [],
+        careplanNames: [], // need this for tooltips
+        tempData: [
           {
             'id': '28th', data: {
               'allSessions': 55
@@ -279,13 +292,13 @@ export class PatientDetailsComponent implements OnInit {
             }
           }
         ],
+        pointRadius: 5,
         backgroundColor: '#000066',
         borderColor: '#000066',
         pointBackgroundColor: '#000066',
-        radius: 5,
         tension: 0.1,
         fill: false,
-        label: 'Success Ratio'
+        label: 'Success Ratio',
       }]
     }
 
@@ -297,10 +310,10 @@ export class PatientDetailsComponent implements OnInit {
         hoverRadius: 12,
         responsive: true,
         // making object array readable for ChartJS
-        parsing: {
-          xAxisKey: 'id',
-          yAxisKey: 'data.allSessions'
-        },
+        // parsing: {
+        //   xAxisKey: 'id',
+        //   yAxisKey: 'data.allSessions'
+        // },
         scales: {
           y: {
             // set max percentage for chart
@@ -353,17 +366,54 @@ export class PatientDetailsComponent implements OnInit {
             font: {
               size: 28
             }
+          },
+          tooltip: {
+            titleFont: {
+              size: 16
+            },
+            bodyFont: {
+              size: 16
+            },
+            caretSize: 15,
+            callbacks: {
+              label: function (tooltipItem: any) {
+                console.log('tooltipItem:', tooltipItem)
+                const careplanName = tooltipItem.dataset.careplanNames[tooltipItem.dataIndex]
+                const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                return `${careplanName} - ${successRatio.toFixed(2)}%`
+              }
+            }
           }
         }
       }
     }
 
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
-    if (ctx) {
+    // fetching chart data
+    this.chartService.getAchievementPerSession(
+      this.patientId!,
+      startDate,
+      endDate
+    ).subscribe((results: any) => {
+      console.log('initAchievementChart:getAchievementPerSession:results:', results)
+
+      // work out labels
+      data.labels = results.map((result: AchievementRatio) => {
+        const createdAtDate = new Date(result.createdAt!)
+        return createdAtDate.toISOString().substring(0, 10)
+      })
+      // console.log('initAchievementChart:labels:', data.labels)
+
+      // work out datasets
+      data.datasets[0].data = results.map((result: AchievementRatio) => result.avgAchievement! * 100)
+      data.datasets[0].careplanNames = results.map((result: AchievementRatio) => result.careplanName)
+
       // @ts-ignore: TypeScript headache - fix later
-      this.achievementChart = new Chart(ctx, config)
-    }
+      const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
+      if (ctx) {
+        // @ts-ignore: TypeScript headache - fix later
+        this.achievementChart = new Chart(ctx, config)
+      }
+    })
   }
 
   secondsToString(seconds: number): string {
@@ -400,5 +450,12 @@ export class PatientDetailsComponent implements OnInit {
 
   openSessionDetailsPage(sessionId: string, sessionDetails: any) {
     this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
+  }
+
+  rant() {
+    return {
+      // for line charts - the maximum data point gets cut in half.
+      'chartJsBug': 'https://github.com/chartjs/Chart.js/issues/4202'
+    }
   }
 }

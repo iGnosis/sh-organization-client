@@ -16,6 +16,14 @@ export class ChartService {
   //   return this.http.post(this.baseURL + '/analytics/activity/reaction-time-chart', { sessionId })
   // }
 
+  getAchievementPerSession(patientId: string, startDate: string, endDate: string) {
+    return this.http.post(this.baseURL + '/analytics/session/achievement-ratio', {
+      patientId,
+      startDate,
+      endDate
+    })
+  }
+
   // here, we do things that are painful to do with plain SQL.
   transformifyData(chartResults: IChart[]): SessionData {
     let patientObject: any = {}

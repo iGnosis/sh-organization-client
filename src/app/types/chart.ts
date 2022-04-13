@@ -29,3 +29,10 @@ class Event {
     createdAt?: string;
     score?: number;
 }
+
+export class AchievementRatio {
+    sessionId?: string;
+    createdAt?: Date;
+    careplanName?: string;
+    avgAchievement?: number;
+}
