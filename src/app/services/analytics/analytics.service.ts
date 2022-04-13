@@ -13,6 +13,6 @@ export class AnalyticsService {
   }
 
   getAnalytics(sessionIds: Array<string>) {
-    return this.http.post(this.baseURL + '/analytics/activity/data', { sessionIds })
+    return this.http.post(this.baseURL + '/analytics/session/data', { sessionIds })
   }
 }

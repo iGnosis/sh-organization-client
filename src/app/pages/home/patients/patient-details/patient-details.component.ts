@@ -134,6 +134,7 @@ export class PatientDetailsComponent implements OnInit {
       })
 
       this.sessionDetails = sessions
+      console.log('sessionDetails:', this.sessionDetails)
     })
   }
 

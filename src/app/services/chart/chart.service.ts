@@ -12,9 +12,9 @@ export class ChartService {
     this.baseURL = environment.servicesEndpoint
   }
 
-  getChartData(sessionId: string) {
-    return this.http.post(this.baseURL + '/analytics/activity/reaction-time-chart', { sessionId })
-  }
+  // getChartData(sessionId: string) {
+  //   return this.http.post(this.baseURL + '/analytics/activity/reaction-time-chart', { sessionId })
+  // }
 
   // here, we do things that are painful to do with plain SQL.
   transformifyData(chartResults: IChart[]): SessionData {
