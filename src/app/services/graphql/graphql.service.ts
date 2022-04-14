@@ -11,6 +11,7 @@ export class GraphqlService {
     }
   })
   public publicClient: GraphQLClient = new GraphQLClient(environment.gqlEndpoint, {})
+  static client: any;
 
   constructor() { }
 }

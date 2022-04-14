@@ -3,9 +3,9 @@
   <div class="container-xl">
     <div>
       <div class="row align-items-center">
-        <div *ngIf="sessionDetails" class="col-md-6 col-12 mb-3 mb-md-0">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
-          <h1 class="h2 mb-0 ls-tight">{{ sessionDetails[0].patientByPatient?.identifier }}</h1>
+          <h1 class="h2 mb-0 ls-tight">IG58M</h1>
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
@@ -44,40 +44,19 @@
 <!-- Charts -->
 <div class="container mt-8">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col">
       <div class="card">
         <div class="card-body">
-          <div class="mb-8 card-header">
-            <h2 style="color: #000066;">Patient Engagement</h2><br>
-            <span>
-              <h5 style="color: #000066;">
-                28 Mar - 31 Mar. 2022
-              </h5>
-              <i>(indicative data)</i>
-            </span>
-          </div>
-          <canvas id="engagementChart" width="500" height="500"></canvas>
+          <!-- Title -->
+          <h3 class="h4">Insert Chart 1 here</h3>
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col">
       <div class="card">
         <div class="card-body">
-          <div class="card-header">
-            <h2 style="color: #000066;">Achievement Ratio</h2><br>
-            <span>
-              <h5 style="color: #000066;">
-                {{ startDate | date }} - {{ endDate | date }}
-              </h5>
-            </span> <br>
-            <div class="form-group">
-              <select class="form-control" id="sessionVal" name="isActive" (change)="changeSessionsChart()">
-                <option value="allSessions">All Sessions</option>
-                <!-- <option value="cognitiveSkillsII">Cognitive Skills II</option> -->
-              </select>
-            </div>
-          </div>
-          <canvas id="achievementChart" width="500" height="500"></canvas>
+          <!-- Title -->
+          <h3 class="h4">Insert Chart 2 here</h3>
         </div>
       </div>
     </div>
@@ -191,9 +170,9 @@
         </div>
       </div>
     </div>
-    <!-- <div class="col-sm">
+    <div class="col-sm">
       Date
-    </div> -->
+    </div>
     <div class="col-sm">
       <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -265,7 +244,7 @@
             </div>
           </th>
           <th></th>
-          <th scope="col">Care Plan</th>
+          <th scope="col">Session Plan</th>
           <th scope="col">Activity Type</th>
           <th scope="col">Time</th>
           <th scope="col">Date</th>
@@ -274,11 +253,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let session of sessionDetails! | paginate: {
-          itemsPerPage,
-          currentPage,
-          totalItems: totalSessionsCount
-        }" (click)="openSessionDetailsPage(session.id!, session)">
+        <tr>
           <!-- Checkbox & Star button -->
           <td class="text-lg" scope="col">
             <div class="form-check">
@@ -292,33 +267,86 @@
           </td>
 
           <td>
-            <span class="text-heading font-semibold">
-              {{ session.careplanByCareplan?.name }}
-            </span>
+            <a class="text-heading font-semibold" href="/app/sessions/123">
+              Music and Movement
+            </a>
           </td>
           <td>
-            <!-- <span>{{ session.activityType }}</span> -->
             <span>Physical</span>
           </td>
           <td>
-            <span>{{ session.timeDuration || 'In Progress' }}</span>
+            <span>45 minutes</span>
           </td>
           <td>
-            <span>{{ session.createdAt | date }}</span>
+            <span>Jan 20, 2022</span>
           </td>
           <td>
-            <div *ngIf="session.totalPerformanceRatio" class="d-flex align-items-center">
-              <span class="me-2">{{session.totalPerformanceRatio}}%</span>
+            <div class="d-flex align-items-center">
+              <span class="me-2">95%</span>
               <div>
                 <div class="progress">
-                  <div class="progress-bar rounded-pill" role="progressbar"
-                    style="width: {{ session.totalPerformanceRatio }}%; background-color: #A6B7D4">
-                  </div>
+                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 95%"
+                    aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
-            <div *ngIf="!session.totalPerformanceRatio">
-              <span>In Progress</span>
+          </td>
+          <td class="text-end">
+            <div class="dropdown">
+              <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <i class="bi bi-three-dots-vertical"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end">
+                <a href="#!" class="dropdown-item">
+                  Edit Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Archive Session Entry
+                </a>
+                <a href="#!" class="dropdown-item">
+                  Delete Session Entry
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <!-- Checkbox & Star button -->
+          <td class="text-lg" scope=" col">
+            <div class="form-check">
+              <input class="form-check-input row-check-input" type="checkbox" value="" id="flexCheckRow1">
+              <label class="form-check-label" for="flexCheckRow1"></label>
+            </div>
+          </td>
+
+          <td class="text-lg" scope=" col">
+            <i class="bi bi-star"></i>
+          </td>
+
+          <td>
+            <a class="text-heading font-semibold" href="#">
+              Cognitive Skills
+            </a>
+          </td>
+          <td>
+            <span>Problem Solving</span>
+          </td>
+          <td>
+            <span>30 minutes</span>
+          </td>
+          <td>
+            <span>Jan 24, 2022</span>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <span class="me-2">50%</span>
+              <div>
+                <div class="progress">
+                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 50%"
+                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
             </div>
           </td>
           <td class="text-end">
@@ -343,11 +371,5 @@
         </tr>
       </tbody>
     </table>
-
-    <nav>
-      <pagination-controls (pageChange)="this.pageChanged($event)">
-      </pagination-controls>
-    </nav>
-
   </div>
 </div>
