@@ -25,7 +25,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementChart: any
   startDate?: Date
   endDate?: Date
-  paginate :any
+
   patientId?: string
   details?: Patient
   totalSessionsCount?: number

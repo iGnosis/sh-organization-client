@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -27,10 +28,6 @@ import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
 import { ToastsComponent } from './components/toasts/toasts.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
-
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -60,11 +57,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     ReactiveFormsModule,
     NgChartsModule,
+    NgxPaginationModule,
     HttpClientModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    MatPaginatorModule,
-    BrowserAnimationsModule,
-    MatTableModule
+    NgMultiSelectDropDownModule.forRoot()
   ],
   providers: [
     PrivateGuard,
