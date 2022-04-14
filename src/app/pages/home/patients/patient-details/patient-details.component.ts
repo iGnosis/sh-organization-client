@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
-import { AchievementRatio } from 'src/app/types/chart';
+import { AchievementRatio, EngagementRatio } from 'src/app/types/chart';
 
 @Component({
   selector: 'app-patient-details',
@@ -31,26 +31,6 @@ export class PatientDetailsComponent implements OnInit {
   totalSessionsCount?: number
   sessionDetails?: Array<Session>
 
-  // sessionDetails = [
-  //   {
-  //     id: '2d01273f-d40b-42d7-bfdb-76843668accb', // sessionId
-  //     carePlan: 'Music and Movement',
-  //     activityType: 'Physical',
-  //     timeDuration: '20 minutes',
-  //     createdDate: 'Jan 20, 2022',
-  //     performance: 70
-  //   },
-  //   {
-  //     id: '2d01273f-1234-42d7-bfdb-76843668accb', // sessionId
-  //     carePlan: 'Cognitive Skills',
-  //     activityType: 'Memory',
-  //     timeDuration: '15 minutes',
-  //     createdDate: 'Jan 24, 2022',
-  //     performance: 45
-  //   }
-  // ]
-
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -68,7 +48,7 @@ export class PatientDetailsComponent implements OnInit {
 
         // TODO: remove this when events are being sent properly from activity site.
         this.startDate = new Date('2022-01-01T08:10:35.797Z')
-        this.endDate = new Date('2022-04-01T08:10:35.797Z')
+        this.endDate = new Date('2022-04-30T08:10:35.797Z')
 
         // by default, get data for past 7 days
         // this.endDate = new Date()
@@ -76,7 +56,7 @@ export class PatientDetailsComponent implements OnInit {
         this.initAchievementChart(this.startDate.toISOString(), this.endDate.toISOString())
 
         // init dummy charts
-        this.initEngagementChart()
+        this.initEngagementChart(this.startDate.toISOString(), this.endDate.toISOString())
       }
     })
   }
@@ -175,11 +155,12 @@ export class PatientDetailsComponent implements OnInit {
     window.open(url, '_blank')
   }
 
-  initEngagementChart() {
+  initEngagementChart(startDate: string, endDate: string) {
     const data = {
-      labels: ['28th', '29th', '30th', '31st', '1st', '2nd', '3rd'],
+      labels: [],
       datasets: [{
-        data: [86, 48, 100, 79, 0, 100, 0],
+        data: [],
+        careplanNames: [], // need this for tooltips
         backgroundColor: '#000066',
         fill: true,
         label: 'Completion Ratio'
@@ -250,21 +231,56 @@ export class PatientDetailsComponent implements OnInit {
             font: {
               size: 28
             }
+          },
+          tooltip: {
+            titleFont: {
+              size: 16
+            },
+            bodyFont: {
+              size: 16
+            },
+            caretSize: 15,
+            callbacks: {
+              label: function (tooltipItem: any) {
+                // console.log('tooltipItem:', tooltipItem)
+                const careplanName = tooltipItem.dataset.careplanNames[tooltipItem.dataIndex]
+                const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex]
+                return `${careplanName} - ${successRatio.toFixed(2)}%`
+              }
+            }
           }
         }
       }
     }
 
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = document.getElementById('engagementChart').getContext('2d')
-    if (ctx) {
+    this.chartService.getEngagementPerSession(
+      this.patientId!,
+      startDate,
+      endDate
+    ).subscribe((results: any) => {
+      console.log('initEngagementChart:results:', results)
+
+      // work out labels
+      data.labels = results.map((result: EngagementRatio) => {
+        const createdAtDate = new Date(result.sessionCreatedAt!)
+        return createdAtDate.toISOString().substring(0, 10)
+      })
+      // console.log('initEngagementChart:labels:', data.labels)
+
+      // work out datasets
+      data.datasets[0].data = results.map((result: EngagementRatio) => result.engagementRatio! * 100)
+      data.datasets[0].careplanNames = results.map((result: EngagementRatio) => result.careplanName)
+
       // @ts-ignore: TypeScript headache - fix later
-      this.engagementChart = new Chart(ctx, config)
-    }
+      const ctx = document.getElementById('engagementChart').getContext('2d')
+      if (ctx) {
+        // @ts-ignore: TypeScript headache - fix later
+        this.engagementChart = new Chart(ctx, config)
+      }
+    })
   }
 
   initAchievementChart(startDate: string, endDate: string) {
-
     const data = {
       labels: [],
       datasets: [{
@@ -394,7 +410,7 @@ export class PatientDetailsComponent implements OnInit {
       startDate,
       endDate
     ).subscribe((results: any) => {
-      console.log('initAchievementChart:getAchievementPerSession:results:', results)
+      console.log('initAchievementChart:results:', results)
 
       // work out labels
       data.labels = results.map((result: AchievementRatio) => {
