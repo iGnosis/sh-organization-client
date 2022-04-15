@@ -253,7 +253,7 @@ export class PatientDetailsComponent implements OnInit {
       }
     }
 
-    this.chartService.getEngagementPerSession(
+    this.chartService.getEngagementPerPatient(
       this.patientId!,
       startDate,
       endDate
@@ -405,7 +405,7 @@ export class PatientDetailsComponent implements OnInit {
     }
 
     // fetching chart data
-    this.chartService.getAchievementPerSession(
+    this.chartService.getAchievementPerPatient(
       this.patientId!,
       startDate,
       endDate

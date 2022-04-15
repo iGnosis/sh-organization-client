@@ -5,6 +5,7 @@ import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent } from 'src/app/types/activity';
 import { Session } from 'src/app/types/session';
+import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
   selector: 'app-sessions-details',
@@ -13,6 +14,7 @@ import { Session } from 'src/app/types/session';
 })
 export class SessionsDetailsComponent implements OnInit {
   sessionId?: string
+  sessionCompletionRatio?: number
   patientConditions: String = ''
   sessionDetails?: any
   activityDetails: Array<Activity> = []
@@ -21,7 +23,7 @@ export class SessionsDetailsComponent implements OnInit {
   // so we can render the charts
   // chartData?: ChartSessionData
 
-  constructor(private route: ActivatedRoute) { }
+  constructor(private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
@@ -102,6 +104,8 @@ export class SessionsDetailsComponent implements OnInit {
           activity.reactionTime = parseFloat((totalReactionTime / totalNumEvents).toFixed(2))
           this.activityDetails.push(activity)
         }
+
+        this.fetchSessionCompletionRatio(this.sessionId)
       }
     })
   }
@@ -360,5 +364,12 @@ export class SessionsDetailsComponent implements OnInit {
     const m = Math.floor(seconds % 3600 / 60).toString().padStart(2, '0')
     const s = Math.floor(seconds % 60).toString().padStart(2, '0')
     return `${h}:${m}:${s}`;
+  }
+
+  fetchSessionCompletionRatio(sessionId: string) {
+    this.analyticsService.getSessionCompletionRatio(sessionId).subscribe((result: any) => {
+      result = result.toFixed(2)
+      this.sessionCompletionRatio = result
+    })
   }
 }

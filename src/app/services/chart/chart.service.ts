@@ -16,16 +16,16 @@ export class ChartService {
   //   return this.http.post(this.baseURL + '/analytics/activity/reaction-time-chart', { sessionId })
   // }
 
-  getEngagementPerSession(patientId: string, startDate: string, endDate: string) {
-    return this.http.post(this.baseURL + '/analytics/session/engagement-ratio', {
+  getEngagementPerPatient(patientId: string, startDate: string, endDate: string) {
+    return this.http.post(this.baseURL + '/analytics/patient/engagement-ratio', {
       patientId,
       startDate,
       endDate
     })
   }
 
-  getAchievementPerSession(patientId: string, startDate: string, endDate: string) {
-    return this.http.post(this.baseURL + '/analytics/session/achievement-ratio', {
+  getAchievementPerPatient(patientId: string, startDate: string, endDate: string) {
+    return this.http.post(this.baseURL + '/analytics/patient/achievement-ratio', {
       patientId,
       startDate,
       endDate
