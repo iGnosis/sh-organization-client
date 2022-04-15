@@ -29,7 +29,11 @@ import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
 import { ToastsComponent } from './components/toasts/toasts.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +65,11 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
     NgChartsModule,
     NgxPaginationModule,
     HttpClientModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule
   ],
   providers: [
     PrivateGuard,
