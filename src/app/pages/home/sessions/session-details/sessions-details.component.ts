@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -19,11 +19,7 @@ export class SessionsDetailsComponent implements OnInit {
   sessionDetails?: any
   activityDetails: Array<Activity> = []
 
-  // data that is passed into Chart init functions
-  // so we can render the charts
-  // chartData?: ChartSessionData
-
-  constructor(private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
@@ -38,14 +34,10 @@ export class SessionsDetailsComponent implements OnInit {
         console.log(this.sessionId, this.sessionDetails)
         this.initPatientConditions()
 
-        // const results = await this.getChartData(this.sessionId)
-        // this.chartData = this.chartService.transformifyData(results)
-        // console.log('chartData:', this.chartData)
-        // init reaction time chart
         this.initReactionChart(this.sessionDetails)
-        // init achievement chart
         this.initAchievementChart(this.sessionDetails)
 
+        // prepare activity level-analytics
         for (const activityId in this.sessionDetails.sessionAnalytics) {
 
           const activity = {
@@ -59,9 +51,11 @@ export class SessionsDetailsComponent implements OnInit {
             correctMotions: 8,
             achievementRatio: 80,
             reactionTime: 4000,
+            events: []
           }
 
           const activityEvents: Array<ActivityEvent> = this.sessionDetails.sessionAnalytics[activityId].events
+          activity.events = this.sessionDetails.sessionAnalytics[activityId].events
 
           if (!activityEvents || !Array.isArray(activityEvents) || !activityEvents.length) {
             return
@@ -102,6 +96,7 @@ export class SessionsDetailsComponent implements OnInit {
           activity.correctMotions = totalNumEvents - incorrectMotions
           activity.achievementRatio = parseFloat(((activity.correctMotions / totalNumEvents) * 100).toFixed(2))
           activity.reactionTime = parseFloat((totalReactionTime / totalNumEvents).toFixed(2))
+
           this.activityDetails.push(activity)
         }
 
@@ -371,5 +366,17 @@ export class SessionsDetailsComponent implements OnInit {
       result = result.toFixed(2)
       this.sessionCompletionRatio = result
     })
+  }
+
+  openActivityDetailsPage(activityId: string, activityDetails: ActivityEvent) {
+    this.router.navigate(
+      ['/app/activities/', activityId],
+      {
+        queryParams: {
+          activityDetails: JSON.stringify(activityDetails),
+          patientIdentifier: this.sessionDetails.patientByPatient.identifier
+        }
+      }
+    )
   }
 }

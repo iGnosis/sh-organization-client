@@ -177,7 +177,8 @@
           <div class="card">
             <!-- Image -->
             <div class="p-2">
-              <img alt="..." src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img">
+              <img (click)="openActivityDetailsPage(activity.id!, activity)" alt="..."
+                src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img">
             </div>
             <div class="card-body pb-0">
               <div class="container align-items-center">

@@ -14,6 +14,7 @@ import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
+import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { NgChartsModule } from 'ng2-charts';
 import { ActivePatientsComponent } from './widgets/dashboard/active-patients/active-patients.component';
 import { InvitePatientComponent } from './widgets/modal/invite-patient/invite-patient.component';
@@ -39,6 +40,7 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
     PatientsComponent,
     PatientDetailsComponent,
     ActivitiesComponent,
+    ActivitiesDetailsComponent,
     ActivePatientsComponent,
     InvitePatientComponent,
     ForgotPasswordComponent,
