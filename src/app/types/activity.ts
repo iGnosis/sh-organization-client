@@ -13,10 +13,10 @@ export class Activity {
   achievementRatio?: number; // avg. achievement ratio (0 to 100%) of all the reps.
   difficulty?: ActivityDifficulty;
   selected?: boolean;
+  events?: Array<ActivityEvent>;
 }
 export class ActivityEvent {
   activityName?: string;
-  repName?: string;
   createdAt?: number; // unix epoch in milliseconds
   reactionTime?: number;
   score?: number;

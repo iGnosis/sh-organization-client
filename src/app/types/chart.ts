@@ -36,3 +36,13 @@ export class AchievementRatio {
     careplanName?: string;
     avgAchievement?: number;
 }
+
+export class EngagementRatio {
+    sessionId?: string;
+    sessionCreatedAt?: Date;
+    careplanId?: string;
+    careplanName?: string;
+    totalRepsCount?: number;
+    totalTasksCount?: number;
+    engagementRatio?: number;
+}

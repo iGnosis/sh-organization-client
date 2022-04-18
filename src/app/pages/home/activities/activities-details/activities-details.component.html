@@ -1,0 +1,136 @@
+<div class="container pt-5">
+  <!-- Outer card -->
+  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="row">
+            <div class="col">
+              <div class="container max-w-screen-xl">
+                <div class="row row-grid align-items-center">
+                  <div class="col">
+                    <p class="lead">
+                      Activity
+                    </p>
+                    <h1 class="ls-tight font-bolder display-6 mb-5">
+                      {{ activityDetails?.name }}
+                    </h1>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Activity Duration</span>
+                      <span class="h3 font-bold mb-0">{{ activityDetails?.durationInStr }}</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #8CDFB3;">
+                        <i class="bi bi-hourglass-split"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Average reaction time</span>
+                      <span class="h3 font-bold mb-0">{{ activityDetails?.reactionTime }} ms</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #FFADBA">
+                        <i class="bi bi-clock-history"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="row">
+            <div class="col">
+              <div class="card mb-8 ml-8 shadow-2">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col">
+                      <span class="h6 font-semibold text-muted text-sm d-block mb-2">Achievement Ratio</span>
+                      <span class="h3 font-bold mb-0">{{ activityDetails?.achievementRatio }}%</span>
+                    </div>
+                    <div class="col-auto">
+                      <div class="icon icon-shape text-white text-lg rounded-circle invert-vertically"
+                        style="background-color: #7895FF;">
+                        <i class="bi bi-file-bar-graph"></i>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+        </div>
+        <div class="col">
+          <div class="card shadow-2">
+            <!-- Image -->
+            <div class="p-2">
+              <img src="../../../../../assets/images/session-details.png" alt="..." class="card-img">
+            </div>
+            <div class="card-body">
+              <div class="info mb-7">
+                <h2 class="h4">Identifer: {{ patientIdentifier }}</h2>
+                <span class="d-block text-muted text-sm font-semibold">Activity Date: {{ activityDetails?.createdAt |
+                  date }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="container mt-8">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-8 card-header">
+              <h2 style="color: #000066;">Achievement Ratio</h2><br>
+              <span>
+                <h5 style="color: #000066;">
+                  {{ activityDetails?.name }}
+                </h5>
+              </span>
+            </div>
+            <canvas id="achievementChart" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-header">
+              <h2 style="color: #000066;">Reaction Time</h2><br>
+              <span>
+                <h5 style="color: #000066;">
+                  {{ activityDetails?.name }}
+                </h5>
+              </span>
+              <br>
+              <span><i>Repetitions shown in the order in which it was performed.</i></span>
+            </div>
+            <canvas id="reactionTimeChart" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

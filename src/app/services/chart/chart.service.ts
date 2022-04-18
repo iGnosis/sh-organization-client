@@ -16,8 +16,16 @@ export class ChartService {
   //   return this.http.post(this.baseURL + '/analytics/activity/reaction-time-chart', { sessionId })
   // }
 
-  getAchievementPerSession(patientId: string, startDate: string, endDate: string) {
-    return this.http.post(this.baseURL + '/analytics/session/achievement-ratio', {
+  getEngagementPerPatient(patientId: string, startDate: string, endDate: string) {
+    return this.http.post(this.baseURL + '/analytics/patient/engagement-ratio', {
+      patientId,
+      startDate,
+      endDate
+    })
+  }
+
+  getAchievementPerPatient(patientId: string, startDate: string, endDate: string) {
+    return this.http.post(this.baseURL + '/analytics/patient/achievement-ratio', {
       patientId,
       startDate,
       endDate

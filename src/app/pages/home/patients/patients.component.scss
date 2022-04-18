@@ -17,8 +17,8 @@ table.mat-table.patients_table {
 		padding-left: 0;
 	}
 	th.mat-header-cell {
-		padding-top: 1rem;
-		padding-bottom: 1rem;
+		padding-top: 1.25rem;
+		padding-bottom: 1.25rem;
 		font-size: 0.675rem;
 		font-weight: 500;
 		text-transform: uppercase;
@@ -29,11 +29,20 @@ table.mat-table.patients_table {
 	}
 }
 td.mat-cell.cdk-cell.cdk-column-total_count.mat-column-total_count {
-	padding-left: 1rem !important;
+	padding-left: 1.5rem !important;
+}
+th.mat-header-cell .form-check-input {
+  width: 2em;
+  height: 2em;
+  border-radius: 0.5em;
+}
+.badge {
+  font-family: var(--x-body-font-family) !important;
+  font-size: 0.7em;
 }
 .form-check-input {
-	width: 1em;
-	height: 1em;
+	width: 1.5em;
+	height: 1.5em;
 	margin-top: 0.3125em;
 	vertical-align: top;
 	background-color: #FFF;
@@ -46,6 +55,7 @@ td.mat-cell.cdk-cell.cdk-column-total_count.mat-column-total_count {
 	appearance: none;
 	-webkit-print-color-adjust: exact;
 	color-adjust: exact;
+  border-radius: 0.4em;
 }
 td.mat-cell.custom_table_text {
 	color: #525F7F;

@@ -9,6 +9,7 @@ import { PublicComponent } from './layouts/public/public.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
+import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
@@ -37,6 +38,7 @@ const routes: Routes = [
       { path: 'care-plans', component: CarePlanComponent },
       { path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
+      { path: 'activities/:id', component: ActivitiesDetailsComponent },
       { path: 'sessions', component: SessionsDetailsComponent },
       { path: 'sessions/:id', component: SessionsDetailsComponent }
     ]

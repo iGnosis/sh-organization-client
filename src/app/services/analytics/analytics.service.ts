@@ -15,4 +15,10 @@ export class AnalyticsService {
   getAnalytics(sessionIds: Array<string>) {
     return this.http.post(this.baseURL + '/analytics/session/data', { sessionIds })
   }
+
+  getSessionCompletionRatio(sessionId: string) {
+    return this.http.post(this.baseURL + '/analytics/session/engagement-ratio', {
+      sessionId
+    })
+  }
 }
