@@ -30,6 +30,7 @@
     "font-awesome": "^4.7.0",
     "graphql": "^16.2.0",
     "graphql-request": "^3.7.0",
+    "mat-table-filter": "^10.2.0",
     "ng-multiselect-dropdown": "^0.3.8",
     "ng2-charts": "^3.0.0-rc.7",
     "ngx-pagination": "^5.1.1",

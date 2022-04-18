@@ -34,7 +34,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
-
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatTableFilterModule } from 'mat-table-filter';
+import {MatIconModule} from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,7 +72,10 @@ import {MatSortModule} from '@angular/material/sort';
     BrowserAnimationsModule,
     MatPaginatorModule,
     MatTableModule,
-    MatSortModule
+    MatSortModule,
+    MatCheckboxModule,
+    MatTableFilterModule,
+    MatIconModule
   ],
   providers: [
     PrivateGuard,

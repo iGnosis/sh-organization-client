@@ -56,5 +56,33 @@ th.mat-header-cell.custom_table_header {
     color: #2F51AE !important;
     background: #2F51AE !important;
 }
+th.mat-header-cell .custom_checkbox .mat-checkbox-frame, .custom_checkbox .mat-checkbox-background {
+  width: 2em;
+  height: 2em;
+  border-radius: 0.5em;
+}
+.custom_checkbox .mat-checkbox-frame
+{
+  border-width: 1px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+.custom_checkbox .mat-checkbox-frame,.custom_checkbox .mat-checkbox-inner-container {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: top;
+  background-color: #FFF;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-print-color-adjust: exact;
+  color-adjust: exact;
+  border-radius: 0.4em;
+}
+.form-check {
+  padding-left: inherit;
+}
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
