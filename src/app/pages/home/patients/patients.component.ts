@@ -91,7 +91,7 @@ export class PatientsComponent implements OnInit {
   async reloadPatientList(filters: any) {
     const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { conditions: this.selectedMedicalConditions })
     this.patients = response.patient
-    // console.log(this.patients)
+    console.log(response.patient)
     this.dataSource.data = response.patient;
   }
   patients_data?: Array<Patient>;
