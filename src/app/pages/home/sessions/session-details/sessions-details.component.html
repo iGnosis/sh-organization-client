@@ -23,7 +23,7 @@
                     <p class="lead">
                       Session
                     </p>
-                    <h1 class="ls-tight font-bolder display-6 mb-5">
+                    <h1 class="h2 mb-0 ls-tight">
                       {{ sessionDetails.careplanByCareplan.name }}
                     </h1>
                   </div>
@@ -139,7 +139,7 @@
       <div class="col-md-6">
         <div class="card">
           <div class="card-body">
-            <div class="mb-8 card-header">
+            <div class="card-header">
               <h2 style="color: #000066;">Achievement Ratio</h2><br>
               <span>
                 <h5 style="color: #000066;">
@@ -147,7 +147,7 @@
                 </h5>
               </span>
             </div>
-            <canvas id="achievementChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="achievementChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@
                 </h5>
               </span>
             </div>
-            <canvas id="reactionTimeChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="reactionTimeChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@
   <!-- Performance Analysis -->
   <div class="card shadow-inset shadow-6 mt-8 mb-12">
     <div class="container mb-8">
-      <h1 class="ls-tight font-bolder display-6 mb-7 p-2">Performance Analysis</h1>
+      <h1 class="h3 ls-tight font-bolder mb-8 pt-8">Performance Analysis</h1>
       <div class="row">
         <div *ngFor="let activity of activityDetails" class="col-lg-4">
           <div class="card">

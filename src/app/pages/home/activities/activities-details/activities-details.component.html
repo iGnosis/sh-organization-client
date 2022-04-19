@@ -12,7 +12,7 @@
                     <p class="lead">
                       Activity
                     </p>
-                    <h1 class="ls-tight font-bolder display-6 mb-5">
+                    <h1 class="h2 ls-tight mb-5">
                       {{ activityDetails?.name }}
                     </h1>
                   </div>
@@ -110,7 +110,7 @@
                 </h5>
               </span>
             </div>
-            <canvas id="achievementChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="achievementChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
@@ -124,10 +124,9 @@
                   {{ activityDetails?.name }}
                 </h5>
               </span>
-              <br>
               <span><i>Repetitions shown in the order in which it was performed.</i></span>
             </div>
-            <canvas id="reactionTimeChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="reactionTimeChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>

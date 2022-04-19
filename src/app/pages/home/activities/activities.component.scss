@@ -1,38 +1,39 @@
 .activities {
-    overflow: auto;
-    white-space: nowrap;
-    
-    .card {
-        width: 20vw;
-        display: inline-block;
-        margin: 16px;
-        white-space: initial;
-        position: relative;
-        
-        &::after {
-            content: "➡️";
-            position: absolute;
-            font-size: 2rem;
-            right: -33px;
-            top: 60px;
-        }
+  overflow: auto;
+  white-space: nowrap;
 
-        .timestamp {
-            position: absolute;
-            top: 0; 
-            right: 0px;
-            background: #333;
-            color: #FFF;
-            padding: 8px;
-        }
-        
-        &:last-of-type::after {
-            display: none;
-        }
-        .card-img-top {
-            width: 100%;
-            height: auto;
-            
-        }
+  .card {
+    width: 20vw;
+    display: inline-block;
+    margin: 16px;
+    white-space: initial;
+    position: relative;
+
+    &::after {
+      content: "➡️";
+      position: absolute;
+      font-size: 2rem;
+      right: -33px;
+      top: 60px;
     }
+
+    .timestamp {
+      position: absolute;
+      top: 0;
+      right: 0px;
+      background: #333;
+      color: #FFF;
+      padding: 8px;
+    }
+
+    &:last-of-type::after {
+      display: none;
+    }
+
+    .card-img-top {
+      width: 100%;
+      height: auto;
+
+    }
+  }
 }
