@@ -304,6 +304,7 @@ export class SessionsDetailsComponent implements OnInit {
         scales: {
           y: {
             beginAtZero: true,
+            max: 100,
             title: {
               display: true,
               text: '% of correct motions',
