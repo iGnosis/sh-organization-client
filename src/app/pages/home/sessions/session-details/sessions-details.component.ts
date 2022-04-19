@@ -235,11 +235,16 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
+    let myChart = null
     // @ts-ignore: TypeScript headache - fix later
-    const ctx = document.getElementById('reactionTimeChart').getContext('2d')
+    const ctx = document.getElementById('sessionReactionTimeChart').getContext('2d')
     if (ctx) {
+      if (myChart != null) {
+        // @ts-ignore: TypeScript headache - fix later
+        myChart.destroy()
+      }
       // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      myChart = new Chart(ctx, config)
     }
   }
 
@@ -347,11 +352,16 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
+    let myChart = null
     // @ts-ignore: TypeScript headache - fix later
-    const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
+    const ctx = <HTMLCanvasElement>document.getElementById('sessionAchievementChart').getContext('2d')!
     if (ctx) {
+      if (myChart != null) {
+        // @ts-ignore: TypeScript headache - fix later
+        myChart.destroy()
+      }
       // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      myChart = new Chart(ctx, config)
     }
   }
 
