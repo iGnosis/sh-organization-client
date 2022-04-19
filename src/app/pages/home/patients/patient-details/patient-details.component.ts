@@ -47,8 +47,9 @@ export class PatientDetailsComponent implements OnInit {
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
+        // And when you have date picker implemented.
         this.startDate = new Date('2022-01-01T08:10:35.797Z')
-        this.endDate = new Date('2022-04-30T08:10:35.797Z')
+        this.endDate = new Date('2023-04-30T08:10:35.797Z')
 
         // by default, get data for past 7 days
         // this.endDate = new Date()

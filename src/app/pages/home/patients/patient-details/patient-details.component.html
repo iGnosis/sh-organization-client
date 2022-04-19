@@ -10,7 +10,7 @@
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
           <div class="mx-n1">
-            <a routerLink="#!" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+            <a routerLink="#!" class="disabled btn d-inline-flex btn-sm btn-outline-primary mx-1">
               <span>Export Report</span>
             </a>
             <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
@@ -25,15 +25,15 @@
       <!-- Nav -->
       <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
-          <a class="nav-link font-regular active">All
+          <a class="clickable nav-link font-regular active">All
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-regular">Starred
+          <a class="clickable nav-link font-regular">Starred
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-regular">Labbeled
+          <a class="clickable nav-link font-regular">Labbeled
           </a>
         </li>
       </ul>
@@ -55,7 +55,7 @@
               </h5>
             </span>
           </div>
-          <canvas id="engagementChart" width="500" height="500"></canvas>
+          <canvas class="chart" id="engagementChart" width="500" height="500"></canvas>
         </div>
       </div>
     </div> -->
@@ -63,20 +63,20 @@
       <div class="card">
         <div class="card-body">
           <div class="card-header">
-            <h2 style="color: #000066;">Achievement Ratio</h2><br>
-            <span>
+            <h4 style="color: #000066;">Achievement Ratio</h4>
+            <!-- <span>
               <h5 style="color: #000066;">
                 {{ startDate | date }} - {{ endDate | date }}
               </h5>
-            </span> <br>
-            <div class="form-group">
+            </span> <br> -->
+            <!-- <div class="form-group">
               <select class="form-control" id="sessionVal" name="isActive" (change)="changeSessionsChart()">
                 <option value="allSessions">All Sessions</option>
-                <!-- <option value="cognitiveSkillsII">Cognitive Skills II</option> -->
+                <option value="cognitiveSkillsII">Cognitive Skills II</option>
               </select>
-            </div>
+            </div> -->
           </div>
-          <canvas id="achievementChart" width="500" height="500"></canvas>
+          <canvas class="chart" id="achievementChart" width="500" height="500"></canvas>
         </div>
       </div>
     </div>
@@ -95,7 +95,7 @@
 </div>
 
 <!-- Filters dropdowns -->
-<div class="container">
+<div class="container hide-dropdown-filters">
   <div class="row">
     <div class="col-sm">
       <div class="dropdown">
@@ -190,9 +190,9 @@
         </div>
       </div>
     </div>
-    <!-- <div class="col-sm">
+    <div class="col-sm">
       Date
-    </div> -->
+    </div>
     <div class="col-sm">
       <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
@@ -273,7 +273,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let session of sessionDetails! | paginate: {
+        <tr class="clickable" *ngFor="let session of sessionDetails! | paginate: {
           itemsPerPage,
           currentPage,
           totalItems: totalSessionsCount

@@ -1,3 +1,16 @@
 ul.nav-tabs {
     background: #f8f9fa;
 }
+
+.chart {
+    max-height: 40vh;
+}
+
+// Hide dropdown filters temporarily.
+.hide-dropdown-filters {
+    display: none;
+}
+
+.clickable {
+    cursor: pointer;
+}
