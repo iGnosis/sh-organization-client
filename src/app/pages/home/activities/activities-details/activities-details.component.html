@@ -124,7 +124,23 @@
                   {{ activityDetails?.name }}
                 </h5>
               </span>
-              <span><i>Repetitions shown in the order in which it was performed.</i></span>
+              <div class="row">
+                <div class="col-md-8">
+                  <span><i>Repetitions shown in the order in which it was performed.</i></span>
+                </div>
+                <div class="col-md-4">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <span class='bi bi-square-fill' style='color: #1ac452'></span>
+                      <span class="p-2">Correct Motion</span>
+                    </div>
+                    <div class="col-md">
+                      <span class='bi bi-square-fill' style='color: #808da1'></span>
+                      <span class="p-2">Incorrect Motion</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <canvas class="chart-canvas" id="reactionTimeChart" width="500" height="500"></canvas>
           </div>
