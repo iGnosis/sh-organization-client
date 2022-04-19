@@ -15,7 +15,7 @@ export const GqlConstants = {
         count
       }
     }
-    patient(limit: 10, offset: 0, where: {medicalConditions: {_has_keys_any: $conditions}}) {
+    patient(where: {medicalConditions: {_has_keys_any: $conditions}}) {
       createdAt
       id
       identifier
