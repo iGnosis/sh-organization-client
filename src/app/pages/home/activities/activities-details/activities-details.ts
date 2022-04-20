@@ -170,6 +170,9 @@ export class ActivitiesDetailsComponent implements OnInit {
       options: {
         beginAtZero: true,
         responsive: true,
+        legend: {
+          display: true
+        },
         scales: {
           y: {
             title: {
