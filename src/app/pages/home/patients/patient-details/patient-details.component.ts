@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -10,14 +10,15 @@ import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { AchievementRatio, EngagementRatio } from 'src/app/types/chart';
-
+import {MatSort, Sort, SortDirection} from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss']
 })
 export class PatientDetailsComponent implements OnInit {
-
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   itemsPerPage = 10
   currentPage = 1
   isRowsChecked = false
@@ -25,6 +26,8 @@ export class PatientDetailsComponent implements OnInit {
   engagementChart: any
   startDate?: Date
   endDate?: Date
+
+  dataSource:any = new MatTableDataSource();
 
   patientId?: string
   details?: Patient
@@ -72,6 +75,7 @@ export class PatientDetailsComponent implements OnInit {
     )
     console.log('offset:', offset)
     console.log('fetchSessions:', sessions)
+
     const totalSessionsCount = sessions.session_aggregate.aggregate.count
     console.log('fetchSessions:totalSessionsCount:', totalSessionsCount)
     this.totalSessionsCount = totalSessionsCount
@@ -127,6 +131,8 @@ export class PatientDetailsComponent implements OnInit {
       this.sessionDetails = sessions
       console.log('sessionDetails:', this.sessionDetails)
     })
+    this.dataSource.data=this.sessionDetails;
+      console.log(this.dataSource.data,">>>>>>>");
   }
 
   async createNewSessionAndRedirect() {
@@ -436,7 +442,9 @@ export class PatientDetailsComponent implements OnInit {
     const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
     return `${numMinutes} minutes`
   }
-
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input')
     if (this.isRowsChecked) {

@@ -76,6 +76,8 @@ export class PatientsComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.tableOnePaginator;
+    // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
+    // element.click();
   }
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
@@ -95,7 +97,7 @@ export class PatientsComponent implements OnInit {
     this.dataSource.data = response.patient;
   }
   patients_data?: Array<Patient>;
-  openPatientDetailsPage(patientId: string) {
+  openPatientDetailsPage(patientId: any) {
     this.router.navigate(['/app/patients/', patientId])
   }
 

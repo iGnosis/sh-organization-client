@@ -69,7 +69,7 @@
     </div>
     <div class="table-responsive">
       <table mat-table [dataSource]="dataSource" matTableFilter [exampleEntity]="filterEntity"
-      [filterType]="filterType" matSort class="mat-elevation-z8" class="patients_table">
+      [filterType]="filterType" matSort class="mat-elevation-z8" class="patients_table" >
 
         <!--- Note that these columns can be defined in any order.
               The actual rendered columns are set as a property on the row definition" -->
@@ -77,8 +77,7 @@
         <!-- Position Column -->
         <ng-container matColumnDef="total_count">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox">
-    </mat-checkbox>
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
           </div> </th>
           <td mat-cell *matCellDef="let element">
             <div class="form-check">
@@ -93,10 +92,9 @@
             <!-- <button (click)=toggleDisplayDiv()><mat-icon>filter_alt</mat-icon></button> -->
             <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.identifier" value="{{seachValue}}">
           </th>
-          <td mat-cell *matCellDef="let element">
-            <a class="text-heading font-semibold" href="/app/patients/{{element.id}}">
-              {{element.identifier}}
-            </a>
+          <td mat-cell *matCellDef="let element" routerLink="/app/patients/{{element.id}}">
+            <span class="text-heading font-semibold"> {{element.identifier}} </span>
+              <!-- <a class="text-heading font-semibold" href="/app/patients/{{element.id}}">click</a> -->
           </td>
         </ng-container>
 
@@ -105,7 +103,7 @@
           <th mat-header-cell *matHeaderCellDef class="custom_table_header"> Medical Condition
             <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.medicalConditions" value="{{seachValue}}">
           </th>
-          <td mat-cell *matCellDef="let element">
+          <td mat-cell *matCellDef="let element" routerLink="/app/patients/{{element.id}}">
             <p></p>
             <span class="badge bg-soft-primary m-2"
               *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span>
@@ -115,7 +113,7 @@
         <!-- Symbol Column -->
         <ng-container matColumnDef="last_session">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Session </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text">
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
             <span *ngFor="let session of element.sessions">
               {{ session.createdAt | date:'short'}}
               <!-- Hacky shit. Expects the API to only return 1 result here. -->
@@ -125,14 +123,14 @@
 
         <ng-container matColumnDef="sessions">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header="sessions"> # Sessions </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text">
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
             {{ element.sessions_aggregate?.aggregate?.count || 0}}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="therapist">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header"> PRIMARY THERAPIST <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.therapist"> </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text">
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
             {{ element.primaryTherapistUser?.firstName}} {{ element.primaryTherapistUser?.lastName}}
           </td>
         </ng-container>

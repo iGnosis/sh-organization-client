@@ -15,6 +15,7 @@ table.mat-table.patients_table {
 		border-bottom-width: 1px;
 		box-shadow: inset 0 0 0 9999px var(--x-table-accent-bg);
 		padding-left: 0;
+    font-family: var(--x-body-font-family) !important;
 	}
 	th.mat-header-cell {
 		padding-top: 1.25rem;
