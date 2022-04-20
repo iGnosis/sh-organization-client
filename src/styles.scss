@@ -85,4 +85,7 @@ th.mat-header-cell .custom_checkbox .mat-checkbox-frame, .custom_checkbox .mat-c
   padding-left: inherit;
 }
 html, body { height: 100%; overflow: hidden;}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0;}
+table.mat-table.patients_detail_table td.mat-cell {font-family: var(--x-body-font-family)!important;}
+td.mat-cell.cdk-cell.cdk-column-label_star.mat-column-label_star {width: 4em;}
+.table td .progress {height: 4px;}

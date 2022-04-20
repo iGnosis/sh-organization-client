@@ -121,7 +121,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="sessions">
+        <ng-container matColumnDef="sessions_aggregate">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header="sessions"> # Sessions </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
             {{ element.sessions_aggregate?.aggregate?.count || 0}}

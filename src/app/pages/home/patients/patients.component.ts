@@ -43,7 +43,7 @@ export class PatientsComponent implements OnInit {
   patients?: Array<Patient>;
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  displayedColumns: string[] = ['total_count','identifier', 'medical_condition', 'last_session', 'sessions','therapist','actions'];
+  displayedColumns: string[] = ['total_count','identifier', 'medical_condition', 'last_session', 'sessions_aggregate','therapist','actions'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
