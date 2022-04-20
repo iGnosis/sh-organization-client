@@ -85,4 +85,13 @@ th.mat-header-cell .custom_checkbox .mat-checkbox-frame, .custom_checkbox .mat-c
   padding-left: inherit;
 }
 html, body { height: 100%; overflow: hidden;}
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0;}
+table.mat-table.patients_detail_table thead {background-color: #FAFAFB;}
+table.mat-table.patients_detail_table{font-family: var(--x-body-font-family)!important;}
+td.mat-cell.cdk-cell.cdk-column-label_star.mat-column-label_star {width: 5em;}
+td.mat-cell.cdk-cell.cdk-column-activity_performance.mat-column-activity_performance span.me-2 {min-width: 4em;}
+.table td .progress {height: 4px;}
+i.bi.bi-star.custom_star_color {color: #CBD5E0;font-size: 1rem;}
+mat-paginator.mat-paginator.top_pagination .mat-paginator-page-size {display: none;}
+mat-paginator.mat-paginator.top_pagination button.mat-paginator-navigation-first {display: none;}
+mat-paginator.mat-paginator.top_pagination button.mat-paginator-navigation-last {display: none;}

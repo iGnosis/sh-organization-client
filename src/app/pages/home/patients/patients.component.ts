@@ -78,6 +78,17 @@ export class PatientsComponent implements OnInit {
     this.dataSource.paginator = this.tableOnePaginator;
     // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
     // element.click();
+    // this.dataSource.sortingDataAccessor = (item:any, property) => {
+    //   switch (property) {
+    //     case 'date': {
+    //       let newDate = new Date(item.date);
+    //       return newDate;
+    //     }
+    //     default: {
+    //       return item[property];
+    //     }
+    //   }
+    // };
   }
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
