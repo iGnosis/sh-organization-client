@@ -5,7 +5,7 @@
       <div class="row align-items-center">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
-          <h1 class="h2 mb-0 ls-tight">Patients</h1>
+          <h1 class="h2 mb-0 ls-tight heading_text">Patients</h1>
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
@@ -46,8 +46,7 @@
       <span class="input-group-text pe-2">
         <i class="bi bi-search"></i>
       </span>
-      <input type="text" class="form-control" placeholder="Search Patient Details" aria-label="Search"
-        aria-describedby="">
+      <input type="text" class="form-control" [(ngModel)]="seachValue || filterEntity.identifier" placeholder="Search Patient Details" aria-label="Search" aria-describedby="">
     </div>
   </div>
   <!-- Container -->
@@ -57,65 +56,88 @@
         <div class="col">
           <h6>Patient List</h6>
         </div>
-        <div class="col text-end">
+        <!-- <div class="col text-end">
           <span class="me-3">1-10 of 67 </span>
 
           <span role="button" class="me-1">
             < </span>
               <span role="button"> > </span>
-              <!-- <i class="fa fa-less-than me-1"></i>
-            <i class="fa fa-greater-than"></i> -->
-        </div>
+               <i class="fa fa-less-than me-1"></i>
+            <i class="fa fa-greater-than"></i>
+        </div> -->
       </div>
     </div>
     <div class="table-responsive">
-      <table class="table table-hover table-nowrap">
-        <thead class="thead-light  bg-secondary">
-          <tr>
-            <th class="text-lg" scope="col">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckAll">
-                <label class="form-check-label" for="flexCheckAll"></label>
-              </div>
-            </th>
-            <th scope="col">Identifier</th>
-            <th scope="col">Medical Condition</th>
-            <th scope="col">Last Session</th>
-            <th scope="col"># Sessions</th>
-            <th scope="col">Primary Therapist</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="bg-light">
-          <tr *ngFor="let patient of patients" (click)="openPatientDetailsPage(patient.id!)">
-            <td class="text-lg" scope="col">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckRow1">
-                <label class="form-check-label" for="flexCheckRow1"></label>
-              </div>
-            </td>
-            <td>
-              <span class="text-heading font-semibold">
-                {{patient.identifier}}
-              </span>
-            </td>
-            <td>
-              <span class="badge bg-soft-primary m-2"
-                *ngFor="let condition of patient.medicalConditions | keyvalue">{{condition.key}}</span>
-            </td>
-            <td>
-              <span *ngFor="let session of patient.sessions">
-                {{ session.createdAt | date:'short'}}
-                <!-- Hacky shit. Expects the API to only return 1 result here. -->
-              </span>
-            </td>
-            <td>
-              {{ patient.sessions_aggregate?.aggregate?.count || 0}}
-            </td>
-            <td>
-              {{ patient.primaryTherapistUser?.firstName}} {{ patient.primaryTherapistUser?.lastName}}
-            </td>
-            <td class="text-end">
+      <table mat-table [dataSource]="dataSource" matTableFilter [exampleEntity]="filterEntity"
+      [filterType]="filterType" matSort class="mat-elevation-z8" class="patients_table" >
+
+        <!--- Note that these columns can be defined in any order.
+              The actual rendered columns are set as a property on the row definition" -->
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="total_count">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
+          </div> </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="form-check">
+              <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="identifier">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header class="custom_table_header"> Identifier
+            <!-- <button (click)=toggleDisplayDiv()><mat-icon>filter_alt</mat-icon></button> -->
+            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.identifier" value="{{seachValue}}">
+          </th>
+          <td mat-cell *matCellDef="let element" routerLink="/app/patients/{{element.id}}">
+            <span class="text-heading font-semibold"> {{element.identifier}} </span>
+              <!-- <a class="text-heading font-semibold" href="/app/patients/{{element.id}}">click</a> -->
+          </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="medical_condition">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> Medical Condition
+            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.medicalConditions" value="{{seachValue}}">
+          </th>
+          <td mat-cell *matCellDef="let element" routerLink="/app/patients/{{element.id}}">
+            <p></p>
+            <span class="badge bg-soft-primary m-2"
+              *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span>
+          </td>
+        </ng-container>
+
+        <!-- Symbol Column -->
+        <ng-container matColumnDef="last_session">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Session </th>
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
+            <span *ngFor="let session of element.sessions">
+              {{ session.createdAt | date:'short'}}
+              <!-- Hacky shit. Expects the API to only return 1 result here. -->
+            </span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sessions">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header="sessions"> # Sessions </th>
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
+            {{ element.sessions_aggregate?.aggregate?.count || 0}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="therapist">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> PRIMARY THERAPIST <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.therapist"> </th>
+          <td mat-cell *matCellDef="let element" class="custom_table_text" routerLink="/app/patients/{{element.id}}">
+            {{ element.primaryTherapistUser?.firstName}} {{ element.primaryTherapistUser?.lastName}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
+          <td mat-cell *matCellDef="let element">
               <div class="dropdown">
                 <a class="text-muted" (click)="null" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                   aria-expanded="false">
@@ -134,19 +156,24 @@
                 </div>
               </div>
             </td>
-          </tr>
-        </tbody>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
+      <mat-paginator [pageSize]="10"
+        #TableOnePaginator="matPaginator" showFirstLastButtons>
+      </mat-paginator>
     </div>
-    <div class="row p-5 bg-light">
-      <div class="col">
+    <div class="p-5 bg-light">
+      <!-- <div class="col">
         Showing 10 items out of 67 results found
       </div>
       <div class="col text-end">
         <span role="button" class="me-1">
           < </span>
             <span role="button"> > </span>
-      </div>
+      </div> -->
     </div>
   </div>
 </main>

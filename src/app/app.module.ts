@@ -29,7 +29,14 @@ import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { CareplansListComponent } from './components/careplan/careplans-list/careplans-list.component';
 import { ToastsComponent } from './components/toasts/toasts.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import {MatSortModule} from '@angular/material/sort';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatTableFilterModule } from 'mat-table-filter';
+import {MatIconModule} from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,7 +68,14 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
     NgChartsModule,
     NgxPaginationModule,
     HttpClientModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    BrowserAnimationsModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
+    MatCheckboxModule,
+    MatTableFilterModule,
+    MatIconModule
   ],
   providers: [
     PrivateGuard,
