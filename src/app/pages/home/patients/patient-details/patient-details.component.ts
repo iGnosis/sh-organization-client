@@ -10,24 +10,24 @@ import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { AchievementRatio, EngagementRatio } from 'src/app/types/chart';
-import {MatSort, Sort, SortDirection} from '@angular/material/sort';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
-  medicalConditions : any;
-  therapist : string;
+  medicalConditions: any;
+  therapist: string;
 }
 
 export class SpaceCraft {
   careplanByCareplan: string;
-  medicalConditions : any;
+  medicalConditions: any;
   isConstitutionClass: boolean;
   captain: Captain;
-  therapist : string;
+  therapist: string;
 }
 @Component({
   selector: 'app-patient-details',
@@ -41,7 +41,7 @@ export class PatientDetailsComponent implements OnInit {
     this.isShowDiv = !this.isShowDiv;
   }
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  seachValue:any;
+  seachValue: any;
   itemsPerPage = 10
   currentPage = 1
   isRowsChecked = false
@@ -51,12 +51,12 @@ export class PatientDetailsComponent implements OnInit {
   endDate?: Date
   // code for mat tab starts here
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
-  selection:any;
-  row : any;
-  dataSource:any = new MatTableDataSource();
+  selection: any;
+  row: any;
+  dataSource: any = new MatTableDataSource();
   filterEntity: SpaceCraft;
   filterType: MatTableFilter;
-  displayedColumns: string[] = ['total_count','label_star', 'careplanByCareplan', 'activity_type', 'timeDuration','createdAt','totalPerformanceRatio','activity_action'];
+  displayedColumns: string[] = ['total_count', 'label_star', 'careplanByCareplan', 'activity_type', 'timeDuration', 'createdAt', 'totalPerformanceRatio', 'activity_action'];
   // displayedColumns: string[] = ['total_count','label_star', 'care_plan', 'activity_type', 'activity_time','activity_date','activity_performance','activity_action'];
   // code for mat tab ends here
 
@@ -176,8 +176,8 @@ export class PatientDetailsComponent implements OnInit {
       this.sessionDetails = sessions
       console.log('sessionDetails:', this.sessionDetails)
     })
-    this.dataSource.data=this.sessionDetails;
-      console.log(this.dataSource.data,">>>>>>>");
+    this.dataSource.data = this.sessionDetails;
+    console.log(this.dataSource.data, ">>>>>>>");
   }
 
   async createNewSessionAndRedirect() {
@@ -227,6 +227,7 @@ export class PatientDetailsComponent implements OnInit {
         responsive: true,
         scales: {
           y: {
+            max: 100,
             title: {
               display: true,
               text: 'Session Completion',

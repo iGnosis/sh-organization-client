@@ -47,13 +47,13 @@
     <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <div class="mb-8 card-header">
-            <h2 style="color: #000066;">Patient Engagement</h2><br>
-            <span>
+          <div class="card-header">
+            <h4 style="color: #000066;">Patient Engagement</h4>
+            <!-- <span>
               <h5 style="color: #000066;">
                 {{ startDate | date }} - {{ endDate | date }}
               </h5>
-            </span>
+            </span> -->
           </div>
           <canvas class="chart-canvas" id="engagementChart" width="500" height="500"></canvas>
         </div>
@@ -89,8 +89,8 @@
     <span class="input-group-text pe-2">
       <i class="bi bi-search"></i>
     </span>
-    <input type="text" class="form-control" placeholder="Search session details" aria-label="Search"
-      aria-describedby="" [(ngModel)]="filterEntity.careplanByCareplan">
+    <input type="text" class="form-control" placeholder="Search session details" aria-label="Search" aria-describedby=""
+      [(ngModel)]="filterEntity.careplanByCareplan">
   </div>
 </div>
 
@@ -254,11 +254,13 @@
   </div>
   <div class="table-responsive">
     <table class="table table-hover table-nowrap patients_detail_table" matTableFilter [exampleEntity]="filterEntity"
-    [filterType]="filterType" mat-table [dataSource]="dataSource" matSort>
+      [filterType]="filterType" mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="total_count">
-        <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
-          <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
-        </div> </th>
+        <th mat-header-cell *matHeaderCellDef class="custom_table_header">
+          <div class="form-check">
+            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
+          </div>
+        </th>
         <td mat-cell *matCellDef="let element">
           <div class="form-check">
             <mat-checkbox class="custom_checkbox"></mat-checkbox>
@@ -343,9 +345,8 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openSessionDetailsPage(row.id!, row)"></tr>
     </table>
-    <mat-paginator [pageSize]="5"
-        #TableOnePaginator="matPaginator" showFirstLastButtons>
-      </mat-paginator>
+    <mat-paginator [pageSize]="5" #TableOnePaginator="matPaginator" showFirstLastButtons>
+    </mat-paginator>
     <!-- <nav>
       <pagination-controls (pageChange)="this.pageChanged($event)">
       </pagination-controls>
