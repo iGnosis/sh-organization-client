@@ -29,6 +29,22 @@ table.mat-table.patients_detail_table td.mat-cell {font-family: var(--x-body-fon
 td.mat-cell.cdk-cell.cdk-column-label_star.mat-column-label_star {width: 4em;}
 .table td .progress {height: 4px;}
 table.mat-table.mat-sort.patients_table thead {border-top: 1px solid #EDF2F7;}
-// header.px-3.px-lg-7.pt-7.custom_header {
-//   background-color: #fff;
-// }
+header.px-3.px-lg-7.pt-7.custom_header {background-color: #fff;border: 1px solid #EDF2F7;}
+.nav-tabs {border-bottom: unset;}
+td.mat-cell.cdk-cell.clicked_class {cursor: pointer;}
+a.btn.d-inline-flex.custom_btn_class:hover {background-color: #fff;color: #000066;}
+.input-group.input_box_icons_alignment {box-shadow: unset;}
+.input_box_icons_alignment input.form-control {flex: unset;width: 95%;}
+.align_search_filter {display: flex;align-items: center;}
+img.filter_align {margin-left: 1em;}
+.condition_select .mat-form-field-flex .mat-form-field-infix {border: unset;padding: 1em;display: flex;}
+.condition_select .mat-form-field-flex {padding: unset !important;}
+.condition_select .mat-form-field-flex .mat-select-arrow-wrapper{display: flex;}
+mat-form-field.mat-form-field.condition_select .mat-form-field-underline {display: none;}
+mat-form-field.mat-form-field.condition_select .mat-form-field-wrapper {padding: unset;}
+mat-form-field.mat-form-field.condition_select .mat-form-field-flex {display: flex;align-items: center;height: 2.7em;}
+mat-form-field.mat-form-field.condition_select {background: #FFFFFF;border-radius: 6px;}
+.condition_select .mat-form-field-flex {background-color: #fff;;box-shadow: 0px 1px 2px rgb(50 50 71 / 8%), 0px 0px 1px rgb(50 50 71 / 20%);border-radius: 6px;}
+.alignment_date.condition_select {margin-left: 1.5rem;}
+i.bi.bi-star.custom_star_color {color: #CBD5E0;font-size: 1.2rem;}
+img.icons_align {cursor: pointer;}

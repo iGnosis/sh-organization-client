@@ -11,6 +11,7 @@ import {LiveAnnouncer} from '@angular/cdk/a11y';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatTableFilter } from 'mat-table-filter';
+import {FormControl} from '@angular/forms';
 export class Captain {
   identifier: string;
   surname: string;
@@ -32,8 +33,13 @@ export class SpaceCraft {
 })
 
 export class PatientsComponent implements OnInit {
+  condition_filter = new FormControl();
   isShowDiv = true;
-
+  isShowFilter = true;
+  selected : any;
+  togglefilterDiv(){
+    this.isShowFilter=!this.isShowFilter;
+  }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
@@ -43,7 +49,7 @@ export class PatientsComponent implements OnInit {
   patients?: Array<Patient>;
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  displayedColumns: string[] = ['total_count','identifier', 'medical_condition', 'last_session', 'sessions_aggregate','therapist','actions'];
+  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session', 'sessions_aggregate','therapist','actions'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
