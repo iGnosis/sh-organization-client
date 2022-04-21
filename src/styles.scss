@@ -1,91 +1,34 @@
 // Import the default variables and function
 @import "@webpixels/css/core/functions";
-
 // Your theme's variables
 @import "./app/variables";
-
 // Webpixels' CSS
 @import "@webpixels/css/base";
 @import "@webpixels/css/forms";
 @import "@webpixels/css/components";
 @import "@webpixels/css/utilities";
-
-
 // Should not be global... or should be...?
-label.form-label {
-    color: #425466;
-    font-weight: 500;
-}
-
-.lg-modal .modal-dialog {
-    max-width: 90vw;
-}
+label.form-label {color: #425466;font-weight: 500;}
+.lg-modal .modal-dialog {max-width: 90vw;}
 // krina's scss starts here
-body, .mat-body, .mat-body-1, .mat-typography
-{
-  font-family: var(--x-body-font-family) !important;
-  font-size: var(--x-body-font-size);
-  font-weight: var(--x-body-font-weight);
-  line-height: var(--x-body-line-height);
-  color: var(--x-body-color);
-  text-align: var(--x-body-text-align);
-  background-color: var(--x-body-bg);
-  -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-}
-th.mat-header-cell.custom_table_header {
-  font-family: var(--x-body-font-family);
-  color: #525f7f;
-}
+body, .mat-body, .mat-body-1, .mat-typography{font-family: var(--x-body-font-family) !important;font-size: var(--x-body-font-size);font-weight: var(--x-body-font-weight);line-height: var(--x-body-line-height);color: var(--x-body-color);text-align: var(--x-body-text-align);background-color: var(--x-body-bg);-webkit-text-size-adjust: 100%;-webkit-tap-highlight-color: rgba(0, 0, 0, 0);}
+th.mat-header-cell.custom_table_header {font-family: var(--x-body-font-family);color: #525f7f;}
 // krina's scss ends here
-.multiselect-dropdown .dropdown-btn {
-    background: #FFF;
-    box-shadow: 0px 1px 2px rgba(50, 50, 71, 0.08);
-    padding: 12px !important;
-    border: unset !important;
-    .selected-item-container .selected-item {
-        background: #2F51AE !important;
-    }
-    .dropdown-multiselect__caret::before {
-        top: 90% !important;
-    }
+.multiselect-dropdown .dropdown-btn {background: #FFF;box-shadow: 0px 1px 2px rgba(50, 50, 71, 0.08);padding: 12px !important;border: unset !important;
+    .selected-item-container .selected-item {background: #2F51AE !important;}
+    .dropdown-multiselect__caret::before {top: 90% !important;}
 }
-
-.multiselect-item-checkbox input[type="checkbox"] + div::before, .multiselect-item-checkbox input[type="checkbox"]:checked + div::before {
-    border: 2px solid #2F51AE !important;
-    color: #2F51AE !important;
-    background: #2F51AE !important;
-}
-th.mat-header-cell .custom_checkbox .mat-checkbox-frame, .custom_checkbox .mat-checkbox-background {
-  width: 2em;
-  height: 2em;
-  border-radius: 0.5em;
-}
-.custom_checkbox .mat-checkbox-frame
-{
-  border-width: 1px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-}
-.custom_checkbox .mat-checkbox-frame,.custom_checkbox .mat-checkbox-inner-container {
-  width: 1.5em;
-  height: 1.5em;
-  vertical-align: top;
-  background-color: #FFF;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  -webkit-print-color-adjust: exact;
-  color-adjust: exact;
-  border-radius: 0.4em;
-}
-.form-check {
-  padding-left: inherit;
-}
+.multiselect-item-checkbox input[type="checkbox"] + div::before, .multiselect-item-checkbox input[type="checkbox"]:checked + div::before {border: 2px solid #2F51AE !important;color: #2F51AE !important;background: #2F51AE !important;}
+th.mat-header-cell .custom_checkbox .mat-checkbox-frame, .custom_checkbox .mat-checkbox-background {width: 2em;height: 2em;border-radius: 0.5em;}
+.custom_checkbox .mat-checkbox-frame{border-width: 1px;border: 1px solid rgba(0, 0, 0, 0.25);}
+.custom_checkbox .mat-checkbox-frame,.custom_checkbox .mat-checkbox-inner-container {width: 1.5em;height: 1.5em;vertical-align: top;background-color: #FFF;background-repeat: no-repeat;background-position: center;background-size: contain;-webkit-appearance: none;-moz-appearance: none;appearance: none;-webkit-print-color-adjust: exact;color-adjust: exact;border-radius: 0.4em;}
+.form-check {padding-left: inherit;}
 html, body { height: 100%; overflow: hidden;}
 body { margin: 0;}
 table.mat-table.patients_detail_table td.mat-cell {font-family: var(--x-body-font-family)!important;}
 td.mat-cell.cdk-cell.cdk-column-label_star.mat-column-label_star {width: 4em;}
 .table td .progress {height: 4px;}
+table.mat-table.mat-sort.patients_table thead {border-top: 1px solid #EDF2F7;}
+// header.px-3.px-lg-7.pt-7.custom_header {
+//   background-color: #fff;
+// }
