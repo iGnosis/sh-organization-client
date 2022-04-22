@@ -41,6 +41,12 @@ jobs:
           echo "ENVIRONMENT=staging" >> $GITHUB_ENV
           echo "NODE_ENV=staging" >> $GITHUB_ENV
 
+      - name: Set env to staging
+        if: endsWith(github.ref, '/dev')
+        run: |
+          echo "ENVIRONMENT=development" >> $GITHUB_ENV
+          echo "NODE_ENV=development" >> $GITHUB_ENV
+
       - name: npm install and npm run build
         run: |
           # Print current env
