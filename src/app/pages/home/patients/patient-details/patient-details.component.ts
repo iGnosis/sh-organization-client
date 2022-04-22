@@ -15,6 +15,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormControl} from '@angular/forms';
+import {SelectionModel} from '@angular/cdk/collections';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -36,7 +39,13 @@ export class SpaceCraft {
 })
 export class PatientDetailsComponent implements OnInit {
   isShowDiv = true;
-
+  selected : any;
+  isShowFilter = true;
+  allowMultiSelect: boolean | undefined;
+  initialSelection: unknown[] | undefined;
+  togglefilterDiv(){
+    this.isShowFilter=!this.isShowFilter;
+  }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
@@ -75,6 +84,7 @@ export class PatientDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
