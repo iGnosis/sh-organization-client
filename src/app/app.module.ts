@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { NgxPaginationModule } from 'ngx-pagination';
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule,ArrayOfComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -42,6 +42,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import {BreadcrumbModule} from 'xng-breadcrumb';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,7 +63,8 @@ import { MatInputModule } from '@angular/material/input';
     CarePlanComponent,
     CareplansListComponent,
     ToastsComponent,
-    SessionsDetailsComponent
+    SessionsDetailsComponent,
+    ArrayOfComponents
   ],
   imports: [
     BrowserModule,
@@ -85,7 +87,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+    BreadcrumbModule
   ],
   providers: [
     PrivateGuard,

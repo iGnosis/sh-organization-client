@@ -5,6 +5,7 @@
       <div class="row align-items-center">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
+          <xng-breadcrumb></xng-breadcrumb>
           <h1 class="h2 mb-0 ls-tight heading_text">Patients List</h1>
         </div>
         <!-- Actions -->
@@ -186,7 +187,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
       </table>
       <mat-paginator [pageSize]="10"
-        #TableOnePaginator="matPaginator" showFirstLastButtons>
+        #TableOnePaginator="matPaginator">
       </mat-paginator>
     </div>
     <div class="p-5 bg-light">
