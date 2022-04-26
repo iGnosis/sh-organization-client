@@ -42,6 +42,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import {BreadcrumbModule} from 'xng-breadcrumb';
 @NgModule({
   declarations: [
     AppComponent,
@@ -85,7 +86,8 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+    BreadcrumbModule
   ],
   providers: [
     PrivateGuard,

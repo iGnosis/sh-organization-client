@@ -29,12 +29,31 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard], children: [
+    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard],data: { breadcrumb: "Dashboard" },
+    children: [
       { path: 'dashboard', component: DashboardComponent },
-      { path: 'patients', component: PatientsComponent },
+      {
+        path: "patients",
+        canActivateChild: [PrivateGuard],
+        data: { breadcrumb: "Patient List" },
+        // outlet:'details',
+        children: [
+          {
+            path: ":id",
+            component: PatientDetailsComponent,
+            data: { breadcrumb: "Patient Details" },
+          },
+          {
+            path: '',
+            pathMatch: "full",
+            component: PatientsComponent,
+            data: { breadcrumb: "Patients" },
+          },
+        ],
+      },
       { path: 'patients/new', component: PatientAddComponent },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      { path: 'patients/:id', component: PatientDetailsComponent },
+      //{ path: 'patients/:id', component: PatientDetailsComponent },
       { path: 'care-plans', component: CarePlanComponent },
       { path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
