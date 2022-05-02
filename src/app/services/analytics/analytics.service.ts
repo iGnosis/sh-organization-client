@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment'
 })
 export class AnalyticsService {
 
-  baseURL: string = ''
+  baseURL = ''
   constructor(private http: HttpClient) {
     this.baseURL = environment.servicesEndpoint
   }

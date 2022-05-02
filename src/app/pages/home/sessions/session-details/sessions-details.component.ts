@@ -15,7 +15,7 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 export class SessionsDetailsComponent implements OnInit {
   sessionId?: string
   sessionCompletionRatio?: number
-  patientConditions: String = ''
+  patientConditions = ''
   sessionDetails?: any
   activityDetails: Array<Activity> = []
 
