@@ -84,7 +84,7 @@
             </td>
           </ng-container>
           <ng-container matColumnDef="name">
-            <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Name</th>
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Care plan</th>
             <td mat-cell *matCellDef="let element">
               {{ element.name }}
             </td>
@@ -98,7 +98,7 @@
           <ng-container matColumnDef="careplan_activities_aggregate">
             <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header"># Activities</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.careplan_activities_aggregate?.aggregate?.count}}
+              {{ element.careplan_activities.length}}
             </td>
           </ng-container>
           <ng-container matColumnDef="difficultyLevel">
@@ -107,10 +107,17 @@
               {{ element.difficultyLevel}}
             </td>
           </ng-container>
+          <!-- <ng-container matColumnDef="medicalConditions">
+            <th mat-header-cell *matHeaderCellDef class="custom_table_header">Medical Conditions</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="badge bg-soft-primary m-2"
+              *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span>
+            </td>
+          </ng-container> -->
           <ng-container matColumnDef="user_careplans_aggregate">
             <th mat-header-cell *matHeaderCellDef class="custom_table_header"># Active Patients</th>
             <td mat-cell *matCellDef="let element">
-              {{ element.user_careplans_aggregate?.aggregate?.count}}
+              {{ element.patient_careplans.length}}
             </td>
           </ng-container>
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

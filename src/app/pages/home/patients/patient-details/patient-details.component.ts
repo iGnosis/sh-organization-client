@@ -18,6 +18,7 @@ import { MatTableFilter } from 'mat-table-filter';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
+import {MatDialog} from '@angular/material/dialog';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -37,6 +38,7 @@ export class SpaceCraft {
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss']
 })
+
 export class PatientDetailsComponent implements OnInit {
   isShowDiv = true;
   selected : any;
@@ -80,9 +82,15 @@ export class PatientDetailsComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private graphqlService: GraphqlService,
     private chartService: ChartService,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    public dialog: MatDialog
   ) { }
-
+  openDialog() {
+    const dialogRef = this.dialog.open(StartSessionPopUp);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
   ngOnInit() {
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
@@ -540,3 +548,8 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 }
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'start-session-pop-up.component.html',
+})
+export class StartSessionPopUp {}

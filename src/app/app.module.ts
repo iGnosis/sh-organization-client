@@ -13,6 +13,7 @@ import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
+
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { NgChartsModule } from 'ng2-charts';
@@ -43,6 +44,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import {BreadcrumbModule} from 'xng-breadcrumb';
+import {MatDialogModule} from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
@@ -63,7 +65,7 @@ import {BreadcrumbModule} from 'xng-breadcrumb';
     CarePlanComponent,
     CareplansListComponent,
     ToastsComponent,
-    SessionsDetailsComponent
+    SessionsDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -87,7 +89,8 @@ import {BreadcrumbModule} from 'xng-breadcrumb';
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    BreadcrumbModule
+    BreadcrumbModule,
+    MatDialogModule
   ],
   providers: [
     PrivateGuard,

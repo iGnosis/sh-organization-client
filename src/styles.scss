@@ -74,3 +74,6 @@ mat-paginator.mat-paginator.paginator_border_radius{
   border-bottom-left-radius: 0.75rem;
   border-bottom-right-radius: 0.75rem;
 }
+.row.custom_alignment {
+  align-items: flex-end;
+}
