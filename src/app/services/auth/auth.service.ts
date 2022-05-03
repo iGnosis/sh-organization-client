@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment'
 })
 export class AuthService {
 
-  baseURL: string = ''
+  baseURL = ''
   constructor(private http: HttpClient) {
     this.baseURL = environment.servicesEndpoint
   }

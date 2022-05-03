@@ -15,7 +15,7 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 export class SessionsDetailsComponent implements OnInit {
   sessionId?: string
   sessionCompletionRatio?: number
-  patientConditions: String = ''
+  patientConditions = ''
   sessionDetails?: any
   activityDetails: Array<Activity> = []
 
@@ -235,11 +235,16 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
+    let myChart = null
     // @ts-ignore: TypeScript headache - fix later
-    const ctx = document.getElementById('reactionTimeChart').getContext('2d')
+    const ctx = document.getElementById('sessionReactionTimeChart').getContext('2d')
     if (ctx) {
+      if (myChart != null) {
+        // @ts-ignore: TypeScript headache - fix later
+        myChart.destroy()
+      }
       // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      myChart = new Chart(ctx, config)
     }
   }
 
@@ -304,6 +309,7 @@ export class SessionsDetailsComponent implements OnInit {
         scales: {
           y: {
             beginAtZero: true,
+            max: 100,
             title: {
               display: true,
               text: '% of correct motions',
@@ -346,11 +352,16 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
+    let myChart = null
     // @ts-ignore: TypeScript headache - fix later
-    const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
+    const ctx = <HTMLCanvasElement>document.getElementById('sessionAchievementChart').getContext('2d')!
     if (ctx) {
+      if (myChart != null) {
+        // @ts-ignore: TypeScript headache - fix later
+        myChart.destroy()
+      }
       // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      myChart = new Chart(ctx, config)
     }
   }
 

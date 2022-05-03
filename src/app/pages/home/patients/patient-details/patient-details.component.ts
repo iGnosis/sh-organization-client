@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -10,14 +10,49 @@ import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { AchievementRatio, EngagementRatio } from 'src/app/types/chart';
+import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatTableFilter } from 'mat-table-filter';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormControl} from '@angular/forms';
+import {SelectionModel} from '@angular/cdk/collections';
+import {MatDialog} from '@angular/material/dialog';
+export class Captain {
+  careplanByCareplan: string;
+  surname: string;
+  medicalConditions: any;
+  therapist: string;
+}
 
+export class SpaceCraft {
+  careplanByCareplan: string;
+  medicalConditions: any;
+  isConstitutionClass: boolean;
+  captain: Captain;
+  therapist: string;
+}
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss']
 })
-export class PatientDetailsComponent implements OnInit {
 
+export class PatientDetailsComponent implements OnInit {
+  isShowDiv = true;
+  selected : any;
+  isShowFilter = true;
+  allowMultiSelect: boolean | undefined;
+  initialSelection: unknown[] | undefined;
+  togglefilterDiv(){
+    this.isShowFilter=!this.isShowFilter;
+  }
+  toggleDisplayDiv() {
+    this.isShowDiv = !this.isShowDiv;
+  }
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  seachValue: any;
   itemsPerPage = 10
   currentPage = 1
   isRowsChecked = false
@@ -25,6 +60,16 @@ export class PatientDetailsComponent implements OnInit {
   engagementChart: any
   startDate?: Date
   endDate?: Date
+  // code for mat tab starts here
+  @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
+  selection: any;
+  row: any;
+  dataSource: any = new MatTableDataSource();
+  filterEntity: SpaceCraft;
+  filterType: MatTableFilter;
+  displayedColumns: string[] = ['total_count', 'label_star', 'careplanByCareplan', 'activity_type', 'timeDuration', 'createdAt', 'totalPerformanceRatio', 'activity_action'];
+  // displayedColumns: string[] = ['total_count','label_star', 'care_plan', 'activity_type', 'activity_time','activity_date','activity_performance','activity_action'];
+  // code for mat tab ends here
 
   patientId?: string
   details?: Patient
@@ -36,10 +81,20 @@ export class PatientDetailsComponent implements OnInit {
     private router: Router,
     private analyticsService: AnalyticsService,
     private graphqlService: GraphqlService,
-    private chartService: ChartService
+    private chartService: ChartService,
+    private _liveAnnouncer: LiveAnnouncer,
+    public dialog: MatDialog
   ) { }
-
+  openDialog() {
+    const dialogRef = this.dialog.open(StartSessionPopUp);
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
   ngOnInit() {
+    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
+    this.filterEntity = new SpaceCraft();
+    this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
@@ -47,8 +102,9 @@ export class PatientDetailsComponent implements OnInit {
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
+        // And when you have date picker implemented.
         this.startDate = new Date('2022-01-01T08:10:35.797Z')
-        this.endDate = new Date('2022-04-30T08:10:35.797Z')
+        this.endDate = new Date('2023-04-30T08:10:35.797Z')
 
         // by default, get data for past 7 days
         // this.endDate = new Date()
@@ -60,7 +116,17 @@ export class PatientDetailsComponent implements OnInit {
       }
     })
   }
-
+  announceSortChange(sortState: Sort) {
+    // This example uses English messages. If your application supports
+    // multiple language, you would internationalize these strings.
+    // Furthermore, you can customize the message to add additional
+    // details about the values being sorted.
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
   async fetchSessions(offset: number) {
     // we need to show sessions of a patient.
     let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
@@ -72,6 +138,7 @@ export class PatientDetailsComponent implements OnInit {
     )
     console.log('offset:', offset)
     console.log('fetchSessions:', sessions)
+
     const totalSessionsCount = sessions.session_aggregate.aggregate.count
     console.log('fetchSessions:totalSessionsCount:', totalSessionsCount)
     this.totalSessionsCount = totalSessionsCount
@@ -127,6 +194,8 @@ export class PatientDetailsComponent implements OnInit {
       this.sessionDetails = sessions
       console.log('sessionDetails:', this.sessionDetails)
     })
+    this.dataSource.data = this.sessionDetails;
+    console.log(this.dataSource.data, ">>>>>>>");
   }
 
   async createNewSessionAndRedirect() {
@@ -176,6 +245,7 @@ export class PatientDetailsComponent implements OnInit {
         responsive: true,
         scales: {
           y: {
+            max: 100,
             title: {
               display: true,
               text: 'Session Completion',
@@ -436,7 +506,10 @@ export class PatientDetailsComponent implements OnInit {
     const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
     return `${numMinutes} minutes`
   }
-
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.tableOnePaginator;
+  }
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input')
     if (this.isRowsChecked) {
@@ -475,3 +548,8 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 }
+@Component({
+  selector: 'dialog-content-example-dialog',
+  templateUrl: 'start-session-pop-up.component.html',
+})
+export class StartSessionPopUp {}

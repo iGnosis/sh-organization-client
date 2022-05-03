@@ -1,16 +1,17 @@
 <!-- Header -->
-<header class="px-3 px-lg-7 pt-7">
+<header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
       <div class="row align-items-center">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
-          <h1 class="h2 mb-0 ls-tight">Care Plans</h1>
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <h1 class="h2 mb-0 ls-tight mt-5">Care Plans</h1>
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
           <div class="mx-n1">
-            <a routerLink="/app/care-plans/new" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+            <a routerLink="/app/care-plans/new" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 ">
               <span class=" pe-2">
                 <i class="bi bi-plus "></i>
               </span>
@@ -22,16 +23,16 @@
       <!-- Nav -->
       <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
-          <a 
-          (click)="selectedMedicalConditions = allMedicalConditions" 
+          <a
+          (click)="selectedMedicalConditions = allMedicalConditions"
           class="nav-link font-regular active"
           [ngClass]="{'active': selectedMedicalConditions.length > 1}"
           >All
         </a>
       </li>
       <li class="nav-item" *ngFor="let condition of allMedicalConditions">
-        <a 
-        role="button" 
+        <a
+        role="button"
         (click)="selectDataSegment(condition)"
         [ngClass]="{'active': selectedMedicalConditions.length == 1 && selectedMedicalConditions[0] == condition}"
         class="nav-link font-regular">
@@ -44,7 +45,7 @@
 </header>
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-  
+
   <div class="container-xl mb-5">
     <div class="input-group input-group-sm input-group-inline">
       <span class="input-group-text pe-2">
@@ -55,8 +56,77 @@
   </div>
   <!-- Container -->
   <div class="container-xl mt-5">
-    <app-careplans-list (selected)="onCarePlansSelected($event)"></app-careplans-list>
+    <div class="rounded-top bg-light p-5">
+      <div class="row">
+        <div class="col">
+          <h6>Care Plans</h6>
+        </div>
+        <!-- <div class="col text-end">
+          <span class="me-3">1-10 of 67 </span>
+
+          <span role="button" class="me-1"> < </span>
+          <span role="button"> > </span>
+           <i class="fa fa-less-than me-1"></i>
+            <i class="fa fa-greater-than"></i>
+          </div> -->
+        </div>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-nowrap" mat-table [dataSource]="dataSource" matSort>
+          <ng-container matColumnDef="total_count">
+            <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
+            </div> </th>
+            <td mat-cell *matCellDef="let element">
+              <div class="form-check">
+                <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
+              </div>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Care plan</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.name }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="estimatedDuration">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Estimated Duration</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.estimatedDuration }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="careplan_activities_aggregate">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header"># Activities</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.careplan_activities.length}}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="difficultyLevel">
+            <th mat-header-cell *matHeaderCellDef class="custom_table_header">Difficulty</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.difficultyLevel}}
+            </td>
+          </ng-container>
+          <!-- <ng-container matColumnDef="medicalConditions">
+            <th mat-header-cell *matHeaderCellDef class="custom_table_header">Medical Conditions</th>
+            <td mat-cell *matCellDef="let element">
+              <span class="badge bg-soft-primary m-2"
+              *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span>
+            </td>
+          </ng-container> -->
+          <ng-container matColumnDef="user_careplans_aggregate">
+            <th mat-header-cell *matHeaderCellDef class="custom_table_header"># Active Patients</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.patient_careplans.length}}
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
+        </table>
+        <mat-paginator [pageSize]="10"
+        #TableOnePaginator="matPaginator">
+      </mat-paginator>
+      </div>
   </div>
   </main>
-  
-  
+
