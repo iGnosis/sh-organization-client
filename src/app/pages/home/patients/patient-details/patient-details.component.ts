@@ -46,7 +46,7 @@ export class PatientDetailsComponent implements OnInit {
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
-  patients: any;
+  active_careplans: any;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -200,8 +200,8 @@ export class PatientDetailsComponent implements OnInit {
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
-    this.patients = response.patient
-    console.log(response,"response");
+    this.active_careplans = response.patient[0].patient_careplans[0].careplanByCareplan
+    console.log(this.active_careplans,"response");
   }
 
   async createNewSessionAndRedirect() {
