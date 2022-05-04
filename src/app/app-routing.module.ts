@@ -39,6 +39,11 @@ const routes: Routes = [
         // outlet:'details',
         children: [
           {
+            path: "new",
+            component: PatientAddComponent,
+            data: { breadcrumb: "Patient Add" },
+          },
+          {
             path: ":id",
             component: PatientDetailsComponent,
             data: { breadcrumb: "Patient Details" },
@@ -51,7 +56,7 @@ const routes: Routes = [
           },
         ],
       },
-      { path: 'patients/new', component: PatientAddComponent },
+      //{ path: 'patients/new', component: PatientAddComponent },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
       //{ path: 'patients/:id', component: PatientDetailsComponent },
       { path: 'care-plans', component: CarePlanComponent,data: { breadcrumb: "Care Plans" } },
