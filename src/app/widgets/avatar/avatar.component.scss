@@ -1,0 +1,38 @@
+.avatar {
+    &.sm {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        color: #FFF;
+        font-size: 16px;
+
+        &.text-dark {
+            color: #000066;
+        }
+    }
+
+    &.md {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        color: #FFF;
+        font-size: 32px;
+
+        &.text-dark {
+            color: #000066;
+        }
+    }
+
+    &.lg {
+        width: 128px;
+        height: 128px;
+        border-radius: 50%;
+        color: #FFF;
+        font-size: 64px;
+
+        &.text-dark {
+            color: #000066;
+        }
+    }
+
+}

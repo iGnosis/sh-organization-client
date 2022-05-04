@@ -45,6 +45,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import {BreadcrumbModule} from 'xng-breadcrumb';
 import {MatDialogModule} from '@angular/material/dialog';
+import { AvatarComponent } from './widgets/avatar/avatar.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -66,6 +67,7 @@ import {MatDialogModule} from '@angular/material/dialog';
     CareplansListComponent,
     ToastsComponent,
     SessionsDetailsComponent,
+    AvatarComponent,
   ],
   imports: [
     BrowserModule,
