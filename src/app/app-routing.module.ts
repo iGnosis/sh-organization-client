@@ -39,14 +39,14 @@ const routes: Routes = [
         // outlet:'details',
         children: [
           {
-            path: ":id",
-            component: PatientDetailsComponent,
-            data: { breadcrumb: "Patient Details" },
-          },
-          {
             path: "new",
             component: PatientAddComponent,
             data: { breadcrumb: "Patient Add" },
+          },
+          {
+            path: ":id",
+            component: PatientDetailsComponent,
+            data: { breadcrumb: "Patient Details" },
           },
           {
             path: '',
