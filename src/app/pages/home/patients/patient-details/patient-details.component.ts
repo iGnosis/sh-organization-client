@@ -19,6 +19,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
+import { StartSessionPopUp } from './start-session-pop-up.component';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -45,6 +46,7 @@ export class PatientDetailsComponent implements OnInit {
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
+  patients: any;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -98,7 +100,7 @@ export class PatientDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
-        console.log('patientId:', this.patientId);
+        console.log('patientId:', this.patientId,this.route);
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
@@ -136,6 +138,7 @@ export class PatientDetailsComponent implements OnInit {
         offset
       }
     )
+
     console.log('offset:', offset)
     console.log('fetchSessions:', sessions)
 
@@ -195,7 +198,10 @@ export class PatientDetailsComponent implements OnInit {
       console.log('sessionDetails:', this.sessionDetails)
     })
     this.dataSource.data = this.sessionDetails;
-    console.log(this.dataSource.data, ">>>>>>>");
+    //console.log(this.dataSource.data, ">>>>>>>");
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
+    this.patients = response.patient
+    console.log(response,"response");
   }
 
   async createNewSessionAndRedirect() {
@@ -548,8 +554,40 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 }
-@Component({
-  selector: 'dialog-content-example-dialog',
-  templateUrl: 'start-session-pop-up.component.html',
-})
-export class StartSessionPopUp {}
+// @Component({
+//   selector: 'dialog-content-example-dialog',
+//   templateUrl: 'start-session-pop-up.component.html',
+// })
+// export class StartSessionPopUp {
+//   patientId?: string
+//   itemsPerPage: any;
+//   dataSource: any;
+//   constructor(
+//     private route: ActivatedRoute,
+//     private router: Router,
+//     private analyticsService: AnalyticsService,
+//     private graphqlService: GraphqlService,
+//   ) { }
+//   ngOnInit() {
+//     // this.route.paramMap.subscribe(async (params: ParamMap) => {
+//     //   this.patientId = params.get('id') || ''
+//     //   if (this.patientId) {
+//     //     //console.log('patientId:', this.patientId);
+//     //   }
+//     // })
+//     console.log("hello",this.patientId);
+//   }
+//   async fetchSessions(offset: number) {
+//     // we need to show sessions of a patient.
+//     let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
+//       {
+//         patientId: this.patientId,
+//         limit: this.itemsPerPage,
+//         offset
+//       }
+//     )
+//     console.log('offset:', offset)
+//     console.log('fetchSessions:', sessions)
+//     console.log(this.dataSource.data, ">>>>>>>");
+//   }
+// }
