@@ -15,11 +15,14 @@
               <span>Select Dates</span>
             </a> -->
             <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="fill">
-              <input matInput [matDatepicker]="picker" placeholder="Select Dates">
-              <mat-datepicker-toggle matSuffix [for]="picker">
+              <mat-date-range-input [rangePicker]="picker1">
+                <input matStartDate placeholder="Select Dates">
+                <input matEndDate>
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="picker1">
                 <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
               </mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
+              <mat-date-range-picker #picker1></mat-date-range-picker>
             </mat-form-field>
             <!-- <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1"> -->
               <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
@@ -205,11 +208,11 @@
     </div>
     <div class="col-sm">
       <mat-form-field class="details_page alignment_date condition_select" appearance="fill">
-        <input matInput [matDatepicker]="picker1" placeholder="Date">
-        <mat-datepicker-toggle matSuffix [for]="picker1">
+        <input matInput [matDatepicker]="picker" placeholder="Date">
+        <mat-datepicker-toggle matSuffix [for]="picker">
           <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
         </mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
+        <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
     </div>
     <div class="col-sm">
@@ -228,14 +231,14 @@
     </div>
   </div>
 </div>
-<div class="container-xl mt-5">
+<!-- <div class="container-xl mt-5">
   <div class="rounded-top bg-light p-5 custom_rounded_top">
     <div class="row custom_alignment">
       <div class="col-md-6 col-12 mb-3 mb-md-0">
-        <!-- Title -->
+         Title
         <h1 class="h2 mb-0 ls-tight">Active Care Plans</h1>
       </div>
-      <!-- Actions -->
+       Actions
       <div class="col-md-6 col-12 text-md-end">
         <div class="mx-n1">
           <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
@@ -245,7 +248,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <!-- Session table -->
 <div class="container-xl mt-5">
   <div class="rounded-top bg-light p-5 custom_rounded_top">

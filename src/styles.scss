@@ -180,9 +180,13 @@ mat-paginator.mat-paginator.care_plan_table_paginator {
 mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates .mat-form-field-flex {
   border-radius: 0.375rem;
 }
-mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates {
-  width: 10em;
-}
+
 mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates input {
   color: #fff !important;
+}
+span.mat-date-range-input-separator {
+  color: #fff;
+}
+input#mat-date-range-input-0 {
+  top: 3px;
 }
