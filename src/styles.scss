@@ -58,22 +58,135 @@ table.mat-table.patients_detail_table tr.mat-header-row {--x-bg-opacity: 1;backg
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
   background-color: rgba(var(--x-primary-rgb)) !important;
 }
-tbody tr.mat-row.row_hover mat-checkbox.custom_checkbox .mat-checkbox-background {
-  width: 1.5em;
-  height: 1.5em;
+tbody {
+	tr.mat-row.row_hover {
+		mat-checkbox.custom_checkbox {
+			.mat-checkbox-background {
+				width: 1.5em;
+				height: 1.5em;
+			}
+		}
+	}
 }
 .table-shadow {
-  box-shadow: 0px 3px 3px -1px rgb(10 22 70 / 10%), 0px 0px 1px 0px rgb(10 22 70 / 6%);
-  border-radius: 0.75rem;
+	box-shadow: 0px 3px 3px -1px rgb(10 22 70 / 10%), 0px 0px 1px 0px rgb(10 22 70 / 6%);
+	border-radius: 0.75rem;
 }
 .bg-light.custom_rounded_top {
-  border-top-left-radius: 0.75rem;
-  border-top-right-radius: 0.75rem;
+	border-top-left-radius: 0.75rem;
+	border-top-right-radius: 0.75rem;
 }
-mat-paginator.mat-paginator.paginator_border_radius{
-  border-bottom-left-radius: 0.75rem;
-  border-bottom-right-radius: 0.75rem;
+mat-paginator.mat-paginator.paginator_border_radius {
+	border-bottom-left-radius: 0.75rem;
+	border-bottom-right-radius: 0.75rem;
 }
 .row.custom_alignment {
-  align-items: flex-end;
+	align-items: flex-end;
+}
+// table.care_plan_table {
+// 	background-color: transparent !important;
+// 	border-collapse: separate;
+// 	border-spacing: 0 1em !important;
+// 	td.mat-cell {
+// 		border: unset !important;
+// 		&:first-child {
+// 			border-radius: 1em 0 0 1em !important;
+// 		}
+// 		&:last-child {
+// 			border-radius: 0 1em 1em 0 !important;
+// 		}
+// 	}
+// 	th.mat-header-cell.cdk-header-cell.custom_table_header {
+// 		border: unset;
+// 		&:first-child {
+// 			border-radius: 1em 0 0 1em !important;
+// 		}
+// 		&:last-child {
+// 			border-radius: 0 1em 1em 0 !important;
+// 		}
+// 	}
+// 	tr.mat-header-row {
+// 		background-color: #FAFAFB;
+// 		border-radius: 1em;
+// 		box-shadow: 0px 3px 8px -1px rgb(50 50 71 / 5%);
+// 	}
+// 	tr.mat-row {
+// 		background-color: #fff;
+// 		box-shadow: 0px 3px 8px -1px rgb(50 50 71 / 5%);
+// 	}
+// }
+// mat-paginator.mat-paginator.care_plan_table_paginator {
+// 	background-color: transparent !important;
+// }
+
+// table.care_plan_table tbody td.mat-cell {
+//   background-color: #fff;
+// }
+// table.care_plan_table tbody td.mat-cell:first-child {
+//   background-color: unset;
+// }
+// scss conversion scss
+.custom_alignment {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+img.icons_aligne {
+  width: auto;
+  height: 1.3em;
+}
+input.form-control.search_in_popup {
+  border-radius: 1em;
+  height: 24px;
+  padding: 1.1em;
+}
+table.mat-table.care_plan_table tr.mat-header-row {
+  --x-bg-opacity: 1;
+  background-color: rgba(var(--x-secondary-rgb), var(--x-bg-opacity)) !important;
+}
+table.mat-table.care_plan_table {
+  border-top: 1px solid #EDF2F7;
+}
+table.mat-table.care_plan_table > :not(:first-child) {
+  border-top: 0px;
+}
+table.mat-table.care_plan_table td.mat-cell {
+  padding: 1.3rem 1rem 1.3rem 0rem;
+  font-family: var(--x-body-font-family) !important;
+}
+td.mat-cell.cdk-cell.cdk-column-total_count.mat-column-total_count {
+  padding-left: 1.5rem;
+}
+td.mat-cell.cdk-cell.cdk-column-difficultyLevel.mat-column-difficultyLevel {
+  text-transform: capitalize;
+}
+.rounded-top {
+  border-top-left-radius: 1rem !important;
+  border-top-right-radius: 1rem !important;
+}
+mat-paginator.mat-paginator.care_plan_table_paginator {
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+.select_dates .mat-form-field-flex {
+  background-color: #000066;
+}
+.select_dates input::placeholder {
+  color: #fff !important;
+}
+.select_dates button.mat-icon-button {
+  color: #fff;
+}
+mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates .mat-form-field-flex {
+  border-radius: 0.375rem;
+}
+
+mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates input {
+  color: #fff !important;
+}
+span.mat-date-range-input-separator {
+  color: #fff;
+}
+input#mat-date-range-input-0 {
+  top: 3px;
 }

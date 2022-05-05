@@ -15,7 +15,7 @@ export class CarePlanComponent implements OnInit {
   row : any;
   initialSelection = [];
   allowMultiSelect = true;
-  displayedColumns: string[] = ['total_count','name','estimatedDuration','careplan_activities_aggregate','difficultyLevel','user_careplans_aggregate'];
+  displayedColumns: string[] = ['total_count','name','estimatedDuration','careplan_activities_aggregate','difficultyLevel','user_careplans_aggregate','actions'];
   dataSource = new MatTableDataSource();
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
