@@ -122,8 +122,8 @@ export class DashboardComponent implements OnInit {
       id: 'quadrants',
       beforeDraw(chart: Chart, args: any, options: any) {
         const { ctx, chartArea: { left, top, right, bottom }, scales: { x, y } } = chart;
-        let midX = x.getPixelForValue(50);
-        let midY = y.getPixelForValue(50);
+        const midX = x.getPixelForValue(50);
+        const midY = y.getPixelForValue(50);
         ctx.save();
         ctx.fillStyle = options.topLeft;
         ctx.fillRect(left, top, midX - left, midY - top);
