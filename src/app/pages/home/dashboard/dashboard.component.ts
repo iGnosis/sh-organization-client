@@ -9,9 +9,12 @@ import { Chart, ChartConfiguration } from 'chart.js';
 export class DashboardComponent implements OnInit {
 
   patientAdherenceCtx: any
-  patientAdherenceCanvas: any
+  patientAdherenceCanvas: HTMLCanvasElement
+  currentDate: Date
 
-  constructor() { }
+  constructor() {
+    this.currentDate = new Date();
+  }
 
   ngOnInit(): void {
     this.initPatientAdherenceChart();
@@ -45,11 +48,6 @@ export class DashboardComponent implements OnInit {
               }
             }
           },
-        },
-        animation: {
-          onProgress: (event) => {
-            this.drawSegmentValues(event.chart)
-          }
         }
       }
     };
@@ -61,7 +59,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  drawSegmentValues(chart: any) {
+  _drawSegmentValues(chart: any) {
     chart._sortedMetasets[0].data.forEach((data: any) => {
       this.patientAdherenceCtx.fillStyle = 'white';
       const textSize = this.patientAdherenceCanvas.width / 10;
