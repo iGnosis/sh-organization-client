@@ -1,8 +1,12 @@
 .dashboard-widget .list-group {
-    max-height: 300px;
-    overflow: scroll;
+  max-height: 300px;
+  overflow: scroll;
 }
 
 .card-title {
-    font-size: 3rem;
+  font-size: 3rem;
+}
+
+.chart-canvas {
+  max-height: 40vh;
 }

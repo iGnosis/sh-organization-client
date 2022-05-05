@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
 import { PrivateGuard } from './guards/private-guard';
@@ -59,7 +58,7 @@ const routes: Routes = [
       //{ path: 'patients/new', component: PatientAddComponent },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
       //{ path: 'patients/:id', component: PatientDetailsComponent },
-      { path: 'care-plans', component: CarePlanComponent,data: { breadcrumb: "Care Plans" } },
+      { path: 'care-plans', component: CarePlanComponent, data: { breadcrumb: "Care Plans" } },
       { path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
