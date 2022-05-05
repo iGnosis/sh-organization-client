@@ -33,6 +33,7 @@ export class SpaceCraft {
   isConstitutionClass: boolean;
   captain: Captain;
   therapist: string;
+  identifier: string;
 }
 @Component({
   selector: 'app-patient-details',
