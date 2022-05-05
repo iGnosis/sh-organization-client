@@ -32,19 +32,19 @@ import { ToastsComponent } from './components/toasts/toasts.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import {MatSortModule} from '@angular/material/sort';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableFilterModule } from 'mat-table-filter';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import {BreadcrumbModule} from 'xng-breadcrumb';
-import {MatDialogModule} from '@angular/material/dialog';
+import { BreadcrumbModule } from 'xng-breadcrumb';
+import { MatDialogModule } from '@angular/material/dialog';
 @NgModule({
   declarations: [
     AppComponent,
