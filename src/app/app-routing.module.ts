@@ -19,7 +19,7 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
 
 
 const routes: Routes = [
-  { path: '', redirectTo: 'public/auth/sign-in', pathMatch: 'full' },
+  { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
   {
     path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
       { path: 'auth/sign-in', component: SignInComponent },
@@ -28,9 +28,25 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard], data: { breadcrumb: "Home" },
+    path: 'app', 
+    component: PrivateComponent, 
+    canActivateChild: [PrivateGuard], 
+    data: { 
+      breadcrumb: {
+        label: 'Home',
+        info: 'Home',
+        routeInterceptor: (routeLink: any, breadcrumb: any)=> {
+          console.log(breadcrumb);
+          return '/app/dashboard';
+        }
+      },
+    },
     children: [
-      { path: 'dashboard', component: DashboardComponent },
+      { 
+        path: 'dashboard', 
+        component: DashboardComponent,
+        data: { breadcrumb: {skip: true} },
+      },
       {
         path: "patients",
         canActivateChild: [PrivateGuard],
