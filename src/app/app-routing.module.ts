@@ -29,7 +29,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard],data: { breadcrumb: "Dashboard" },
+    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard], data: { breadcrumb: "Dashboard" },
     children: [
       { path: 'dashboard', component: DashboardComponent },
       {
@@ -59,7 +59,7 @@ const routes: Routes = [
       //{ path: 'patients/new', component: PatientAddComponent },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
       //{ path: 'patients/:id', component: PatientDetailsComponent },
-      { path: 'care-plans', component: CarePlanComponent,data: { breadcrumb: "Care Plans" } },
+      { path: 'care-plans', component: CarePlanComponent, data: { breadcrumb: "Care Plans" } },
       { path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
