@@ -29,7 +29,7 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard],data: { breadcrumb: "Dashboard" },
+    path: 'app', component: PrivateComponent, canActivateChild: [PrivateGuard], data: { breadcrumb: "Home" },
     children: [
       { path: 'dashboard', component: DashboardComponent },
       {
