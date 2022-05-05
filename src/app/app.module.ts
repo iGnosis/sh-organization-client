@@ -46,6 +46,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
+import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -68,6 +69,7 @@ import { AvatarComponent } from './widgets/avatar/avatar.component';
     ToastsComponent,
     SessionsDetailsComponent,
     AvatarComponent,
+    PatientsListComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { filter } from 'rxjs';
 import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/invite-patient.component';
 
 @Component({
@@ -10,9 +11,17 @@ import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/inv
 })
 export class PrivateComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+          if (event.url == '/app') {
+            this.router.navigate(['/'])
+          }
+      }
+  });
+
   }
 
   // invitePatient() {

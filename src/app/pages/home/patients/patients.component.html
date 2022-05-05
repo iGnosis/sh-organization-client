@@ -2,12 +2,13 @@
 <header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
-      <div class="row custom_alignment">
+      <div class="row custom_alignment p-5">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
           <xng-breadcrumb separator=">"></xng-breadcrumb>
           <router-outlet></router-outlet>
           <h1 class="h2 mb-0 ls-tight heading_text mt-5">Patients List</h1>
+          <!-- <avatar text="YA" [bgAuto]="true" size="lg"></avatar> -->
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
@@ -23,7 +24,7 @@
       </div>
       <!-- Nav -->
       <!-- {{ selectedMedicalConditions | json }} -->
-      <ul class="nav nav-tabs overflow-x mt-2">
+      <!-- <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
           <a (click)="selectedMedicalConditions = allMedicalConditions" class="nav-link font-regular active"
             [ngClass]="{'active': selectedMedicalConditions.length > 1}">All
@@ -36,170 +37,11 @@
             {{condition}}
           </a>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </header>
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-
-  <div class="container-xl mb-5">
-    <div class="align_search_filter">
-      <div class="input-group input-group-sm input-group-inline input_box_icons_alignment">
-      <span class="input-group-text pe-2">
-        <i class="bi bi-search"></i>
-      </span>
-      <input type="text" class="form-control" [(ngModel)]="seachValue || filterEntity.identifier" placeholder="Search Patient Details" aria-label="Search" aria-describedby="">
-      </div>
-      <img src="/assets/images/filter_icon.svg"(click)="togglefilterDiv()" class="icons_align"/>
-      <img src="/assets/images/setting.svg" class="filter_align icons_align"/>
-    </div>
-    <div class="filter_toggle mt-5" [hidden]="isShowFilter">
-      <mat-form-field appearance="fill" class="condition_select">
-        <!-- <mat-label>Conditions</mat-label> -->
-        <mat-select [formControl]="condition_filter" multiple [(value)]="selected" placeholder="Condition">
-          <mat-option *ngFor="let topping of selectedMedicalConditions" [value]="topping">{{topping}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="alignment_date condition_select" appearance="fill">
-        <input matInput [matDatepicker]="picker" placeholder="Date">
-        <mat-datepicker-toggle matSuffix [for]="picker">
-          <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
-        </mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </div>
-  </div>
-  <!-- Container -->
-  <div class="container-xl mt-5">
-    <div class="rounded-top bg-light p-5">
-      <div class="row">
-        <div class="col">
-          <h6>Patient List</h6>
-        </div>
-        <!-- <div class="col text-end">
-          <span class="me-3">1-10 of 67 </span>
-
-          <span role="button" class="me-1">
-            < </span>
-              <span role="button"> > </span>
-               <i class="fa fa-less-than me-1"></i>
-            <i class="fa fa-greater-than"></i>
-        </div> -->
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" matTableFilter [exampleEntity]="filterEntity"
-      [filterType]="filterType" matSort class="mat-elevation-z8" class="patients_table" >
-
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-
-        <!-- Position Column -->
-        <ng-container matColumnDef="total_count">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
-          </div> </th>
-          <td mat-cell *matCellDef="let element">
-            <div class="form-check">
-              <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
-            </div>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="label_star">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
-          <td mat-cell *matCellDef="let element">
-            <i class="bi bi-star custom_star_color"></i>
-          </td>
-        </ng-container>
-        <!-- Name Column -->
-        <ng-container matColumnDef="identifier">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="custom_table_header"> Identifier
-            <!-- <button (click)=toggleDisplayDiv()><mat-icon>filter_alt</mat-icon></button> -->
-            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.identifier" value="{{seachValue}}">
-          </th>
-          <td mat-cell *matCellDef="let element" class="clicked_class" routerLink="/app/patients/{{element.id}}">
-            <span class="text-heading font-semibold"> {{element.identifier}} </span>
-              <!-- <a class="text-heading font-semibold" href="/app/patients/{{element.id}}">click</a> -->
-          </td>
-        </ng-container>
-
-        <!-- Weight Column -->
-        <ng-container matColumnDef="medical_condition">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> Medical Condition
-            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.medicalConditions" value="{{seachValue}}">
-          </th>
-          <td mat-cell *matCellDef="let element" class="clicked_class" routerLink="/app/patients/{{element.id}}">
-            <p></p>
-            <span class="badge bg-soft-primary m-2"
-              *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span>
-          </td>
-        </ng-container>
-
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="last_session">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Session </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
-            <span *ngFor="let session of element.sessions">
-              {{ session.createdAt | date:'short'}}
-              <!-- Hacky shit. Expects the API to only return 1 result here. -->
-            </span>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="sessions_aggregate">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header="sessions"> # Sessions </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
-            {{ element.sessions_aggregate?.aggregate?.count || 0}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="therapist">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> PRIMARY THERAPIST <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.therapist"> </th>
-          <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
-            {{ element.primaryTherapistUser?.firstName}} {{ element.primaryTherapistUser?.lastName}}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
-          <td mat-cell *matCellDef="let element">
-              <div class="dropdown">
-                <a class="text-muted" (click)="null" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <a href="#!" class="dropdown-item">
-                    Edit Patient Details
-                  </a>
-                  <a href="#!" class="dropdown-item">
-                    Archive Patient Details
-                  </a>
-                  <a href="#!" class="dropdown-item">
-                    Open Patient Profile
-                  </a>
-                </div>
-              </div>
-            </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
-      </table>
-      <mat-paginator [pageSize]="10"
-        #TableOnePaginator="matPaginator" showFirstLastButtons>
-      </mat-paginator>
-    </div>
-    <div class="p-5 bg-light">
-      <!-- <div class="col">
-        Showing 10 items out of 67 results found
-      </div>
-      <div class="col text-end">
-        <span role="button" class="me-1">
-          < </span>
-            <span role="button"> > </span>
-      </div> -->
-    </div>
-  </div>
+  <app-patients-list></app-patients-list>
 </main>
