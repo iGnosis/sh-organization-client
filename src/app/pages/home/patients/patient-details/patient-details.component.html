@@ -157,10 +157,10 @@
 </div>
 
 <!-- Filters dropdowns -->
-<div class="container" [hidden]="isShowFilter">
+<div class="container filter_options_container" [hidden]="isShowFilter">
   <div class="row">
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Care Plan
@@ -188,16 +188,16 @@
             </div>
           </form>
         </div>
-      </div>
-      <mat-form-field appearance="fill" class="condition_select">
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
         <!-- <mat-label>Conditions</mat-label> -->
         <mat-select multiple [(value)]="selected" placeholder="Condition">
-          <mat-option  [value]="1">1</mat-option>
+          <mat-option *ngFor="let active_careplan of active_careplans" [value]="active_careplan.careplanByCareplan.name">{{active_careplan.careplanByCareplan.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Activity Type
@@ -225,10 +225,16 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Activity Type">
+          <mat-option [value]="1">Physical</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Time
@@ -256,7 +262,16 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Time">
+          <mat-option [value]="15">15 mins. or less</mat-option>
+          <mat-option [value]="30">30 mins. or less</mat-option>
+          <mat-option [value]="45">45 mins. or less</mat-option>
+          <mat-option [value]="60">60 mins. or less</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
       <mat-form-field class="details_page alignment_date condition_select" appearance="fill">
@@ -268,7 +283,7 @@
       </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Achievement Ratio
@@ -279,7 +294,16 @@
           <li><a class="dropdown-item" href="#">25% - 50%</a></li>
           <li><a class="dropdown-item" href="#">25% or less</a></li>
         </ul>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Achievement Ratio">
+          <mat-option [value]="75">75% or more</mat-option>
+          <mat-option [value]="50">50% - 75%</mat-option>
+          <mat-option [value]="25">25% - 50%</mat-option>
+          <mat-option [value]="0">25% or less</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 </div>

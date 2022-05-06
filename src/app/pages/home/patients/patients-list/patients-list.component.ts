@@ -21,8 +21,8 @@ export class PatientsListComponent implements OnInit {
 
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  
-  
+
+
   searchValue:string;
   filterEntity: SpaceCraft;
   filterType: MatTableFilter;
@@ -59,7 +59,7 @@ export class PatientsListComponent implements OnInit {
     // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
     // element.click();
   }
-  
+
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -67,19 +67,19 @@ export class PatientsListComponent implements OnInit {
     this.isShowDiv = !this.isShowDiv;
   }
   async reloadPatientList(filters: any) {
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { 
-      conditions: this.selectedMedicalConditions 
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, {
+      conditions: this.selectedMedicalConditions
     })
     this.patients = response.patient
     console.log(response.patient)
     this.dataSource.data = response.patient;
   }
-  
+
   openPatientDetailsPage(patientId: any) {
     this.router.navigate(['/app/patients/', patientId])
   }
 
-  
+
 
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
