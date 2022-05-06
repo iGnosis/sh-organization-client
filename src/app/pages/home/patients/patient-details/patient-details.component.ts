@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -19,7 +19,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
-import { StartSessionPopUp } from './start-session-pop-up.component';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -97,11 +96,13 @@ export class PatientDetailsComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog
   ) { }
+
+  @ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
   openDialog() {
-    const dialogRef = this.dialog.open(StartSessionPopUp);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    const dialogRef = this.dialog.open(this.callStartNewSessionModal);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
   }
   ngOnInit() {
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);

@@ -138,9 +138,9 @@ img.icons_aligne {
   height: 1.3em;
 }
 input.form-control.search_in_popup {
-  border-radius: 1em;
-  height: 24px;
-  padding: 1.1em;
+  border-radius: 0.5em;
+  padding: 0.3em 1em;
+  font-size: 14px;
 }
 table.mat-table.care_plan_table tr.mat-header-row {
   --x-bg-opacity: 1;
@@ -241,3 +241,7 @@ table.patients_detail_table .form-check {
   font-size: 14px;
   color: #718096;
 }
+.container.popup_alignment.ng-star-inserted .custom_alignment h1 {font-weight: 700;font-size: 18px;line-height: 22px;margin-left: 1em;}
+.container.popup_alignment .list-group-item a.d-block.h6.mb-1 {text-transform: capitalize;font-weight: 400;font-size: 14px;color: #505780;}
+.container.popup_alignment {width: 40em;}
+.container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 1.5em !important;}

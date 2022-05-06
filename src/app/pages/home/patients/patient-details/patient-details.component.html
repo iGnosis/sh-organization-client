@@ -27,8 +27,8 @@
               </mat-datepicker-toggle>
               <mat-date-range-picker #picker1></mat-date-range-picker>
             </mat-form-field>
-            <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
-              <!-- <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1"> -->
+            <!-- <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1"> -->
+              <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span class="pe-2">
                 <i class="bi bi-play-btn"></i>
               </span>
@@ -121,9 +121,9 @@
         <div class="list-group list-group-flush">
           <div class="list-group-item d-flex align-items-center px-0">
               <div class="flex-fill align_care_plan">
-                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan.name)}}" [bgAuto]="true" size="sm"></avatar>
+                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan?.name)}}" [bgAuto]="true" size="sm"></avatar>
                 <div class="careplan_details">
-                <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan.name}}</a>
+                <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan?.name}}</a>
                 <p>Includes
                   <span>{{get_activity_count}}</span>
                   <span *ngIf="get_activity_count>1"> activities</span>
@@ -192,7 +192,7 @@
       <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
         <!-- <mat-label>Conditions</mat-label> -->
         <mat-select multiple [(value)]="selected" placeholder="Condition">
-          <mat-option *ngFor="let active_careplan of active_careplans" [value]="active_careplan.careplanByCareplan.name">{{active_careplan.careplanByCareplan.name}}</mat-option>
+          <mat-option *ngFor="let active_careplan of active_careplans" [value]="active_careplan.careplanByCareplan?.name">{{active_careplan.careplanByCareplan?.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -470,3 +470,31 @@
   </div>
   </div>
 </div>
+
+<ng-template #callStartNewSessionModal>
+  <div class="container popup_alignment">
+    <div>
+      <div class="row align-items-center">
+        <div class="col-12 mb-md-0 custom_alignment">
+          <img src="/assets/images/play-icon.svg" class="icons_aligne"/>
+          <h1 class="h2 mb-0 ls-tight">Start Session</h1>
+        </div>
+        <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Session" aria-label="Search" aria-describedby="">
+      </div>
+    </div>
+      <div class="mt-5">
+          <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplan of active_careplans">
+                  <div class="flex-fill ms-4">
+                      <!-- Title -->
+                      <a class="d-block h6 mb-1">{{active_careplan.careplanByCareplan?.name}}</a>
+                  </div>
+                  <div class="">
+                      <a class="btn btn-sm btn-neutral px-4 py-2 text-xs" (click)="this.createNewSessionAndRedirect()">Start</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</ng-template>
+
