@@ -1,6 +1,7 @@
 {
   "name": "sh-provider-client",
   "version": "0.0.0",
+
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -37,6 +38,7 @@
     "ng-multiselect-dropdown": "^0.3.8",
     "ng2-charts": "^3.0.10",
     "ngx-pagination": "^5.1.1",
+    "node-fetch": "^3.2.4",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "xng-breadcrumb": "^7.2.0",
