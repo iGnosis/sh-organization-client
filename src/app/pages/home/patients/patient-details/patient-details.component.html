@@ -6,7 +6,10 @@
         <div *ngIf="sessionDetails" class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
           <xng-breadcrumb separator=">"></xng-breadcrumb>
-          <h1 class="h2 mb-0 ls-tight mt-5">{{ sessionDetails[0].patientByPatient?.identifier }}</h1>
+          <!-- <div *ngIf="sessionDetails.length!=0">
+          <h1 class="h2 mb-0 ls-tight mt-5">{{ sessionDetails[0].patientByPatient?.identifier }}</h1> -->
+          <h1 class="h2 mb-0 ls-tight mt-5">{{ patient_identifier }}</h1>
+
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
@@ -249,8 +252,39 @@
     </div>
   </div>
 </div> -->
+<div class="container-xl mt-5">
+  <div class="bg-light p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-md-6 col-12 mb-3 mb-md-0">
+        <!-- Title -->
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
+      </div>
+      <!-- Actions -->
+      <div class="col-md-6 col-12 text-md-end">
+        <div class="mx-n1">
+          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+            <mat-icon>add</mat-icon><span>Add New</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row custom_alignment assigned_care_plan_row">
+      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngFor="let active_careplan of active_careplans">
+
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex align-items-center px-0">
+              <div class="flex-fill align_care_plan">
+                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan.name)}}" [bgAuto]="true" size="sm"></avatar><a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan.name}}</a>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Session table -->
 <div class="container-xl mt-5">
+  <div class="session_table">
   <div class="rounded-top bg-light p-5 custom_rounded_top">
     <div class="row">
       <div class="col">
@@ -389,5 +423,6 @@
       </pagination-controls>
     </nav> -->
 
+  </div>
   </div>
 </div>

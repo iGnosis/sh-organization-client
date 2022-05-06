@@ -47,12 +47,18 @@ export class PatientDetailsComponent implements OnInit {
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
-  active_careplans: any;
+  active_careplans: any | undefined;
+  patient_identifier:any| undefined;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
+  }
+  getAvatarInitials(fullName: string) {
+    const avatar_name=fullName.replace(/[^a-zA-Z ]/g, "");
+    return avatar_name.split(' ').slice(0,2).map(n => n[0]).join('');
+    //.map(n => n[0]).join('');
   }
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
@@ -201,8 +207,11 @@ export class PatientDetailsComponent implements OnInit {
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
-    this.active_careplans = response.patient[0].patient_careplans[0].careplanByCareplan
-    console.log(this.active_careplans,"response");
+    this.active_careplans = response.patient[0].patient_careplans;
+    //console.log(this.active_careplans,"response");
+    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
+    this.patient_identifier = identifier_response.patient[0].identifier;
+    //console.log(this.patient_identifier,'getpatient');
   }
 
   async createNewSessionAndRedirect() {
