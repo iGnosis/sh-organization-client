@@ -97,7 +97,49 @@
     </div>
   </div>
 </div>
+<!-- Assigned care plan -->
+<div class="container-xl mt-5" *ngIf="active_careplans">
+  <div class="bg-light p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-md-6 col-12 mb-3 mb-md-0">
+        <!-- Title -->
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
+      </div>
+      <!-- Actions -->
+      <div class="col-md-6 col-12 text-md-end">
+        <div class="mx-n1">
+          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+            <mat-icon>add</mat-icon><span>Add New</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row custom_alignment assigned_care_plan_row">
+      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngFor="let active_careplan of active_careplans">
 
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex align-items-center px-0">
+              <div class="flex-fill align_care_plan">
+                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan.name)}}" [bgAuto]="true" size="sm"></avatar>
+                <div class="careplan_details">
+                <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan.name}}</a>
+                <p>Includes
+                  <span>{{active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count}}</span>
+                  <span *ngIf="active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count>1"> activities</span>
+                  <span *ngIf="active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count==1"> activity</span>
+                  for a {{active_careplan.careplanByCareplan.estimatedDuration}}
+                  <span *ngIf="active_careplan.careplanByCareplan.estimatedDuration>1">minutes</span>
+                  <span *ngIf="active_careplan.careplanByCareplan.estimatedDuration==1">minute</span>
+                  session
+                </p>
+                </div>
+              </div>
+          </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Search Bar -->
 <div class="container-xl mb-5 mt-5">
   <div class="align_search_filter">
@@ -120,7 +162,7 @@
       <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
-          Session Plan
+          Care Plan
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <form>
@@ -222,13 +264,13 @@
       <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
-          Performance
+          Achievement Ratio
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="#">High Performance (&gt;75%)</a></li>
-          <li><a class="dropdown-item" href="#">Avg Performance (&lt;75%)</a></li>
-          <li><a class="dropdown-item" href="#">Low Performance (&lt;50%)</a></li>
-          <li><a class="dropdown-item" href="#">Poor Performance (&lt;25%)</a></li>
+          <li><a class="dropdown-item" href="#">75% or more</a></li>
+          <li><a class="dropdown-item" href="#">50% - 75%</a></li>
+          <li><a class="dropdown-item" href="#">25% - 50%</a></li>
+          <li><a class="dropdown-item" href="#">25% or less</a></li>
         </ul>
       </div>
     </div>
@@ -252,36 +294,7 @@
     </div>
   </div>
 </div> -->
-<div class="container-xl mt-5">
-  <div class="bg-light p-5 assigned_care_plan_card">
-    <div class="row custom_alignment">
-      <div class="col-md-6 col-12 mb-3 mb-md-0">
-        <!-- Title -->
-        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
-      </div>
-      <!-- Actions -->
-      <div class="col-md-6 col-12 text-md-end">
-        <div class="mx-n1">
-          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
-            <mat-icon>add</mat-icon><span>Add New</span>
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="row custom_alignment assigned_care_plan_row">
-      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngFor="let active_careplan of active_careplans">
 
-        <div class="list-group list-group-flush">
-          <div class="list-group-item d-flex align-items-center px-0">
-              <div class="flex-fill align_care_plan">
-                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan.name)}}" [bgAuto]="true" size="sm"></avatar><a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan.name}}</a>
-              </div>
-          </div>
-      </div>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- Session table -->
 <div class="container-xl mt-5">
   <div class="session_table">

@@ -200,7 +200,6 @@ h1.active_care_plan_card_title {
   color: #000066;
 }
 .care_plan_title {
-  margin-left: 1em;
   text-transform: capitalize;
   color: #425466;
   font-weight: 600;
@@ -230,4 +229,13 @@ table.patients_detail_table .form-check {
 .patients_detail_table + mat-paginator.mat-paginator {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
+}
+.careplan_details {
+  margin-left: 1em;
+}
+.careplan_details p {
+  font-family: var(--x-body-font-family) !important;
+  font-weight: 400;
+  font-size: 14px;
+  color: #718096;
 }

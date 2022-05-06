@@ -208,7 +208,7 @@ export class PatientDetailsComponent implements OnInit {
     //console.log(this.dataSource.data, ">>>>>>>");
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
     this.active_careplans = response.patient[0].patient_careplans;
-    //console.log(this.active_careplans,"response");
+    //console.log(response,"response");
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
     this.patient_identifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
