@@ -98,7 +98,7 @@
   </div>
 </div>
 <!-- Assigned care plan -->
-<div class="container-xl mt-5" *ngIf="active_careplans">
+<div class="container-xl mt-5" *ngIf="get_careplan_count>0">
   <div class="bg-light p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
       <div class="col-md-6 col-12 mb-3 mb-md-0">
@@ -124,12 +124,12 @@
                 <div class="careplan_details">
                 <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan.name}}</a>
                 <p>Includes
-                  <span>{{active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count}}</span>
-                  <span *ngIf="active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count>1"> activities</span>
-                  <span *ngIf="active_careplan.careplanByCareplan.careplan_activities_aggregate.aggregate.count==1"> activity</span>
-                  for a {{active_careplan.careplanByCareplan.estimatedDuration}}
-                  <span *ngIf="active_careplan.careplanByCareplan.estimatedDuration>1">minutes</span>
-                  <span *ngIf="active_careplan.careplanByCareplan.estimatedDuration==1">minute</span>
+                  <span>{{get_activity_count}}</span>
+                  <span *ngIf="get_activity_count>1"> activities</span>
+                  <span *ngIf="get_activity_count==1"> activity</span>
+                  for a {{get_estimated_activity_duration}}
+                  <span *ngIf="get_estimated_activity_duration>1">minutes</span>
+                  <span *ngIf="get_estimated_activity_duration==1">minute</span>
                   session
                 </p>
                 </div>
@@ -188,6 +188,12 @@
           </form>
         </div>
       </div>
+      <mat-form-field appearance="fill" class="condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Condition">
+          <mat-option  [value]="1">1</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
       <div class="dropdown">

@@ -49,6 +49,9 @@ export class PatientDetailsComponent implements OnInit {
   initialSelection: unknown[] | undefined;
   active_careplans: any | undefined;
   patient_identifier:any| undefined;
+  get_activity_count : number;
+  get_estimated_activity_duration : number;
+  get_careplan_count : number;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -208,10 +211,18 @@ export class PatientDetailsComponent implements OnInit {
     //console.log(this.dataSource.data, ">>>>>>>");
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
     this.active_careplans = response.patient[0].patient_careplans;
-    //console.log(response,"response");
+    //console.log(this.active_careplans.length,"length");
+    this.get_careplan_count=this.active_careplans.length
+    if(this.get_careplan_count!=0)
+    {
+      this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
+      this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    }
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
     this.patient_identifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
+
+    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
 
   async createNewSessionAndRedirect() {
