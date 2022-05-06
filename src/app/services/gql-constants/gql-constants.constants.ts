@@ -151,10 +151,6 @@ export const GqlConstants = {
         }
       }
     }
-    careplan {
-      name
-      id
-    }
   }
 `,
 
@@ -164,6 +160,11 @@ export const GqlConstants = {
         id
       }
     }
-  }`
+  }`,
+  GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
+    patient(where: {id: {_eq: $patientId}}) {
+      identifier
+    }
+  }`,
 
 } as const

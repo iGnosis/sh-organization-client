@@ -28,22 +28,22 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'app', 
-    component: PrivateComponent, 
-    canActivateChild: [PrivateGuard], 
-    data: { 
+    path: 'app',
+    component: PrivateComponent,
+    canActivateChild: [PrivateGuard],
+    data: {
       breadcrumb: {
         label: 'Home',
         info: 'Home',
         routeInterceptor: (routeLink: any, breadcrumb: any)=> {
-          console.log(breadcrumb);
+          //console.log(breadcrumb);
           return '/app/dashboard';
         }
       },
     },
     children: [
-      { 
-        path: 'dashboard', 
+      {
+        path: 'dashboard',
         component: DashboardComponent,
         data: { breadcrumb: {skip: true} },
       },
