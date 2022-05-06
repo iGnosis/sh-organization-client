@@ -48,7 +48,7 @@ export class PatientDetailsComponent implements OnInit {
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
   active_careplans: any | undefined;
-  patient_identifier:any=[];
+  patient_identifier:any| undefined;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -210,8 +210,8 @@ export class PatientDetailsComponent implements OnInit {
     this.active_careplans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans,"response");
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
-    this.patient_identifier = identifier_response.patient;
-    //console.log(identifier_response,'getpatient');
+    this.patient_identifier = identifier_response.patient[0].identifier;
+    //console.log(this.patient_identifier,'getpatient');
   }
 
   async createNewSessionAndRedirect() {
