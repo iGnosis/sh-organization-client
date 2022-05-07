@@ -27,4 +27,9 @@ export class AvatarComponent implements OnInit {
     }
   }
 
+  getTextInitials(text: string) {
+    const avatar_name=text.replace(/[^a-zA-Z ]/g, "");
+    return avatar_name.split(' ').slice(0,2).map(n => n[0]).join('');
+  }
+
 }

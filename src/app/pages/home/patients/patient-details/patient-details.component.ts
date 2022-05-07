@@ -57,11 +57,7 @@ export class PatientDetailsComponent implements OnInit {
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
-  getAvatarInitials(fullName: string) {
-    const avatar_name=fullName.replace(/[^a-zA-Z ]/g, "");
-    return avatar_name.split(' ').slice(0,2).map(n => n[0]).join('');
-    //.map(n => n[0]).join('');
-  }
+ 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
   itemsPerPage = 10
