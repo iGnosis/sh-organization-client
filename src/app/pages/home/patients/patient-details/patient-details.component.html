@@ -17,10 +17,10 @@
             <!-- <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span>Select Dates</span>
             </a> -->
-            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="fill">
+            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
               <mat-date-range-input [rangePicker]="picker1">
-                <input matStartDate placeholder="Select Dates">
-                <input matEndDate>
+                <input matStartDate placeholder="Start Date">
+                <input matEndDate placeholder="End Date">
               </mat-date-range-input>
               <mat-datepicker-toggle matSuffix [for]="picker1">
                 <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
