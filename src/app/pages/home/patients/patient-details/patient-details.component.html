@@ -425,7 +425,8 @@
             <div>
               <div class="progress">
                 <div class="progress-bar rounded-pill" role="progressbar"
-                  style="width: {{ element.totalPerformanceRatio }}%; background-color: #A6B7D4">
+                  [style.width]="element.totalPerformanceRatio + '%'"
+                  style="background-color: #A6B7D4">
                 </div>
               </div>
             </div>
