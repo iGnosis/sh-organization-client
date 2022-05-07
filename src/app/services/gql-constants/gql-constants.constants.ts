@@ -148,6 +148,12 @@ export const GqlConstants = {
         careplanByCareplan {
           name
           id
+          estimatedDuration
+          careplan_activities_aggregate {
+            aggregate {
+              count
+            }
+          }
         }
       }
     }

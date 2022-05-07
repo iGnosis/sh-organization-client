@@ -49,8 +49,9 @@ mat-form-field.mat-form-field.condition_select {background: #FFFFFF;border-radiu
 i.bi.bi-star.custom_star_color {color: #CBD5E0;font-size: 1.2rem;}
 img.icons_align {cursor: pointer;}
 mat-form-field.mat-form-field.details_page.alignment_date.condition_select {margin-left: 0px !important;font-family: var(--x-body-font-family) !important;}
+.container.filter_options_container mat-form-field.mat-form-field.details_page.alignment_date.condition_select {width: 100%;}
 mat-form-field.mat-form-field.details_page.alignment_date.condition_select .mat-form-field-flex {height: 2.3em;border-radius: 8px;}
-mat-form-field.mat-form-field.details_page.alignment_date.condition_select input::placeholder {color: #16192C;font-size: 0.875rem;font-weight: 500;}
+mat-form-field.mat-form-field.details_page.alignment_date.condition_select input::placeholder, .container.filter_options_container span.mat-select-min-line , .mat-option-text , .container.filter_options_container span.mat-select-placeholder {color: #16192C;font-size: 0.875rem;font-weight: 500;font-family: var(--x-body-font-family) !important;}
 mat-form-field.mat-form-field.details_page.alignment_date.condition_select input {color: #16192C;font-size: 0.875rem;font-weight: 500;}
 tr.mat-row.cdk-row.row_hover:hover {background-color: #f8f8f8;}
 table.mat-table.patients_detail_table tr.mat-header-row {--x-bg-opacity: 1;background-color: rgba(var(--x-secondary-rgb),var(--x-bg-opacity))!important;border-top: 2px solid #EDF2F7;}
@@ -58,6 +59,7 @@ table.mat-table.patients_detail_table tr.mat-header-row {--x-bg-opacity: 1;backg
 .mat-checkbox-checked.mat-accent .mat-checkbox-background {
   background-color: rgba(var(--x-primary-rgb)) !important;
 }
+.container.filter_options_container.patient_list_filter mat-form-field.mat-form-field.details_page.alignment_date.condition_select {width: initial;}
 tbody {
 	tr.mat-row.row_hover {
 		mat-checkbox.custom_checkbox {
@@ -136,9 +138,9 @@ img.icons_aligne {
   height: 1.3em;
 }
 input.form-control.search_in_popup {
-  border-radius: 1em;
-  height: 24px;
-  padding: 1.1em;
+  border-radius: 0.5em;
+  padding: 0.3em 1em;
+  font-size: 14px;
 }
 table.mat-table.care_plan_table tr.mat-header-row {
   --x-bg-opacity: 1;
@@ -200,7 +202,6 @@ h1.active_care_plan_card_title {
   color: #000066;
 }
 .care_plan_title {
-  margin-left: 1em;
   text-transform: capitalize;
   color: #425466;
   font-weight: 600;
@@ -231,3 +232,16 @@ table.patients_detail_table .form-check {
   border-bottom-left-radius: 16px;
   border-bottom-right-radius: 16px;
 }
+.careplan_details {
+  margin-left: 1em;
+}
+.careplan_details p {
+  font-family: var(--x-body-font-family) !important;
+  font-weight: 400;
+  font-size: 14px;
+  color: #718096;
+}
+.container.popup_alignment.ng-star-inserted .custom_alignment h1 {font-weight: 700;font-size: 18px;line-height: 22px;margin-left: 1em;}
+.container.popup_alignment .list-group-item a.d-block.h6.mb-1 {text-transform: capitalize;font-weight: 400;font-size: 14px;color: #505780;}
+.container.popup_alignment {width: 40em;}
+.container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 1.5em !important;}

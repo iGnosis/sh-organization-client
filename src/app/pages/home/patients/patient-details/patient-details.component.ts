@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -19,7 +19,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
-import { StartSessionPopUp } from './start-session-pop-up.component';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -49,6 +48,9 @@ export class PatientDetailsComponent implements OnInit {
   initialSelection: unknown[] | undefined;
   active_careplans: any | undefined;
   patient_identifier:any| undefined;
+  get_activity_count : number;
+  get_estimated_activity_duration : number;
+  get_careplan_count : number;
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
@@ -94,11 +96,13 @@ export class PatientDetailsComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog
   ) { }
+
+  @ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
   openDialog() {
-    const dialogRef = this.dialog.open(StartSessionPopUp);
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    const dialogRef = this.dialog.open(this.callStartNewSessionModal);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
   }
   ngOnInit() {
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
@@ -208,10 +212,18 @@ export class PatientDetailsComponent implements OnInit {
     //console.log(this.dataSource.data, ">>>>>>>");
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
     this.active_careplans = response.patient[0].patient_careplans;
-    //console.log(this.active_careplans,"response");
+    //console.log(this.active_careplans.length,"length");
+    this.get_careplan_count=this.active_careplans.length
+    if(this.get_careplan_count!=0)
+    {
+      this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
+      this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    }
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
     this.patient_identifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
+
+    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
 
   async createNewSessionAndRedirect() {
