@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
   selector: 'app-dashboard',
@@ -23,11 +24,12 @@ export class DashboardComponent implements OnInit {
 
   initPatientAdherenceChart() {
     const data = {
-      labels: ['Inactive Patients', 'Active Patients'],
+      labels: ['Active Patients', 'Inactive Patients'],
       datasets: [
         {
-          data: [4, 11],
-          backgroundColor: ['#2f51ae', '#ffa2ad'],
+          data: [11, 4],
+          backgroundColor: ['#ffa2ad', '#2f51ae'],
+          borderWidth: 0,
           hoverOffset: 4,
         },
       ],
@@ -38,7 +40,7 @@ export class DashboardComponent implements OnInit {
       options: {
         plugins: {
           tooltip: {
-            enabled: true
+            enabled: false
           },
           legend: {
             position: 'bottom',
@@ -48,8 +50,16 @@ export class DashboardComponent implements OnInit {
               }
             }
           },
+          datalabels: {
+            font: {
+              size: 26,
+              weight: 'bold'
+            },
+            color: ['#000066', '#ffffff']
+          }
         }
-      }
+      },
+      plugins: [ChartDataLabels]
     };
     this.patientAdherenceCanvas = <HTMLCanvasElement>(document.getElementById('patientAdherence'));
     this.patientAdherenceCtx = this.patientAdherenceCanvas.getContext('2d');
