@@ -49,8 +49,8 @@ export class PatientAddComponent implements OnInit {
 
     this.medicalConditionsList = [
       { id: 1, name: `Parkinson's` },
+      { id: 3, name: `Stroke` },
       { id: 2, name: `Alzheimer's` },
-      { id: 3, name: `Huntington's` },
       { id: 4, name: `Others` },
     ];
     this.availableGenres = [

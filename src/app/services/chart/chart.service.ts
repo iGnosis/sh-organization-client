@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment'
 })
 export class ChartService {
 
-  baseURL: string = ''
+  baseURL = ''
   constructor(private http: HttpClient) {
     this.baseURL = environment.servicesEndpoint
   }
@@ -34,7 +34,7 @@ export class ChartService {
 
   // here, we do things that are painful to do with plain SQL.
   transformifyData(chartResults: IChart[]): SessionData {
-    let patientObject: any = {}
+    const patientObject: any = {}
 
     // build session
     for (const item of chartResults) {

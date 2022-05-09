@@ -16,11 +16,6 @@ export class CarePlanService {
         createdAt
         estimatedDuration
         difficultyLevel
-        careplan_activities_aggregate {
-          aggregate {
-            count
-          }
-        }
         name
         createdBy
         id
@@ -34,6 +29,10 @@ export class CarePlanService {
           activity
           reps
         }
+        patient_careplans {
+          patient
+        }
+        medicalConditions
       }
     }`
 

@@ -1,105 +1,134 @@
 <!-- Header -->
-<header class="px-3 px-lg-7 pt-7">
-    <div class="container-xl">
-        <div>
-            <div class="row align-items-center">
-                <div class="col-md-6 col-12 mb-3 mb-md-0">
-                    <!-- Title -->
-                    <h1 class="h2 mb-0 ls-tight">Application</h1>
-                </div>
-                <!-- Actions -->
-                <div class="col-md-6 col-12 text-md-end">
-                    <div class="mx-n1">
-                        <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
-                            <span class=" pe-2">
-                                <i class="bi bi-pencil"></i>
-                            </span>
-                            <span>Edit</span>
-                        </a>
-                        <a href="#" class="btn d-inline-flex btn-sm btn-neutral border-base mx-1">
-                            <span class=" pe-2">
-                                <i class="bi bi-eye"></i>
-                            </span>
-                            <span>View</span>
-                        </a>
-                        <a href="#" class="btn d-inline-flex btn-sm btn-primary mx-1">
-                            <span class=" pe-2">
-                                <i class="bi bi-cloud-download"></i>
-                            </span>
-                            <span>Download</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- Nav -->
-            <ul class="nav nav-tabs overflow-x mt-2">
-                <li class="nav-item">
-                    <a href="#" class="nav-link font-regular active">Components</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link font-regular">Pages</a>
-                </li>
-            </ul>
+<header class="px-3 px-lg-7 pt-7 custom_header">
+  <div class="container-xl">
+    <div>
+      <div class="row custom_alignment p-5">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
+          <!-- Title -->
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <router-outlet></router-outlet>
+          <h1 class="h2 mb-0 ls-tight heading_text mt-5">Dashboard</h1>
+          <!-- <avatar text="YA" [bgAuto]="true" size="lg"></avatar> -->
         </div>
+        <!-- Actions -->
+        <div class="col-md-6 col-12 text-md-end">
+          <div class="mx-n1">
+            <!-- <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 ">
+              <span class=" pe-2">
+                <i class="bi bi-plus "></i>
+              </span>
+              <span>Add Patient</span>
+            </a> -->
+          </div>
+        </div>
+      </div>
+      <!-- Nav -->
+      <!-- {{ selectedMedicalConditions | json }} -->
+      <!-- <ul class="nav nav-tabs overflow-x mt-2">
+        <li class="nav-item">
+          <a (click)="selectedMedicalConditions = allMedicalConditions" class="nav-link font-regular active"
+            [ngClass]="{'active': selectedMedicalConditions.length > 1}">All
+          </a>
+        </li>
+        <li class="nav-item" *ngFor="let condition of allMedicalConditions">
+          <a role="button" (click)="selectDataSegment(condition)"
+            [ngClass]="{'active': selectedMedicalConditions.length == 1 && selectedMedicalConditions[0] == condition}"
+            class="nav-link font-regular">
+            {{condition}}
+          </a>
+        </li>
+      </ul> -->
     </div>
+  </div>
 </header>
+
+<!-- Welcome Dr. Kevin Card -->
+<div class="container pt-5" style="display: none;">
+  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+          <div class="row">
+            <div class="col">
+              <h1 class="h1 mt-5" style="color: #000066;">Welcome Dr. Kevin</h1>
+              <span>Date: <b>{{ this.currentDate | date }}</b></span>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 mt-8">
+          <div class="row">
+            <div class="col-lg-8">
+              <button class="btn btn-primary">
+                Select Dates
+              </button>
+            </div>
+            <div class="col">
+              <h2><i class="bi bi-bell"></i></h2>
+            </div>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card border shadow-6">
+            <div class="row">
+              <div class="col-lg-6">
+                <img class="rounded" alt="..."
+                  src="https://images.unsplash.com/photo-1612531385476-a86dc00daf9a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80">
+              </div>
+              <div class="col mt-8">
+                <div class="row">
+                  <div class="col-lg-1">
+                    <i style="color: #00BD3E" class="bi bi-circle-fill"></i>
+                  </div>
+                  <div class="col">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <h4>Dr. Kevin</h4>
+                      </div>
+                      <div class="col mt-2">
+                        <a style="color: #2F51AE" class="text-decoration-none" href="#">
+                          View Profile
+                          <i class="bi bi-arrow-right-square-fill"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-    <!-- Container -->
-    <div class="container-xl">
-        <div class="row">
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header">
-                        Active Patients
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">18</h5>
-                      <p class="card-text text-success">+4 since last week</p>
-                      <pmc-active-patients></pmc-active-patients>
-                      <a href="#" class="btn btn-secondary mt-4">See All</a>
-                    </div>
-                </div>
+  <!-- Put Charts here -->
+  <div class="container mt-8 mb-8">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-header">
+              <h4 style="color: #000066;">Patient Adherence</h4>
             </div>
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header">
-                        Improving Performance
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">12</h5>
-                      <p class="card-text text-success">+2 since last week</p>
-                      <pmc-active-patients></pmc-active-patients>
-                      <a href="#" class="btn btn-secondary mt-4">See All</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header">
-                        Reducing Performance
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">6</h5>
-                      <p class="card-text text-success">-2 since last week</p>
-                      <pmc-active-patients></pmc-active-patients>
-                      <a href="#" class="btn btn-secondary mt-4">See All</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center">
-                    <div class="card-header">
-                        New Patients
-                    </div>
-                    <div class="card-body">
-                      <h5 class="card-title">4</h5>
-                      <p class="card-text text-danger">-1 since last week</p>
-                      <pmc-active-patients></pmc-active-patients>
-                      <a href="#" class="btn btn-secondary mt-4">See All</a>
-                    </div>
-                </div>
-            </div>
+            <canvas class="chart-canvas" id="patientAdherence" width="500" height="500"></canvas>
+          </div>
         </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-header">
+              <h4 style="color: #000066;">Patient Overview</h4>
+            </div>
+            <canvas class="chart-canvas" id="patientOverview" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+  <!-- Container -->
+  <app-patients-list class="mt-5"></app-patients-list>
 </main>

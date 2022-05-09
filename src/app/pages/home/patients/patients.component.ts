@@ -33,38 +33,22 @@ export class SpaceCraft {
 })
 
 export class PatientsComponent implements OnInit {
-  condition_filter = new FormControl();
-  isShowDiv = true;
-  isShowFilter = true;
-  selected : any;
-  togglefilterDiv(){
-    this.isShowFilter=!this.isShowFilter;
-  }
-  toggleDisplayDiv() {
-    this.isShowDiv = !this.isShowDiv;
-  }
-  filterEntity: SpaceCraft;
-  filterType: MatTableFilter;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-  patients?: Array<Patient>;
+  
+  
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session', 'sessions_aggregate','therapist','actions'];
-  dataSource = new MatTableDataSource();
-  initialSelection = [];
-  allowMultiSelect = true;
-  selection:any;
-  row : any;
-  seachValue:any;
-  @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
-  constructor(private router: Router, private graphqlService: GraphqlService,private _liveAnnouncer: LiveAnnouncer) { }
+  
+  
+  
+  constructor() { }
 
   async ngOnInit() {
-    this.reloadPatientList(null);
-    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
-    this.filterEntity = new SpaceCraft();
-    this.filterEntity.captain = new Captain();
-    this.filterType = MatTableFilter.ANYWHERE;
+    
+  }
+
+  selectDataSegment(condition: string) {
+    this.selectedMedicalConditions = [condition]
+    // this.reloadPatientList({})
   }
   // isAllSelected() {
   //   const numSelected = this.selection.selected.length;
@@ -79,38 +63,9 @@ export class PatientsComponent implements OnInit {
   //   this.selection.clear() :
   //     this.dataSource.data.forEach(row => this.selection.select(row));
   // }
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.tableOnePaginator;
-    // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
-    // element.click();
-  }
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-  async reloadPatientList(filters: any) {
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, { conditions: this.selectedMedicalConditions })
-    this.patients = response.patient
-    console.log(response.patient)
-    this.dataSource.data = response.patient;
-  }
-  patients_data?: Array<Patient>;
-  openPatientDetailsPage(patientId: any) {
-    this.router.navigate(['/app/patients/', patientId])
-  }
-
-  selectDataSegment(condition: string) {
-    this.selectedMedicalConditions = [condition]
-    this.reloadPatientList({})
-  }
+  
+  
+  
 }
 // export interface PeriodicElement {
 //   total_count: number;

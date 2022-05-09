@@ -13,6 +13,7 @@ import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
+
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { NgChartsModule } from 'ng2-charts';
@@ -31,17 +32,21 @@ import { ToastsComponent } from './components/toasts/toasts.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {MatPaginatorModule} from '@angular/material/paginator';
-import {MatTableModule} from '@angular/material/table';
-import {MatSortModule} from '@angular/material/sort';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableFilterModule } from 'mat-table-filter';
-import {MatIconModule} from '@angular/material/icon';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { BreadcrumbModule } from 'xng-breadcrumb';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AvatarComponent } from './widgets/avatar/avatar.component';
+import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,7 +67,9 @@ import { MatInputModule } from '@angular/material/input';
     CarePlanComponent,
     CareplansListComponent,
     ToastsComponent,
-    SessionsDetailsComponent
+    SessionsDetailsComponent,
+    AvatarComponent,
+    PatientsListComponent,
   ],
   imports: [
     BrowserModule,
@@ -85,7 +92,9 @@ import { MatInputModule } from '@angular/material/input';
     MatSelectModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatInputModule
+    MatInputModule,
+    BreadcrumbModule,
+    MatDialogModule
   ],
   providers: [
     PrivateGuard,

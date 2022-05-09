@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -15,6 +15,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {FormControl} from '@angular/forms';
+import {SelectionModel} from '@angular/cdk/collections';
+import {MatDialog} from '@angular/material/dialog';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -28,18 +32,32 @@ export class SpaceCraft {
   isConstitutionClass: boolean;
   captain: Captain;
   therapist: string;
+  identifier: string;
 }
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss']
 })
+
 export class PatientDetailsComponent implements OnInit {
   isShowDiv = true;
-
+  selected : any;
+  isShowFilter = true;
+  allowMultiSelect: boolean | undefined;
+  initialSelection: unknown[] | undefined;
+  active_careplans: any | undefined;
+  patient_identifier:any| undefined;
+  get_activity_count : number;
+  get_estimated_activity_duration : number;
+  get_careplan_count : number;
+  togglefilterDiv(){
+    this.isShowFilter=!this.isShowFilter;
+  }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
+ 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
   itemsPerPage = 10
@@ -71,16 +89,25 @@ export class PatientDetailsComponent implements OnInit {
     private analyticsService: AnalyticsService,
     private graphqlService: GraphqlService,
     private chartService: ChartService,
-    private _liveAnnouncer: LiveAnnouncer
+    private _liveAnnouncer: LiveAnnouncer,
+    public dialog: MatDialog
   ) { }
 
+  @ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
+  openDialog() {
+    const dialogRef = this.dialog.open(this.callStartNewSessionModal);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
+  }
   ngOnInit() {
+    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
-        console.log('patientId:', this.patientId);
+        console.log('patientId:', this.patientId,this.route);
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
@@ -118,6 +145,7 @@ export class PatientDetailsComponent implements OnInit {
         offset
       }
     )
+
     console.log('offset:', offset)
     console.log('fetchSessions:', sessions)
 
@@ -177,7 +205,21 @@ export class PatientDetailsComponent implements OnInit {
       console.log('sessionDetails:', this.sessionDetails)
     })
     this.dataSource.data = this.sessionDetails;
-    console.log(this.dataSource.data, ">>>>>>>");
+    //console.log(this.dataSource.data, ">>>>>>>");
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
+    this.active_careplans = response.patient[0].patient_careplans;
+    //console.log(this.active_careplans.length,"length");
+    this.get_careplan_count=this.active_careplans.length
+    if(this.get_careplan_count!=0)
+    {
+      this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
+      this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    }
+    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
+    this.patient_identifier = identifier_response.patient[0].identifier;
+    //console.log(this.patient_identifier,'getpatient');
+
+    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
 
   async createNewSessionAndRedirect() {
@@ -530,3 +572,40 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 }
+// @Component({
+//   selector: 'dialog-content-example-dialog',
+//   templateUrl: 'start-session-pop-up.component.html',
+// })
+// export class StartSessionPopUp {
+//   patientId?: string
+//   itemsPerPage: any;
+//   dataSource: any;
+//   constructor(
+//     private route: ActivatedRoute,
+//     private router: Router,
+//     private analyticsService: AnalyticsService,
+//     private graphqlService: GraphqlService,
+//   ) { }
+//   ngOnInit() {
+//     // this.route.paramMap.subscribe(async (params: ParamMap) => {
+//     //   this.patientId = params.get('id') || ''
+//     //   if (this.patientId) {
+//     //     //console.log('patientId:', this.patientId);
+//     //   }
+//     // })
+//     console.log("hello",this.patientId);
+//   }
+//   async fetchSessions(offset: number) {
+//     // we need to show sessions of a patient.
+//     let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
+//       {
+//         patientId: this.patientId,
+//         limit: this.itemsPerPage,
+//         offset
+//       }
+//     )
+//     console.log('offset:', offset)
+//     console.log('fetchSessions:', sessions)
+//     console.log(this.dataSource.data, ">>>>>>>");
+//   }
+// }
