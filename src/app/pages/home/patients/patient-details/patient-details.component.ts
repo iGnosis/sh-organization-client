@@ -71,6 +71,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementChart: any
   startDate?: Date
   endDate?: Date
+  no_session_assigned_plan:number
   // code for mat tab starts here
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   selection: any;
@@ -213,11 +214,18 @@ export class PatientDetailsComponent implements OnInit {
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
     this.active_careplans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
-    this.get_careplan_count=this.active_careplans.length
+    this.get_careplan_count=this.active_careplans.length;
+    console.log(this.dataSource.data.length,"length");
     if(this.get_careplan_count!=0)
     {
       this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
       this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    }
+    if(this.get_careplan_count==0 && this.dataSource.data.length==0){
+      this.no_session_assigned_plan=1;
+    }
+    else{
+      this.no_session_assigned_plan=0;
     }
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
     this.patient_identifier = identifier_response.patient[0].identifier;

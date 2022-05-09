@@ -57,7 +57,7 @@
 </header>
 
 <!-- Charts -->
-<div class="container mt-8">
+<div class="container mt-8" *ngIf="dataSource.data.length!=0">
   <div class="row">
     <div class="col-md-6">
       <div class="card">
@@ -97,17 +97,65 @@
     </div>
   </div>
 </div>
+<div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && no_session_assigned_plan==0">
+  <div class="p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-12 mb-3 mb-md-0">
+      <div class="no_careplan_notice_alignment">
+      <img src="/assets/images/no_session_img.svg" />
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patient_identifier }} has not started any session yet.</h2>
+        <div class="mx-n1 mt-7">
+          <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
+            <span class="pe-2">
+              <i class="bi bi-play-btn"></i>
+            </span>
+            <span>Start New Session</span>
+          </a>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-xl mt-5" *ngIf="no_session_assigned_plan==1">
+  <div class="p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-12 mb-3 mb-md-0">
+      <div class="no_careplan_notice_alignment">
+        <img src="/assets/images/no_assigned.svg" />
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patient_identifier }} has no care plan assigned to them yet.</h2>
+        <div class="mx-n1 mt-7">
+          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+            <mat-icon>add</mat-icon><span>Add Care Plan</span>
+          </a>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Assigned care plan -->
-<div class="container-xl mt-5">
+<div class="container-xl mt-5" *ngIf="no_session_assigned_plan==0">
   <div class="bg-light p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
-      <div class="col-md-6 col-12 mb-3 mb-md-0">
+      <div class="col-12 mb-3 mb-md-0" *ngIf="get_careplan_count==0">
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
+      <div class="no_careplan_notice_alignment">
+      <img src="/assets/images/no_assigned.svg" />
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No care plans assigned for {{ patient_identifier }}</h2>
+        <div class="mx-n1 mt-7">
+          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+            <mat-icon>add</mat-icon><span>Add Care Plan</span>
+          </a>
+        </div>
+      </div>
+      </div>
+      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="get_careplan_count!=0">
         <!-- Title -->
-        <h1 class="active_care_plan_card_title"*ngIf="get_careplan_count!=0">Assigned Care Plans</h1>
-        <h1 class="active_care_plan_card_title" *ngIf="get_careplan_count==0">No Care Plans Assigned</h1>
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
       </div>
       <!-- Actions -->
-      <div class="col-md-6 col-12 text-md-end">
+      <div class="col-md-6 col-12 text-md-end" *ngIf="get_careplan_count!=0">
         <div class="mx-n1">
           <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
             <mat-icon>add</mat-icon><span>Add New</span>
@@ -142,7 +190,7 @@
   </div>
 </div>
 <!-- Search Bar -->
-<div class="container-xl mb-5 mt-5">
+<div class="container-xl mb-5 mt-5" *ngIf="dataSource.data.length!=0">
   <div class="align_search_filter">
   <div class="input-group input-group-sm input-group-inline input_box_icons_alignment">
     <span class="input-group-text pe-2">
@@ -328,7 +376,7 @@
 
 <!-- Session table -->
 <div class="container-xl mt-5">
-  <div class="session_table">
+  <div class="session_table" *ngIf="dataSource.data.length!=0">
   <div class="rounded-top bg-light p-5 custom_rounded_top">
     <div class="row">
       <div class="col">
