@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Chart, ChartConfiguration, Tooltip, TooltipItem, TooltipOptions } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 @Component({
