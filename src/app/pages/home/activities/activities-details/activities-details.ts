@@ -60,7 +60,8 @@ export class ActivitiesDetailsComponent implements OnInit {
         radius: 6,
         tension: 0.1,
         fill: false,
-        label: 'Success Ratio'
+        label: 'Success Ratio',
+        clip: false,
       }]
     }
 
@@ -87,7 +88,8 @@ export class ActivitiesDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
-              color: '#000066'
+              color: '#000066',
+              stepSize: 20,
             }
           },
           x: {

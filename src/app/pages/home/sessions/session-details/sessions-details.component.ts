@@ -295,7 +295,8 @@ export class SessionsDetailsComponent implements OnInit {
         radius: 6,
         tension: 0.1,
         fill: false,
-        label: 'Success Ratio'
+        label: 'Success Ratio',
+        clip: false
       }]
     }
 
@@ -323,6 +324,7 @@ export class SessionsDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },

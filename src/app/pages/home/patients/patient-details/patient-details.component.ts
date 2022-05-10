@@ -15,10 +15,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormControl} from '@angular/forms';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatDialog} from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormControl } from '@angular/forms';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -42,22 +42,22 @@ export class SpaceCraft {
 
 export class PatientDetailsComponent implements OnInit {
   isShowDiv = true;
-  selected : any;
+  selected: any;
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
   active_careplans: any | undefined;
-  patient_identifier:any| undefined;
-  get_activity_count : number;
-  get_estimated_activity_duration : number;
-  get_careplan_count : number;
-  togglefilterDiv(){
-    this.isShowFilter=!this.isShowFilter;
+  patient_identifier: any | undefined;
+  get_activity_count: number;
+  get_estimated_activity_duration: number;
+  get_careplan_count: number;
+  togglefilterDiv() {
+    this.isShowFilter = !this.isShowFilter;
   }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
- 
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
   itemsPerPage = 10
@@ -107,7 +107,7 @@ export class PatientDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
-        console.log('patientId:', this.patientId,this.route);
+        console.log('patientId:', this.patientId, this.route);
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
@@ -206,16 +206,15 @@ export class PatientDetailsComponent implements OnInit {
     })
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId })
     this.active_careplans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
-    this.get_careplan_count=this.active_careplans.length
-    if(this.get_careplan_count!=0)
-    {
-      this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
-      this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    this.get_careplan_count = this.active_careplans.length
+    if (this.get_careplan_count != 0) {
+      this.get_activity_count = this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
+      this.get_estimated_activity_duration = this.active_careplans[0].careplanByCareplan.estimatedDuration;
     }
-    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
+    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId })
     this.patient_identifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
 
@@ -283,6 +282,7 @@ export class PatientDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },
@@ -380,28 +380,6 @@ export class PatientDetailsComponent implements OnInit {
       datasets: [{
         data: [],
         careplanNames: [], // need this for tooltips
-        tempData: [
-          {
-            'id': '28th', data: {
-              'allSessions': 55
-            }
-          },
-          {
-            'id': '29th', data: {
-              'allSessions': 86
-            }
-          },
-          {
-            'id': '30th', data: {
-              'allSessions': 90
-            }
-          },
-          {
-            'id': '31st', data: {
-              'allSessions': 78
-            }
-          }
-        ],
         pointRadius: 5,
         backgroundColor: '#000066',
         borderColor: '#000066',
@@ -409,6 +387,7 @@ export class PatientDetailsComponent implements OnInit {
         tension: 0.1,
         fill: false,
         label: 'Success Ratio',
+        clip: false,
       }]
     }
 
@@ -443,6 +422,7 @@ export class PatientDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },
