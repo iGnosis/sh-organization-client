@@ -172,28 +172,28 @@ mat-paginator.mat-paginator.care_plan_table_paginator {
   border-bottom-right-radius: 1rem;
   border-bottom-left-radius: 1rem;
 }
-.select_dates .mat-form-field-flex {
-  background-color: #000066;
-}
-.select_dates input::placeholder {
-  color: #fff !important;
-}
-.select_dates button.mat-icon-button {
-  color: #fff;
-}
-mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates .mat-form-field-flex {
-  border-radius: 0.375rem;
-}
+// .select_dates .mat-form-field-flex {
+//   border-color: #000066;
+// }
+// .select_dates input::placeholder {
+//   // color: #fff !important;
+// }
+// .select_dates button.mat-icon-button {
+//   color: #fff;
+// }
+// mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates .mat-form-field-flex {
+//   border-radius: 0.375rem;
+// }
 
-mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates input {
-  color: #fff !important;
-}
-span.mat-date-range-input-separator {
-  color: #fff;
-}
-input#mat-date-range-input-0 {
-  top: 3px;
-}
+// mat-form-field.mat-form-field.details_page.alignment_date.condition_select.select_dates input {
+//   color: #fff !important;
+// }
+// span.mat-date-range-input-separator {
+//   color: #fff;
+// }
+// input#mat-date-range-input-0 {
+//   top: 3px;
+// }
 .align_care_plan {
   display: flex;
   align-items: center;

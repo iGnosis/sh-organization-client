@@ -23,10 +23,10 @@ export class CreateCareplanComponent implements OnInit {
   }
 
   medicalConditionsList = [
-    { name: `Parkinson's` },
-    { name: `Alzheimer's` },
-    { name: `Huntington's` },
-    { name: `Others` },
+    { id: 1, name: `Parkinson's` },
+    { id: 3, name: `Stroke` },
+    { id: 2, name: `Alzheimer's` },
+    { id: 4, name: `Others` },
   ]
 
   activitiesList: Array<Activity> = []

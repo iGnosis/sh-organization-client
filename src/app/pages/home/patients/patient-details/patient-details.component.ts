@@ -19,6 +19,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 export class Captain {
   careplanByCareplan: string;
   surname: string;
@@ -57,11 +59,7 @@ export class PatientDetailsComponent implements OnInit {
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
-  getAvatarInitials(fullName: string) {
-    const avatar_name=fullName.replace(/[^a-zA-Z ]/g, "");
-    return avatar_name.split(' ').slice(0,2).map(n => n[0]).join('');
-    //.map(n => n[0]).join('');
-  }
+ 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
   itemsPerPage = 10
@@ -87,6 +85,7 @@ export class PatientDetailsComponent implements OnInit {
   details?: Patient
   totalSessionsCount?: number
   sessionDetails?: Array<Session>
+  selectedCarePlanId: string
 
   constructor(
     private route: ActivatedRoute,
@@ -95,7 +94,8 @@ export class PatientDetailsComponent implements OnInit {
     private graphqlService: GraphqlService,
     private chartService: ChartService,
     private _liveAnnouncer: LiveAnnouncer,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private modalService: NgbModal
   ) { }
 
   @ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
@@ -232,6 +232,17 @@ export class PatientDetailsComponent implements OnInit {
     //console.log(this.patient_identifier,'getpatient');
 
     //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
+  }
+
+  async removeCareplanFromPatient(careplan: string, modalContent: any) {
+    console.log(careplan)
+    this.modalService.open(modalContent)
+    this.selectedCarePlanId = careplan
+  }
+
+  async startSessionFromCareplan(careplan: string, modalContent: any) {
+    this.modalService.open(modalContent)
+    this.selectedCarePlanId = careplan
   }
 
   async createNewSessionAndRedirect() {

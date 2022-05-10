@@ -17,10 +17,10 @@
             <!-- <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span>Select Dates</span>
             </a> -->
-            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="fill">
+            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
               <mat-date-range-input [rangePicker]="picker1">
-                <input matStartDate placeholder="Select Dates">
-                <input matEndDate>
+                <input matStartDate placeholder="Start Date">
+                <input matEndDate placeholder="End Date">
               </mat-date-range-input>
               <mat-datepicker-toggle matSuffix [for]="picker1">
                 <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
@@ -164,13 +164,28 @@
       </div>
     </div>
     <div class="row custom_alignment assigned_care_plan_row">
-      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngFor="let active_careplan of active_careplans">
+      <div class="col-md-6 col-12 mb-3 mb-md-0 careplan" *ngFor="let active_careplan of active_careplans">
 
         <div class="list-group list-group-flush">
           <div class="list-group-item d-flex align-items-center px-0">
               <div class="flex-fill align_care_plan">
-                <avatar text="{{getAvatarInitials(active_careplan.careplanByCareplan?.name)}}" [bgAuto]="true" size="sm"></avatar>
+                
+                <avatar text="{{active_careplan.careplanByCareplan?.name}}" [bgAuto]="true" size="sm"></avatar>
                 <div class="careplan_details">
+                  <span 
+                    class="start-session"
+                    ngbPopover="Start a New Session With Care Plan" 
+                    (click)="startSessionFromCareplan(active_careplan.careplanByCareplan?.id, confirmStartSession)"
+                    triggers="mouseenter:mouseleave">
+                      <i class="fa fa-solid fa-play text-primary"></i>
+                  </span>
+                  <span 
+                    class="remove"
+                    ngbPopover="Remove Care Plan from Patient" 
+                    triggers="mouseenter:mouseleave" 
+                    (click)="removeCareplanFromPatient(active_careplan.careplanByCareplan?.id, confirmDeletion)">
+                      <i class="fa fa-solid fa-trash text-danger"></i>
+                  </span>
                 <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan?.name}}</a>
                 <p>Includes
                   <span>{{get_activity_count}}</span>
@@ -473,7 +488,8 @@
             <div>
               <div class="progress">
                 <div class="progress-bar rounded-pill" role="progressbar"
-                  style="width: {{ element.totalPerformanceRatio }}%; background-color: #A6B7D4">
+                  [style.width]="element.totalPerformanceRatio + '%'"
+                  style="background-color: #A6B7D4">
                 </div>
               </div>
             </div>
@@ -546,3 +562,22 @@
   </div>
 </ng-template>
 
+<ng-template #confirmDeletion let-modal>
+  <div class="modal-body">
+    <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+    <div class="text-end mt-2">
+      <button type="button" class="btn btn-sm btn-danger me-5" (click)="modal.close('Close click')">Yes, Remove</button>
+      <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmStartSession let-modal>
+  <div class="modal-body">
+    <p>This will start a new Session.</p>
+    <div class="text-end mt-5">
+      <button type="button" class="btn btn-sm btn-primary me-5" (click)="modal.close('Close click')">Start Session</button>
+      <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+    </div>
+  </div>
+</ng-template>
