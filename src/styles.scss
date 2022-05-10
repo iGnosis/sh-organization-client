@@ -7,6 +7,8 @@
 @import "@webpixels/css/forms";
 @import "@webpixels/css/components";
 @import "@webpixels/css/utilities";
+@import '/node_modules/ngx-owl-carousel-o/lib/styles/scss/owl.carousel.scss';
+@import '/node_modules/ngx-owl-carousel-o/lib/styles/scss/owl.theme.default.scss';
 // Should not be global... or should be...?
 label.form-label {color: #425466;font-weight: 500;}
 .lg-modal .modal-dialog {max-width: 90vw;}
@@ -247,3 +249,16 @@ table.patients_detail_table .form-check {
 .container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 1.5em !important;}
 .no_careplan_notice_alignment {text-align: center;}
 .no_care_plan_assigned {padding: 0.3em 2em;}
+.col.custom-careplan-col-alignment {padding-bottom: 2em;display: flex;align-items: center;justify-content: flex-end;}
+.col.custom-careplan-col-alignment img.card-img {width: 15em;}
+.col.custom-careplan-col-alignment .card.shadow-2 {margin-left: 1.5em;}
+.activities-carousel .card.shadow-2 .card-img {height: 13em;}
+.activities-carousel .info {display: flex;align-items: center;justify-content: space-between;}
+.activities-carousel .info.mb-7 {border-bottom: 1px solid #E2E8F0;padding-bottom: 1em;}
+.activities-carousel h2.h4 {font-weight: 600;font-size: 14px;line-height: 24px;color: #718096;}
+.activities-carousel span {font-weight: 600;font-size: 14px;line-height: 24px;color: #27272E;}
+.activities-carousel .owl-stage {padding-bottom: 1em;}
+.activities-carousel .owl-carousel.owl-theme.owl-loaded.owl-responsive {display: flex;flex-direction: column;}
+.activities-carousel .owl-stage-outer {order: 2;margin-top: 1em;}
+.activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;}
+h2.activities-title {padding-top: 0.5em;margin-bottom: -2em;}

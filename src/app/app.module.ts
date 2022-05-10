@@ -47,6 +47,8 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
 import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { CarePlanDetailComponent } from './pages/home/care-plan-detail/care-plan-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,6 +72,7 @@ import { PatientsListComponent } from './pages/home/patients/patients-list/patie
     SessionsDetailsComponent,
     AvatarComponent,
     PatientsListComponent,
+    CarePlanDetailComponent
   ],
   imports: [
     BrowserModule,
@@ -94,7 +97,8 @@ import { PatientsListComponent } from './pages/home/patients/patients-list/patie
     MatNativeDateModule,
     MatInputModule,
     BreadcrumbModule,
-    MatDialogModule
+    MatDialogModule,
+    CarouselModule
   ],
   providers: [
     PrivateGuard,
