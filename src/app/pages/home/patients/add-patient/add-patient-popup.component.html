@@ -19,9 +19,18 @@
                       <a class="btn btn-sm btn-neutral px-4 py-2 text-xs">Add</a>
                   </div>
                   <div *ngIf="active_careplan.value=='true'">
-                    <a class="btn btn-sm btn-neutral px-4 py-2 text-xs success"><mat-icon>done</mat-icon>Added</a>
+                    <a (click)="removeCareplanFromPatient(active_careplan.careplanByCareplan?.id, confirmDeletion)" class="btn btn-sm btn-neutral px-4 py-2 text-xs danger">Remove</a>
                 </div>
               </div>
           </div>
       </div>
   </div>
+  <ng-template #confirmDeletion let-modal>
+    <div class="modal-body">
+      <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+      <div class="text-end mt-2">
+        <button type="button" class="btn btn-sm btn-danger me-5" (click)="modal.close('Close click')">Yes, Remove</button>
+        <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+      </div>
+    </div>
+  </ng-template>

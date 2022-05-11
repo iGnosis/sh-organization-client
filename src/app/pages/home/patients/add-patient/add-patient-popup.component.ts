@@ -4,7 +4,7 @@ import { environment } from 'src/environments/environment';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { forEachChild } from 'typescript';
-
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'add-patient-pop-up',
   templateUrl: 'add-patient-popup.component.html',
@@ -16,7 +16,8 @@ export class AddPatient implements OnInit {
   patientId: any='';
   data:any;
   careplans_list : any | undefined=[];
-  all_list:any|undefined=[];
+  selectedCarePlanId: string
+  private modalService: NgbModal
   public static apiURL: string
   constructor(
     private graphqlService: GraphqlService,
@@ -54,6 +55,11 @@ console.log(this.patientId);
         }
       }
     }
-    console.log(this.careplans_list);
+    //console.log(this.careplans_list);
+  }
+  async removeCareplanFromPatient(careplan: string, modalContent: any) {
+    console.log(careplan)
+    this.modalService.open(modalContent)
+    this.selectedCarePlanId = careplan
   }
 }
