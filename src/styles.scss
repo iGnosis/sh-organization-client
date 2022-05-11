@@ -246,7 +246,7 @@ table.patients_detail_table .form-check {
 .container.popup_alignment.ng-star-inserted .custom_alignment h1 {font-weight: 700;font-size: 18px;line-height: 22px;margin-left: 1em;}
 .container.popup_alignment .list-group-item a.d-block.h6.mb-1 {text-transform: capitalize;font-weight: 400;font-size: 14px;color: #505780;}
 .container.popup_alignment {width: 40em;}
-.container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 1.5em !important;}
+.container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 2em !important;}
 .no_careplan_notice_alignment {text-align: center;}
 .no_care_plan_assigned {padding: 0.3em 2em;}
 .col.custom-careplan-col-alignment {padding-bottom: 2em;display: flex;align-items: center;justify-content: flex-end;}
@@ -262,3 +262,8 @@ table.patients_detail_table .form-check {
 .activities-carousel .owl-stage-outer {order: 2;margin-top: 1em;}
 .activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;}
 h2.activities-title {padding-top: 0.5em;margin-bottom: -2em;}
+a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.success {border: 0.5px solid #00BD3E;color: #00BD3E;padding: 0.1em 0.4em !important;display: flex; align-items: center;}
+a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.success mat-icon {font-size: 20px;}
+.add_new_careplan .custom_alignment {align-items: initial;}
+.add_new_careplan .custom_alignment mat-icon {font-size: 2em;margin-right: 0.4em;color: #000066;}
+.add_new_careplan .custom_alignment h1 {color: #000066;}

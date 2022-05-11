@@ -20,6 +20,9 @@ import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { StartSessionPopUp } from '../start-session/start-session-popup.component';
+import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
+import { AddPatient } from '../add-patient/add-patient-popup.component';
 
 export class Captain {
   careplanByCareplan: string;
@@ -59,7 +62,7 @@ export class PatientDetailsComponent implements OnInit {
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
- 
+
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   seachValue: any;
   itemsPerPage = 10
@@ -95,24 +98,22 @@ export class PatientDetailsComponent implements OnInit {
     private chartService: ChartService,
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    public eventEmitterService : EventEmitterService
   ) { }
 
-  @ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
-  openDialog() {
-    const dialogRef = this.dialog.open(this.callStartNewSessionModal);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-  }
+  //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
+
   ngOnInit() {
+
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || ''
       if (this.patientId) {
-        console.log('patientId:', this.patientId,this.route);
+        console.log('patientId:', this.patientId);
+        // this.eventEmitterService.SentPatientID({data:this.patientId});
         this.fetchSessions(0)
 
         // TODO: remove this when events are being sent properly from activity site.
@@ -129,6 +130,20 @@ export class PatientDetailsComponent implements OnInit {
         this.initEngagementChart(this.startDate.toISOString(), this.endDate.toISOString())
       }
     })
+  }
+  openDialog() {
+    const dialogRef = this.dialog.open(StartSessionPopUp);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
+    this.eventEmitterService.SentPatientID(this.patientId);
+  }
+  openAddPatientDialog() {
+    const dialogRef = this.dialog.open(AddPatient);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
+    this.eventEmitterService.SentPatientID(this.patientId);
   }
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
@@ -243,32 +258,6 @@ export class PatientDetailsComponent implements OnInit {
   async startSessionFromCareplan(careplan: string, modalContent: any) {
     this.modalService.open(modalContent)
     this.selectedCarePlanId = careplan
-  }
-
-  async createNewSessionAndRedirect() {
-    const sessionId = await this.createNewSession()
-    this.goToLink(`${environment.activityEndpoint}?sessionId=${sessionId}`)
-  }
-
-  async createNewSession() {
-    const session = await this.graphqlService.client.request(GqlConstants.CREATE_SESSION, { patient: this.patientId, careplan: '4e2aa726-b07f-4f44-a4fd-fc228c93bfc7' })
-    if (
-      session &&
-      session.insert_session &&
-      session.insert_session.returning &&
-      Array.isArray(session.insert_session.returning) &&
-      session.insert_session.returning.length == 1 &&
-      session.insert_session.returning[0].id
-    ) {
-      const sessionId = session.insert_session.returning[0].id
-      console.log('createSessionAndRedirect:sessionId', sessionId)
-      return sessionId
-    }
-  }
-
-  goToLink(url: string) {
-    console.log(`goToLink:Redirecting user to ${url}...`)
-    window.open(url, '_blank')
   }
 
   initEngagementChart(startDate: string, endDate: string) {
@@ -595,40 +584,3 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 }
-// @Component({
-//   selector: 'dialog-content-example-dialog',
-//   templateUrl: 'start-session-pop-up.component.html',
-// })
-// export class StartSessionPopUp {
-//   patientId?: string
-//   itemsPerPage: any;
-//   dataSource: any;
-//   constructor(
-//     private route: ActivatedRoute,
-//     private router: Router,
-//     private analyticsService: AnalyticsService,
-//     private graphqlService: GraphqlService,
-//   ) { }
-//   ngOnInit() {
-//     // this.route.paramMap.subscribe(async (params: ParamMap) => {
-//     //   this.patientId = params.get('id') || ''
-//     //   if (this.patientId) {
-//     //     //console.log('patientId:', this.patientId);
-//     //   }
-//     // })
-//     console.log("hello",this.patientId);
-//   }
-//   async fetchSessions(offset: number) {
-//     // we need to show sessions of a patient.
-//     let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
-//       {
-//         patientId: this.patientId,
-//         limit: this.itemsPerPage,
-//         offset
-//       }
-//     )
-//     console.log('offset:', offset)
-//     console.log('fetchSessions:', sessions)
-//     console.log(this.dataSource.data, ">>>>>>>");
-//   }
-// }

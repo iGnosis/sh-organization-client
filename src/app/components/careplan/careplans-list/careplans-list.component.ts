@@ -18,7 +18,7 @@ export class CareplansListComponent implements OnInit {
 
   async ngOnInit() {
     let assignedCareplansIds: Array<string> = []
-
+    console.log(this.patientId,"patientid");
     if (this.patientId) {
       let assignedCareplans = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_CAREPLANS,
         { patientId: this.patientId }

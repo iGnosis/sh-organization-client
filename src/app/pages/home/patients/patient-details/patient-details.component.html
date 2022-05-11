@@ -157,7 +157,7 @@
       <!-- Actions -->
       <div class="col-md-6 col-12 text-md-end" *ngIf="get_careplan_count!=0">
         <div class="mx-n1">
-          <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+          <a  (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
             <mat-icon>add</mat-icon><span>Add New</span>
           </a>
         </div>
@@ -169,20 +169,20 @@
         <div class="list-group list-group-flush">
           <div class="list-group-item d-flex align-items-center px-0">
               <div class="flex-fill align_care_plan">
-                
+
                 <avatar text="{{active_careplan.careplanByCareplan?.name}}" [bgAuto]="true" size="sm"></avatar>
                 <div class="careplan_details">
-                  <span 
+                  <span
                     class="start-session"
-                    ngbPopover="Start a New Session With Care Plan" 
+                    ngbPopover="Start a New Session With Care Plan"
                     (click)="startSessionFromCareplan(active_careplan.careplanByCareplan?.id, confirmStartSession)"
                     triggers="mouseenter:mouseleave">
                       <i class="fa fa-solid fa-play text-primary"></i>
                   </span>
-                  <span 
+                  <span
                     class="remove"
-                    ngbPopover="Remove Care Plan from Patient" 
-                    triggers="mouseenter:mouseleave" 
+                    ngbPopover="Remove Care Plan from Patient"
+                    triggers="mouseenter:mouseleave"
                     (click)="removeCareplanFromPatient(active_careplan.careplanByCareplan?.id, confirmDeletion)">
                       <i class="fa fa-solid fa-trash text-danger"></i>
                   </span>
@@ -535,7 +535,7 @@
   </div>
 </div>
 
-<ng-template #callStartNewSessionModal>
+<!-- <ng-template #callStartNewSessionModal>
   <div class="container popup_alignment">
     <div>
       <div class="row align-items-center">
@@ -550,7 +550,6 @@
           <div class="list-group list-group-flush">
               <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplan of active_careplans">
                   <div class="flex-fill ms-4">
-                      <!-- Title -->
                       <a class="d-block h6 mb-1">{{active_careplan.careplanByCareplan?.name}}</a>
                   </div>
                   <div class="">
@@ -560,7 +559,7 @@
           </div>
       </div>
   </div>
-</ng-template>
+</ng-template> -->
 
 <ng-template #confirmDeletion let-modal>
   <div class="modal-body">

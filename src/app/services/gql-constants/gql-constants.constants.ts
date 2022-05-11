@@ -159,6 +159,21 @@ export const GqlConstants = {
     }
   }
 `,
+GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
+  patient(where: {id: {_eq: $patientId}}) {
+    patient_careplans {
+      careplanByCareplan {
+        name
+        id
+      }
+    }
+  }
+  careplan {
+    name
+    id
+  }
+}
+`,
 
   CREATE_SESSION: `mutation CreateSession($patient: uuid = "", $careplan: uuid = "") {
     insert_session(objects: {patient: $patient, careplan: $careplan}) {
