@@ -209,5 +209,20 @@ GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
     }
   }
   `,
+  POST_SESSION_ADDED_DATA:`
+  mutation AssignCareplan($patient: uuid, $careplan: uuid) {
+    insert_patient_careplan(objects: {patient: $patient, careplan: $careplan}) {
+      returning {
+        careplan
+      }
+    }
+  }
+  `,
+  DELETE_PATIENT_CAREPLAN:`
+  mutation DeleteCareplan($patient: uuid, $careplan: uuid) {
+    delete_patient_careplan(where: {careplan: {_eq: $careplan}, patient: {_eq: $patient}}) {
+      affected_rows
+    }
+  }`,
 
 } as const

@@ -16,10 +16,10 @@
                       <a class="d-block h6 mb-1">{{active_careplan.name}}</a>
                   </div>
                   <div *ngIf="active_careplan.value=='false'">
-                      <a class="btn btn-sm btn-neutral px-4 py-2 text-xs">Add</a>
+                      <a class="btn btn-sm btn-neutral px-4 py-2 text-xs" (click)="addCarePlan(active_careplan.id)">Add</a>
                   </div>
                   <div *ngIf="active_careplan.value=='true'">
-                    <a (click)="removeCareplanFromPatient(active_careplan.careplanByCareplan?.id, confirmDeletion)" class="btn btn-sm btn-neutral px-4 py-2 text-xs danger">Remove</a>
+                    <a (click)="removeCareplanFromPatient(active_careplan.id, confirmDeletion)" class="btn btn-sm btn-neutral px-4 py-2 text-xs danger">Remove</a>
                 </div>
               </div>
           </div>
@@ -29,7 +29,7 @@
     <div class="modal-body">
       <p>Are you sure? This will remove the Care Plan from the Patient.</p>
       <div class="text-end mt-2">
-        <button type="button" class="btn btn-sm btn-danger me-5" (click)="modal.close('Close click')">Yes, Remove</button>
+        <button type="button" class="btn btn-sm btn-danger me-5" (click)="confirmRemoveCarePlan()">Yes, Remove</button>
         <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
       </div>
     </div>
