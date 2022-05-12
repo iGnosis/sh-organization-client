@@ -36,6 +36,7 @@
     "mat-table-filter": "^10.2.0",
     "ng-multiselect-dropdown": "^0.3.8",
     "ng2-charts": "^3.0.10",
+    "ng2-search-filter": "^0.5.1",
     "ngx-owl-carousel-o": "^7.0.2",
     "ngx-pagination": "^5.1.1",
     "node-fetch": "^3.2.4",
