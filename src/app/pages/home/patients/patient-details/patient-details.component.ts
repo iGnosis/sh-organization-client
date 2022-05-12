@@ -3,7 +3,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
@@ -12,17 +11,15 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormControl} from '@angular/forms';
 import {SelectionModel} from '@angular/cdk/collections';
 import {MatDialog} from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
-import { AddPatient } from '../add-patient/add-patient-popup.component';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
 import { AchievementRatio, EngagementRatio, Patient, Session } from 'src/app/pointmotion';
+import { AddPatient } from '../add-careplan/add-careplan-popup.component';
 
 export class Captain {
   careplanByCareplan: string;
