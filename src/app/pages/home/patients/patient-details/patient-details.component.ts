@@ -19,10 +19,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
-import { AddPatient } from '../add-patient/add-patient-popup.component';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
 import { AchievementRatio, EngagementRatio, Patient, Session } from 'src/app/pointmotion';
+import { AddPatient } from '../add-careplan/add-careplan-popup.component';
 
 export class Captain {
   careplanByCareplan: string;
