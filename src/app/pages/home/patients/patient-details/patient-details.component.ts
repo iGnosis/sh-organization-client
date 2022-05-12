@@ -12,10 +12,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import {FormControl} from '@angular/forms';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatDialog} from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormControl } from '@angular/forms';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
@@ -52,13 +52,13 @@ export class PatientDetailsComponent implements OnInit {
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
   activeCarePlans: any | undefined;
-  patientIdentifier:any| undefined;
-  getActivityCount : number;
-  getEstimatedActivityDuration : number;
+  patientIdentifier: any | undefined;
+  getActivityCount: number;
+  getEstimatedActivityDuration: number;
   // getCarePlanCount : number;
 
-  toggleFilterDiv(){
-    this.isShowFilter=!this.isShowFilter;
+  toggleFilterDiv() {
+    this.isShowFilter = !this.isShowFilter;
   }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
@@ -103,7 +103,7 @@ export class PatientDetailsComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private modalService: NgbModal,
-    public eventEmitterService : EventEmitterService
+    public eventEmitterService: EventEmitterService
   ) { }
 
   //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
@@ -230,23 +230,23 @@ export class PatientDetailsComponent implements OnInit {
     })
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId})
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId })
     this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
     // this.getCarePlanCount = this.activeCarePlans.length;
-    console.log(this.dataSource.data.length,"length");
-    if(this.activeCarePlans.length > 0) {
+    console.log(this.dataSource.data.length, "length");
+    if (this.activeCarePlans.length > 0) {
       this.getActivityCount = this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
       this.getEstimatedActivityDuration = this.activeCarePlans[0].careplanByCareplan.estimatedDuration;
     }
 
-    if(this.getActivityCount == 0 && this.dataSource.data.length == 0){
+    if (this.getActivityCount == 0 && this.dataSource.data.length == 0) {
       this.noSessionAssignedPlan = 1;
     }
-    else{
+    else {
       this.noSessionAssignedPlan = 0;
     }
-    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
+    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId })
     this.patientIdentifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
 
@@ -588,12 +588,5 @@ export class PatientDetailsComponent implements OnInit {
 
   openSessionDetailsPage(sessionId: string, sessionDetails: any) {
     this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
-  }
-
-  rant() {
-    return {
-      // for line charts - the maximum data point gets cut in half.
-      'chartJsBug': 'https://github.com/chartjs/Chart.js/issues/4202'
-    }
   }
 }
