@@ -8,7 +8,7 @@
           <xng-breadcrumb separator=">"></xng-breadcrumb>
           <!-- <div *ngIf="sessionDetails.length!=0">
           <h1 class="h2 mb-0 ls-tight mt-5">{{ sessionDetails[0].patientByPatient?.identifier }}</h1> -->
-          <h1 class="h2 mb-0 ls-tight mt-5">{{ patient_identifier }}</h1>
+          <h1 class="h2 mb-0 ls-tight mt-5">{{ patientIdentifier }}</h1>
 
         </div>
         <!-- Actions -->
@@ -97,13 +97,13 @@
     </div>
   </div>
 </div>
-<div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && no_session_assigned_plan==0">
+<div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && noSessionAssignedPlan==0">
   <div class="p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
       <div class="col-12 mb-3 mb-md-0">
       <div class="no_careplan_notice_alignment">
       <img src="/assets/images/no_session_img.svg" />
-        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patient_identifier }} has not started any session yet.</h2>
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has not started any session yet.</h2>
         <div class="mx-n1 mt-7">
           <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
             <span class="pe-2">
@@ -117,13 +117,13 @@
     </div>
   </div>
 </div>
-<div class="container-xl mt-5" *ngIf="no_session_assigned_plan==1">
+<div class="container-xl mt-5" *ngIf="noSessionAssignedPlan == 1">
   <div class="p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
       <div class="col-12 mb-3 mb-md-0">
       <div class="no_careplan_notice_alignment">
         <img src="/assets/images/no_assigned.svg" />
-        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patient_identifier }} has no care plan assigned to them yet.</h2>
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has no care plan assigned to them yet.</h2>
         <div class="mx-n1 mt-7">
           <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
             <mat-icon>add</mat-icon><span>Add Care Plan</span>
@@ -135,14 +135,14 @@
   </div>
 </div>
 <!-- Assigned care plan -->
-<div class="container-xl mt-5" *ngIf="no_session_assigned_plan==0">
+<div class="container-xl mt-5" *ngIf="noSessionAssignedPlan == 0">
   <div class="bg-light p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
-      <div class="col-12 mb-3 mb-md-0" *ngIf="get_careplan_count==0">
+      <div class="col-12 mb-3 mb-md-0" *ngIf="activeCarePlans.length == 0">
         <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
       <div class="no_careplan_notice_alignment">
       <img src="/assets/images/no_assigned.svg" />
-        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No care plans assigned for {{ patient_identifier }}</h2>
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No care plans assigned for {{ patientIdentifier }}</h2>
         <div class="mx-n1 mt-7">
           <a class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
             <mat-icon>add</mat-icon><span>Add Care Plan</span>
@@ -150,12 +150,12 @@
         </div>
       </div>
       </div>
-      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="get_careplan_count!=0">
+      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="activeCarePlans.length != 0">
         <!-- Title -->
         <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
       </div>
       <!-- Actions -->
-      <div class="col-md-6 col-12 text-md-end" *ngIf="get_careplan_count!=0">
+      <div class="col-md-6 col-12 text-md-end" *ngIf="activeCarePlans.length != 0">
         <div class="mx-n1">
           <a  (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
             <mat-icon>add</mat-icon><span>Add New</span>
@@ -164,18 +164,18 @@
       </div>
     </div>
     <div class="row custom_alignment assigned_care_plan_row">
-      <div class="col-md-6 col-12 mb-3 mb-md-0 careplan" *ngFor="let active_careplan of active_careplans">
+      <div class="col-md-6 col-12 mb-3 mb-md-0 careplan" *ngFor="let carePlan of activeCarePlans">
 
         <div class="list-group list-group-flush">
           <div class="list-group-item d-flex align-items-center px-0">
               <div class="flex-fill align_care_plan">
 
-                <avatar text="{{active_careplan.careplanByCareplan?.name}}" [bgAuto]="true" size="sm"></avatar>
+                <avatar text="{{carePlan.careplanByCareplan?.name}}" [bgAuto]="true" size="sm"></avatar>
                 <div class="careplan_details">
                   <span
                     class="start-session"
                     ngbPopover="Start a New Session With Care Plan"
-                    (click)="startSessionFromCareplan(active_careplan.careplanByCareplan?.id, confirmStartSession)"
+                    (click)="openStartSessionFromCareplanModal(carePlan.careplanByCareplan?.id, confirmStartSession)"
                     triggers="mouseenter:mouseleave">
                       <i class="fa fa-solid fa-play text-primary"></i>
                   </span>
@@ -183,17 +183,17 @@
                     class="remove"
                     ngbPopover="Remove Care Plan from Patient"
                     triggers="mouseenter:mouseleave"
-                    (click)="removeCareplanFromPatient(active_careplan.careplanByCareplan?.id, confirmDeletion)">
+                    (click)="openRemoveCareplanFromPatientModal(carePlan.careplanByCareplan?.id, confirmDeletion)">
                       <i class="fa fa-solid fa-trash text-danger"></i>
                   </span>
-                <a href="" class="d-block h6 mb-1 care_plan_title">{{active_careplan.careplanByCareplan?.name}}</a>
+                <a href="" class="d-block h6 mb-1 care_plan_title">{{carePlan.careplanByCareplan?.name}}</a>
                 <p>Includes
-                  <span>{{get_activity_count}}</span>
-                  <span *ngIf="get_activity_count>1"> activities</span>
-                  <span *ngIf="get_activity_count==1"> activity</span>
-                  for a {{get_estimated_activity_duration}}
-                  <span *ngIf="get_estimated_activity_duration>1">minutes</span>
-                  <span *ngIf="get_estimated_activity_duration==1">minute</span>
+                  <span>{{getActivityCount}}</span>
+                  <span *ngIf="getActivityCount > 1"> activities</span>
+                  <span *ngIf="getActivityCount == 1"> activity</span>
+                  for a {{ getEstimatedActivityDuration }}
+                  <span *ngIf="getEstimatedActivityDuration > 1">minutes</span>
+                  <span *ngIf="getEstimatedActivityDuration == 1">minute</span>
                   session
                 </p>
                 </div>
@@ -214,7 +214,7 @@
     <input type="text" class="form-control" placeholder="Search session details" aria-label="Search" aria-describedby=""
       [(ngModel)]="filterEntity.careplanByCareplan">
   </div>
-  <img src="/assets/images/filter_icon.svg"(click)="togglefilterDiv()" class="icons_align"/>
+  <img src="/assets/images/filter_icon.svg"(click)="toggleFilterDiv()" class="icons_align"/>
   <img src="/assets/images/setting.svg" class="filter_align icons_align"/>
 </div>
 </div>
@@ -255,7 +255,7 @@
       <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
         <!-- <mat-label>Conditions</mat-label> -->
         <mat-select multiple [(value)]="selected" placeholder="Condition">
-          <mat-option *ngFor="let active_careplan of active_careplans" [value]="active_careplan.careplanByCareplan?.name">{{active_careplan.careplanByCareplan?.name}}</mat-option>
+          <mat-option *ngFor="let active_careplan of activeCarePlans" [value]="active_careplan.careplanByCareplan?.name">{{active_careplan.careplanByCareplan?.name}}</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -453,7 +453,7 @@
       </ng-container>
       <ng-container matColumnDef="careplanByCareplan">
         <th mat-header-cell *matHeaderCellDef class="custom_table_header">Care Plan
-          <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.careplanByCareplan" value="{{seachValue}}">
+          <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.careplanByCareplan" value="{{searchValue}}">
         </th>
         <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
           <span class="text-heading font-semibold">
@@ -539,7 +539,7 @@
   <div class="modal-body">
     <p>Are you sure? This will remove the Care Plan from the Patient.</p>
     <div class="text-end mt-2">
-      <button type="button" class="btn btn-sm btn-danger me-5" (click)="modal.close('Close click')">Yes, Remove</button>
+      <button type="button" class="btn btn-sm btn-danger me-5" (click)="removeCarePlanFromPatient(modal)">Yes, Remove</button>
       <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
     </div>
   </div>
@@ -549,7 +549,7 @@
   <div class="modal-body">
     <p>This will start a new Session.</p>
     <div class="text-end mt-5">
-      <button type="button" class="btn btn-sm btn-primary me-5" (click)="modal.close('Close click')">Start Session</button>
+      <button type="button" class="btn btn-sm btn-primary me-5" (click)="startSessionFromCareplan()">Start Session</button>
       <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
     </div>
   </div>

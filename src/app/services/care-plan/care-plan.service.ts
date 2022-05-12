@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'graphql-request';
 import { CarePlan } from 'src/app/types/careplan';
+import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
 
 @Injectable({
@@ -95,5 +96,9 @@ export class CarePlanService {
 
   async detachActivities(careplanId: string, activityIds: Array<string>) {
 
+  }
+
+  async getCarePlansForPatient(patient: string) {
+    return this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient })
   }
 }

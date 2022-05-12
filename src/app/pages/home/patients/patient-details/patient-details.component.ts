@@ -23,6 +23,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { AddPatient } from '../add-patient/add-patient-popup.component';
+import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
+import { SessionService } from 'src/app/services/session/session.service';
 
 export class Captain {
   careplanByCareplan: string;
@@ -51,12 +53,13 @@ export class PatientDetailsComponent implements OnInit {
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
-  active_careplans: any | undefined;
-  patient_identifier:any| undefined;
-  get_activity_count : number;
-  get_estimated_activity_duration : number;
-  get_careplan_count : number;
-  togglefilterDiv(){
+  activeCarePlans: any | undefined;
+  patientIdentifier:any| undefined;
+  getActivityCount : number;
+  getEstimatedActivityDuration : number;
+  // getCarePlanCount : number;
+
+  toggleFilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
   toggleDisplayDiv() {
@@ -64,7 +67,8 @@ export class PatientDetailsComponent implements OnInit {
   }
 
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  seachValue: any;
+
+  searchValue: any;
   itemsPerPage = 10
   currentPage = 1
   isRowsChecked = false
@@ -72,7 +76,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementChart: any
   startDate?: Date
   endDate?: Date
-  no_session_assigned_plan:number
+  noSessionAssignedPlan: number
   // code for mat tab starts here
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   selection: any;
@@ -94,7 +98,9 @@ export class PatientDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private analyticsService: AnalyticsService,
+    private carePlanService: CarePlanService,
     private graphqlService: GraphqlService,
+    private sessionService: SessionService,
     private chartService: ChartService,
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
@@ -226,36 +232,58 @@ export class PatientDetailsComponent implements OnInit {
     })
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVEPLANS, { patientId: this.patientId})
-    this.active_careplans = response.patient[0].patient_careplans;
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId})
+    this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
-    this.get_careplan_count=this.active_careplans.length;
+    // this.getCarePlanCount = this.activeCarePlans.length;
     console.log(this.dataSource.data.length,"length");
-    if(this.get_careplan_count!=0)
-    {
-      this.get_activity_count=this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count;
-      this.get_estimated_activity_duration=this.active_careplans[0].careplanByCareplan.estimatedDuration;
+    if(this.activeCarePlans.length > 0) {
+      this.getActivityCount = this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
+      this.getEstimatedActivityDuration = this.activeCarePlans[0].careplanByCareplan.estimatedDuration;
     }
-    if(this.get_careplan_count==0 && this.dataSource.data.length==0){
-      this.no_session_assigned_plan=1;
+
+    if(this.getActivityCount == 0 && this.dataSource.data.length == 0){
+      this.noSessionAssignedPlan = 1;
     }
     else{
-      this.no_session_assigned_plan=0;
+      this.noSessionAssignedPlan = 0;
     }
     const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId})
-    this.patient_identifier = identifier_response.patient[0].identifier;
+    this.patientIdentifier = identifier_response.patient[0].identifier;
     //console.log(this.patient_identifier,'getpatient');
 
     //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
 
-  async removeCareplanFromPatient(careplan: string, modalContent: any) {
-    console.log(careplan)
+  async openRemoveCareplanFromPatientModal(careplan: string, modalContent: any) {
     this.modalService.open(modalContent)
     this.selectedCarePlanId = careplan
   }
 
-  async startSessionFromCareplan(careplan: string, modalContent: any) {
+  async removeCarePlanFromPatient(modal: NgbModal) {
+    if (this.patientId) {
+      await this.carePlanService.detachCarePlan(this.patientId, [this.selectedCarePlanId])
+      this.modalService.dismissAll()
+    } else {
+      throw new Error('patientId not initialized')
+    }
+  }
+
+  async startSessionFromCareplan() {
+    if (this.patientId) {
+      const session = await this.sessionService.new(this.patientId, this.selectedCarePlanId)
+      if (session.insert_session_one && session.insert_session_one.id) {
+        alert(session.insert_session_one.id)
+      }
+      console.log(session);
+      this.modalService.dismissAll()
+    } else {
+      throw new Error('patientId not initialized')
+    }
+    this.modalService.dismissAll()
+  }
+
+  async openStartSessionFromCareplanModal(careplan: string, modalContent?: any) {
     this.modalService.open(modalContent)
     this.selectedCarePlanId = careplan
   }
@@ -377,11 +405,14 @@ export class PatientDetailsComponent implements OnInit {
       data.datasets[0].data = results.map((result: EngagementRatio) => result.engagementRatio! * 100)
       data.datasets[0].careplanNames = results.map((result: EngagementRatio) => result.careplanName)
 
-      // @ts-ignore: TypeScript headache - fix later
-      const ctx = document.getElementById('engagementChart').getContext('2d')
-      if (ctx) {
+      const engagementChartElm = document.getElementById('engagementChart')
+      if (engagementChartElm) {
         // @ts-ignore: TypeScript headache - fix later
-        this.engagementChart = new Chart(ctx, config)
+        const ctx = document.getElementById('engagementChart').getContext('2d')
+        if (ctx) {
+          // @ts-ignore: TypeScript headache - fix later
+          this.engagementChart = new Chart(ctx, config)
+        }
       }
     })
   }
@@ -529,11 +560,14 @@ export class PatientDetailsComponent implements OnInit {
       data.datasets[0].data = results.map((result: AchievementRatio) => result.avgAchievement! * 100)
       data.datasets[0].careplanNames = results.map((result: AchievementRatio) => result.careplanName)
 
-      // @ts-ignore: TypeScript headache - fix later
-      const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
-      if (ctx) {
+      const achievementChartElm = document.getElementById('achievementChart')
+      if (achievementChartElm) {
         // @ts-ignore: TypeScript headache - fix later
-        this.achievementChart = new Chart(ctx, config)
+        const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
+        if (ctx) {
+          // @ts-ignore: TypeScript headache - fix later
+          this.achievementChart = new Chart(ctx, config)
+        }
       }
     })
   }

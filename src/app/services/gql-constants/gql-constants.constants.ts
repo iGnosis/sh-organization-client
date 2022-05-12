@@ -141,8 +141,8 @@ export const GqlConstants = {
       }
     }
   `,
-  GET_ACTIVEPLANS: `query GetPatientCarePlan($patientId: uuid) {
-    patient(where: {id: {_eq: $patientId}}) {
+  GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
+    patient(where: {id: {_eq: $patient}}) {
       id
       patient_careplans {
         careplanByCareplan {
@@ -175,13 +175,16 @@ GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
 }
 `,
 
-  CREATE_SESSION: `mutation CreateSession($patient: uuid = "", $careplan: uuid = "") {
-    insert_session(objects: {patient: $patient, careplan: $careplan}) {
-      returning {
-        id
-      }
+  CREATE_SESSION: `mutation StartSession($careplan: uuid!, $patient: uuid!) {
+    insert_session_one(object: {careplan: $careplan, patient: $patient}) {
+      id
+      createdAt
+      updatedAt
+      careplan
+      patient
     }
   }`,
+  
   GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
     patient(where: {id: {_eq: $patientId}}) {
       identifier
