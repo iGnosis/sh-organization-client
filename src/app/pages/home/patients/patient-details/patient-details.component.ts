@@ -49,7 +49,7 @@ export class SpaceCraft {
 
 export class PatientDetailsComponent implements OnInit {
   isShowDiv = true;
-  selected : any;
+  selected: any;
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
@@ -323,6 +323,7 @@ export class PatientDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },
@@ -423,28 +424,6 @@ export class PatientDetailsComponent implements OnInit {
       datasets: [{
         data: [],
         careplanNames: [], // need this for tooltips
-        tempData: [
-          {
-            'id': '28th', data: {
-              'allSessions': 55
-            }
-          },
-          {
-            'id': '29th', data: {
-              'allSessions': 86
-            }
-          },
-          {
-            'id': '30th', data: {
-              'allSessions': 90
-            }
-          },
-          {
-            'id': '31st', data: {
-              'allSessions': 78
-            }
-          }
-        ],
         pointRadius: 5,
         backgroundColor: '#000066',
         borderColor: '#000066',
@@ -452,6 +431,7 @@ export class PatientDetailsComponent implements OnInit {
         tension: 0.1,
         fill: false,
         label: 'Success Ratio',
+        clip: false,
       }]
     }
 
@@ -486,6 +466,7 @@ export class PatientDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },
