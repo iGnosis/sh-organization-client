@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { SessionData, IChart } from 'src/app/types/chart';
+import { IChart, SessionData } from 'src/app/pointmotion';
 import { environment } from '../../../environments/environment'
 @Injectable({
   providedIn: 'root'

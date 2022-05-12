@@ -51,6 +51,8 @@ import { CarouselModule } from 'ngx-owl-carousel-o';
 import { CarePlanDetailComponent } from './pages/home/care-plan-detail/care-plan-detail.component';
 import { StartSessionPopUp } from './pages/home/patients/start-session/start-session-popup.component';
 import { AddPatient } from './pages/home/patients/add-patient/add-patient-popup.component';
+import { SessionComponent } from './pages/session/session.component';
+import { SafePipe } from './pipes/safe/safe.pipe';
 
 @NgModule({
   declarations: [
@@ -77,7 +79,10 @@ import { AddPatient } from './pages/home/patients/add-patient/add-patient-popup.
     PatientsListComponent,
     CarePlanDetailComponent,
     StartSessionPopUp,
-    AddPatient
+    AddPatient,
+    SessionComponent,
+    SafePipe
+
   ],
   imports: [
     BrowserModule,

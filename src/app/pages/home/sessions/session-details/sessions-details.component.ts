@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Activity, ActivityEvent } from 'src/app/types/activity';
-import { Session } from 'src/app/types/session';
+import { Activity, ActivityEvent, Session } from 'src/app/pointmotion';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({

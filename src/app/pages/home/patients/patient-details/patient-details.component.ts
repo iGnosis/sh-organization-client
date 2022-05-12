@@ -3,13 +3,10 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Patient } from 'src/app/types/patient';
-import { Session } from 'src/app/types/session';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
-import { AchievementRatio, EngagementRatio } from 'src/app/types/chart';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,6 +22,7 @@ import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter
 import { AddPatient } from '../add-patient/add-patient-popup.component';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
+import { AchievementRatio, EngagementRatio, Patient, Session } from 'src/app/pointmotion';
 
 export class Captain {
   careplanByCareplan: string;

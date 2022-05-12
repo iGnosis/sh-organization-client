@@ -17,6 +17,7 @@ import { PatientAddComponent } from './pages/home/patients/patient-add/patient-a
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
+import { SessionComponent } from './pages/session/session.component';
 
 
 const routes: Routes = [
@@ -94,9 +95,11 @@ const routes: Routes = [
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'sessions/:id', component: SessionsDetailsComponent }
+      { path: 'sessions/:id', component: SessionsDetailsComponent },
+      
     ]
-  }
+  },
+  { path: 'session/:id', component: SessionComponent}
 ];
 
 @NgModule({

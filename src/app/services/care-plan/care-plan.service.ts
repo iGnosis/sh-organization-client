@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { gql } from 'graphql-request';
-import { CarePlan } from 'src/app/types/careplan';
+import { CarePlan } from 'src/app/pointmotion';
 import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
 

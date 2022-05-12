@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Activity, ActivityEvent } from 'src/app/types/activity';
+import { Activity, ActivityEvent } from 'src/app/pointmotion';
 
 @Component({
   selector: 'app-activities-details',
