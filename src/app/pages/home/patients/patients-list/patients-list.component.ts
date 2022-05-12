@@ -7,9 +7,9 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MatTableFilter } from 'mat-table-filter';
+import { Patient } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { Patient } from 'src/app/types/patient';
 import { Captain, SpaceCraft } from '../patient-details/patient-details.component';
 
 @Component({

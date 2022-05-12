@@ -69,39 +69,14 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  _drawSegmentValues(chart: any) {
-    chart._sortedMetasets[0].data.forEach((data: any) => {
-      this.patientAdherenceCtx.fillStyle = 'white';
-      const textSize = this.patientAdherenceCanvas.width / 10;
-      this.patientAdherenceCtx.font = textSize + "px Verdana";
-
-      const value = data.$context.raw;
-      const startAngle = data.startAngle;
-      const endAngle = data.endAngle;
-      const middleAngle = startAngle + ((endAngle - startAngle) / 2);
-
-      const midX = this.patientAdherenceCanvas.width / 2;
-      const midY = this.patientAdherenceCanvas.height / 2
-
-      // compute text location
-      const posX = (data.outerRadius / 2) * Math.cos(middleAngle) + midX;
-      const posY = (data.outerRadius / 2) * Math.sin(middleAngle) + midY;
-
-      // Text offside to middle of text
-      const w_offset = this.patientAdherenceCtx.measureText(value).width / 2;
-      const h_offset = textSize / 4;
-      this.patientAdherenceCtx.fillText(value, posX - w_offset, posY + h_offset);
-    })
-  }
-
   initPatientOverviewChart() {
     const data = {
       datasets: [{
         label: 'Dementia',
         data: [
-          { x: 20, y: 30, r: 10 },
-          { x: 40, y: 10, r: 25 },
-          { x: 55, y: 47, r: 18 }
+          { x: 20, y: 30, r: 10, pid: 'john' },
+          { x: 40, y: 10, r: 25, pid: 'jane' },
+          { x: 55, y: 47, r: 18, pid: 'han' }
         ],
         backgroundColor: '#2f51ae',
         clip: false
@@ -109,8 +84,8 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Alzheimers',
         data: [
-          { x: 80, y: 30, r: 10 },
-          { x: 80, y: 10, r: 15 }
+          { x: 80, y: 30, r: 10, pid: 'corey' },
+          { x: 80, y: 10, r: 15, pid: 'mike' }
         ],
         backgroundColor: '#007f6e',
         clip: false
@@ -118,8 +93,8 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Parkinsons',
         data: [
-          { x: 100, y: 10, r: 10 },
-          { x: 42, y: 90, r: 15 }
+          { x: 100, y: 10, r: 10, pid: 'vader' },
+          { x: 42, y: 90, r: 15, pid: 'leia' }
         ],
         backgroundColor: '#ffa2ad',
         clip: false
@@ -164,12 +139,39 @@ export class DashboardComponent implements OnInit {
             topRight: '#f0faf4',
             bottomRight: '#fff7e4',
             bottomLeft: '#fdebeb',
+          },
+          tooltip: {
+            events: ["click"],
+            displayColors: false,
+            titleFont: {
+              size: 16
+            },
+            bodyFont: {
+              size: 16
+            },
+            caretSize: 15,
+            callbacks: {
+              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].pid,
+              label: function (tooltipItem: any) {
+                const dataIndex = tooltipItem.dataIndex
+                const data = tooltipItem.dataset.data[dataIndex]
+                return `No. of activities: ${data.r}`
+              },
+              afterLabel: (tooltipItem: any) => {
+                const sessionCompletionStr = `Session Completion Rate: ${tooltipItem.dataset.data[tooltipItem.dataIndex].x}%`
+                const achievementRatioStr = `Achievement Ratio: ${tooltipItem.dataset.data[tooltipItem.dataIndex].y}%`
+                return sessionCompletionStr + '\n' + achievementRatioStr
+              },
+            }
           }
         },
         scales: {
           y: {
             max: 100,
             beginAtZero: true,
+            ticks: {
+              stepSize: 20,
+            },
             title: {
               display: true,
               padding: 12,
@@ -183,6 +185,9 @@ export class DashboardComponent implements OnInit {
           x: {
             max: 100,
             beginAtZero: true,
+            ticks: {
+              stepSize: 20,
+            },
             title: {
               display: true,
               padding: 12,

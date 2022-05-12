@@ -21,10 +21,10 @@ export const GqlConstants = {
       identifier
       medicalConditions
       preferredGenres
-      sessions(order_by: {createdAt: desc}, limit: 1, offset: 0) {
+      sessions(order_by: {createdAt: desc}, limit: 1, offset: 0, where: {status: {_neq: trashed}}) {
         createdAt
       }
-      sessions_aggregate {
+      sessions_aggregate(where: {status: {_neq: trashed}}) {
         aggregate {
           count
         }
@@ -122,12 +122,12 @@ export const GqlConstants = {
       }}}`,
 
   GET_SESSIONS: `query GetSessions($offset: Int, $limit: Int, $patientId: uuid) {
-      session_aggregate(where: {patient: {_eq: $patientId}}) {
+      session_aggregate(where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
         aggregate {
           count
         }
       }
-      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}}) {
+      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
         id
         createdAt
         endedAt
@@ -141,8 +141,8 @@ export const GqlConstants = {
       }
     }
   `,
-  GET_ACTIVEPLANS: `query GetPatientCarePlan($patientId: uuid) {
-    patient(where: {id: {_eq: $patientId}}) {
+  GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
+    patient(where: {id: {_eq: $patient}}) {
       id
       patient_careplans {
         careplanByCareplan {
@@ -159,7 +159,7 @@ export const GqlConstants = {
     }
   }
 `,
-GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
+  GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
   patient(where: {id: {_eq: $patientId}}) {
     patient_careplans {
       careplanByCareplan {
@@ -175,13 +175,16 @@ GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
 }
 `,
 
-  CREATE_SESSION: `mutation CreateSession($patient: uuid = "", $careplan: uuid = "") {
-    insert_session(objects: {patient: $patient, careplan: $careplan}) {
-      returning {
-        id
-      }
+  CREATE_SESSION: `mutation StartSession($careplan: uuid!, $patient: uuid!) {
+    insert_session_one(object: {careplan: $careplan, patient: $patient}) {
+      id
+      createdAt
+      updatedAt
+      careplan
+      patient
     }
   }`,
+
   GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
     patient(where: {id: {_eq: $patientId}}) {
       identifier
