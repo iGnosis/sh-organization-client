@@ -50,7 +50,7 @@ import { PatientsListComponent } from './pages/home/patients/patients-list/patie
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { CarePlanDetailComponent } from './pages/home/care-plan-detail/care-plan-detail.component';
 import { StartSessionPopUp } from './pages/home/patients/start-session/start-session-popup.component';
-import { AddPatient } from './pages/home/patients/add-patient/add-patient-popup.component';
+import { AddPatient } from './pages/home/patients/add-careplan/add-careplan-popup.component';
 
 @NgModule({
   declarations: [

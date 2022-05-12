@@ -261,10 +261,50 @@ table.patients_detail_table .form-check {
 .activities-carousel .owl-carousel.owl-theme.owl-loaded.owl-responsive {display: flex;flex-direction: column;}
 .activities-carousel .owl-stage-outer {order: 2;margin-top: 1em;}
 .activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;}
-h2.activities-title {padding-top: 0.5em;margin-bottom: -2em;}
+h2.activities-title {padding-top: 0.5em;}
 a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.success {border: 0.5px solid #00BD3E;color: #00BD3E;padding: 0.1em 0.4em !important;display: flex; align-items: center;}
 a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.success mat-icon {font-size: 20px;}
 .add_new_careplan .custom_alignment {align-items: initial;}
 .add_new_careplan .custom_alignment mat-icon {font-size: 2em;margin-right: 0.4em;color: #000066;}
 .add_new_careplan .custom_alignment h1 {color: #000066;}
 a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.danger {border-color: #FF0000;color: #FF0000;padding: 0.4em 1em !important;}
+.shadow-2.care-plan-detail {
+  display: flex;
+  align-items: center;
+}
+.inner-avatar-align {
+  display: flex;
+  align-items: center;
+}
+.care-plan-detail {
+  display: flex;
+  align-items: center;
+  box-shadow: 0px 0px 1px rgb(12 26 75 / 10%), 0px 4px 20px -2px rgb(50 50 71 / 8%);
+  border-radius: 16px;
+}
+.inner-avatar-align {
+  display: flex;
+  align-items: center;
+  box-shadow: inset 0px 2px 4px rgb(0 0 0 / 6%);
+  border-radius: 16px;
+  background-color: #fff;
+}
+// .inner-avatar-align:hover {
+//   background: #EDF2F7 !important;
+// }
+.care-plan-detail:hover{
+  background: #EDF2F7;
+}
+// .inner-avatar-align {
+//   background: #fff;
+// }
+// .care-plan-detail:hover .inner-avatar-align {
+//   background-color: #fff;
+// }
+.care-plan-detail:not(:hover){
+  background-color: #fff !important;
+  }
+
+  .care-plan-detail .inner-avatar-align:hover{
+    background: #EDF2F7 !important;
+  }

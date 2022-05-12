@@ -6,8 +6,8 @@ import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter
 import { forEachChild } from 'typescript';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
-  selector: 'add-patient-pop-up',
-  templateUrl: 'add-patient-popup.component.html',
+  selector: 'add-careplan-pop-up',
+  templateUrl: 'add-careplan-popup.component.html',
 })
 
 export class AddPatient implements OnInit {
@@ -45,6 +45,10 @@ console.log(this.patientId);
       }
     }
     for(const patient_data of this.all_careplans){
+      if(this.patients_careplan.length==0)
+      {
+        this.careplans_list.push({ name:patient_data.name,value: 'false' });
+      }
       for(const pt_data of this.patients_careplan){
         if(pt_data.careplanByCareplan.name!=patient_data.name){
           const isPresent = this.careplans_list.some(function(el:any){ return el.name === patient_data.name});
@@ -55,7 +59,8 @@ console.log(this.patientId);
         }
       }
     }
-    //console.log(this.careplans_list);
+    console.log(this.careplans_list);
+    console.log(this.patients_careplan.length);
   }
   async removeCareplanFromPatient(careplan: string, modalContent: any) {
     console.log(careplan)

@@ -187,5 +187,27 @@ GET_PATIENT_ACTIVEPLANS: `query GetPatientCarePlans($patientId: uuid) {
       identifier
     }
   }`,
+  GETCAREPLANDETAILS:`query GetCarePlanDetails($careplan: uuid) {
+    careplan(where: {id: {_eq: $careplan}}) {
+      name
+      id
+      careplan_activities {
+        activityByActivity {
+          name
+          duration
+          id
+        }
+      }
+      patient_careplans {
+        patientByPatient {
+          id
+          identifier
+          medicalConditions
+          updatedAt
+        }
+      }
+    }
+  }
+  `,
 
 } as const

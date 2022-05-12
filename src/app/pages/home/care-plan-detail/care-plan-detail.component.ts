@@ -4,12 +4,20 @@ import {SelectionModel} from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import {MatSort, Sort, SortDirection} from '@angular/material/sort';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 @Component({
   selector: 'app-care-plan',
   templateUrl: './care-plan-detail.component.html',
   styleUrls: ['./care-plan-detail.component.scss']
 })
 export class CarePlanDetailComponent implements OnInit {
+  carePlan?: string;
+  carePlanName?:string;
+  activityList : any | undefined=[];
+  patientList : any | undefined=[];
+
   customOptions: OwlOptions = {
     loop: true,
     mouseDrag: false,
@@ -38,8 +46,20 @@ export class CarePlanDetailComponent implements OnInit {
     },
     nav: true,
   }
-  constructor() { }
+  constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,) { }
 
   async ngOnInit() {
+    this.route.paramMap.subscribe(async (params: ParamMap) => {
+      this.carePlan = params.get('id') || ''
+      if (this.carePlan) {
+        console.log('carePlan:', this.carePlan);
+      }
+    })
+    const response = await this.graphqlService.client.request(GqlConstants.GETCAREPLANDETAILS, { careplan: this.carePlan})
+    this.carePlanName=response.careplan[0].name;
+    this.activityList=response.careplan[0].careplan_activities;
+    this.patientList=response.careplan[0].patient_careplans;
+    console.log(this.patientList,'patient_list');
+    console.log(response.careplan[0]);
   }
 }
