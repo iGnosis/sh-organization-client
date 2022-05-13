@@ -155,7 +155,7 @@ export class DashboardComponent implements OnInit {
               label: function (tooltipItem: any) {
                 const dataIndex = tooltipItem.dataIndex
                 const data = tooltipItem.dataset.data[dataIndex]
-                return `No. of activities: ${data.r}`
+                return `Number of Activities: ${data.r}`
               },
               afterLabel: (tooltipItem: any) => {
                 const sessionCompletionStr = `Session Completion Rate: ${tooltipItem.dataset.data[tooltipItem.dataIndex].x}%`
