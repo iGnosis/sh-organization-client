@@ -99,7 +99,7 @@ const routes: Routes = [
       
     ]
   },
-  { path: 'session/:id', component: SessionComponent}
+  { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]}
 ];
 
 @NgModule({
