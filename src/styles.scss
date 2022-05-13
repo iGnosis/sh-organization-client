@@ -252,7 +252,7 @@ table.patients_detail_table .form-check {
 .col.custom-careplan-col-alignment {display: flex;align-items: center;justify-content: flex-end;}
 .col.custom-careplan-col-alignment img.card-img {width: 15em;}
 .col.custom-careplan-col-alignment .card.shadow-2 {margin-left: 1.5em;}
-.activities-carousel .card.shadow-2 .card-img {height: 13em;}
+.activities-carousel .card.shadow-2 .card-img {height: auto;width: 100%;}
 .activities-carousel .info {display: flex;align-items: center;justify-content: space-between;}
 .activities-carousel .info.mb-7 {border-bottom: 1px solid #E2E8F0;padding-bottom: 1em;}
 .activities-carousel h2.h4 {font-weight: 600;font-size: 14px;line-height: 24px;color: #718096;}

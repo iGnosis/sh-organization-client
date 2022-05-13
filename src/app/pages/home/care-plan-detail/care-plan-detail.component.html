@@ -40,7 +40,7 @@
       <div class="card shadow-2" [ngClass]="{'count-class': !showActivity}">
       <!-- Image -->
       <div class="p-2">
-        <img src="../../../../../assets/images/session-details.png" alt="..." class="card-img">
+        <img [attr.src]="careplan_activity_list.activityByActivity.id=='ffed653f-1fd5-4d3f-8fee-5530c23fa014' ? '../../../../../assets/images/activity1.png' : null || careplan_activity_list.activityByActivity.id=='f779b79f-74ef-4ed9-95a5-e55f50409860' ? '../../../../../assets/images/activity2.png' : null || careplan_activity_list.activityByActivity.id=='0d2606ed-92da-476d-8af2-3aec4cc260a6' ? '../../../../../assets/images/activity3.png' : null ||  careplan_activity_list.activityByActivity.id=='0fa7d873-fd22-4784-8095-780028ceb08e' ? '../../../../../assets/images/activity4.png' : null ||  careplan_activity_list.activityByActivity.id=='d97e90d4-6c7f-4013-94f7-ba61fd52acdc' ? '../../../../../assets/images/activity5.png' : null "alt="..." class="card-img">
       </div>
       <div class="card-body">
         <div class="info mb-7">
