@@ -268,10 +268,8 @@ export class PatientDetailsComponent implements OnInit {
     if (this.patientId) {
       const session = await this.sessionService.new(this.patientId, this.selectedCarePlanId)
       if (session.insert_session_one && session.insert_session_one.id) {
-        alert(session.insert_session_one.id)
+        this.router.navigate(['/session/', session.insert_session_one.id])
       }
-      console.log(session);
-      this.modalService.dismissAll()
     } else {
       throw new Error('patientId not initialized')
     }
