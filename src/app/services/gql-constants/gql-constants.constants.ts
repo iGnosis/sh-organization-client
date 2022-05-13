@@ -190,7 +190,7 @@ export const GqlConstants = {
       identifier
     }
   }`,
-  GETCAREPLANDETAILS:`query GetCarePlanDetails($careplan: uuid) {
+  GETCAREPLANDETAILS:`query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
     careplan(where: {id: {_eq: $careplan}}) {
       name
       id
@@ -200,6 +200,7 @@ export const GqlConstants = {
           duration
           id
         }
+        reps
       }
       patient_careplans {
         patientByPatient {

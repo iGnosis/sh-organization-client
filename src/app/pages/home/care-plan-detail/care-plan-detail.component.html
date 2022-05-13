@@ -32,7 +32,7 @@
 </header>
 <!-- Main content -->
 <main>
-  <div class="px-3 px-lg-7 pt-7 mb-5 bg-light mt-5">
+  <div class="px-3 px-lg-7 pt-7 pb-7 mb-5 bg-light mt-5">
   <h2 class="activities-title">Activities</h2>
   <owl-carousel-o [options]="customOptions" class="activities-carousel">
     <ng-template carouselSlide *ngFor="let careplan_activity_list of activityList"><div class="card shadow-2">
@@ -51,7 +51,7 @@
         </div>
         <div class="info">
           <h2 class="h4">No. of Reps.</h2>
-          <span class="d-block text-sm font-semibold">4</span>
+          <span class="d-block text-sm font-semibold">{{careplan_activity_list.reps}}</span>
         </div>
       </div>
     </div></ng-template>
@@ -70,7 +70,7 @@
       </div>
     </div>
   </div>
-  <div class="row custom_alignment g-5 active-patients">
+  <div class="row custom_alignment g-5 active-patients mt-5">
     <div class="col-sm-6 care-plan-detail py-5" *ngFor="let patient_list of patientList">
       <div class="col-sm-6 px-5">
         <h6>{{patient_list.patientByPatient.identifier}}</h6>
@@ -82,7 +82,7 @@
         </div>
         <div class="col-10">
           <h6>Mind Body Movement</h6>
-        <p>Last Done - 23-04-2022</p>
+        <p>Last Done - {{patient_list.patientByPatient.updatedAt | date}}</p>
         </div>
       </div>
     </div>
