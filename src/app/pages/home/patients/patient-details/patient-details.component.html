@@ -186,7 +186,7 @@
                     (click)="openRemoveCareplanFromPatientModal(carePlan.careplanByCareplan?.id, confirmDeletion)">
                       <i class="fa fa-solid fa-trash text-danger"></i>
                   </span>
-                <a href="" class="d-block h6 mb-1 care_plan_title">{{carePlan.careplanByCareplan?.name}}</a>
+                <a role="button" (click)="openCarePlanDetails(carePlan.careplanByCareplan?.id)" class="d-block h6 mb-1 care_plan_title">{{carePlan.careplanByCareplan?.name}}</a>
                 <p>Includes
                   <span>{{getActivityCount}}</span>
                   <span *ngIf="getActivityCount > 1"> activities</span>
