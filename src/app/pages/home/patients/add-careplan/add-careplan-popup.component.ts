@@ -5,6 +5,7 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { forEachChild } from 'typescript';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'add-careplan-pop-up',
   templateUrl: 'add-careplan-popup.component.html',
@@ -14,6 +15,7 @@ export class AddPatient implements OnInit {
   all_careplans: any | undefined=[];
   patients_careplan : any | undefined;
   patientId: any='';
+  searchText:any;
   data:any;
   careplans_list : any | undefined=[];
   selectedCarePlanId: string
@@ -36,6 +38,7 @@ console.log(this.patientId);
   async fetchActiveCareplans(){
     const response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_ACTIVEPLANS, { patientId: this.patientId})
     this.all_careplans = response.careplan;
+    //console.log(response,">>>>response.....");
     this.patients_careplan=response.patient[0].patient_careplans
     for(const patient_data of this.all_careplans){
       for(const pt_data of this.patients_careplan){

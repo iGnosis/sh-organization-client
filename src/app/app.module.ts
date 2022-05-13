@@ -53,7 +53,7 @@ import { StartSessionPopUp } from './pages/home/patients/start-session/start-ses
 import { SessionComponent } from './pages/session/session.component';
 import { SafePipe } from './pipes/safe/safe.pipe';
 import { AddPatient } from './pages/home/patients/add-careplan/add-careplan-popup.component';
-
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 @NgModule({
   declarations: [
     AppComponent,
@@ -107,7 +107,8 @@ import { AddPatient } from './pages/home/patients/add-careplan/add-careplan-popu
     MatInputModule,
     BreadcrumbModule,
     MatDialogModule,
-    CarouselModule
+    CarouselModule,
+    Ng2SearchPipeModule
   ],
   providers: [
     PrivateGuard,

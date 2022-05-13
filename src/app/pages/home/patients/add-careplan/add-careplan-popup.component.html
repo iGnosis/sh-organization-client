@@ -5,12 +5,12 @@
           <mat-icon>add</mat-icon>
           <h1 class="h2 mb-0 ls-tight">Add New Care Plan</h1>
         </div>
-        <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Care Plans" aria-label="Search" aria-describedby="">
+        <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Care Plans" aria-label="Search" aria-describedby="" [(ngModel)]="searchText">
       </div>
     </div>
       <div class="mt-5">
           <div class="list-group list-group-flush">
-              <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplan of careplans_list">
+              <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplan of careplans_list | filter:searchText">
                   <div class="flex-fill ms-4">
                       <!-- Title -->
                       <a class="d-block h6 mb-1">{{active_careplan.name}}</a>
