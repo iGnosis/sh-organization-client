@@ -284,22 +284,10 @@ a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.danger {border-color: #FF0000;color: 
 // }
 .care-plan-detail:not(:hover){background-color: #fff !important;}
 .care-plan-detail .inner-avatar-align:hover{background: #EDF2F7 !important;}
-
 .row.custom_alignment.active-patients {justify-content: space-around;align-items: center;}
 .care-plan-heading {font-weight: 700;font-size: 32px;line-height: 48px;color: #000066;text-transform: capitalize;}
-
-.count-class.hide-class {
-  display: none;
-}
-a.toggle-patients {
-  cursor: pointer;
-  text-align: center;
-  font-weight: 600;
-  font-size: 12px;
-  line-height: 12px;
-  color: #425466;
-}
-.card.shadow-2.count-class {
-  width: 30em;
-  margin-right: auto;
-}
+.count-class.hide-class {display: none;}
+a.toggle-patients {cursor: pointer;text-align: center;font-weight: 600;font-size: 12px;line-height: 12px;color: #425466;}
+.card.shadow-2.count-class {width: 30em;margin-right: auto;}
+.owl-carousel .owl-item .card-body {flex: 1 1 auto;padding: 1.5rem 1.5rem;color: #525F7F;min-height: 15em;display: flex;flex-direction: column;justify-content: center;}
+.activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;margin-top: -3em;}
