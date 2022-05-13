@@ -80,6 +80,11 @@ const routes: Routes = [
         data: { breadcrumb: "Care Plans" },
         children: [
           {
+            path: "new",
+            component: CreateCareplanComponent,
+            data: { breadcrumb: "Add Care Plan" },
+          },
+          {
             path: '',
             pathMatch: "full",
             component: CarePlanComponent,
@@ -91,12 +96,12 @@ const routes: Routes = [
           },
         ]
       },
-      { path: 'care-plans/new', component: CreateCareplanComponent },
+      //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       { path: 'sessions', component: SessionsDetailsComponent },
       { path: 'sessions/:id', component: SessionsDetailsComponent },
-      
+
     ]
   },
   { path: 'session/:id', component: SessionComponent}

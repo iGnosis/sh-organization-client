@@ -119,6 +119,7 @@ export class PatientDetailsComponent implements OnInit {
         console.log('patientId:', this.patientId);
         // this.eventEmitterService.SentPatientID({data:this.patientId});
         this.fetchSessions(0)
+        this.GetAssignedCarePlan()
 
         // TODO: remove this when events are being sent properly from activity site.
         // And when you have date picker implemented.
@@ -230,6 +231,14 @@ export class PatientDetailsComponent implements OnInit {
     })
     this.dataSource.data = this.sessionDetails;
     //console.log(this.dataSource.data, ">>>>>>>");
+
+    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId })
+    this.patientIdentifier = identifier_response.patient[0].identifier;
+    //console.log(this.patient_identifier,'getpatient');
+
+    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
+  }
+  async GetAssignedCarePlan(){
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId })
     this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
@@ -246,11 +255,6 @@ export class PatientDetailsComponent implements OnInit {
     else {
       this.noSessionAssignedPlan = 0;
     }
-    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId })
-    this.patientIdentifier = identifier_response.patient[0].identifier;
-    //console.log(this.patient_identifier,'getpatient');
-
-    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
 
   async openRemoveCareplanFromPatientModal(careplan: string, modalContent: any) {
@@ -559,6 +563,7 @@ export class PatientDetailsComponent implements OnInit {
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.tableOnePaginator;
+    localStorage.getItem("reload");
   }
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input')

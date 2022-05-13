@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
@@ -12,12 +12,17 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
   templateUrl: './care-plan-detail.component.html',
   styleUrls: ['./care-plan-detail.component.scss']
 })
+
 export class CarePlanDetailComponent implements OnInit {
+  @Input() public hoverClassName: string;
+public hovered: boolean;
   carePlan?: string;
   carePlanName?:string;
   activityList : any | undefined=[];
   patientList : any | undefined=[];
-
+  isShowCareplan = true;
+  isShowToggle=false;
+  showActivity=false;
   customOptions: OwlOptions = {
     loop: true,
     mouseDrag: false,
@@ -47,7 +52,9 @@ export class CarePlanDetailComponent implements OnInit {
     nav: true,
   }
   constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,) { }
-
+  toggleFilterDiv() {
+    this.isShowCareplan = !this.isShowCareplan;
+  }
   async ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.carePlan = params.get('id') || ''
@@ -59,7 +66,18 @@ export class CarePlanDetailComponent implements OnInit {
     this.carePlanName=response.careplan[0].name;
     this.activityList=response.careplan[0].careplan_activities;
     this.patientList=response.careplan[0].patient_careplans;
-    console.log(this.patientList,'patient_list');
-    console.log(response.careplan[0]);
+    console.log(this.activityList);
+    if(this.patientList.length<6){
+      this.isShowToggle=false;
+    }
+    else{
+      this.isShowToggle=true;
+    }
+    if(this.activityList.length<=2){
+      this.showActivity=false;
+    }
+    else{
+      this.showActivity=true;
+    }
   }
 }
