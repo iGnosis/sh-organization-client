@@ -262,6 +262,7 @@ export class PatientDetailsComponent implements OnInit {
     if (this.patientId) {
       await this.carePlanService.detachCarePlan(this.patientId, [this.selectedCarePlanId])
       this.modalService.dismissAll()
+      window.location.reload();
     } else {
       throw new Error('patientId not initialized')
     }
