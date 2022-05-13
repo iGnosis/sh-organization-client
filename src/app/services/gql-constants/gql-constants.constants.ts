@@ -127,7 +127,7 @@ export const GqlConstants = {
           count
         }
       }
-      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}}) {
+      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {_and: {patient: {_eq: $patientId}}, status:{_neq:trashed}}) {
         id
         createdAt
         endedAt
