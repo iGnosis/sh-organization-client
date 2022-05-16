@@ -59,12 +59,25 @@
     </div></ng-template>
   </owl-carousel-o>
   </div>
+
   <div class="px-3 px-lg-7 pt-7 mb-5 bg-light mt-5 pb-7">
     <div class="row custom_alignment">
-    <div class="col-md-6 col-12 mb-3 mb-md-0">
+      <div class="col-12 mb-3 mb-md-0" *ngIf="patientList.length == 0">
+        <h1 class="h2 mb-0 ls-tight mt-5">Active Patients</h1>
+      <div class="no_careplan_notice_alignment">
+      <img src="/assets/images/no_assigned.svg" />
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No Patients added for {{carePlanName}}</h2>
+        <div class="mx-n1 mt-7">
+          <a (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+          <mat-icon>add</mat-icon><span>Add New</span>
+        </a>
+        </div>
+      </div>
+      </div>
+    <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="patientList.length != 0">
       <h1 class="h2 mb-0 ls-tight mt-5">Active Patients</h1>
     </div>
-    <div class="col-md-6 col-12 text-md-end">
+    <div class="col-md-6 col-12 text-md-end" *ngIf="patientList.length != 0">
       <div class="mx-n1">
         <a (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
           <mat-icon>add</mat-icon><span>Add New</span>

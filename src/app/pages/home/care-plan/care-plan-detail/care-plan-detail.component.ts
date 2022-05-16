@@ -62,14 +62,14 @@ public hovered: boolean;
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.carePlan = params.get('id') || ''
       if (this.carePlan) {
-        console.log('carePlan:', this.carePlan);
+       // console.log('carePlan:', this.carePlan);
       }
     })
     const response = await this.graphqlService.client.request(GqlConstants.GETCAREPLANDETAILS, { careplan: this.carePlan})
     this.carePlanName=response.careplan[0].name;
     this.activityList=response.careplan[0].careplan_activities;
     this.patientList=response.careplan[0].patient_careplans;
-    console.log(this.activityList);
+    //console.log(this.activityList);
     if(this.patientList.length<6){
       this.isShowToggle=false;
     }
