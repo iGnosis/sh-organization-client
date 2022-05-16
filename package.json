@@ -39,6 +39,7 @@
     "ng2-search-filter": "^0.5.1",
     "ngx-owl-carousel-o": "^7.0.2",
     "ngx-pagination": "^5.1.1",
+    "ngx-perfect-scrollbar": "^10.1.1",
     "node-fetch": "^3.2.4",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",

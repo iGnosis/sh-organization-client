@@ -249,14 +249,14 @@ table.patients_detail_table .form-check {
 .container.popup_alignment a.btn.btn-sm.btn-neutral {border: 0.5px solid #000066;border-radius: 5px;color: #27272E;padding: 0.4em 2em !important;}
 .no_careplan_notice_alignment {text-align: center;}
 .no_care_plan_assigned {padding: 0.3em 2em;}
-.col.custom-careplan-col-alignment {padding-bottom: 2em;display: flex;align-items: center;justify-content: flex-end;}
+.col.custom-careplan-col-alignment {display: flex;align-items: center;justify-content: flex-end;}
 .col.custom-careplan-col-alignment img.card-img {width: 15em;}
 .col.custom-careplan-col-alignment .card.shadow-2 {margin-left: 1.5em;}
-.activities-carousel .card.shadow-2 .card-img {height: 13em;}
+.activities-carousel .card.shadow-2 .card-img {height: auto;width: 100%;}
 .activities-carousel .info {display: flex;align-items: center;justify-content: space-between;}
 .activities-carousel .info.mb-7 {border-bottom: 1px solid #E2E8F0;padding-bottom: 1em;}
 .activities-carousel h2.h4 {font-weight: 600;font-size: 14px;line-height: 24px;color: #718096;}
-.activities-carousel span {font-weight: 600;font-size: 14px;line-height: 24px;color: #27272E;}
+.activities-carousel span {font-weight: 600 !important;font-size: 14px !important;line-height: 24px;color: #27272E;width: 10em;}
 .activities-carousel .owl-stage {padding-bottom: 1em;}
 .activities-carousel .owl-carousel.owl-theme.owl-loaded.owl-responsive {display: flex;flex-direction: column;}
 .activities-carousel .owl-stage-outer {order: 2;margin-top: 1em;}
@@ -284,5 +284,10 @@ a.btn.btn-sm.btn-neutral.px-4.py-2.text-xs.danger {border-color: #FF0000;color: 
 // }
 .care-plan-detail:not(:hover){background-color: #fff !important;}
 .care-plan-detail .inner-avatar-align:hover{background: #EDF2F7 !important;}
-.row.custom_alignment .col-sm-6 {width: 48%;}
 .row.custom_alignment.active-patients {justify-content: space-around;align-items: center;}
+.care-plan-heading {font-weight: 700;font-size: 32px;line-height: 48px;color: #000066;text-transform: capitalize;}
+.count-class.hide-class {display: none;}
+a.toggle-patients {cursor: pointer;text-align: center;font-weight: 600;font-size: 12px;line-height: 12px;color: #425466;}
+.card.shadow-2.count-class {width: 30em;margin-right: auto;}
+.owl-carousel .owl-item .card-body {flex: 1 1 auto;padding: 1.5rem 1.5rem;color: #525F7F;min-height: 15em;display: flex;flex-direction: column;justify-content: center;}
+.activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;margin-top: -3em;}

@@ -3,15 +3,15 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { environment } from 'src/environments/environment';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
-import { forEachChild } from 'typescript';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PatientDetailsComponent } from '../patient-details/patient-details.component';
 
 @Component({
   selector: 'add-careplan-pop-up',
   templateUrl: 'add-careplan-popup.component.html',
 })
 
-export class AddPatient implements OnInit {
+export class AddCareplan implements OnInit {
   all_careplans: any | undefined=[];
   patients_careplan : any | undefined;
   patientId: any='';
@@ -69,11 +69,13 @@ console.log(this.patientId);
     console.log(getcareplan)
     this.modalService.open(modalContent)
     this.selectedCarePlanId = getcareplan
+    localStorage.removeItem("reload");
   }
   async confirmRemoveCarePlan() {
     const removecareplan = await this.graphqlService.client.request(GqlConstants.DELETE_PATIENT_CAREPLAN, {careplan: this.selectedCarePlanId,patient: this.patientId })
     window.location.reload();
     return removecareplan.delete_patient_careplan.affected_rows
+    localStorage.setItem("reload", "0");
   }
 
   async addCarePlan(getcareplan: string) {

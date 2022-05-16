@@ -10,7 +10,7 @@ import { SetPasswordComponent } from './pages/auth/set-password/set-password.com
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
-import { CarePlanDetailComponent } from './pages/home/care-plan-detail/care-plan-detail.component';
+import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
 import { PatientAddComponent } from './pages/home/patients/patient-add/patient-add.component';
@@ -80,6 +80,11 @@ const routes: Routes = [
         data: { breadcrumb: "Care Plans" },
         children: [
           {
+            path: "new",
+            component: CreateCareplanComponent,
+            data: { breadcrumb: "Add Care Plan" },
+          },
+          {
             path: '',
             pathMatch: "full",
             component: CarePlanComponent,
@@ -91,12 +96,12 @@ const routes: Routes = [
           },
         ]
       },
-      { path: 'care-plans/new', component: CreateCareplanComponent },
+      //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       { path: 'sessions', component: SessionsDetailsComponent },
       { path: 'sessions/:id', component: SessionsDetailsComponent },
-      
+
     ]
   },
   { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]}

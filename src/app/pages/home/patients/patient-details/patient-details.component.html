@@ -125,7 +125,7 @@
         <img src="/assets/images/no_assigned.svg" />
         <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has no care plan assigned to them yet.</h2>
         <div class="mx-n1 mt-7">
-          <a  (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+          <a  (click)="openCarePlanDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
             <mat-icon>add</mat-icon><span>Add Care Plan</span>
           </a>
         </div>
@@ -144,7 +144,7 @@
       <img src="/assets/images/no_assigned.svg" />
         <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No care plans assigned for {{ patientIdentifier }}</h2>
         <div class="mx-n1 mt-7">
-          <a  (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+          <a  (click)="openCarePlanDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
             <mat-icon>add</mat-icon><span>Add Care Plan</span>
           </a>
         </div>
@@ -157,7 +157,7 @@
       <!-- Actions -->
       <div class="col-md-6 col-12 text-md-end" *ngIf="activeCarePlans.length != 0">
         <div class="mx-n1">
-          <a  (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+          <a  (click)="openCarePlanDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
             <mat-icon>add</mat-icon><span>Add New</span>
           </a>
         </div>
