@@ -22,7 +22,7 @@ import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
 import { AchievementRatio, EngagementRatio, Patient, Session } from 'src/app/pointmotion';
-import { AddPatient } from '../add-careplan/add-careplan-popup.component';
+import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
 
 export class Captain {
   careplanByCareplan: string;
@@ -143,8 +143,8 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
-  openAddPatientDialog() {
-    const dialogRef = this.dialog.open(AddPatient);
+  openCarePlanDialog() {
+    const dialogRef = this.dialog.open(AddCareplan);
     // dialogRef.afterClosed().subscribe(result => {
     //   console.log(`Dialog result: ${result}`);
     // });
