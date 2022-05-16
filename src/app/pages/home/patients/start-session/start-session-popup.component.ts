@@ -5,6 +5,7 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { SessionService } from 'src/app/services/session/session.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'start-session-pop-up',
@@ -19,7 +20,8 @@ export class StartSessionPopUp implements OnInit {
   constructor(
     private sessionService: SessionService,
     private carePlanService: CarePlanService,
-    public eventEmitterService : EventEmitterService
+    public eventEmitterService : EventEmitterService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -36,21 +38,15 @@ export class StartSessionPopUp implements OnInit {
 
   async createNewSessionAndRedirect(carePlan: string) {
     const sessionId = await this.createNewSession(carePlan)
+    // console.log(sessionId);
+    this.router.navigate(['/session/', sessionId])
     // this.goToLink(`${environment.activityEndpoint}?sessionId=${sessionId}`)
   }
 
   async createNewSession(careplan: string) {
     const session = await this.sessionService.new(this.patientId, careplan)
-    if (
-      session &&
-      session.insert_session &&
-      session.insert_session.returning &&
-      Array.isArray(session.insert_session.returning) &&
-      session.insert_session.returning.length == 1 &&
-      session.insert_session.returning[0].id
-    ) {
-      const sessionId = session.insert_session.returning[0].id
-      console.log('createSessionAndRedirect:sessionId', sessionId)
+    if ( session && session.insert_session_one ) {
+      const sessionId = session.insert_session_one.id
       return sessionId
     }
   }
