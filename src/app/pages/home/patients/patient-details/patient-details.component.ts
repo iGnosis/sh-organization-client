@@ -3,7 +3,6 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
@@ -12,10 +11,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FormControl } from '@angular/forms';
-import { SelectionModel } from '@angular/cdk/collections';
-import { MatDialog } from '@angular/material/dialog';
+import {SelectionModel} from '@angular/cdk/collections';
+import {MatDialog} from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
@@ -276,10 +273,8 @@ export class PatientDetailsComponent implements OnInit {
     if (this.patientId) {
       const session = await this.sessionService.new(this.patientId, this.selectedCarePlanId)
       if (session.insert_session_one && session.insert_session_one.id) {
-        alert(session.insert_session_one.id)
+        this.router.navigate(['/session/', session.insert_session_one.id])
       }
-      console.log(session);
-      this.modalService.dismissAll()
     } else {
       throw new Error('patientId not initialized')
     }

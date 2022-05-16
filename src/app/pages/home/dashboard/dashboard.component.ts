@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-dashboard',
@@ -15,6 +16,7 @@ export class DashboardComponent implements OnInit {
 
   constructor() {
     this.currentDate = new Date();
+    console.log('Environment ', environment.name);
   }
 
   ngOnInit(): void {
@@ -155,7 +157,7 @@ export class DashboardComponent implements OnInit {
               label: function (tooltipItem: any) {
                 const dataIndex = tooltipItem.dataIndex
                 const data = tooltipItem.dataset.data[dataIndex]
-                return `No. of activities: ${data.r}`
+                return `Number of Activities: ${data.r}`
               },
               afterLabel: (tooltipItem: any) => {
                 const sessionCompletionStr = `Session Completion Rate: ${tooltipItem.dataset.data[tooltipItem.dataIndex].x}%`
