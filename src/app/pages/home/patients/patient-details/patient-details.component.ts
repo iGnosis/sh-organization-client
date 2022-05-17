@@ -588,6 +588,6 @@ export class PatientDetailsComponent implements OnInit {
   }
 
   openSessionDetailsPage(sessionId: string, sessionDetails: any) {
-    this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
+    this.router.navigate(['/app/patients/',this.patientId, sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
   }
 }

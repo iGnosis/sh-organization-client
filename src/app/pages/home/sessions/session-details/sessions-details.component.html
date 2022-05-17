@@ -10,9 +10,11 @@
 </div> -->
 
 <div class="container pt-5">
+  <xng-breadcrumb separator=">"></xng-breadcrumb>
   <!-- Outer card -->
-  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+  <div class="card shadow-inset shadow-6 pt-5 pb-5 mt-5">
     <div class="container">
+
       <div class="row">
         <div class="col-lg-8">
           <div class="row">
@@ -178,7 +180,7 @@
             <!-- Image -->
             <div class="p-2">
               <img (click)="openActivityDetailsPage(activity.id!, activity)" alt="..."
-                src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img">
+                src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img performance_click">
             </div>
             <div class="card-body pb-0">
               <div class="container align-items-center">
@@ -224,6 +226,15 @@
                   </div>
                   <div class="col-lg-6 text-dark">
                     {{ activity.correctMotions }}
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Average Reaction Time
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    {{ activity.reactionTime }}
                   </div>
                 </div>
                 <hr>

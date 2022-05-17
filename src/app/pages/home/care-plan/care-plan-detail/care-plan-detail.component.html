@@ -91,6 +91,8 @@
       <div class="col-sm-6 px-5" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true}">
         <h6>{{patient_list.patientByPatient.identifier}}</h6>
         <span *ngFor="let medical_conditions of patient_list.patientByPatient.medicalConditions | keyvalue">{{medical_conditions.key}} </span>
+        <!-- <span class="start-session" ngbPopover="Start a New Session With Care Plan" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-play text-primary"></i></span> -->
+        <span class="remove" ngbPopover="Remove Care Plan from Patient" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-trash text-danger"></i></span>
       </div>
       <div class="col-sm-6 inner-avatar-align p-5">
         <div class="col-2">
