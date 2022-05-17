@@ -34,6 +34,7 @@
 <!-- Main content -->
 <main>
   <div class="px-3 px-lg-7 pt-7 pb-7 mb-5 bg-light mt-5">
+  <div class="container-xl">
   <h2 class="activities-title">Activities</h2>
   <owl-carousel-o [options]="customOptions" class="activities-carousel">
     <ng-template carouselSlide *ngFor="let careplan_activity_list of activityList;let count = index">
@@ -59,8 +60,10 @@
     </div></ng-template>
   </owl-carousel-o>
   </div>
+</div>
 
   <div class="px-3 px-lg-7 pt-7 mb-5 bg-light mt-5 pb-7">
+    <div class="container-xl">
     <div class="row custom_alignment">
       <div class="col-12 mb-3 mb-md-0" *ngIf="patientList.length == 0">
         <h1 class="h2 mb-0 ls-tight mt-5">Active Patients</h1>
@@ -108,6 +111,7 @@
   <a *ngIf="isShowToggle"(click)="isShowCareplan = !isShowCareplan" class="toggle-patients">{{ isShowCareplan ? 'See More': 'See Less' }}</a>
   </div>
     </div>
+  </div>
   </main>
 
   <ng-template #confirmDeletion let-modal>
