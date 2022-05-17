@@ -7,6 +7,9 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { AddPatient } from '../add-patient/add-patient-popup.component';
+import { MatDialog } from '@angular/material/dialog';
+import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 @Component({
   selector: 'app-care-plan',
   templateUrl: './care-plan-detail.component.html',
@@ -51,7 +54,7 @@ public hovered: boolean;
     },
     nav: true,
   }
-  constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,) { }
+  constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,public dialog: MatDialog,public eventEmitterService: EventEmitterService) { }
   toggleFilterDiv() {
     this.isShowCareplan = !this.isShowCareplan;
   }
@@ -79,5 +82,13 @@ public hovered: boolean;
     else{
       this.showActivity=true;
     }
+
+  }
+  openAddPatientDialog() {
+    const dialogRef = this.dialog.open(AddPatient);
+    // dialogRef.afterClosed().subscribe(result => {
+    //   console.log(`Dialog result: ${result}`);
+    // });
+    this.eventEmitterService.SentCarePlanID(this.carePlan,this.patientList);
   }
 }

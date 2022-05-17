@@ -228,5 +228,17 @@ export const GqlConstants = {
       affected_rows
     }
   }`,
+  ADD_PATIENT_IN_CAREPLAN:`
+  query GetCarePlanDetails($careplan: uuid) {
+    patient {
+      identifier
+      id
+      patient_careplans(where: {careplan: {_neq: $careplan}}) {
+        careplan
+        patient
+      }
+    }
+  }
+  `,
 
 } as const
