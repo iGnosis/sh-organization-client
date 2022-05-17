@@ -10,6 +10,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AddPatient } from '../add-patient/add-patient-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-care-plan',
   templateUrl: './care-plan-detail.component.html',
@@ -26,6 +27,7 @@ public hovered: boolean;
   isShowCareplan = true;
   isShowToggle=false;
   showActivity=false;
+  getPatientId: string;
   customOptions: OwlOptions = {
     loop: true,
     mouseDrag: false,
@@ -54,7 +56,8 @@ public hovered: boolean;
     },
     nav: true,
   }
-  constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,public dialog: MatDialog,public eventEmitterService: EventEmitterService) { }
+
+  constructor(private graphqlService: GraphqlService,private route: ActivatedRoute,public dialog: MatDialog,public eventEmitterService: EventEmitterService,private modalService: NgbModal) { }
   toggleFilterDiv() {
     this.isShowCareplan = !this.isShowCareplan;
   }
@@ -90,5 +93,15 @@ public hovered: boolean;
     //   console.log(`Dialog result: ${result}`);
     // });
     this.eventEmitterService.SentCarePlanID(this.carePlan,this.patientList);
+  }
+  async removeCareplanFromPatient(getpatientId: string, modalContent: any) {
+    console.log(getpatientId)
+    this.modalService.open(modalContent)
+    this.getPatientId = getpatientId
+  }
+  async confirmRemoveCarePlan() {
+    const removecareplan = await this.graphqlService.client.request(GqlConstants.DELETE_PATIENT_CAREPLAN, {careplan: this.carePlan,patient: this.getPatientId })
+    window.location.reload();
+    return removecareplan.delete_patient_careplan.affected_rows
   }
 }

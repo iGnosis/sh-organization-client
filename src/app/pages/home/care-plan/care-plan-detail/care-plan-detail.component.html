@@ -88,11 +88,11 @@
   <div class="row custom_alignment g-7 active-patients mt-5">
     <div *ngFor="let patient_list of patientList;let i = index" class="col-sm-6">
     <div class="care-plan-detail p-5" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true,'alignment-class':isShowCareplan}">
-      <div class="col-sm-6 px-5" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true}">
-        <h6>{{patient_list.patientByPatient.identifier}}</h6>
+      <div class="col-sm-6 px-5 careplan-content" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true}">
+        <h6><a routerLink="/app/patients/{{patient_list.patientByPatient.id}}">{{patient_list.patientByPatient.identifier}}</a></h6>
         <span *ngFor="let medical_conditions of patient_list.patientByPatient.medicalConditions | keyvalue">{{medical_conditions.key}} </span>
         <!-- <span class="start-session" ngbPopover="Start a New Session With Care Plan" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-play text-primary"></i></span> -->
-        <span class="remove" ngbPopover="Remove Care Plan from Patient" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-trash text-danger"></i></span>
+        <span class="remove" (click)="removeCareplanFromPatient(patient_list.patientByPatient.id, confirmDeletion)" ngbPopover="Remove Care Plan from Patient" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-trash text-danger"></i></span>
       </div>
       <div class="col-sm-6 inner-avatar-align p-5">
         <div class="col-2">
@@ -110,3 +110,12 @@
     </div>
   </main>
 
+  <ng-template #confirmDeletion let-modal>
+    <div class="modal-body">
+      <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+      <div class="text-end mt-2">
+        <button type="button" class="btn btn-sm btn-danger me-5" (click)="confirmRemoveCarePlan()">Yes, Remove</button>
+        <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+      </div>
+    </div>
+  </ng-template>
