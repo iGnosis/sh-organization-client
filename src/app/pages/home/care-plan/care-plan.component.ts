@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
-import { CarePlan } from 'src/app/types/careplan';
 import { MatTableDataSource } from '@angular/material/table';
 import {SelectionModel} from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import {MatSort, Sort, SortDirection} from '@angular/material/sort';
+import { CarePlan } from 'src/app/pointmotion';
 @Component({
   selector: 'app-care-plan',
   templateUrl: './care-plan.component.html',

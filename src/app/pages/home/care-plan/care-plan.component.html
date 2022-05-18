@@ -2,7 +2,7 @@
 <header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
-      <div class="row align-items-center">
+      <div class="row custom_alignment">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
           <xng-breadcrumb separator=">"></xng-breadcrumb>
@@ -85,25 +85,25 @@
           </ng-container>
           <ng-container matColumnDef="name">
             <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Care plan</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" routerLink="/app/care-plans/{{element.id}}" class="clicked_class">
               <span class="text-heading font-semibold">{{ element.name }}</span>
             </td>
           </ng-container>
           <ng-container matColumnDef="estimatedDuration">
             <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header">Estimated Duration</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" routerLink="/app/care-plans/{{element.id}}" class="clicked_class">
               {{ element.estimatedDuration }} minutes
             </td>
           </ng-container>
           <ng-container matColumnDef="careplan_activities_aggregate">
             <th mat-header-cell mat-sort-header *matHeaderCellDef class="custom_table_header"># Activities</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" routerLink="/app/care-plans/{{element.id}}" class="clicked_class">
               {{ element.careplan_activities.length}}
             </td>
           </ng-container>
           <ng-container matColumnDef="difficultyLevel">
             <th mat-header-cell *matHeaderCellDef class="custom_table_header">Difficulty</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" routerLink="/app/care-plans/{{element.id}}" class="clicked_class">
               {{ element.difficultyLevel}}
             </td>
           </ng-container>
@@ -116,7 +116,7 @@
           </ng-container> -->
           <ng-container matColumnDef="user_careplans_aggregate">
             <th mat-header-cell *matHeaderCellDef class="custom_table_header"># Active Patients</th>
-            <td mat-cell *matCellDef="let element">
+            <td mat-cell *matCellDef="let element" routerLink="/app/care-plans/{{element.id}}" class="clicked_class">
               {{ element.patient_careplans.length}}
             </td>
           </ng-container>

@@ -47,6 +47,20 @@ import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
 import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
+import { StartSessionPopUp } from './pages/home/patients/start-session/start-session-popup.component';
+import { SessionComponent } from './pages/session/session.component';
+import { SafePipe } from './pipes/safe/safe.pipe';
+import { AddCareplan } from './pages/home/patients/add-careplan/add-careplan-popup.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,6 +84,13 @@ import { PatientsListComponent } from './pages/home/patients/patients-list/patie
     SessionsDetailsComponent,
     AvatarComponent,
     PatientsListComponent,
+    CarePlanDetailComponent,
+    StartSessionPopUp,
+    AddCareplan,
+    SessionComponent,
+    SafePipe,
+    AddPatient
+
   ],
   imports: [
     BrowserModule,
@@ -94,11 +115,19 @@ import { PatientsListComponent } from './pages/home/patients/patients-list/patie
     MatNativeDateModule,
     MatInputModule,
     BreadcrumbModule,
-    MatDialogModule
+    MatDialogModule,
+    CarouselModule,
+    Ng2SearchPipeModule,
+    PerfectScrollbarModule
   ],
   providers: [
     PrivateGuard,
-    PublicGuard
+    PublicGuard,
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    }
+
   ],
   bootstrap: [AppComponent]
 })

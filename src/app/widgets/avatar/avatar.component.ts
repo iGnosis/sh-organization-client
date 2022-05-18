@@ -12,7 +12,7 @@ export class AvatarComponent implements OnInit {
   @Input() bgAuto = false;
   @Input() size: 'sm' | 'md' | 'lg'  = 'md'
 
-  bgChoices = ['#000066', '#39B54A', '#FFB000', '#EB0000']
+  bgChoices = ['#000066', '#FFA2AD', '#2F51AE', '#007F6E', '#00BD3E', '#39B54A', '#FFB000', '#EB0000', '#55CCAB', '#B6E5C8']
 
   constructor() { 
   }
@@ -25,6 +25,11 @@ export class AvatarComponent implements OnInit {
       }
       this.bgColor = this.bgChoices[sum % this.bgChoices.length]
     }
+  }
+
+  getTextInitials(text: string) {
+    const avatar_name=text.replace(/[^a-zA-Z ]/g, "");
+    return avatar_name.split(' ').slice(0,2).map(n => n[0]).join('');
   }
 
 }

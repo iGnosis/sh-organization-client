@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild   } from '@angular/core';
 import { Router } from '@angular/router';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { Patient } from 'src/app/types/patient';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {ChangeDetectorRef } from '@angular/core';

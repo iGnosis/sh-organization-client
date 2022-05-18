@@ -18,3 +18,30 @@ html {
 .clickable {
   cursor: pointer;
 }
+
+
+.assigned_care_plan_row {
+  .careplan_details {
+    position: relative;
+
+    .remove, .start-session {
+      position: absolute;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      top: -4px;
+    }
+
+    .remove {
+      right: 0;
+    }
+
+    .start-session {
+      right: 32px;
+    }
+  }
+
+  .careplan:hover .remove, .careplan:hover .start-session{ 
+    display: inline;
+  }
+}

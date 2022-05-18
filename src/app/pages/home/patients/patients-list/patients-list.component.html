@@ -9,20 +9,43 @@
       <img src="/assets/images/filter_icon.svg"(click)="togglefilterDiv()" class="icons_align"/>
       <img src="/assets/images/setting.svg" class="filter_align icons_align"/>
     </div>
-    <div class="filter_toggle mt-5" [hidden]="isShowFilter">
-      <mat-form-field appearance="fill" class="condition_select">
-        <!-- <mat-label>Conditions</mat-label> -->
-        <mat-select [formControl]="conditionFilter" multiple [(value)]="selected" placeholder="Condition">
-          <mat-option *ngFor="let topping of selectedMedicalConditions" [value]="topping">{{topping}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="alignment_date condition_select" appearance="fill">
-        <input matInput [matDatepicker]="picker" placeholder="Date">
-        <mat-datepicker-toggle matSuffix [for]="picker">
-          <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
-        </mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
+  </div>
+  <div class="container filter_options_container patient_list_filter" [hidden]="isShowFilter">
+    <div class="row">
+      <div class="col-sm-2">
+        <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+          <mat-select multiple [(value)]="selected" placeholder="Condition">
+            <mat-option *ngFor="let topping of selectedMedicalConditions" [value]="topping">{{topping}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <!-- <div class="col-sm">
+        <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+          <mat-select multiple [(value)]="selected" placeholder="Activity Type">
+            <mat-option [value]="1">Physical</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-sm">
+        <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+          <mat-select multiple [(value)]="selected" placeholder="Time">
+            <mat-option [value]="15">15 mins. or less</mat-option>
+            <mat-option [value]="30">30 mins. or less</mat-option>
+            <mat-option [value]="45">45 mins. or less</mat-option>
+            <mat-option [value]="60">60 mins. or less</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div> -->
+      <div class="col-sm-2">
+        <mat-form-field class="details_page alignment_date condition_select" appearance="fill">
+          <input matInput [matDatepicker]="picker" placeholder="Date">
+          <mat-datepicker-toggle matSuffix [for]="picker">
+            <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+          </mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
     </div>
   </div>
   <!-- Container -->
@@ -146,5 +169,5 @@
         #TableOnePaginator="matPaginator" showFirstLastButtons>
       </mat-paginator>
     </div>
-  
+
   </div>
