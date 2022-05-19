@@ -8,6 +8,7 @@ import { PublicComponent } from './layouts/public/public.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
+import { AccountComponent } from './pages/home/account/account.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
@@ -102,6 +103,7 @@ const routes: Routes = [
       { path: 'sessions', component: SessionsDetailsComponent },
       { path: 'sessions/:id', component: SessionsDetailsComponent },
 
+      {path: 'account', component: AccountComponent},
     ]
   },
   { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]}

@@ -58,6 +58,7 @@ import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { AccountComponent } from './pages/home/account/account.component';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
 };
@@ -89,7 +90,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AddCareplan,
     SessionComponent,
     SafePipe,
-    AddPatient
+    AddPatient,
+    AccountComponent
 
   ],
   imports: [
