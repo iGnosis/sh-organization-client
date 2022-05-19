@@ -54,17 +54,37 @@ const routes: Routes = [
         path: "patients",
         canActivateChild: [PrivateGuard],
         data: { breadcrumb: "Patient List" },
+
         // outlet:'details',
         children: [
+          {
+            path: ":id",
+            data: { breadcrumb: "Patient Details" },
+            canActivateChild: [PrivateGuard],
+            children:[
+              {
+                path: ':id',
+                pathMatch: "full",
+                data: { breadcrumb: "Session Details" },
+                children:[
+                  {
+                    path: '',
+                    pathMatch: "full",
+                    component: SessionsDetailsComponent,
+                  }
+                ]
+              },
+              {
+                    path: '',
+                    pathMatch: "full",
+                    component: PatientDetailsComponent
+              }
+            ]
+          },
           {
             path: "new",
             component: PatientAddComponent,
             data: { breadcrumb: "Patient Add" },
-          },
-          {
-            path: ":id",
-            component: PatientDetailsComponent,
-            data: { breadcrumb: "Patient Details" },
           },
           {
             path: '',
@@ -100,8 +120,8 @@ const routes: Routes = [
       //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
-      { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'sessions/:id', component: SessionsDetailsComponent },
+      //{ path: 'sessions', component: SessionsDetailsComponent },
+      //{ path: 'sessions/:id', component: SessionsDetailsComponent },
 
       {path: 'account', component: AccountComponent},
     ]
