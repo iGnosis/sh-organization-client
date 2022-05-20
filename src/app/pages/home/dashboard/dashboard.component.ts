@@ -76,9 +76,9 @@ export class DashboardComponent implements OnInit {
       datasets: [{
         label: 'Dementia',
         data: [
-          { x: 20, y: 30, r: 10, pid: 'john' },
-          { x: 40, y: 10, r: 25, pid: 'jane' },
-          { x: 55, y: 47, r: 18, pid: 'han' }
+          { x: 20, y: 30, r: 10, pid: 'anakin' },
+          { x: 40, y: 10, r: 25, pid: 'obiwan' },
+          { x: 55, y: 47, r: 18, pid: 'leia' }
         ],
         backgroundColor: '#2f51ae',
         clip: false
@@ -86,8 +86,8 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Alzheimers',
         data: [
-          { x: 80, y: 30, r: 10, pid: 'corey' },
-          { x: 80, y: 10, r: 15, pid: 'mike' }
+          { x: 80, y: 30, r: 10, pid: 'han' },
+          { x: 80, y: 10, r: 15, pid: 'leia' }
         ],
         backgroundColor: '#007f6e',
         clip: false
@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
       {
         label: 'Parkinsons',
         data: [
-          { x: 100, y: 10, r: 10, pid: 'vader' },
+          { x: 100, y: 10, r: 10, pid: 'obiwan' },
           { x: 42, y: 90, r: 15, pid: 'leia' }
         ],
         backgroundColor: '#ffa2ad',

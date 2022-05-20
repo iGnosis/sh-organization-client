@@ -158,6 +158,11 @@ export class PatientDetailsComponent implements OnInit {
       this._liveAnnouncer.announce('Sorting cleared');
     }
   }
+
+  openCarePlanDetails(id: string) {
+    this.router.navigate(['/app/care-plans/', id])
+  }
+
   async fetchSessions(offset: number) {
     // we need to show sessions of a patient.
     let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
