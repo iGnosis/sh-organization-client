@@ -1,25 +1,26 @@
+<header class="px-3 px-lg-7 pt-7 custom_header">
+  <div class="container-xl">
+    <div>
+      <div class="row custom_alignment p-5">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
+          <!-- Title -->
+          <p class="lead">
+            Activity
+          </p>
+          <router-outlet></router-outlet>
+          <h1 class="h2 mb-0 ls-tight heading_text mt-5">{{ activityDetails?.name }}</h1>
+        </div>
+        <!-- Actions -->
+      </div>
+    </div>
+  </div>
+</header>
 <div class="container pt-5">
   <!-- Outer card -->
   <div class="card shadow-inset shadow-6 pt-5 pb-5">
     <div class="container">
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-lg-8">
-          <div class="row">
-            <div class="col">
-              <div class="container max-w-screen-xl">
-                <div class="row row-grid align-items-center">
-                  <div class="col">
-                    <p class="lead">
-                      Activity
-                    </p>
-                    <h1 class="h2 ls-tight mb-5">
-                      {{ activityDetails?.name }}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-lg-6">
               <div class="card mb-8 ml-8 shadow-2">
