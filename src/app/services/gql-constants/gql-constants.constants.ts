@@ -68,9 +68,16 @@ export const GqlConstants = {
     }
   }`,
 
-  INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $preferredGenres:jsonb) {
-    insert_patient_one(object: {identifier: $identifier, medicalConditions: $medicalConditions, preferredGenres: $preferredGenres}) {
-      id
+  INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $email:String, $careGiverEmail: String, $phoneNumber: String, $careGiverPhoneNumber: String) {
+    insert_patient_one(object: {
+      identifier: $identifier, 
+      medicalConditions: $medicalConditions, 
+      email: $email,
+      careGiverEmail: $careGiverEmail,
+      phoneNumber: $phoneNumber,
+      careGiverPhoneNumber:$careGiverPhoneNumber
+    }) {
+        id
     }
   }`,
 

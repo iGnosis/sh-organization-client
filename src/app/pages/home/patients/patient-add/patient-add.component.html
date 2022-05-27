@@ -5,7 +5,7 @@
             <div class="row align-items-center">
                 <div class="col-md-6 col-12 mb-3 mb-md-0">
                     <!-- Title -->
-                    <h1 class="h2 mb-0 ls-tight">{{ identifier || 'Add New Patient' }}</h1>
+                    <h1 class="h2 mb-0 ls-tight">{{ patient.identifier || 'Add New Patient' }}</h1>
                 </div>
             </div>
             <!-- Nav -->
@@ -28,25 +28,49 @@
     <!-- Container -->
     <div class="container-xl mt-5">
         <div *ngIf="stage == 1" class="row">
-            <div class="col-6 offset-3">
+            <div class="col-8 card offset-2 p-5">
                 <h5 class="mb-5">Account Information</h5>
 
                 <div class="mb-3">
                     <label for="identifier" class="form-label">Identifier</label>
-                    <input type="text" [(ngModel)]="identifier" class="form-control" id="identifier"
+                    <input type="text" [(ngModel)]="patient.identifier" class="form-control" id="identifier"
                         aria-describedby="identifierHelp">
-                    <div id="identifierHelp" class="form-text">Hint: You can use the Identifier from your EHR</div>
+                    <div id="identifierHelp" class="form-text">Hint: You can use the Identifier from your EHR or Patient's Name</div>
                 </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="">
+                            <label for="identifier" class="form-label">Email Address (Patient)</label>
+                            <input type="text" [(ngModel)]="patient.email" class="form-control" id="email">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="">
+                            <label for="identifier" class="form-label">Phone Number (Patient)</label>
+                            <input type="tel" [(ngModel)]="patient.phoneNumber" class="form-control" id="phoneNumber">
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <div class="">
+                            <label for="identifier" class="form-label">Email Address (Care Giver)</label>
+                    <input type="text" [(ngModel)]="patient.careGiverEmail" class="form-control" id="careGiverEmail">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="">
+                            <label for="identifier" class="form-label">Phone Number (Care Giver)</label>
+                            <input type="tel" [(ngModel)]="patient.careGiverPhoneNumber" class="form-control" id="careGiverPhoneNumber">
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Medical Conditions</label>
                     <ng-multiselect-dropdown placeholder="Medical Conditions" [settings]="dropdownSettings"
                         [data]="medicalConditionsList" [(ngModel)]="selectedMedicalConditions">
                     </ng-multiselect-dropdown>
-                </div>
-                <div class="mb-5">
-                    <label for="exampleInputPassword1" class="form-label">Preferred Genre</label>
-                    <ng-multiselect-dropdown placeholder="Preferred Genre" [settings]="dropdownSettings"
-                        [data]="availableGenres" [(ngModel)]="selectedGenres"></ng-multiselect-dropdown>
                 </div>
 
                 <div class="mt-5 d-grid gap-2">
