@@ -19,6 +19,7 @@ import { PatientDetailsComponent } from './pages/home/patients/patient-details/p
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
 import { SessionComponent } from './pages/session/session.component';
+import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
 
 const routes: Routes = [
@@ -50,53 +51,19 @@ const routes: Routes = [
         component: DashboardComponent,
         data: { breadcrumb: {skip: true} },
       },
-      {
-        path: "patients",
-        canActivateChild: [PrivateGuard],
-        data: { breadcrumb: "Patient List" },
-
-        // outlet:'details',
-        children: [
-          {
-            path: ":id",
-            data: { breadcrumb: "Patient Details" },
-            canActivateChild: [PrivateGuard],
-            children:[
-              {
-                path: ':id',
-                pathMatch: "full",
-                data: { breadcrumb: "Session Details" },
-                children:[
-                  {
-                    path: '',
-                    pathMatch: "full",
-                    component: SessionsDetailsComponent,
-                  }
-                ]
-              },
-              {
-                    path: '',
-                    pathMatch: "full",
-                    component: PatientDetailsComponent
-              }
-            ]
-          },
-          {
-            path: "new",
-            component: PatientAddComponent,
-            data: { breadcrumb: "Patient Add" },
-          },
-          {
-            path: '',
-            pathMatch: "full",
-            component: PatientsComponent,
-            data: { breadcrumb: "Patients" },
-          },
-        ],
-      },
-      //{ path: 'patients/new', component: PatientAddComponent },
+      { path: "patients", data: { breadcrumb: "Patients" }, component: PatientsComponent },
+      { path: 'patients/new', component: PatientAddComponent, data: { breadcrumb: "New Patient" } },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      //{ path: 'patients/:id', component: PatientDetailsComponent },
+      { path: 'patients/:id', component: PatientDetailsComponent, data: { breadcrumb: "Patient Details" },
+        // children: [
+        //   {
+        //     path: 'session/:id',
+        //     data: { breadcrumb: "Session Details" },
+        //     component: SessionsDetailsComponent,
+        //   },
+        // ]
+      },
+      
       { path: 'care-plans',
         data: { breadcrumb: "Care Plans" },
         children: [
@@ -120,13 +87,15 @@ const routes: Routes = [
       //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
-      //{ path: 'sessions', component: SessionsDetailsComponent },
-      //{ path: 'sessions/:id', component: SessionsDetailsComponent },
+      // { path: 'sessions', component: SessionsDetailsComponent },
+      { path: 'sessions/:id', component: SessionsDetailsComponent },
 
       {path: 'account', component: AccountComponent},
+      
     ]
   },
-  { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]}
+  { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]},
+  {path: 'fhir', component: CallbackComponent, canActivate: [PrivateGuard]},
 ];
 
 @NgModule({

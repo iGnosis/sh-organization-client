@@ -56,6 +56,7 @@ import { AddCareplan } from './pages/home/patients/add-careplan/add-careplan-pop
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
 import { AccountComponent } from './pages/home/account/account.component';
+import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -92,6 +93,7 @@ import { AccountComponent } from './pages/home/account/account.component';
     SafePipe,
     AddPatient,
     AccountComponent,
+    CallbackComponent,
   ],
   imports: [
     BrowserModule,
