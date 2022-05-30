@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { SessionData } from 'src/app/types/chart';
 import { Chart } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { Activity, ActivityEvent } from 'src/app/types/activity';
-import { Session } from 'src/app/types/session';
+import { Activity, ActivityEvent, Session } from 'src/app/pointmotion';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 
 @Component({
@@ -295,7 +293,8 @@ export class SessionsDetailsComponent implements OnInit {
         radius: 6,
         tension: 0.1,
         fill: false,
-        label: 'Success Ratio'
+        label: 'Success Ratio',
+        clip: false
       }]
     }
 
@@ -323,6 +322,7 @@ export class SessionsDetailsComponent implements OnInit {
               font: {
                 size: 14
               },
+              stepSize: 20,
               color: '#000066'
             }
           },

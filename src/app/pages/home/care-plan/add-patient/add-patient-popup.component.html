@@ -1,0 +1,25 @@
+  <div class="container popup_alignment add_new_careplan">
+    <div>
+      <div class="row align-items-center">
+        <div class="col-12 mb-md-0 custom_alignment">
+          <mat-icon>add</mat-icon>
+          <h1 class="h2 mb-0 ls-tight">Add Patient</h1>
+        </div>
+        <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Care Plans" aria-label="Search" aria-describedby="" [(ngModel)]="searchText">
+      </div>
+    </div>
+    <perfect-scrollbar style="max-height: 400px;" [config]="config" class="scroll-container" fxFlex="auto"[scrollIndicators]="true">
+      <div class="mt-5">
+          <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplans of all_careplans| filter:searchText">
+                  <div class="flex-fill ms-4">
+                      <a class="d-block h6 mb-1">{{active_careplans.identifier}}</a>
+                  </div>
+                  <div>
+                      <a class="btn btn-sm btn-neutral px-4 py-2 text-xs" (click)="addPatient(active_careplans.id)">Add</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </perfect-scrollbar>
+  </div>
