@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent, Session } from 'src/app/pointmotion';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
@@ -16,6 +16,8 @@ export class SessionsDetailsComponent implements OnInit {
   patientConditions = ''
   sessionDetails?: any
   activityDetails: Array<Activity> = []
+  sessionReactionTimeChart: Chart
+  sessionAchievementChart: Chart
 
   constructor(private router: Router, private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
 
@@ -164,15 +166,15 @@ export class SessionsDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'bar',
       data: data,
       plugins: [ChartDataLabels],
       options: {
-        beginAtZero: true,
         responsive: true,
         scales: {
           y: {
+            beginAtZero: true,
             title: {
               display: true,
               text: 'Avg Reaction Time (Milliseconds)',
@@ -182,7 +184,7 @@ export class SessionsDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}ms`,
+              callback: (value: any) => `${value}ms`,
               font: {
                 size: 14
               },
@@ -233,16 +235,13 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
-    let myChart = null
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = document.getElementById('sessionReactionTimeChart').getContext('2d')
+    const canvas = <HTMLCanvasElement>(document.getElementById('sessionReactionTimeChart'));
+    const ctx = canvas.getContext('2d');
     if (ctx) {
-      if (myChart != null) {
-        // @ts-ignore: TypeScript headache - fix later
-        myChart.destroy()
+      if (this.sessionReactionTimeChart != null) {
+        this.sessionReactionTimeChart.destroy()
       }
-      // @ts-ignore: TypeScript headache - fix later
-      myChart = new Chart(ctx, config)
+      this.sessionReactionTimeChart = new Chart(ctx, config)
     }
   }
 
@@ -283,7 +282,7 @@ export class SessionsDetailsComponent implements OnInit {
     console.log('initAchievementChart:labels', labels)
     console.log('initAchievementChart:achievementData', achievementData)
 
-    const data = {
+    const data: any = {
       labels: [...labels],
       datasets: [{
         data: [...achievementData],
@@ -298,12 +297,16 @@ export class SessionsDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'line',
       data: data,
       options: {
-        hitRadius: 30,
-        hoverRadius: 12,
+        elements: {
+          point: {
+            hitRadius: 30,
+            hoverRadius: 12
+          }
+        },
         responsive: true,
         scales: {
           y: {
@@ -318,7 +321,7 @@ export class SessionsDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
                 size: 14
               },
@@ -352,16 +355,13 @@ export class SessionsDetailsComponent implements OnInit {
       }
     }
 
-    let myChart = null
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = <HTMLCanvasElement>document.getElementById('sessionAchievementChart').getContext('2d')!
+    const canvas = <HTMLCanvasElement>(document.getElementById('sessionAchievementChart'));
+    const ctx = canvas.getContext('2d');
     if (ctx) {
-      if (myChart != null) {
-        // @ts-ignore: TypeScript headache - fix later
-        myChart.destroy()
+      if (this.sessionAchievementChart != null) {
+        this.sessionAchievementChart.destroy()
       }
-      // @ts-ignore: TypeScript headache - fix later
-      myChart = new Chart(ctx, config)
+      this.sessionAchievementChart = new Chart(ctx, config)
     }
   }
 

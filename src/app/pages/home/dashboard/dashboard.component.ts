@@ -10,8 +10,8 @@ import { environment } from 'src/environments/environment';
 })
 export class DashboardComponent implements OnInit {
 
-  patientAdherenceCtx: any
-  patientAdherenceCanvas: HTMLCanvasElement
+  patientAdherenceChart: Chart
+  patientOverviewChart: Chart
   currentDate: Date
 
   constructor() {
@@ -63,11 +63,14 @@ export class DashboardComponent implements OnInit {
       },
       plugins: [ChartDataLabels]
     };
-    this.patientAdherenceCanvas = <HTMLCanvasElement>(document.getElementById('patientAdherence'));
-    this.patientAdherenceCtx = this.patientAdherenceCanvas.getContext('2d');
 
-    if (this.patientAdherenceCtx) {
-      new Chart(this.patientAdherenceCtx, config);
+    const canvas = <HTMLCanvasElement>(document.getElementById('patientAdherenceChart'));
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.patientAdherenceChart != null) {
+        this.patientAdherenceChart.destroy()
+      }
+      this.patientAdherenceChart = new Chart(ctx, config)
     }
   }
 
@@ -205,10 +208,13 @@ export class DashboardComponent implements OnInit {
       plugins: [quadrants]
     };
 
-    const canvas = <HTMLCanvasElement>(document.getElementById('patientOverview'));
+    const canvas = <HTMLCanvasElement>(document.getElementById('patientOverviewChart'));
     const ctx = canvas.getContext('2d');
     if (ctx) {
-      new Chart(ctx, config);
+      if (this.patientOverviewChart != null) {
+        this.patientOverviewChart.destroy()
+      }
+      this.patientOverviewChart = new Chart(ctx, config)
     }
   }
 }
