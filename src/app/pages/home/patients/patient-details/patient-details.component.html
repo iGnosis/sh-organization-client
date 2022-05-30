@@ -455,7 +455,7 @@
         <th mat-header-cell *matHeaderCellDef class="custom_table_header">Care Plan
           <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.careplanByCareplan" value="{{searchValue}}">
         </th>
-        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
+        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
           <span class="text-heading font-semibold">
             {{ element.careplanByCareplan?.name }}
           </span>
@@ -463,26 +463,26 @@
       </ng-container>
       <ng-container matColumnDef="activity_type">
         <th mat-header-cell *matHeaderCellDef class="custom_table_header">Activity Type</th>
-        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
+        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
           <!-- <span>{{ session.activityType }}</span> -->
           <span>Physical</span>
         </td>
       </ng-container>
       <ng-container matColumnDef="timeDuration">
         <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Time</th>
-        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
+        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
           <span>{{ element.timeDuration || 'In Progress' }}</span>
         </td>
       </ng-container>
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Date</th>
-        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
+        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
           <span>{{ element.createdAt | date }}</span>
         </td>
       </ng-container>
       <ng-container matColumnDef="totalPerformanceRatio">
         <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Performance</th>
-        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!, element)" class="clicked_class">
+        <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
           <div *ngIf="element.totalPerformanceRatio" class="d-flex align-items-center">
             <span class="me-2">{{element.totalPerformanceRatio}}%</span>
             <div>

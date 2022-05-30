@@ -4,14 +4,15 @@ import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent, Session } from 'src/app/pointmotion';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
-
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 @Component({
   selector: 'app-sessions-details',
   templateUrl: './sessions-details.component.html',
   styleUrls: ['./sessions-details.component.scss']
 })
 export class SessionsDetailsComponent implements OnInit {
-  sessionId?: string
+  sessionId: string
   sessionCompletionRatio?: number
   patientConditions = ''
   sessionDetails?: any
@@ -19,18 +20,52 @@ export class SessionsDetailsComponent implements OnInit {
   sessionReactionTimeChart: Chart
   sessionAchievementChart: Chart
 
-  constructor(private router: Router, private route: ActivatedRoute, private analyticsService: AnalyticsService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private analyticsService: AnalyticsService,
+    private graphqlService: GraphqlService
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
 
-      this.route.queryParamMap.subscribe((params: ParamMap) => {
-        this.sessionDetails = JSON.parse(params.get('sessionDetails')!)
-      })
-
       this.sessionId = params.get('id') || ''
 
-      if (this.sessionId && this.sessionDetails) {
+      this.sessionDetails = await this.graphqlService.client.request(GqlConstants.GET_SESSION_BY_PK, {
+        sessionId: this.sessionId
+      })
+
+      this.sessionDetails = this.sessionDetails.session_by_pk
+      console.log('sessionDetails:', this.sessionDetails)
+
+      // work out time duration
+      if (this.sessionDetails.createdAt && this.sessionDetails.endedAt) {
+        this.sessionDetails.timeDuration = this.analyticsService.calculateTimeDuration(
+          this.sessionDetails.createdAt,
+          this.sessionDetails.endedAt
+        )
+      }
+
+      this.analyticsService.getAnalytics([this.sessionId]).subscribe((sessionAnalytics: any) => {
+        let performanceRatio = 0
+        let totalEventsPerSession = 0
+        let avgReactionTime = 0
+        const session = sessionAnalytics[this.sessionId!]
+        this.sessionDetails.sessionAnalytics = session
+        for (const activity in session) {
+          for (const event of session[activity].events) {
+            // console.log('event:', event)
+            performanceRatio += event.score * 100
+            avgReactionTime += event.reactionTime
+            totalEventsPerSession++
+          }
+        }
+        performanceRatio = performanceRatio / totalEventsPerSession
+        performanceRatio = Math.round(performanceRatio * 100) / 100
+        this.sessionDetails.totalPerformanceRatio = performanceRatio
+        this.sessionDetails.avgReactionTime = parseFloat((avgReactionTime / totalEventsPerSession).toFixed(2))
+
         console.log(this.sessionId, this.sessionDetails)
         this.initPatientConditions()
 
@@ -99,9 +134,8 @@ export class SessionsDetailsComponent implements OnInit {
 
           this.activityDetails.push(activity)
         }
-
         this.fetchSessionCompletionRatio(this.sessionId)
-      }
+      })
     })
   }
 

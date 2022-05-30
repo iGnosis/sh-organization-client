@@ -105,7 +105,7 @@ export class PatientDetailsComponent implements OnInit {
 
   //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
@@ -114,8 +114,8 @@ export class PatientDetailsComponent implements OnInit {
       if (this.patientId) {
         console.log('patientId:', this.patientId);
         // this.eventEmitterService.SentPatientID({data:this.patientId});
-        this.fetchSessions(0)
-        this.GetAssignedCarePlan()
+        await this.fetchSessions(0)
+        await this.GetAssignedCarePlan()
 
         // TODO: remove this when events are being sent properly from activity site.
         // And when you have date picker implemented.
@@ -130,6 +130,7 @@ export class PatientDetailsComponent implements OnInit {
       }
     })
   }
+
   openDialog() {
     const dialogRef = this.dialog.open(StartSessionPopUp);
     // dialogRef.afterClosed().subscribe(result => {
@@ -137,6 +138,7 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
+
   openCarePlanDialog() {
     const dialogRef = this.dialog.open(AddCareplan);
     // dialogRef.afterClosed().subscribe(result => {
@@ -144,6 +146,7 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
+
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
     // multiple language, you would internationalize these strings.
@@ -185,10 +188,7 @@ export class PatientDetailsComponent implements OnInit {
     sessions.forEach((val: Session) => {
       // work out time duration
       if (val.createdAt && val.endedAt) {
-        const createdAtMilliSec: number = new Date(val.createdAt).getTime()
-        const endedAtMilliSec: number = new Date(val.endedAt).getTime()
-        const seconds = (endedAtMilliSec - createdAtMilliSec) / 1000
-        val.timeDuration = this.secondsToString(seconds)
+        val.timeDuration = this.analyticsService.calculateTimeDuration(val.createdAt, val.endedAt)
       }
     })
 
@@ -237,6 +237,7 @@ export class PatientDetailsComponent implements OnInit {
 
     //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
+
   async GetAssignedCarePlan(){
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId })
     this.activeCarePlans = response.patient[0].patient_careplans;
@@ -556,10 +557,6 @@ export class PatientDetailsComponent implements OnInit {
     })
   }
 
-  secondsToString(seconds: number): string {
-    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
-    return `${numMinutes} minutes`
-  }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.tableOnePaginator;
@@ -592,7 +589,7 @@ export class PatientDetailsComponent implements OnInit {
   //   this.achievementChart.update()
   // }
 
-  openSessionDetailsPage(sessionId: string, sessionDetails: any) {
-    this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
+  openSessionDetailsPage(sessionId: string) {
+    this.router.navigate(['/app/sessions/', sessionId])
   }
 }

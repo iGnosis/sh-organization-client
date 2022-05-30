@@ -141,6 +141,22 @@ export const GqlConstants = {
       }
     }
   `,
+
+  GET_SESSION_BY_PK: `query GetSessionByPk($sessionId: uuid = "") {
+    session_by_pk(id: $sessionId) {
+      id
+      createdAt
+      endedAt
+      careplanByCareplan {
+        name
+      }
+      patientByPatient {
+        identifier
+        medicalConditions
+      }
+    }
+  }`,
+
   GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
     patient(where: {id: {_eq: $patient}}) {
       id
