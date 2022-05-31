@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { Activity, ActivityEvent } from 'src/app/pointmotion';
 
@@ -16,6 +16,8 @@ export class ActivitiesDetailsComponent implements OnInit {
   patientIdentifier?: string
   activityId?: string
   activityDetails?: Activity
+  achievementChart: Chart
+  patientAdherenceChart: Chart
 
   ngOnInit(): void {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
@@ -49,7 +51,7 @@ export class ActivitiesDetailsComponent implements OnInit {
     console.log('initAchievementChart:labels', labels)
     console.log('initAchievementChart:achievementData', achievementData)
 
-    const data = {
+    const data: any = {
       labels,
       datasets: [{
         data: achievementData,
@@ -65,12 +67,16 @@ export class ActivitiesDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'line',
       data: data,
       options: {
-        hitRadius: 30,
-        hoverRadius: 12,
+        elements: {
+          point: {
+            hitRadius: 30,
+            hoverRadius: 12
+          }
+        },
         responsive: true,
         scales: {
           y: {
@@ -84,7 +90,7 @@ export class ActivitiesDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
                 size: 14
               },
@@ -135,12 +141,15 @@ export class ActivitiesDetailsComponent implements OnInit {
       }
     }
 
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
+    const canvas = <HTMLCanvasElement>(document.getElementById('achievementChart'));
+    const ctx = canvas.getContext('2d');
     if (ctx) {
-      // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      if (this.achievementChart != null) {
+        this.achievementChart.destroy()
+      }
+      this.achievementChart = new Chart(ctx, config)
     }
+
   }
 
   initReactionTimeChart() {
@@ -156,7 +165,7 @@ export class ActivitiesDetailsComponent implements OnInit {
     console.log('initReactionChart:labels:', labels)
     console.log('initReactionChart:reactionData:', reactionData)
 
-    const data = {
+    const data: any = {
       labels,
       datasets: [{
         data: reactionData,
@@ -165,18 +174,15 @@ export class ActivitiesDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'bar',
       data: data,
       plugins: [ChartDataLabels],
       options: {
-        beginAtZero: true,
         responsive: true,
-        legend: {
-          display: true
-        },
         scales: {
           y: {
+            beginAtZero: true,
             title: {
               display: true,
               text: 'Reaction Time (Milliseconds)',
@@ -186,7 +192,7 @@ export class ActivitiesDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}ms`,
+              callback: (value: any) => `${value}ms`,
               font: {
                 size: 14
               },
@@ -237,11 +243,13 @@ export class ActivitiesDetailsComponent implements OnInit {
       }
     }
 
-    // @ts-ignore: TypeScript headache - fix later
-    const ctx = document.getElementById('reactionTimeChart').getContext('2d')
+    const canvas = <HTMLCanvasElement>(document.getElementById('reactionTimeChart'));
+    const ctx = canvas.getContext('2d');
     if (ctx) {
-      // @ts-ignore: TypeScript headache - fix later
-      new Chart(ctx, config)
+      if (this.patientAdherenceChart != null) {
+        this.patientAdherenceChart.destroy()
+      }
+      this.patientAdherenceChart = new Chart(ctx, config)
     }
   }
 }

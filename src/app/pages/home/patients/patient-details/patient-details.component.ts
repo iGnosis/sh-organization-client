@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { MatSort, Sort, SortDirection } from '@angular/material/sort';
@@ -67,8 +67,8 @@ export class PatientDetailsComponent implements OnInit {
   itemsPerPage = 10
   currentPage = 1
   isRowsChecked = false
-  achievementChart: any
-  engagementChart: any
+  achievementChart: Chart
+  engagementChart: Chart
   startDate?: Date
   endDate?: Date
   noSessionAssignedPlan: number
@@ -105,8 +105,7 @@ export class PatientDetailsComponent implements OnInit {
 
   //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
 
-  ngOnInit() {
-
+  async ngOnInit() {
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
@@ -115,8 +114,8 @@ export class PatientDetailsComponent implements OnInit {
       if (this.patientId) {
         console.log('patientId:', this.patientId);
         // this.eventEmitterService.SentPatientID({data:this.patientId});
-        this.fetchSessions(0)
-        this.GetAssignedCarePlan()
+        await this.fetchSessions(0)
+        await this.GetAssignedCarePlan()
 
         // TODO: remove this when events are being sent properly from activity site.
         // And when you have date picker implemented.
@@ -127,12 +126,11 @@ export class PatientDetailsComponent implements OnInit {
         // this.endDate = new Date()
         // this.startDate = new Date(new Date().setDate(new Date().getDate() - 7))
         this.initAchievementChart(this.startDate.toISOString(), this.endDate.toISOString())
-
-        // init dummy charts
         this.initEngagementChart(this.startDate.toISOString(), this.endDate.toISOString())
       }
     })
   }
+
   openDialog() {
     const dialogRef = this.dialog.open(StartSessionPopUp);
     // dialogRef.afterClosed().subscribe(result => {
@@ -140,6 +138,7 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
+
   openCarePlanDialog() {
     const dialogRef = this.dialog.open(AddCareplan);
     // dialogRef.afterClosed().subscribe(result => {
@@ -147,6 +146,7 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
+
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
     // multiple language, you would internationalize these strings.
@@ -188,10 +188,7 @@ export class PatientDetailsComponent implements OnInit {
     sessions.forEach((val: Session) => {
       // work out time duration
       if (val.createdAt && val.endedAt) {
-        const createdAtMilliSec: number = new Date(val.createdAt).getTime()
-        const endedAtMilliSec: number = new Date(val.endedAt).getTime()
-        const seconds = (endedAtMilliSec - createdAtMilliSec) / 1000
-        val.timeDuration = this.secondsToString(seconds)
+        val.timeDuration = this.analyticsService.calculateTimeDuration(val.createdAt, val.endedAt)
       }
     })
 
@@ -240,6 +237,7 @@ export class PatientDetailsComponent implements OnInit {
 
     //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
   }
+
   async GetAssignedCarePlan(){
     const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId })
     this.activeCarePlans = response.patient[0].patient_careplans;
@@ -303,15 +301,15 @@ export class PatientDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'bar',
       data: data,
       plugins: [ChartDataLabels],
       options: {
-        beginAtZero: true,
         responsive: true,
         scales: {
           y: {
+            beginAtZero: true,
             max: 100,
             title: {
               display: true,
@@ -322,7 +320,7 @@ export class PatientDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
                 size: 14
               },
@@ -409,20 +407,19 @@ export class PatientDetailsComponent implements OnInit {
       data.datasets[0].data = results.map((result: EngagementRatio) => result.engagementRatio! * 100)
       data.datasets[0].careplanNames = results.map((result: EngagementRatio) => result.careplanName)
 
-      const engagementChartElm = document.getElementById('engagementChart')
-      if (engagementChartElm) {
-        // @ts-ignore: TypeScript headache - fix later
-        const ctx = document.getElementById('engagementChart').getContext('2d')
-        if (ctx) {
-          // @ts-ignore: TypeScript headache - fix later
-          this.engagementChart = new Chart(ctx, config)
+      const canvas = <HTMLCanvasElement>(document.getElementById('engagementChart'));
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        if (this.engagementChart != null) {
+          this.engagementChart.destroy()
         }
+        this.engagementChart = new Chart(ctx, config)
       }
     })
   }
 
   initAchievementChart(startDate: string, endDate: string) {
-    const data = {
+    const data: any = {
       labels: [],
       datasets: [{
         data: [],
@@ -438,12 +435,16 @@ export class PatientDetailsComponent implements OnInit {
       }]
     }
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'line',
       data: data,
       options: {
-        hitRadius: 30,
-        hoverRadius: 12,
+        elements: {
+          point: {
+            hitRadius: 30,
+            hoverRadius: 12
+          }
+        },
         responsive: true,
         // making object array readable for ChartJS
         // parsing: {
@@ -465,7 +466,7 @@ export class PatientDetailsComponent implements OnInit {
               padding: 12
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
                 size: 14
               },
@@ -544,22 +545,18 @@ export class PatientDetailsComponent implements OnInit {
       data.datasets[0].data = results.map((result: AchievementRatio) => result.avgAchievement! * 100)
       data.datasets[0].careplanNames = results.map((result: AchievementRatio) => result.careplanName)
 
-      const achievementChartElm = document.getElementById('achievementChart')
-      if (achievementChartElm) {
-        // @ts-ignore: TypeScript headache - fix later
-        const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
-        if (ctx) {
-          // @ts-ignore: TypeScript headache - fix later
-          this.achievementChart = new Chart(ctx, config)
+      const canvas = <HTMLCanvasElement>(document.getElementById('achievementChart'));
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        if (this.achievementChart != null) {
+          this.achievementChart.destroy()
         }
+        this.achievementChart = new Chart(ctx, config)
       }
+
     })
   }
 
-  secondsToString(seconds: number): string {
-    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
-    return `${numMinutes} minutes`
-  }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.tableOnePaginator;
@@ -585,14 +582,14 @@ export class PatientDetailsComponent implements OnInit {
     this.currentPage = pageNumber
   }
 
-  changeSessionsChart() {
-    const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
-    console.log('changeFinancials:', sessionVal)
-    this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
-    this.achievementChart.update()
-  }
+  // changeSessionsChart() {
+  //   const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
+  //   console.log('changeFinancials:', sessionVal)
+  //   this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
+  //   this.achievementChart.update()
+  // }
 
-  openSessionDetailsPage(sessionId: string, sessionDetails: any) {
-    this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
+  openSessionDetailsPage(sessionId: string) {
+    this.router.navigate(['/app/sessions/', sessionId])
   }
 }
