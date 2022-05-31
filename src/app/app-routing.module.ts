@@ -88,7 +88,7 @@ const routes: Routes = [
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       // { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'sessions/:id', component: SessionsDetailsComponent },
+      { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Session Details" } },
 
       {path: 'account', component: AccountComponent},
       
