@@ -80,10 +80,11 @@ export class PatientAddComponent implements OnInit {
 
     this.selectedMedicalConditions.map((x: any) => { medicalConditions[x.name] = true })
 
-    const patient = Object.assign({}, this.patient, medicalConditions)
+    const patient = Object.assign({}, this.patient, { medicalConditions } );
 
     const response = await this.patientService.insertPatient(patient)
       .catch((error) => {
+        console.log(error)
         if (error.message.includes('Uniqueness violation')) {
           this.toastService.showDanger('Identifier already in use, please use a different identifier.')
         }
