@@ -8,6 +8,9 @@
           <router-outlet></router-outlet>
           <h1 class="h2 mb-0 ls-tight heading_text mt-5">{{ sessionDetails.careplanByCareplan.name }}</h1>
         </div>
+        <div *ngIf="showDownloadSession" class="col-md-6 col-md-8 col-lg-4">
+          <button (click)="downloadSession()">Download Session</button>
+        </div>
         <!-- Actions -->
       </div>
     </div>
