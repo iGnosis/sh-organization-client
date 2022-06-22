@@ -23,7 +23,8 @@ export class SessionComponent implements OnInit {
       // TODO: Bad security practice, need a better way to do it...
       this.session.nativeElement.contentWindow?.postMessage({
         token: window.localStorage.getItem('token'),
-        session: this.sessionId
+        session: this.sessionId,
+        type: 'token'
       }, '*')
     }, 1000);
     

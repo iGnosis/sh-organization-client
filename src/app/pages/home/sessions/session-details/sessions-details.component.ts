@@ -6,6 +6,7 @@ import { Activity, ActivityEvent, Session } from 'src/app/pointmotion';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-sessions-details',
   templateUrl: './sessions-details.component.html',
@@ -19,6 +20,7 @@ export class SessionsDetailsComponent implements OnInit {
   activityDetails: Array<Activity> = []
   sessionReactionTimeChart: Chart
   sessionAchievementChart: Chart
+  showDownloadSession: boolean = false
 
   constructor(
     private router: Router,
@@ -28,6 +30,11 @@ export class SessionsDetailsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    if (environment.name === 'local' || environment.name === 'dev') {
+      this.showDownloadSession = true
+    }
+
     this.route.paramMap.subscribe(async (params: ParamMap) => {
 
       this.sessionId = params.get('id') || ''
@@ -423,5 +430,14 @@ export class SessionsDetailsComponent implements OnInit {
         }
       }
     )
+  }
+
+  downloadSession() {
+    const data = JSON.stringify(this.sessionDetails.sessionAnalytics)
+    const a = document.createElement("a")
+    const file = new Blob([data], { type: 'application/json' })
+    a.href = URL.createObjectURL(file)
+    a.download = `${this.sessionId}_analytics.json`
+    a.click();
   }
 }
