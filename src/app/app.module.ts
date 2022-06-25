@@ -55,12 +55,14 @@ import { SafePipe } from './pipes/safe/safe.pipe';
 import { AddCareplan } from './pages/home/patients/add-careplan/add-careplan-popup.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
-};
+import { AccountComponent } from './pages/home/account/account.component';
+import { CallbackComponent } from './widgets/fhir/callback/callback.component';
+// import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+// import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+// const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+//   suppressScrollX: true
+// };
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,8 +91,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AddCareplan,
     SessionComponent,
     SafePipe,
-    AddPatient
-
+    AddPatient,
+    AccountComponent,
+    CallbackComponent,
   ],
   imports: [
     BrowserModule,
@@ -118,15 +121,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatDialogModule,
     CarouselModule,
     Ng2SearchPipeModule,
-    PerfectScrollbarModule
+    // PerfectScrollbarModule
   ],
   providers: [
     PrivateGuard,
     PublicGuard,
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    // {
+    //   provide: PERFECT_SCROLLBAR_CONFIG,
+    //   useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    // }
 
   ],
   bootstrap: [AppComponent]

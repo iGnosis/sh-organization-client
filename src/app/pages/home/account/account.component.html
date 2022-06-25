@@ -1,0 +1,260 @@
+<!-- <div class="container">
+
+    <a role="button" target="_blank" class="btn btn-primary" [href]="authorizeLink">Link Epic</a>
+</div> -->
+
+<div class="container-fluid py-7">
+    <div class="row">
+        <div class="flex-none w-56 w-lg-96 mb-10 mb-md-0">
+            <div class="list-group bg-white ">
+                <div class="list-group-item">
+                    <h5 class="mb-0">Settings</h5>
+                </div>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-person-square text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Profile</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+                <a [href]="authorizeLink"  target="_blank" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-link text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">EPIC FHIR</span>
+                        <p class="text-sm text-muted d-none d-lg-block">Link your EPIC account to import patient data from EPIC directly</p>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-gear text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Account</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-palette text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Appearance</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-shield-lock text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Account Security</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-wallet text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Billing</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+                <a href="#" class="list-group-item list-group-item-action d-flex">
+                    <div class="me-3 text-sm d-none d-md-block">
+                        <i class="bi bi-bell text-muted"></i>
+                    </div>
+                    <div>
+                        <span class="d-block text-heading text-sm font-semibold mb-0 mb-lg-1">Notifications</span>
+                        <p class="text-sm text-muted d-none d-lg-block">By filling your data you get a much better experience using our.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col col-lg-6 mx-auto card p-5">
+            <div class="mb-7">
+                <h4 class="font-semibold mb-1">Profile</h4>
+                <p class="text-sm text-muted">By filling your data you get a much better experience using our website.</p>
+            </div>
+            <div class="row g-5">
+                <div class="col-md-6">
+                    <div class="">
+                        <label class="form-label" for="first_name">First name</label>
+                        <input type="text" class="form-control" id="first_name">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="">
+                        <label class="form-label" for="last_name">Last name</label>
+                        <input type="text" class="form-control" id="last_name">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="">
+                        <label class="form-label" for="formInputExample">Bio</label>
+                        <textarea class="form-control" id="formInputExample" placeholder="Your email" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="">
+                        <label class="form-label" for="formInputExample">Username</label>
+                        <div class="input-group position-relative">
+                            <span class="input-group-text" id="">pointmotion.us/</span>
+                            <input type="email" class="form-control" placeholder="username" aria-label="username" aria-describedby="">
+                            <span class="input-group-text" id="">.com</span>
+                        </div>
+                        <span class="mt-2 valid-feedback">Looks good!</span>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="">
+                        <label class="form-label" for="formInputExample">Profile picture</label>
+                        <div class="d-flex align-items-center">
+                            <a href="#" class="avatar avatar-2xl bg-warning rounded-circle">
+                                <img alt="..." src="https://images.unsplash.com/photo-1579463148228-138296ac3b98?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=256&h=256&q=80">
+                            </a>
+                            <div class="ms-5">
+                                <label for="file_upload" class="btn btn-sm btn-neutral">
+                                    <span>Upload</span>
+                                    <input type="file" name="file_upload" id="file_upload" class="visually-hidden">
+                                </label>
+                                <a href="#" class="btn d-inline-flex btn-sm btn-neutral ms-2 text-danger">
+                                    <span class=" pe-2">
+                                        <i class="bi bi-trash"></i>
+                                    </span>
+                                    <span>Remove</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="">
+                        <label class="form-label" for="formInputExample">Cover</label>
+                        <div class="card border-2 border-dashed border-primary-hover position-relative">
+                            <div class="d-flex justify-content-center px-5 py-5">
+                                <label for="file_upload" class="position-absolute w-full h-full top-0 start-0 cursor-pointer">
+                                    <input id="file_upload" name="file_upload" type="file" class="visually-hidden">
+                                </label>
+                                <div class="text-center">
+                                    <div class="text-2xl text-muted">
+                                        <i class="bi bi-upload"></i>
+                                    </div>
+                                    <div class="d-flex text-sm mt-3">
+                                        <p class="font-semibold">Upload a file or drag and drop</p>
+                                    </div>
+                                    <p class="text-xs text-gray-500">
+                                        PNG, JPG, GIF up to 3MB
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="">
+                        <label class="form-label" for="formInputExample">Website</label>
+                        <input type="text" class="form-control" id="formInputExample">
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" name="switch_make_public" id="switch_make_public">
+                        <label class="form-check-label ms-2" for="switch_make_public">
+                            Make my profile public
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-10 mb-8" />
+            <div class="mb-7">
+                <h4 class="font-semibold mb-1">Email Notifications</h4>
+                <p class="text-sm text-muted">By filling your data you get a much better experience using our website.</p>
+                <div class="mt-7">
+                    <div class="d-flex mb-5">
+                        <div class="me-3">
+                            <input class="form-check-input" type="checkbox" name="check_notification_1" id="check_notification_1">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="check_notification_1">
+                                Account Activity
+                            </label>
+                            <p class="text-sm text-muted">
+                                Get important notifications about you or activity you&#39;ve missed
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-5">
+                        <div class="me-3">
+                            <input class="form-check-input" type="checkbox" name="check_notification_2" id="check_notification_2">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="check_notification_2">
+                                Communications
+                            </label>
+                            <p class="text-sm text-muted">
+                                Get important notifications about you or activity you&#39;ve missed
+                            </p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-5">
+                        <div class="me-3">
+                            <input class="form-check-input" type="checkbox" name="check_notification_3" id="check_notification_3">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="check_notification_3">
+                                Meetups near you
+                            </label>
+                            <p class="text-sm text-muted">
+                                Get important notifications about you or activity you&#39;ve missed
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h4 class="font-semibold">Push Notifications</h4>
+                    <p class="text-sm text-muted mb-5">By filling your data you get a much better experience using our website.</p>
+                    <div class="d-flex mb-3">
+                        <div class="me-3">
+                            <input class="form-check-input" type="radio" name="radio_notifications" id="radio_notification_1">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="radio_notification_1">
+                                Everything
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="me-3">
+                            <input class="form-check-input" type="radio" name="radio_notifications" id="radio_notification_2">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="radio_notification_2">
+                                Only what&#39;s important
+                            </label>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="me-3">
+                            <input class="form-check-input" type="radio" name="radio_notifications" id="radio_notification_3">
+                        </div>
+                        <div>
+                            <label class="form-label mb-0" for="radio_notification_3">
+                                No push notifications
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-7 mb-7" />
+            <div class="d-flex">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-neutral ms-auto">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

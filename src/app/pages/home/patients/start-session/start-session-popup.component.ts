@@ -6,6 +6,7 @@ import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter
 import { SessionService } from 'src/app/services/session/session.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'start-session-pop-up',
@@ -21,6 +22,7 @@ export class StartSessionPopUp implements OnInit {
     private sessionService: SessionService,
     private carePlanService: CarePlanService,
     public eventEmitterService : EventEmitterService,
+    private dialog: MatDialog,
     private router: Router
   ) { }
 
@@ -40,6 +42,7 @@ export class StartSessionPopUp implements OnInit {
     const sessionId = await this.createNewSession(carePlan)
     // console.log(sessionId);
     this.router.navigate(['/session/', sessionId])
+    this.dialog.closeAll();
     // this.goToLink(`${environment.activityEndpoint}?sessionId=${sessionId}`)
   }
 

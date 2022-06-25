@@ -1,36 +1,27 @@
-<!-- <div *ngIf="showCharts" class="session-details-charts">
-  <div class="container mt-3 row">
-    <div class="chart-2 col">
-      <canvas id="achievementChart" width="400" height="400"></canvas>
-    </div>
-    <div class="chart-1 col">
-      <canvas id="reactionTimeChart" width="400" height="400"></canvas>
+<header class="px-3 px-lg-7 pt-7 custom_header">
+  <div class="container-xl">
+    <div>
+      <div class="row custom_alignment p-5">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
+          <!-- Title -->
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <router-outlet></router-outlet>
+          <h1 class="h2 mb-0 ls-tight heading_text mt-5">{{ sessionDetails.careplanByCareplan.name }}</h1>
+        </div>
+        <div *ngIf="showDownloadSession" class="col-md-6 col-md-8 col-lg-4">
+          <button (click)="downloadSession()">Download Session</button>
+        </div>
+        <!-- Actions -->
+      </div>
     </div>
   </div>
-</div> -->
-
+</header>
 <div class="container pt-5">
-  <!-- Outer card -->
-  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+  <div class="card shadow-inset shadow-6 pt-5 pb-5 mt-5">
     <div class="container">
-      <div class="row">
+
+      <div class="row align-items-center">
         <div class="col-lg-8">
-          <div class="row">
-            <div class="col">
-              <div class="container max-w-screen-xl">
-                <div class="row row-grid align-items-center">
-                  <div class="col">
-                    <p class="lead">
-                      Session
-                    </p>
-                    <h1 class="h2 mb-0 ls-tight">
-                      {{ sessionDetails.careplanByCareplan.name }}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
           <div class="row">
             <div class="col-lg-6">
               <div class="card mb-8 ml-8 shadow-2">
@@ -178,7 +169,7 @@
             <!-- Image -->
             <div class="p-2">
               <img (click)="openActivityDetailsPage(activity.id!, activity)" alt="..."
-                src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img">
+                src="../../../../../assets/images/activity/sit-to-stand.png" class="card-img performance_click">
             </div>
             <div class="card-body pb-0">
               <div class="container align-items-center">
@@ -224,6 +215,15 @@
                   </div>
                   <div class="col-lg-6 text-dark">
                     {{ activity.correctMotions }}
+                  </div>
+                </div>
+                <hr>
+                <div class="row mt-2 mb-2">
+                  <div class="col-lg-6">
+                    Average Reaction Time
+                  </div>
+                  <div class="col-lg-6 text-dark">
+                    {{ activity.reactionTime }}
                   </div>
                 </div>
                 <hr>
