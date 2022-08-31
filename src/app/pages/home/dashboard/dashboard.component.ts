@@ -25,12 +25,21 @@ export class DashboardComponent implements OnInit {
   }
 
   initPatientAdherenceChart() {
-    const data = {
+
+    const apiResponse = {
       labels: ['Active Patients', 'Inactive Patients'],
+      pieChartDataset: [11, 4],
+      backgroundColor: ['#ffa2ad', '#2f51ae'],
+    }
+
+    const { labels, pieChartDataset, backgroundColor } = apiResponse;
+
+    const data = {
+      labels,
       datasets: [
         {
-          data: [11, 4],
-          backgroundColor: ['#ffa2ad', '#2f51ae'],
+          data: pieChartDataset,
+          backgroundColor,
           borderWidth: 0,
           hoverOffset: 4,
         },
@@ -75,14 +84,19 @@ export class DashboardComponent implements OnInit {
   }
 
   initPatientOverviewChart() {
+
+    const apiResponse = {
+      data: [
+        { x: 20, y: 30, r: 10, pid: 'anakin' },
+        { x: 40, y: 10, r: 25, pid: 'obiwan' },
+        { x: 55, y: 47, r: 18, pid: 'leia' }
+      ]
+    }
+
     const data = {
       datasets: [{
         label: 'Dementia',
-        data: [
-          { x: 20, y: 30, r: 10, pid: 'anakin' },
-          { x: 40, y: 10, r: 25, pid: 'obiwan' },
-          { x: 55, y: 47, r: 18, pid: 'leia' }
-        ],
+        data: apiResponse.data,
         backgroundColor: '#2f51ae',
         clip: false
       },
