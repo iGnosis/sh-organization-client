@@ -76,8 +76,25 @@ export class Patient {
     sessions_aggregate: any;
     primaryTherapistUser?: Therapist;
 }
-
-
+export class User {
+  id: string;
+  email: string;
+  password: string;
+  createdAt: Date;
+  updatedAt: Date;
+  lastActive: Date;
+  firstName: string;
+  lastName: string;
+  type: string;
+  status: string;
+  provider: string;
+  phoneCountryCode: string;
+  phoneNumber: string;
+  auth: {
+    otp: number;
+    issuedAt: number;
+  };
+}
 declare class PatientFrom {
     userFrom?: Patient;
     userTo?: Patient;
@@ -115,7 +132,7 @@ export class Session {
     sessionAnalytics: any; // Fix this later...
   }
 
-  
+
   export class Therapist {
     id?: string;
     username?: string;

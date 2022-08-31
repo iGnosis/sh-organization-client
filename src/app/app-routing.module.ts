@@ -8,6 +8,7 @@ import { PublicComponent } from './layouts/public/public.component';
 import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
 import { SetPasswordComponent } from './pages/auth/set-password/set-password.component';
 import { SignInComponent } from './pages/auth/sign-in/sign-in.component';
+import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/sms-otp-login.component';
 import { AccountComponent } from './pages/home/account/account.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
   {
     path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
       { path: 'auth/sign-in', component: SignInComponent },
+      {path:'auth/sms-login', component: SmsOtpLoginComponent},
       { path: 'auth/forgot-password', component: ForgotPasswordComponent },
       { path: 'auth/set-password/:code', component: SetPasswordComponent }
     ]
@@ -63,7 +65,7 @@ const routes: Routes = [
         //   },
         // ]
       },
-      
+
       { path: 'care-plans',
         data: { breadcrumb: "Care Plans" },
         children: [
@@ -91,7 +93,7 @@ const routes: Routes = [
       { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Session Details" } },
 
       {path: 'account', component: AccountComponent},
-      
+
     ]
   },
   { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]},

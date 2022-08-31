@@ -7,7 +7,7 @@ export class PublicGuard implements CanActivateChild {
   constructor(private router: Router, private jwtService: JwtService) { }
 
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
-    if (this.jwtService.getToken()) {
+    if (this.jwtService.isAuthenticated()) {
       this.router.navigate(['/app/dashboard'])
       return false
     } else {

@@ -30,6 +30,6 @@ export class PrivateComponent implements OnInit {
 
   logout() {
     localStorage.clear()
-    this.router.navigate(['/'])
+    this.router.navigate(['/public/auth/sign-in'])
   }
 }
