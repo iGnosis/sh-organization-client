@@ -8,7 +8,7 @@ export class PrivateGuard implements CanActivateChild, CanActivate {
     constructor(private router: Router, private jwtService: JwtService) { }
 
     handleActivate() {
-        if (this.jwtService.getToken()) {
+        if (this.jwtService.isAuthenticated()) {
             return true
         } else {
             this.router.navigate(['/public/auth/sign-in'])

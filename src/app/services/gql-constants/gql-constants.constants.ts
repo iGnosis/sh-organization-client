@@ -1,4 +1,3 @@
-
 export const GqlConstants = {
   SEARCH_USER: `query SignIn($email:String, $password:String) {
     user(where: {_and: {email: {_eq: $email}, password: {_eq: $password}}, type: {_eq: provider}}) {
@@ -70,8 +69,8 @@ export const GqlConstants = {
 
   INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $email:String, $careGiverEmail: String, $phoneNumber: String, $careGiverPhoneNumber: String) {
     insert_patient_one(object: {
-      identifier: $identifier, 
-      medicalConditions: $medicalConditions, 
+      identifier: $identifier,
+      medicalConditions: $medicalConditions,
       email: $email,
       careGiverEmail: $careGiverEmail,
       phoneNumber: $phoneNumber,
@@ -213,7 +212,7 @@ export const GqlConstants = {
       identifier
     }
   }`,
-  GETCAREPLANDETAILS:`query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
+  GETCAREPLANDETAILS: `query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
     careplan(where: {id: {_eq: $careplan}}) {
       name
       id
@@ -236,7 +235,7 @@ export const GqlConstants = {
     }
   }
   `,
-  POST_SESSION_ADDED_DATA:`
+  POST_SESSION_ADDED_DATA: `
   mutation AssignCareplan($patient: uuid, $careplan: uuid) {
     insert_patient_careplan(objects: {patient: $patient, careplan: $careplan}) {
       returning {
@@ -245,13 +244,13 @@ export const GqlConstants = {
     }
   }
   `,
-  DELETE_PATIENT_CAREPLAN:`
+  DELETE_PATIENT_CAREPLAN: `
   mutation DeleteCareplan($patient: uuid, $careplan: uuid) {
     delete_patient_careplan(where: {careplan: {_eq: $careplan}, patient: {_eq: $patient}}) {
       affected_rows
     }
   }`,
-  ADD_PATIENT_IN_CAREPLAN:`
+  ADD_PATIENT_IN_CAREPLAN: `
   query GetCarePlanDetails($careplan: uuid) {
     patient {
       identifier
@@ -263,5 +262,25 @@ export const GqlConstants = {
     }
   }
   `,
-
-} as const
+  REQUEST_LOGIN_OTP: `mutation RequestLoginOtp($phoneCountryCode: String!, $phoneNumber: String!) {
+    requestLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber) {
+      data {
+        message
+      }
+    }
+  }`,
+  RESEND_LOGIN_OTP: `mutation ResendLoginOtp($phoneCountryCode: String!, $phoneNumber: String!) {
+    resendLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber) {
+      data {
+        message
+      }
+    }
+  }`,
+  VERIFY_LOGIN_OTP: `mutation VerifyLoginOtp($phoneCountryCode: String!, $phoneNumber: String!, $otp: Int!) {
+    verifyLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, otp: $otp) {
+      data {
+        token
+      }
+    }
+  }`,
+};
