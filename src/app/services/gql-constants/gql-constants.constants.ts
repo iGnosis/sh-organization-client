@@ -9,7 +9,7 @@ export const GqlConstants = {
   }`,
 
   GET_ALL_PATIENTS: `query PatientList {
-    patient_aggregate {
+    patient_aggregate(where: {nickname: {_is_null: false}}) {
       aggregate {
         count
       }
