@@ -22,7 +22,7 @@ export const GqlConstants = {
       games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
         createdAt
       }
-      games_aggregate {
+      games_aggregate(where: {endedAt: {_is_null: false}}) {
         aggregate {
           count
         }
