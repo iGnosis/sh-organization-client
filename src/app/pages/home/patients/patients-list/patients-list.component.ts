@@ -67,9 +67,7 @@ export class PatientsListComponent implements OnInit {
     this.isShowDiv = !this.isShowDiv;
   }
   async reloadPatientList(filters: any) {
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS, {
-      conditions: this.selectedMedicalConditions
-    })
+    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS)
     this.patients = response.patient
     console.log(response.patient)
     this.dataSource.data = response.patient;

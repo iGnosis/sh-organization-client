@@ -8,29 +8,24 @@ export const GqlConstants = {
     }
   }`,
 
-  GET_ALL_PATIENTS: `query PatientList($conditions: [String!]) {
-    patient_aggregate(where: {medicalConditions: {_has_keys_any: $conditions}}) {
+  GET_ALL_PATIENTS: `query PatientList {
+    patient_aggregate {
       aggregate {
         count
       }
     }
-    patient(where: {medicalConditions: {_has_keys_any: $conditions}}) {
-      createdAt
+    patient(where: {nickname: {_is_null: false}}) {
       id
-      identifier
-      medicalConditions
+      createdAt
+      nickname
       preferredGenres
-      sessions(order_by: {createdAt: desc}, limit: 1, offset: 0, where: {status: {_neq: trashed}}) {
+      games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
         createdAt
       }
-      sessions_aggregate(where: {status: {_neq: trashed}}) {
+      games_aggregate {
         aggregate {
           count
         }
-      }
-      primaryTherapistUser {
-        firstName
-        lastName
       }
     }
   }`,

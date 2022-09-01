@@ -20,7 +20,7 @@ export class SessionsDetailsComponent implements OnInit {
   activityDetails: Array<Activity> = []
   sessionReactionTimeChart: Chart
   sessionAchievementChart: Chart
-  showDownloadSession: boolean = false
+  showDownloadSession = false
 
   constructor(
     private router: Router,
