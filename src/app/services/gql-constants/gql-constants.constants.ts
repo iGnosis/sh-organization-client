@@ -122,27 +122,26 @@ export const GqlConstants = {
         }
       }}}`,
 
-  GET_SESSIONS: `query GetSessions($offset: Int, $limit: Int, $patientId: uuid) {
-      session_aggregate(where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
-        aggregate {
-          count
+  GET_GAMES: `query GetGames($offset: Int, $limit: Int, $patientId: uuid) {
+        game_aggregate(where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+          aggregate {
+            count
+          }
         }
-      }
-      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
-        id
-        createdAt
-        endedAt
-        careplanByCareplan {
-          name
+        game(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+          id
+          game
+          createdAt
+          endedAt
+          totalDuration
         }
-        patientByPatient {
-          identifier
-          medicalConditions
-        }
-      }
+      }`,
+  GET_PATIENT_CHARTS: `
+  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true) {
+    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames) {
+      data
     }
-  `,
-
+  }`,
   GET_SESSION_BY_PK: `query GetSessionByPk($sessionId: uuid = "") {
     session_by_pk(id: $sessionId) {
       id
