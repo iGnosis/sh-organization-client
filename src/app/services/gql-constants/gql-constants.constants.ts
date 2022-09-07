@@ -136,6 +136,19 @@ export const GqlConstants = {
           totalDuration
         }
       }`,
+
+  GET_GAME_BY_PK: `query GetGameByPK($gameId: uuid!) {
+    game_by_pk(id: $gameId) {
+      game
+      endedAt
+      createdAt
+      id
+      patient
+      repsCompleted
+      totalDuration
+      calibrationDuration
+    }
+  }`,
   GET_PATIENT_CHARTS: `
   query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true) {
     patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames) {
@@ -277,4 +290,13 @@ export const GqlConstants = {
       }
     }
   }`,
+
+  GAME_ACHIEVEMENT_CHART: `query GameAchievementRatio($gameId: ID!) {
+  gameAchievementRatio(gameId: $gameId) {
+    data {
+      labels
+      data
+    }
+  }
+}`,
 };

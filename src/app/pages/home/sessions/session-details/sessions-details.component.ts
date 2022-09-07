@@ -7,205 +7,244 @@ import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { environment } from 'src/environments/environment';
+import { capitalize } from 'lodash';
+
+type GameObj = {
+  calibrationDuration: number;
+  createdAt: string;
+  endedAt: string;
+  game: string;
+  id: string;
+  patient: string;
+  repsCompleted: number;
+
+  totalDuration: string;
+};
 @Component({
   selector: 'app-sessions-details',
   templateUrl: './sessions-details.component.html',
-  styleUrls: ['./sessions-details.component.scss']
+  styleUrls: ['./sessions-details.component.scss'],
 })
 export class SessionsDetailsComponent implements OnInit {
-  sessionId: string
-  sessionCompletionRatio?: number
-  patientConditions = ''
-  sessionDetails?: any
-  activityDetails: Array<Activity> = []
-  sessionReactionTimeChart: Chart
-  sessionAchievementChart: Chart
-  showDownloadSession = false
+  gameId: string;
+  sessionCompletionRatio?: number;
+  patientConditions = '';
+  gameDetails: any;
+  activityDetails: Array<Activity> = [];
+  sessionReactionTimeChart: Chart;
+  sessionAchievementChart: Chart;
+  showDownloadSession = false;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
     private graphqlService: GraphqlService
-  ) { }
+  ) {}
 
   ngOnInit() {
-
     if (environment.name === 'local' || environment.name === 'dev') {
-      this.showDownloadSession = true
+      this.showDownloadSession = true;
     }
 
     this.route.paramMap.subscribe(async (params: ParamMap) => {
+      this.gameId = params.get('id') || '';
 
-      this.sessionId = params.get('id') || ''
-
-      this.sessionDetails = await this.graphqlService.client.request(GqlConstants.GET_SESSION_BY_PK, {
-        sessionId: this.sessionId
-      })
-
-      this.sessionDetails = this.sessionDetails.session_by_pk
-      console.log('sessionDetails:', this.sessionDetails)
-
-      // work out time duration
-      if (this.sessionDetails.createdAt && this.sessionDetails.endedAt) {
-        this.sessionDetails.timeDuration = this.analyticsService.calculateTimeDuration(
-          this.sessionDetails.createdAt,
-          this.sessionDetails.endedAt
-        )
-      }
-
-      this.analyticsService.getAnalytics([this.sessionId]).subscribe((sessionAnalytics: any) => {
-        let performanceRatio = 0
-        let totalEventsPerSession = 0
-        let avgReactionTime = 0
-        const session = sessionAnalytics[this.sessionId!]
-        this.sessionDetails.sessionAnalytics = session
-        for (const activity in session) {
-          for (const event of session[activity].events) {
-            // console.log('event:', event)
-            performanceRatio += event.score * 100
-            avgReactionTime += event.reactionTime
-            totalEventsPerSession++
-          }
+      const game = await this.graphqlService.client.request(
+        GqlConstants.GET_GAME_BY_PK,
+        {
+          gameId: this.gameId,
         }
-        performanceRatio = performanceRatio / totalEventsPerSession
-        performanceRatio = Math.round(performanceRatio * 100) / 100
-        this.sessionDetails.totalPerformanceRatio = performanceRatio
-        this.sessionDetails.avgReactionTime = parseFloat((avgReactionTime / totalEventsPerSession).toFixed(2))
+      );
 
-        console.log(this.sessionId, this.sessionDetails)
-        this.initPatientConditions()
+      this.gameDetails = game.game_by_pk;
+      console.log('gameDetails:', this.gameDetails);
 
-        this.initReactionChart(this.sessionDetails)
-        this.initAchievementChart(this.sessionDetails)
+      this.initAchievementChart(this.gameDetails.id);
 
-        // prepare activity level-analytics
-        for (const activityId in this.sessionDetails.sessionAnalytics) {
+      // // work out time duration
+      // if (this.gameDetails.createdAt && this.gameDetails.endedAt) {
+      //   this.gameDetails.timeDuration =
+      //     this.analyticsService.calculateTimeDuration(
+      //       this.gameDetails.createdAt,
+      //       this.gameDetails.endedAt
+      //     );
+      // }
 
-          const activity = {
-            id: activityId,
-            createdAt: 1,
-            name: '',
-            prompt: 'Visual, Auditory',
-            duration: 0,
-            durationInStr: '',
-            reps: 10,
-            correctMotions: 8,
-            achievementRatio: 80,
-            reactionTime: 4000,
-            events: []
-          }
+      // this.analyticsService
+      //   .getAnalytics([this.gameId])
+      //   .subscribe((sessionAnalytics: any) => {
+      //     let performanceRatio = 0;
+      //     let totalEventsPerSession = 0;
+      //     let avgReactionTime = 0;
+      //     const session = sessionAnalytics[this.gameId!];
+      //     this.gameDetails.sessionAnalytics = session;
+      //     for (const activity in session) {
+      //       for (const event of session[activity].events) {
+      //         // console.log('event:', event)
+      //         performanceRatio += event.score * 100;
+      //         avgReactionTime += event.reactionTime;
+      //         totalEventsPerSession++;
+      //       }
+      //     }
+      //     performanceRatio = performanceRatio / totalEventsPerSession;
+      //     performanceRatio = Math.round(performanceRatio * 100) / 100;
+      //     this.gameDetails.totalPerformanceRatio = performanceRatio;
+      //     this.gameDetails.avgReactionTime = parseFloat(
+      //       (avgReactionTime / totalEventsPerSession).toFixed(2)
+      //     );
 
-          const activityEvents: Array<ActivityEvent> = this.sessionDetails.sessionAnalytics[activityId].events
-          activity.events = this.sessionDetails.sessionAnalytics[activityId].events
+      //     console.log(this.gameId, this.gameDetails);
+      //     this.initPatientConditions();
 
-          if (!activityEvents || !Array.isArray(activityEvents) || !activityEvents.length) {
-            return
-          }
+      //     this.initReactionChart(this.gameDetails);
+      //     this.initAchievementChart(this.gameDetails);
 
-          if (activityEvents[0].activityName && activityEvents[0].createdAt) {
-            activity.name = activityEvents[0].activityName
-            activity.createdAt = activityEvents[0].createdAt
-          }
+      //     // prepare activity level-analytics
+      //     for (const activityId in this.gameDetails.sessionAnalytics) {
+      //       const activity = {
+      //         id: activityId,
+      //         createdAt: 1,
+      //         name: '',
+      //         prompt: 'Visual, Auditory',
+      //         duration: 0,
+      //         durationInStr: '',
+      //         reps: 10,
+      //         correctMotions: 8,
+      //         achievementRatio: 80,
+      //         reactionTime: 4000,
+      //         events: [],
+      //       };
 
-          // edge case -- handle later
-          if (activityEvents.length === 1) {
-            activity.duration = 60000 / 1000
-          } else {
-            const minTime = activityEvents[0].createdAt
-            const maxTime = activityEvents[activityEvents.length - 1].createdAt
-            if (minTime && maxTime) {
-              activity.duration = (maxTime - minTime) / 1000 // duration in seconds
-              activity.durationInStr = this.secondsToTime(activity.duration)
-            }
-          }
+      //       const activityEvents: Array<ActivityEvent> =
+      //         this.gameDetails.sessionAnalytics[activityId].events;
+      //       activity.events =
+      //         this.gameDetails.sessionAnalytics[activityId].events;
 
-          let totalNumEvents = 0
-          let incorrectMotions = 0
-          let totalReactionTime = 0
-          for (const event of activityEvents) {
-            // build this below JSON struct and append it to the array
-            if (event.reactionTime) {
-              totalReactionTime += event.reactionTime
-            }
-            if (event.score === 0) {
-              incorrectMotions++
-            }
-            totalNumEvents++
-          }
+      //       if (
+      //         !activityEvents ||
+      //         !Array.isArray(activityEvents) ||
+      //         !activityEvents.length
+      //       ) {
+      //         return;
+      //       }
 
-          activity.reps = totalNumEvents
-          activity.correctMotions = totalNumEvents - incorrectMotions
-          activity.achievementRatio = parseFloat(((activity.correctMotions / totalNumEvents) * 100).toFixed(2))
-          activity.reactionTime = parseFloat((totalReactionTime / totalNumEvents).toFixed(2))
+      //       if (activityEvents[0].activityName && activityEvents[0].createdAt) {
+      //         activity.name = activityEvents[0].activityName;
+      //         activity.createdAt = activityEvents[0].createdAt;
+      //       }
 
-          this.activityDetails.push(activity)
-        }
-        this.fetchSessionCompletionRatio(this.sessionId)
-      })
-    })
+      //       // edge case -- handle later
+      //       if (activityEvents.length === 1) {
+      //         activity.duration = 60000 / 1000;
+      //       } else {
+      //         const minTime = activityEvents[0].createdAt;
+      //         const maxTime =
+      //           activityEvents[activityEvents.length - 1].createdAt;
+      //         if (minTime && maxTime) {
+      //           activity.duration = (maxTime - minTime) / 1000; // duration in seconds
+      //           activity.durationInStr = this.secondsToTime(activity.duration);
+      //         }
+      //       }
+
+      //       let totalNumEvents = 0;
+      //       let incorrectMotions = 0;
+      //       let totalReactionTime = 0;
+      //       for (const event of activityEvents) {
+      //         // build this below JSON struct and append it to the array
+      //         if (event.reactionTime) {
+      //           totalReactionTime += event.reactionTime;
+      //         }
+      //         if (event.score === 0) {
+      //           incorrectMotions++;
+      //         }
+      //         totalNumEvents++;
+      //       }
+
+      //       activity.reps = totalNumEvents;
+      //       activity.correctMotions = totalNumEvents - incorrectMotions;
+      //       activity.achievementRatio = parseFloat(
+      //         ((activity.correctMotions / totalNumEvents) * 100).toFixed(2)
+      //       );
+      //       activity.reactionTime = parseFloat(
+      //         (totalReactionTime / totalNumEvents).toFixed(2)
+      //       );
+
+      //       this.activityDetails.push(activity);
+      //     }
+      //     this.fetchSessionCompletionRatio(this.gameId);
+      //   });
+    });
   }
 
-  initPatientConditions() {
-    const conditions = this.sessionDetails.patientByPatient.medicalConditions
-    for (const condition in conditions) {
-      if (conditions[condition] === true) {
-        this.patientConditions += `${condition}, `
-      }
-    }
+  // initPatientConditions() {
+  //   const conditions = this.gameDetails.patientByPatient.medicalConditions;
+  //   for (const condition in conditions) {
+  //     if (conditions[condition] === true) {
+  //       this.patientConditions += `${condition}, `;
+  //     }
+  //   }
 
-    if (this.patientConditions) {
-      this.patientConditions = this.patientConditions.slice(0, this.patientConditions.length - 2)
-    }
-  }
+  //   if (this.patientConditions) {
+  //     this.patientConditions = this.patientConditions.slice(
+  //       0,
+  //       this.patientConditions.length - 2
+  //     );
+  //   }
+  // }
 
   initReactionChart(chartData: Session) {
     // pick the first session
-    const sessionId = chartData.id
+    const sessionId = chartData.id;
 
-    if (!sessionId) return
+    if (!sessionId) return;
 
     // building chartjs DS
-    const labels = new Set()
-    const reactionData = []
+    const labels = new Set();
+    const reactionData = [];
 
-    console.log('initReactionChart:chartData:sessionAnalytics', chartData.sessionAnalytics)
+    console.log(
+      'initReactionChart:chartData:sessionAnalytics',
+      chartData.sessionAnalytics
+    );
 
     // for (const activity in chartData.sessionAnalytics) {
     //   console.log('activity:', activity)
     // }
 
     for (const activity in chartData.sessionAnalytics) {
-      const activityDetails = chartData.sessionAnalytics[activity].events
-      if (!activityDetails) continue
+      const activityDetails = chartData.sessionAnalytics[activity].events;
+      if (!activityDetails) continue;
 
-      let totalReactionTime = 0
+      let totalReactionTime = 0;
       for (const eventDetail of activityDetails) {
-        labels.add(eventDetail.activityName)
+        labels.add(eventDetail.activityName);
 
         if (eventDetail.reactionTime) {
-          totalReactionTime += parseFloat(eventDetail.reactionTime)
+          totalReactionTime += parseFloat(eventDetail.reactionTime);
         }
       }
 
       // building average reaction time for each activity
-      let avgReactionTime = totalReactionTime / activityDetails.length
-      avgReactionTime = parseFloat(avgReactionTime.toFixed(2))
-      reactionData.push(avgReactionTime)
+      let avgReactionTime = totalReactionTime / activityDetails.length;
+      avgReactionTime = parseFloat(avgReactionTime.toFixed(2));
+      reactionData.push(avgReactionTime);
     }
 
-    console.log('initReactionChart:labels:', labels)
-    console.log('initReactionChart:reactionData:', reactionData)
+    console.log('initReactionChart:labels:', labels);
+    console.log('initReactionChart:reactionData:', reactionData);
 
     const data = {
       labels: [...labels],
-      datasets: [{
-        data: [...reactionData],
-        backgroundColor: '#000066',
-        fill: true,
-        label: 'activities'
-      }]
-    }
+      datasets: [
+        {
+          data: [...reactionData],
+          backgroundColor: '#000066',
+          fill: true,
+          label: 'activities',
+        },
+      ],
+    };
 
     const config: ChartConfiguration = {
       type: 'bar',
@@ -220,34 +259,34 @@ export class SessionsDetailsComponent implements OnInit {
               display: true,
               text: 'Avg Reaction Time (Milliseconds)',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              padding: 12,
             },
             ticks: {
               callback: (value: any) => `${value}ms`,
               font: {
-                size: 14
+                size: 14,
               },
-              color: '#000066'
-            }
+              color: '#000066',
+            },
           },
           x: {
             title: {
               display: true,
               text: 'Activities',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              padding: 12,
             },
             ticks: {
               font: {
-                size: 14
+                size: 14,
               },
-              color: '#000066'
-            }
-          }
+              color: '#000066',
+            },
+          },
         },
         plugins: {
           datalabels: {
@@ -256,8 +295,8 @@ export class SessionsDetailsComponent implements OnInit {
             offset: 10,
             color: 'white',
             font: {
-              size: 14
-            }
+              size: 14,
+            },
           },
           title: {
             display: false,
@@ -265,179 +304,138 @@ export class SessionsDetailsComponent implements OnInit {
             text: 'Reaction Time',
             fullSize: true,
             font: {
-              size: 28
-            }
+              size: 28,
+            },
           },
           legend: {
             // don't show label
-            display: false
-          }
+            display: false,
+          },
         },
-      }
-    }
+      },
+    };
 
-    const canvas = <HTMLCanvasElement>(document.getElementById('sessionReactionTimeChart'));
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('sessionReactionTimeChart')
+    );
     const ctx = canvas.getContext('2d');
     if (ctx) {
       if (this.sessionReactionTimeChart != null) {
-        this.sessionReactionTimeChart.destroy()
+        this.sessionReactionTimeChart.destroy();
       }
-      this.sessionReactionTimeChart = new Chart(ctx, config)
+      this.sessionReactionTimeChart = new Chart(ctx, config);
     }
   }
 
-  initAchievementChart(chartData: Session) {
-    // pick the first session
-    const sessionId = chartData.id
-    if (!sessionId) return
+  async initAchievementChart(gameId: string) {
+    const response = await this.graphqlService.gqlRequest(
+      GqlConstants.GAME_ACHIEVEMENT_CHART,
+      { gameId },
+      true
+    );
 
-    // building chartjs DS
-    const labels = new Set()
-    const achievementData = []
+    const gameAchievementRatioData: { data: number[]; labels: string[] } =
+      response.gameAchievementRatio.data;
 
-    for (const activity in chartData.sessionAnalytics) {
-      console.log('initAchievementChart:activity:', activity)
+    const backgroundColor = ['#00BD3E', '#718096'];
 
-      const activityDetails = chartData.sessionAnalytics[activity].events
+    console.log('gameAchievementRatio', response);
 
-      if (!activityDetails) continue
-
-      let success = 0;
-      for (const eventDetail of activityDetails) {
-        if (eventDetail.activityName && eventDetail.score) {
-          labels.add(eventDetail.activityName)
-          success += eventDetail.score * 100
-        }
-      }
-
-      success = success / (activityDetails.length)
-
-      // work-around for calibration
-      if (activityDetails[0].activityName === 'Calibration') {
-        success = success * 2
-      }
-
-      achievementData.push(success)
-    }
-
-    console.log('initAchievementChart:labels', labels)
-    console.log('initAchievementChart:achievementData', achievementData)
-
-    const data: any = {
-      labels: [...labels],
-      datasets: [{
-        data: [...achievementData],
-        backgroundColor: '#000066',
-        borderColor: '#000066',
-        pointBackgroundColor: '#000066',
-        radius: 6,
-        tension: 0.1,
-        fill: false,
-        label: 'Success Ratio',
-        clip: false
-      }]
-    }
-
+    const data = {
+      labels: gameAchievementRatioData.labels,
+      datasets: [
+        {
+          data: gameAchievementRatioData.data,
+          backgroundColor,
+          borderWidth: 0,
+          hoverOffset: 4,
+        },
+      ],
+    };
     const config: ChartConfiguration = {
-      type: 'line',
+      type: 'pie',
       data: data,
       options: {
-        elements: {
-          point: {
-            hitRadius: 30,
-            hoverRadius: 12
-          }
-        },
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100,
-            title: {
-              display: true,
-              text: '% of correct motions',
-              font: {
-                size: 18
-              },
-              padding: 12
-            },
-            ticks: {
-              callback: (value: any) => `${value}%`,
-              font: {
-                size: 14
-              },
-              stepSize: 20,
-              color: '#000066'
-            }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Day',
-              font: {
-                size: 18
-              },
-              padding: 12
-            },
-            ticks: {
-              font: {
-                size: 14
-              },
-              color: '#000066'
-            }
-          }
-        },
         plugins: {
+          tooltip: {
+            enabled: false,
+          },
           legend: {
-            // don't show label
-            display: false
-          }
-        }
-      }
-    }
+            position: 'bottom',
+            labels: {
+              font: {
+                size: 16,
+              },
+            },
+          },
+          datalabels: {
+            font: {
+              size: 26,
+              weight: 'bold',
+            },
+            color: ['#000000', '#ffffff'],
+          },
+        },
+      },
+      plugins: [ChartDataLabels],
+    };
 
-    const canvas = <HTMLCanvasElement>(document.getElementById('sessionAchievementChart'));
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('sessionAchievementChart')
+    );
     const ctx = canvas.getContext('2d');
     if (ctx) {
       if (this.sessionAchievementChart != null) {
-        this.sessionAchievementChart.destroy()
+        this.sessionAchievementChart.destroy();
       }
-      this.sessionAchievementChart = new Chart(ctx, config)
+      this.sessionAchievementChart = new Chart(ctx, config);
     }
   }
 
   secondsToTime(seconds: number) {
-    const h = Math.floor(seconds / 3600).toString().padStart(2, '0')
-    const m = Math.floor(seconds % 3600 / 60).toString().padStart(2, '0')
-    const s = Math.floor(seconds % 60).toString().padStart(2, '0')
+    const h = Math.floor(seconds / 3600)
+      .toString()
+      .padStart(2, '0');
+    const m = Math.floor((seconds % 3600) / 60)
+      .toString()
+      .padStart(2, '0');
+    const s = Math.floor(seconds % 60)
+      .toString()
+      .padStart(2, '0');
     return `${h}:${m}:${s}`;
   }
 
   fetchSessionCompletionRatio(sessionId: string) {
-    this.analyticsService.getSessionCompletionRatio(sessionId).subscribe((result: any) => {
-      result = result.toFixed(2)
-      this.sessionCompletionRatio = result
-    })
+    this.analyticsService
+      .getSessionCompletionRatio(sessionId)
+      .subscribe((result: any) => {
+        result = result.toFixed(2);
+        this.sessionCompletionRatio = result;
+      });
   }
 
   openActivityDetailsPage(activityId: string, activityDetails: ActivityEvent) {
-    this.router.navigate(
-      ['/app/activities/', activityId],
-      {
-        queryParams: {
-          activityDetails: JSON.stringify(activityDetails),
-          patientIdentifier: this.sessionDetails.patientByPatient.identifier
-        }
-      }
-    )
+    this.router.navigate(['/app/activities/', activityId], {
+      queryParams: {
+        activityDetails: JSON.stringify(activityDetails),
+        patientIdentifier: this.gameDetails.patientByPatient.identifier,
+      },
+    });
   }
 
   downloadSession() {
-    const data = JSON.stringify(this.sessionDetails.sessionAnalytics)
-    const a = document.createElement("a")
-    const file = new Blob([data], { type: 'application/json' })
-    a.href = URL.createObjectURL(file)
-    a.download = `${this.sessionId}_analytics.json`
+    const data = JSON.stringify(this.gameDetails);
+    const a = document.createElement('a');
+    const file = new Blob([data], { type: 'application/json' });
+    a.href = URL.createObjectURL(file);
+    a.download = `${this.gameId}_analytics.json`;
     a.click();
+  }
+
+  getName(game: string): string {
+    return game
+      .split('_')
+      .map((str) => capitalize(str))
+      .join(' ');
   }
 }
