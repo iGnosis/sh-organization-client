@@ -50,26 +50,23 @@ export class SessionsDetailsComponent implements OnInit {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.gameId = params.get('id') || '';
 
-      const game = await this.graphqlService.client.request(
+      const gameDetails = await this.graphqlService.client.request(
         GqlConstants.GET_GAME_BY_PK,
         {
           gameId: this.gameId,
         }
       );
 
-      this.gameDetails = game.game_by_pk;
+      this.gameDetails = gameDetails.game_by_pk;
       console.log('gameDetails:', this.gameDetails);
 
       this.initAchievementChart(this.gameDetails.id);
 
-      // // work out time duration
-      // if (this.gameDetails.createdAt && this.gameDetails.endedAt) {
-      //   this.gameDetails.timeDuration =
-      //     this.analyticsService.calculateTimeDuration(
-      //       this.gameDetails.createdAt,
-      //       this.gameDetails.endedAt
-      //     );
-      // }
+      const { game, id } = this.gameDetails;
+
+      if (game === 'sit_stand_achieve' || 'beat_boxer') {
+        this.initInitiationTimeChart(id, game);
+      }
 
       // this.analyticsService
       //   .getAnalytics([this.gameId])
@@ -193,55 +190,54 @@ export class SessionsDetailsComponent implements OnInit {
   //   }
   // }
 
-  initReactionChart(chartData: Session) {
-    // pick the first session
-    const sessionId = chartData.id;
-
-    if (!sessionId) return;
-
+  initInitiationTimeChart(gameId: string, game: string) {
     // building chartjs DS
-    const labels = new Set();
-    const reactionData = [];
-
-    console.log(
-      'initReactionChart:chartData:sessionAnalytics',
-      chartData.sessionAnalytics
-    );
 
     // for (const activity in chartData.sessionAnalytics) {
     //   console.log('activity:', activity)
     // }
 
-    for (const activity in chartData.sessionAnalytics) {
-      const activityDetails = chartData.sessionAnalytics[activity].events;
-      if (!activityDetails) continue;
+    // const config = {
+    //   type: 'bar',
+    //   data: data,
+    //   options: {
+    //     scales: {
+    //       y: {
+    //         beginAtZero: true,
+    //       },
+    //     },
+    //   },
+    // };
 
-      let totalReactionTime = 0;
-      for (const eventDetail of activityDetails) {
-        labels.add(eventDetail.activityName);
+    const initiationChartData = {
+      lables: ['sit', 'stand', 'sit', 'stand', 'sit', 'stand', 'stand'].map(
+        (str) => capitalize(str)
+      ),
+      initiationData: [650, 590, 800, 810, 560, 550, 400],
+      results: [
+        'correct',
+        'failure',
+        'failure',
+        'correct',
+        'failure',
+        'correct',
+        'failure',
+      ],
+    };
 
-        if (eventDetail.reactionTime) {
-          totalReactionTime += parseFloat(eventDetail.reactionTime);
-        }
-      }
-
-      // building average reaction time for each activity
-      let avgReactionTime = totalReactionTime / activityDetails.length;
-      avgReactionTime = parseFloat(avgReactionTime.toFixed(2));
-      reactionData.push(avgReactionTime);
-    }
-
-    console.log('initReactionChart:labels:', labels);
-    console.log('initReactionChart:reactionData:', reactionData);
+    const backgroundColor = initiationChartData.results.map((result) =>
+      result === 'correct' ? '#00BD3E' : '#718096'
+    );
 
     const data = {
-      labels: [...labels],
+      labels: initiationChartData.lables,
       datasets: [
         {
-          data: [...reactionData],
-          backgroundColor: '#000066',
+          data: initiationChartData.initiationData,
+          backgroundColor,
           fill: true,
-          label: 'activities',
+          label: this.getName(game),
+          hoverBackgroundColor: backgroundColor,
         },
       ],
     };
@@ -257,34 +253,37 @@ export class SessionsDetailsComponent implements OnInit {
             beginAtZero: true,
             title: {
               display: true,
-              text: 'Avg Reaction Time (Milliseconds)',
+              text: 'Reaction Time (Milliseconds)',
               font: {
                 size: 18,
               },
               padding: 12,
+              color: '#000000',
             },
             ticks: {
-              callback: (value: any) => `${value}ms`,
+              callback: (value: any) => `${value}`,
               font: {
                 size: 14,
               },
-              color: '#000066',
+              stepSize: 200,
+              color: '#000000',
             },
           },
           x: {
             title: {
               display: true,
-              text: 'Activities',
+              text: 'Total Attempts',
               font: {
                 size: 18,
               },
               padding: 12,
+              color: '#000000',
             },
             ticks: {
               font: {
                 size: 14,
               },
-              color: '#000066',
+              color: '#000000',
             },
           },
         },
@@ -316,7 +315,7 @@ export class SessionsDetailsComponent implements OnInit {
     };
 
     const canvas = <HTMLCanvasElement>(
-      document.getElementById('sessionReactionTimeChart')
+      document.getElementById('sessionInitiationTimeChart')
     );
     const ctx = canvas.getContext('2d');
     if (ctx) {
@@ -348,7 +347,8 @@ export class SessionsDetailsComponent implements OnInit {
           data: gameAchievementRatioData.data,
           backgroundColor,
           borderWidth: 0,
-          hoverOffset: 4,
+          hoverOffset: 6,
+          hoverBackgroundColor: ['#03ad3b', '#5d697a'],
         },
       ],
     };

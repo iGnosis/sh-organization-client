@@ -104,7 +104,7 @@
             </div>
             <div class="card-body">
               <div class="info mb-7">
-                <h2 class="h4">Identifer: {{ gameDetails.patientByPatient.identifier }}</h2>
+                <h2 class="h4">Identifer: {{ gameDetails.patient }}</h2>
                 <span class="d-block text-muted text-sm font-semibold">Session Date: {{ gameDetails.createdAt | date
                   }}</span>
               </div>
@@ -130,14 +130,14 @@
         <div class="card">
           <div class="card-body">
             <div class="card-header">
-              <h2 style="color: #000066;">Achievement Ratio</h2><br>
-              <span>
+              <h2 style="color: #000066;">Initiation Time</h2><br>
+              <!-- <span>
                 <h5 style="color: #000066;">
-                  {{ gameDetails.careplanByCareplan.name }}
+                  {{ gameDetails.game }}
                 </h5>
-              </span>
+              </span> -->
             </div>
-            <canvas class="chart-canvas" id="sessionAchievementChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="sessionInitiationTimeChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
@@ -145,14 +145,14 @@
         <div class="card">
           <div class="card-body">
             <div class="card-header">
-              <h2 style="color: #000066;">Reaction Time</h2><br>
-              <span>
+              <!-- <span>
                 <h5 style="color: #000066;">
-                  {{ gameDetails.careplanByCareplan.name }}
+                  {{ gameDetails.game && getName(gameDetails.game) }}
                 </h5>
-              </span>
+              </span> -->
+              <h2 style="color: #000066;">Achievement Ratio</h2><br>
             </div>
-            <canvas class="chart-canvas" id="sessionReactionTimeChart" width="500" height="500"></canvas>
+            <canvas class="chart-canvas" id="sessionAchievementChart" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
