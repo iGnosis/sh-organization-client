@@ -26,6 +26,9 @@ import {
   Session,
 } from 'src/app/pointmotion';
 import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { groupBy as lodashGroupBy, capitalize } from 'lodash';
+import * as moment from 'moment';
 
 export class Captain {
   careplanByCareplan: string;
@@ -58,6 +61,10 @@ export class PatientDetailsComponent implements OnInit {
   getActivityCount: number;
   getEstimatedActivityDuration: number;
   // getCarePlanCount : number;
+
+  engagementChartFilter?: string = undefined;
+
+  activityFilterOptions = ['sit_stand_achieve', 'beat_boxer', 'sound_explorer'];
 
   toggleFilterDiv() {
     this.isShowFilter = !this.isShowFilter;
@@ -138,14 +145,13 @@ export class PatientDetailsComponent implements OnInit {
         // by default, get data for past 7 days
         this.endDate = new Date();
         this.startDate = new Date(new Date().setDate(new Date().getDate() - 7));
-        this.initAchievementChart(
-          this.startDate.toISOString(),
-          this.endDate.toISOString()
-        );
-        this.initEngagementChart(
-          this.startDate.toISOString(),
-          this.endDate.toISOString()
-        );
+        this.startDate.setHours(0, 0, 0, 0);
+
+        this.changeAchievementChart('start', this.startDate);
+        this.changeAchievementChart('end', this.endDate);
+
+        this.changeEngagementChart('start', this.startDate);
+        this.changeEngagementChart('end', this.endDate);
       }
     });
   }
@@ -338,7 +344,7 @@ export class PatientDetailsComponent implements OnInit {
         {
           data: [],
           careplanNames: [], // need this for tooltips
-          backgroundColor: '#000066',
+          backgroundColor: '#2F51AE',
           fill: true,
           label: 'Completion Ratio',
         },
@@ -461,7 +467,7 @@ export class PatientDetailsComponent implements OnInit {
     }
 
     console.log('initEngagementChart:labels:', data.labels);
-    console.log('initEngagementChart:labels:', data.datasets[0].data);
+    console.log('initEngagementChart:dataset:', data.datasets[0].data);
 
     // data.datasets[0].careplanNames = engagementRatioData.map(
     //   (result: EngagementRatio) => result.careplanName
@@ -479,7 +485,11 @@ export class PatientDetailsComponent implements OnInit {
     }
   }
 
-  async initAchievementChart(startDate: string, endDate: string) {
+  async initAchievementChart(
+    startDate: Date,
+    endDate: Date,
+    filter?: string[]
+  ) {
     const data: any = {
       labels: [],
       datasets: [
@@ -559,7 +569,17 @@ export class PatientDetailsComponent implements OnInit {
         plugins: {
           // hide Label 'success ratio'
           legend: {
-            display: false,
+            labels: {
+              color: '#000000',
+              padding: 12,
+              font: {
+                size: 14,
+                weight: '500',
+              },
+            },
+            display: true,
+            position: 'bottom',
+            align: 'center',
           },
           title: {
             display: false,
@@ -580,12 +600,11 @@ export class PatientDetailsComponent implements OnInit {
             caretSize: 15,
             callbacks: {
               label: function (tooltipItem: any) {
-                // console.log('tooltipItem:', tooltipItem)
-                const careplanName =
-                  tooltipItem.dataset.careplanNames[tooltipItem.dataIndex];
-                const successRatio =
-                  tooltipItem.dataset.data[tooltipItem.dataIndex];
-                return `${successRatio.toFixed(2)}%`;
+                // console.log('tooltipItem:', tooltipItem);
+                const data = tooltipItem.dataset.data[tooltipItem.dataIndex];
+                // const successRatio =
+                //   tooltipItem.dataset.data[tooltipItem.dataIndex];
+                return ` ${tooltipItem.dataset.label} - ${data}%`;
               },
             },
           },
@@ -595,28 +614,103 @@ export class PatientDetailsComponent implements OnInit {
 
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+    console.log(startDate, endDate);
+
+    console.dir({
+      startDate,
+      endDate,
+      userTimezone,
+      patientId: this.patientId!,
+      chartType: 'avgAchievementRatio',
+      groupBy: 'day',
+      isGroupByGames: true,
+    });
+
     const achievementRatioData =
       await this.chartService.fetchPatientChartableData(
-        startDate,
-        endDate,
+        startDate.toISOString(),
+        endDate.toISOString(),
         userTimezone,
         this.patientId!,
         'avgAchievementRatio',
         'day',
-        false
+        true
       );
 
     console.log('achievementRatioData::', achievementRatioData);
 
+    let games: string[];
+    if (!filter) {
+      games = ['sit_stand_achieve', 'beat_boxer', 'sound_explorer'];
+    } else {
+      games = filter;
+    }
+
     const chartResults: {
-      avgAchievementPercentage: string;
+      avgAchievementPercentage: number;
+      game: string;
       createdAt: string;
     }[] = achievementRatioData.patientChart.data.results;
 
-    chartResults.map((result) => {
-      data.labels.push(result.createdAt.split('T')[0].split('-')[2]);
-      data.datasets[0].data.push(result.avgAchievementPercentage);
+    const groupByGame = lodashGroupBy(chartResults, 'game');
+    console.log('groupByGame::', groupByGame);
+
+    const generatedDates = this.generateDates(startDate, endDate);
+
+    generatedDates.forEach((date) => {
+      data.labels.push(date.split('T')[0].split('-')[2]);
     });
+
+    const dataSet = [];
+
+    for (const game in groupByGame) {
+      // filtering the games
+      if (!games.includes(game)) {
+        continue;
+      }
+
+      const data: (number | null)[] = [];
+
+      const existingDates = groupByGame[game].map((val) =>
+        new Date(val.createdAt).toISOString()
+      );
+      const stripDates = existingDates.map((val) => val.split('T')[0]);
+
+      generatedDates.forEach((gDate) => {
+        if (!stripDates.includes(gDate)) {
+          data.push(0);
+        } else {
+          groupByGame[game].forEach((game) => {
+            const strippedDate = new Date(game.createdAt)
+              .toISOString()
+              .split('T')[0];
+            if (
+              new Date(gDate).getTime() - new Date(strippedDate).getTime() ===
+              0
+            ) {
+              data.push(game.avgAchievementPercentage);
+            }
+          });
+        }
+      });
+
+      dataSet.push({
+        label: game
+          .split('_')
+          .map((str) => capitalize(str))
+          .join(' '),
+        data,
+        fill: true,
+        tension: 0.1,
+        // borderColor: '#0ff011',
+      });
+    }
+
+    console.log(dataSet);
+
+    data.datasets = dataSet;
+
+    // data.labels.push(result.createdAt.split('T')[0].split('-')[2]);
 
     // data.datasets[0].careplanNames = results.map(
     //   (result: AchievementRatio) => result.careplanName
@@ -639,6 +733,7 @@ export class PatientDetailsComponent implements OnInit {
     this.dataSource.paginator = this.tableOnePaginator;
     localStorage.getItem('reload');
   }
+
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input');
     if (this.isRowsChecked) {
@@ -668,5 +763,98 @@ export class PatientDetailsComponent implements OnInit {
 
   openSessionDetailsPage(sessionId: string) {
     this.router.navigate(['/app/sessions/', sessionId]);
+  }
+
+  engagementStartDate: Date;
+  engagementEndDate?: Date;
+  changeEngagementChart(type: 'start' | 'end', date: Date) {
+    console.log(`${type}: ${date}`);
+    if (!date) return;
+    switch (type) {
+      case 'start':
+        if (date !== this.engagementStartDate) {
+          date.setHours(0, 0, 0, 0);
+          this.engagementStartDate = date;
+          this.engagementEndDate = undefined;
+        }
+        break;
+      case 'end':
+        if (date !== this.engagementEndDate) {
+          this.engagementEndDate = date;
+        }
+        break;
+    }
+    if (this.engagementStartDate && this.engagementEndDate) {
+      this.initEngagementChart(
+        this.engagementStartDate.toISOString(),
+        this.engagementEndDate.toISOString()
+      );
+    }
+  }
+
+  achievementStartDate: Date;
+  achievementEndDate?: Date;
+  changeAchievementChart(type: 'start' | 'end', date: Date) {
+    console.log(`${type}: ${date}`);
+    if (!date) return;
+
+    switch (type) {
+      case 'start':
+        if (date !== this.achievementStartDate) {
+          date.setHours(0, 0, 0, 0);
+          this.achievementStartDate = date;
+          this.achievementEndDate = undefined;
+        }
+        break;
+      case 'end':
+        if (date !== this.achievementEndDate) {
+          this.achievementEndDate = date;
+        }
+        break;
+    }
+
+    if (this.achievementStartDate && this.achievementEndDate) {
+      this.initAchievementChart(
+        this.achievementStartDate,
+        this.achievementEndDate
+      );
+    }
+  }
+
+  generateDates(startDate: Date, endDate: Date) {
+    const mStartDate = moment(startDate);
+    const mEndDate = moment(endDate);
+    const generateDates = [];
+
+    while (mStartDate.isBefore(mEndDate)) {
+      generateDates.push(mStartDate.format('YYYY-MM-DD'));
+      mStartDate.add(1, 'day');
+    }
+    return generateDates;
+  }
+
+  filterAchievementRatioChart(event: SubmitEvent) {
+    event.preventDefault();
+    const filters: string[] = [];
+    const form = document.querySelector('#filterAchievementRationForm')!;
+    Array.from(form.querySelectorAll('input')).forEach(function (input) {
+      if (input.checked) {
+        filters.push(input.value);
+      }
+    });
+
+    console.log(filters);
+
+    if (
+      filters.length > 0 &&
+      this.achievementEndDate &&
+      this.achievementStartDate
+    ) {
+      this.initAchievementChart(
+        this.achievementStartDate,
+        this.achievementEndDate,
+        filters
+      );
+    }
   }
 }
