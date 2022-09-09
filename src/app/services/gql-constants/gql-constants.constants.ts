@@ -1,4 +1,3 @@
-
 export const GqlConstants = {
   SEARCH_USER: `query SignIn($email:String, $password:String) {
     user(where: {_and: {email: {_eq: $email}, password: {_eq: $password}}, type: {_eq: provider}}) {
@@ -9,29 +8,24 @@ export const GqlConstants = {
     }
   }`,
 
-  GET_ALL_PATIENTS: `query PatientList($conditions: [String!]) {
-    patient_aggregate(where: {medicalConditions: {_has_keys_any: $conditions}}) {
+  GET_ALL_PATIENTS: `query PatientList {
+    patient_aggregate(where: {nickname: {_is_null: false}}) {
       aggregate {
         count
       }
     }
-    patient(where: {medicalConditions: {_has_keys_any: $conditions}}) {
-      createdAt
+    patient(where: {nickname: {_is_null: false}}) {
       id
-      identifier
-      medicalConditions
+      createdAt
+      nickname
       preferredGenres
-      sessions(order_by: {createdAt: desc}, limit: 1, offset: 0, where: {status: {_neq: trashed}}) {
+      games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
         createdAt
       }
-      sessions_aggregate(where: {status: {_neq: trashed}}) {
+      games_aggregate(where: {endedAt: {_is_null: false}}) {
         aggregate {
           count
         }
-      }
-      primaryTherapistUser {
-        firstName
-        lastName
       }
     }
   }`,
@@ -70,8 +64,8 @@ export const GqlConstants = {
 
   INSERT_PATIENT: `mutation InsertPatient($identifier:String, $medicalConditions:jsonb, $email:String, $careGiverEmail: String, $phoneNumber: String, $careGiverPhoneNumber: String) {
     insert_patient_one(object: {
-      identifier: $identifier, 
-      medicalConditions: $medicalConditions, 
+      identifier: $identifier,
+      medicalConditions: $medicalConditions,
       email: $email,
       careGiverEmail: $careGiverEmail,
       phoneNumber: $phoneNumber,
@@ -128,27 +122,39 @@ export const GqlConstants = {
         }
       }}}`,
 
-  GET_SESSIONS: `query GetSessions($offset: Int, $limit: Int, $patientId: uuid) {
-      session_aggregate(where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
-        aggregate {
-          count
+  GET_GAMES: `query GetGames($offset: Int, $limit: Int, $patientId: uuid) {
+        game_aggregate(where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+          aggregate {
+            count
+          }
         }
-      }
-      session(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, status: {_neq: trashed}}) {
-        id
-        createdAt
-        endedAt
-        careplanByCareplan {
-          name
+        game(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+          id
+          game
+          createdAt
+          endedAt
+          totalDuration
         }
-        patientByPatient {
-          identifier
-          medicalConditions
-        }
-      }
-    }
-  `,
+      }`,
 
+  GET_GAME_BY_PK: `query GetGameByPK($gameId: uuid!) {
+    game_by_pk(id: $gameId) {
+      game
+      endedAt
+      createdAt
+      id
+      patient
+      repsCompleted
+      totalDuration
+      calibrationDuration
+    }
+  }`,
+  GET_PATIENT_CHARTS: `
+  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true) {
+    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames) {
+      data
+    }
+  }`,
   GET_SESSION_BY_PK: `query GetSessionByPk($sessionId: uuid = "") {
     session_by_pk(id: $sessionId) {
       id
@@ -213,7 +219,7 @@ export const GqlConstants = {
       identifier
     }
   }`,
-  GETCAREPLANDETAILS:`query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
+  GETCAREPLANDETAILS: `query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
     careplan(where: {id: {_eq: $careplan}}) {
       name
       id
@@ -236,7 +242,7 @@ export const GqlConstants = {
     }
   }
   `,
-  POST_SESSION_ADDED_DATA:`
+  POST_SESSION_ADDED_DATA: `
   mutation AssignCareplan($patient: uuid, $careplan: uuid) {
     insert_patient_careplan(objects: {patient: $patient, careplan: $careplan}) {
       returning {
@@ -245,13 +251,13 @@ export const GqlConstants = {
     }
   }
   `,
-  DELETE_PATIENT_CAREPLAN:`
+  DELETE_PATIENT_CAREPLAN: `
   mutation DeleteCareplan($patient: uuid, $careplan: uuid) {
     delete_patient_careplan(where: {careplan: {_eq: $careplan}, patient: {_eq: $patient}}) {
       affected_rows
     }
   }`,
-  ADD_PATIENT_IN_CAREPLAN:`
+  ADD_PATIENT_IN_CAREPLAN: `
   query GetCarePlanDetails($careplan: uuid) {
     patient {
       identifier
@@ -263,5 +269,34 @@ export const GqlConstants = {
     }
   }
   `,
+  REQUEST_LOGIN_OTP: `mutation RequestLoginOtp($phoneCountryCode: String!, $phoneNumber: String!) {
+    requestLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber) {
+      data {
+        message
+      }
+    }
+  }`,
+  RESEND_LOGIN_OTP: `mutation ResendLoginOtp($phoneCountryCode: String!, $phoneNumber: String!) {
+    resendLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber) {
+      data {
+        message
+      }
+    }
+  }`,
+  VERIFY_LOGIN_OTP: `mutation VerifyLoginOtp($phoneCountryCode: String!, $phoneNumber: String!, $otp: Int!) {
+    verifyLoginOtp(phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, otp: $otp) {
+      data {
+        token
+      }
+    }
+  }`,
 
-} as const
+  GAME_ACHIEVEMENT_CHART: `query GameAchievementRatio($gameId: ID!) {
+  gameAchievementRatio(gameId: $gameId) {
+    data {
+      labels
+      data
+    }
+  }
+}`,
+};
