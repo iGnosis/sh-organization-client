@@ -150,8 +150,8 @@ export const GqlConstants = {
     }
   }`,
   GET_PATIENT_CHARTS: `
-  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true, $sortBy: SortByEnum, $sortDirection: SortDirectionEnum, $limit: String, $offset: String, $showInactive: Boolean = true) {
-    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames, sortBy: $sortBy, sortDirection: $sortDirection, limit: $limit, offset: $offset, showInactive: $showInactive) {
+  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true) {
+    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames) {
       data
     }
   }`,

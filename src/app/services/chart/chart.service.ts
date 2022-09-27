@@ -8,8 +8,7 @@ import { GraphqlService } from '../graphql/graphql.service';
 type ChartTypeEnum =
   | 'avgAchievementRatio'
   | 'avgCompletionTime'
-  | 'avgEngagementRatio'
-  | 'patientsCompletionHeatmap';
+  | 'avgEngagementRatio';
 type GroupByEnum = 'day' | 'week' | 'month';
 @Injectable({
   providedIn: 'root',
@@ -32,11 +31,6 @@ export class ChartService {
     chartType: ChartTypeEnum,
     groupBy: GroupByEnum,
     isGroupByGames: boolean,
-    sortBy?: string,
-    sortDirection?: string,
-    limit?: string,
-    offset?: string,
-    showInactive?: boolean
   ) {
     return this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENT_CHARTS,
@@ -48,11 +42,6 @@ export class ChartService {
         chartType,
         groupBy,
         isGroupByGames,
-        sortBy,
-        sortDirection,
-        limit,
-        offset,
-        showInactive,
       },
       true
     );
