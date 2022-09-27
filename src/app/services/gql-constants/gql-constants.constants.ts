@@ -150,8 +150,14 @@ export const GqlConstants = {
     }
   }`,
   GET_PATIENT_CHARTS: `
-  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true) {
-    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames) {
+  query PatientChart($startDate: String!, $endDate: String!, $userTimezone: String!, $patientId: ID!, $chartType: ChartTypeEnum!, $groupBy: GroupByEnum!, $isGroupByGames: Boolean = true, $sortBy: SortByEnum, $sortDirection: SortDirectionEnum, $limit: String, $offset: String, $showInactive: Boolean = true) {
+    patientChart(startDate: $startDate, endDate: $endDate, userTimezone: $userTimezone, patientId: $patientId, chartType: $chartType, groupBy: $groupBy, isGroupByGames: $isGroupByGames, sortBy: $sortBy, sortDirection: $sortDirection, limit: $limit, offset: $offset, showInactive: $showInactive) {
+      data
+    }
+  }`,
+  GET_PATIENT_MONTHLY_COMPLETION: `
+  query PatientMonthlyCompletion($startDate: String!, $userTimezone: String!, $sortDirection: SortDirectionEnum!, $sortBy: SortByEnum!, $showInactive: Boolean!, $offset: String!, $limit: String!, $endDate: String!) {
+    patientMonthlyCompletion(endDate: $endDate, limit: $limit, offset: $offset, showInactive: $showInactive, sortBy: $sortBy, sortDirection: $sortDirection, startDate: $startDate, userTimezone: $userTimezone) {
       data
     }
   }`,

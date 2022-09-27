@@ -1,0 +1,68 @@
+<div class="card my-5">
+    <div class="row p-6 align-items-center">
+        <h4 class="pb-3" style="color: #000066;">Patient Monthly Completion</h4>
+        <div class="col-6 row align-items-center">
+            <div class="col-2">
+              <h6 class="mb-0 font-semibold">Sort By</h6>
+            </div>
+            <mat-form-field appearance="fill" class="col-8 details_page alignment_date condition_select">
+                <mat-select placeholder="Sort By" [(value)]="sortBy" (selectionChange)="getHeatmapData()">
+                    <mat-option value="recentActivity">Recent Activity</mat-option>
+                    <mat-option value="overallActivity">Overall Activity</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-6 row align-items-center">
+            <div class="col-4">
+              <h6 class="mb-0 font-semibold">Sort Direction</h6>
+            </div>
+            <mat-form-field appearance="fill" class="col-8 details_page alignment_date condition_select">
+                <mat-select placeholder="Sort Direction" [(value)]="sortDirection" (selectionChange)="getHeatmapData()">
+                    <mat-option value="asc">Ascending</mat-option>
+                    <mat-option value="desc">Descending</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="col-12">
+            <table class="col-12 py-5 rounded-2 bg-white h-50 overflow-y-auto d-block">
+                <ng-container *ngIf="chartData.length">
+                    <tr *ngFor="let patient of chartData">
+                        <td><p class="patient-name">{{getName(patient)}}</p></td>
+                        <td>
+                            <div class="d-flex">
+                                <div *ngFor="let day of initHeatmap(patient)">
+                                    <div class="square w-4 h-4 mx-1" [style.background]="completionColor(day)"></div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-container>
+            </table>
+            <div class="row mt-2">
+                <nav class="col-6" *ngIf="totalPages > 1">
+                    <ul class="pagination">
+                    <li class="page-item" (click)="setPage(offset-1)">
+                        <div class="page-link cursor-pointer">
+                        <i class="bi bi-chevron-left"></i>
+                        </div>
+                    </li>
+                    <li class="page-item" [class.active]="i===offset" *ngFor="let item of [].constructor(totalPages); let i=index"><div (click)="setPage(i)" class="page-link cursor-pointer">{{i+1}}</div></li>
+                    <li class="page-item" (click)="setPage(offset+1)">
+                        <div class="page-link cursor-pointer">
+                        <i class="bi bi-chevron-right"></i>
+                        </div>
+                    </li>
+                    </ul>
+                </nav>
+                <div class="col-6 d-flex justify-content-end">
+                    <div class="form-check form-switch">
+                    <input [checked]="showInactive" (change)="showInactive = !showInactive; getHeatmapData()" class="form-check-input" type="checkbox" name="switch_make_public" id="switch_make_public">
+                    <label class="form-check-label ms-2" for="switch_make_public">
+                        Show Inactive Patients
+                    </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
