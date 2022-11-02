@@ -10,6 +10,7 @@ import { MatTableFilter } from 'mat-table-filter';
 import { Patient } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { Captain, SpaceCraft } from '../patient-details/patient-details.component';
 
 @Component({
@@ -67,7 +68,7 @@ export class PatientsListComponent implements OnInit {
     this.isShowDiv = !this.isShowDiv;
   }
   async reloadPatientList(filters: any) {
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ALL_PATIENTS)
+    const response = await this.graphqlService.gqlRequest(GqlConstants.GET_ALL_PATIENTS, {}, true);
     this.patients = response.patient
     console.log(response.patient)
     this.dataSource.data = response.patient;

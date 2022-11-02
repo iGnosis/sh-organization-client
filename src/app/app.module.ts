@@ -58,6 +58,7 @@ import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup
 import { AccountComponent } from './pages/home/account/account.component';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/sms-otp-login.component';
+import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap/patients-heatmap.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -96,6 +97,7 @@ import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/s
     AccountComponent,
     CallbackComponent,
     SmsOtpLoginComponent,
+    PatientsHeatmapComponent,
   ],
   imports: [
     BrowserModule,

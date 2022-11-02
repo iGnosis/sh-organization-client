@@ -140,7 +140,7 @@ export class PatientDetailsComponent implements OnInit {
         console.log('patientId:', this.patientId);
         // this.eventEmitterService.SentPatientID({data:this.patientId});
         await this.fetchSessions(0);
-        await this.GetAssignedCarePlan();
+        // await this.GetAssignedCarePlan();
 
         // by default, get data for past 7 days
         this.endDate = new Date();

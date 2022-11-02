@@ -30,7 +30,7 @@ export class ChartService {
     patientId: string,
     chartType: ChartTypeEnum,
     groupBy: GroupByEnum,
-    isGroupByGames: boolean
+    isGroupByGames: boolean,
   ) {
     return this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENT_CHARTS,
@@ -42,6 +42,32 @@ export class ChartService {
         chartType,
         groupBy,
         isGroupByGames,
+      },
+      true
+    );
+  }
+
+  fetchPatientMonthlyCompletionData(
+    startDate: string,
+    endDate: string,
+    userTimezone: string,
+    sortBy: string,
+    sortDirection: string,
+    limit: string,
+    offset: string,
+    showInactive: boolean
+  ) {
+    return this.gqlService.gqlRequest(
+      GqlConstants.GET_PATIENT_MONTHLY_COMPLETION,
+      {
+        startDate,
+        endDate,
+        userTimezone,
+        sortBy,
+        sortDirection,
+        limit,
+        offset,
+        showInactive,
       },
       true
     );

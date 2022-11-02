@@ -155,6 +155,12 @@ export const GqlConstants = {
       data
     }
   }`,
+  GET_PATIENT_MONTHLY_COMPLETION: `
+  query PatientMonthlyCompletion($startDate: String!, $userTimezone: String!, $sortDirection: SortDirectionEnum!, $sortBy: SortByEnum!, $showInactive: Boolean!, $offset: String!, $limit: String!, $endDate: String!) {
+    patientMonthlyCompletion(endDate: $endDate, limit: $limit, offset: $offset, showInactive: $showInactive, sortBy: $sortBy, sortDirection: $sortDirection, startDate: $startDate, userTimezone: $userTimezone) {
+      data
+    }
+  }`,
   GET_SESSION_BY_PK: `query GetSessionByPk($sessionId: uuid = "") {
     session_by_pk(id: $sessionId) {
       id
