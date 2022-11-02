@@ -1,27 +1,30 @@
 <!-- Header -->
-<header class="px-3 px-lg-7 pt-7">
+<header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
-      <div class="row align-items-center">
+      <div class="row custom_alignment p-5">
         <div class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
-          <h1 class="h2 mb-0 ls-tight">Patients</h1>
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <router-outlet></router-outlet>
+          <h1 class="h2 mb-0 ls-tight heading_text mt-5">Patients List</h1>
+          <!-- <avatar text="YA" [bgAuto]="true" size="lg"></avatar> -->
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
-          <div class="mx-n1">
-            <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+          <!-- <div class="mx-n1">
+            <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 ">
               <span class=" pe-2">
                 <i class="bi bi-plus "></i>
               </span>
               <span>Add Patient</span>
             </a>
-          </div>
+          </div> -->
         </div>
       </div>
       <!-- Nav -->
       <!-- {{ selectedMedicalConditions | json }} -->
-      <ul class="nav nav-tabs overflow-x mt-2">
+      <!-- <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
           <a (click)="selectedMedicalConditions = allMedicalConditions" class="nav-link font-regular active"
             [ngClass]="{'active': selectedMedicalConditions.length > 1}">All
@@ -34,119 +37,11 @@
             {{condition}}
           </a>
         </li>
-      </ul>
+      </ul> -->
     </div>
   </div>
 </header>
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-
-  <div class="container-xl mb-5">
-    <div class="input-group input-group-sm input-group-inline">
-      <span class="input-group-text pe-2">
-        <i class="bi bi-search"></i>
-      </span>
-      <input type="text" class="form-control" placeholder="Search Patient Details" aria-label="Search"
-        aria-describedby="">
-    </div>
-  </div>
-  <!-- Container -->
-  <div class="container-xl mt-5">
-    <div class="rounded-top bg-light p-5">
-      <div class="row">
-        <div class="col">
-          <h6>Patient List</h6>
-        </div>
-        <div class="col text-end">
-          <span class="me-3">1-10 of 67 </span>
-
-          <span role="button" class="me-1">
-            < </span>
-              <span role="button"> > </span>
-              <!-- <i class="fa fa-less-than me-1"></i>
-            <i class="fa fa-greater-than"></i> -->
-        </div>
-      </div>
-    </div>
-    <div class="table-responsive">
-      <table class="table table-hover table-nowrap">
-        <thead class="thead-light  bg-secondary">
-          <tr>
-            <th class="text-lg" scope="col">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckAll">
-                <label class="form-check-label" for="flexCheckAll"></label>
-              </div>
-            </th>
-            <th scope="col">Identifier</th>
-            <th scope="col">Medical Condition</th>
-            <th scope="col">Last Session</th>
-            <th scope="col"># Sessions</th>
-            <th scope="col">Primary Therapist</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody class="bg-light">
-          <tr *ngFor="let patient of patients">
-            <td class="text-lg" scope="col">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckRow1">
-                <label class="form-check-label" for="flexCheckRow1"></label>
-              </div>
-            </td>
-            <td>
-              <a class="text-heading font-semibold" href="/app/patients/{{patient.id}}">
-                {{patient.identifier}}
-              </a>
-            </td>
-            <td>
-              <span class="badge bg-soft-primary m-2"
-                *ngFor="let condition of patient.medicalConditions | keyvalue">{{condition.key}}</span>
-            </td>
-            <td>
-              <span *ngFor="let session of patient.sessions">
-                {{ session.createdAt | date:'short'}}
-                <!-- Hacky shit. Expects the API to only return 1 result here. -->
-              </span>
-            </td>
-            <td>
-              {{ patient.sessions_aggregate?.aggregate?.count || 0}}
-            </td>
-            <td>
-              {{ patient.primaryTherapistUser?.firstName}} {{ patient.primaryTherapistUser?.lastName}}
-            </td>
-            <td class="text-end">
-              <div class="dropdown">
-                <a class="text-muted" (click)="null" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                  aria-expanded="false">
-                  <i class="bi bi-three-dots-vertical"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-end">
-                  <a href="#!" class="dropdown-item">
-                    Action
-                  </a>
-                  <a href="#!" class="dropdown-item">
-                    Another action
-                  </a>
-                  <a href="#!" class="dropdown-item">
-                    Something else here
-                  </a>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="row p-5 bg-light">
-      <div class="col">
-        Showing 10 items out of 67 results found
-      </div>
-      <div class="col text-end">
-        <span role="button" class="me-1">
-          < </span>
-            <span role="button"> > </span>
-      </div>
-    </div>
-  </div>
+  <app-patients-list></app-patients-list>
 </main>

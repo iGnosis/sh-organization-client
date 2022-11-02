@@ -12,9 +12,9 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class SetPasswordComponent implements OnInit {
 
-  code: string = ''
-  password: string = ''
-  confirmPassword: string = ''
+  code = ''
+  password = ''
+  confirmPassword = ''
   errors = []
 
   constructor(

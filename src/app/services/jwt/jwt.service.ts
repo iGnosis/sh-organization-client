@@ -1,22 +1,53 @@
 import { Injectable } from '@angular/core';
+import jwtDecode from 'jwt-decode';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class JwtService {
+  private currentToken = new Subject<string>();
+  private tokenSetInterval: any;
 
-  private jwt?: string
-  private TOKEN = 'token'
-  
-  constructor() {
-    this.jwt = localStorage.getItem(this.TOKEN) || ''
+  constructor() {}
+
+  watchToken(): Observable<any> {
+    return this.currentToken.asObservable();
   }
 
-  getToken(): string {
-    return localStorage.getItem(this.TOKEN) || ''
+  isAuthenticated() {
+    const accessToken = this.getToken();
+
+    if (!accessToken) {
+      return false;
+    }
+
+    const decodedToken: {
+      iat: number;
+      exp: number;
+    } = jwtDecode(accessToken);
+
+    const nowUnixEpochInSecs = new Date().getTime() / 1000;
+    const diffInSecs = nowUnixEpochInSecs - decodedToken.exp;
+
+    // token stays valid for 24hrs.
+    if (diffInSecs >= 0) {
+      return false;
+    }
+
+    return true;
+  }
+
+  clearTokens() {
+    localStorage.removeItem('accessToken');
   }
 
   setToken(token: string) {
-    localStorage.setItem(this.TOKEN, token)
+    localStorage.setItem('accessToken', token);
+  }
+
+  getToken() {
+    const token = localStorage.getItem('accessToken');
+    return token;
   }
 }

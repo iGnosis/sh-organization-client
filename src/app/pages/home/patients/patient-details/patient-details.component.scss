@@ -1,3 +1,47 @@
-ul.nav-tabs {
-    background: #f8f9fa;
+// ul.nav-tabs {
+//   background: #f8f9fa;
+// }
+
+html {
+  overflow: hidden;
+}
+
+.chart-canvas {
+  max-height: 40vh;
+}
+
+// Hide dropdown filters temporarily.
+.hide-dropdown-filters {
+  display: none;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+
+.assigned_care_plan_row {
+  .careplan_details {
+    position: relative;
+
+    .remove, .start-session {
+      position: absolute;
+      font-size: 16px;
+      cursor: pointer;
+      display: none;
+      top: -4px;
+    }
+
+    .remove {
+      right: 0;
+    }
+
+    .start-session {
+      right: 32px;
+    }
+  }
+
+  .careplan:hover .remove, .careplan:hover .start-session{ 
+    display: inline;
+  }
 }

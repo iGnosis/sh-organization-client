@@ -1,0 +1,24 @@
+  <div class="container popup_alignment">
+    <div>
+      <div class="row align-items-center">
+        <div class="col-12 mb-md-0 custom_alignment">
+          <!-- <img src="/assets/images/play-icon.svg" class="icons_aligne"/> -->
+          <h1 class="h2 mb-0 ls-tight">Start Session</h1>
+        </div>
+        <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Session" aria-label="Search" aria-describedby="">
+      </div>
+    </div>
+      <div class="mt-5">
+          <div class="list-group list-group-flush">
+              <div class="list-group-item d-flex align-items-center px-0" *ngFor="let activeCarePlan of activeCarePlans">
+                  <div class="flex-fill ms-4">
+                      <!-- Title -->
+                      <a class="d-block h6 mb-1">{{activeCarePlan.careplanByCareplan?.name}}</a>
+                  </div>
+                  <div class="">
+                      <a class="btn btn-sm btn-neutral px-4 py-2 text-xs" (click)="this.createNewSessionAndRedirect(activeCarePlan.careplanByCareplan?.id)">Start</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>

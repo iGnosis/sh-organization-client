@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Activity, ActivityByActivity, CarePlan } from 'src/app/pointmotion';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { ToastService } from 'src/app/services/toast/toast.service';
-import { Activity } from 'src/app/types/activity';
-import { ActivityByActivity, CarePlan, CarePlanDifficulty } from 'src/app/types/careplan';
 
 @Component({
   selector: 'app-create-careplan',
@@ -23,15 +22,15 @@ export class CreateCareplanComponent implements OnInit {
   }
 
   medicalConditionsList = [
-    { name: `Parkinson's` },
-    { name: `Alzheimer's` },
-    { name: `Huntington's` },
-    { name: `Others` },
+    { id: 1, name: `Parkinson's` },
+    { id: 3, name: `Stroke` },
+    { id: 2, name: `Alzheimer's` },
+    { id: 4, name: `Others` },
   ]
 
   activitiesList: Array<Activity> = []
 
-  careplan:CarePlan = {
+  careplan: CarePlan = {
     careplan_activities: [],
     // name: 'test '+ Math.random(),
     // difficultyLevel: CarePlanDifficulty.easy,
@@ -122,7 +121,7 @@ export class CreateCareplanComponent implements OnInit {
     }
 
     // add all the activities to the careplan
-    const activities = this.careplan.careplan_activities?.map(x => {
+    const activities = this.careplan.careplan_activities?.map((x: any) => {
       return {
         activity: x.activityByActivity?.id,
         reps: x.reps,

@@ -1,19 +1,34 @@
 <!-- Header -->
-<header class="px-3 px-lg-7 pt-7">
+<header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
-      <div class="row align-items-center">
-        <div class="col-md-6 col-12 mb-3 mb-md-0">
+      <div class="row custom_alignment">
+        <div *ngIf="gameDetails" class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
-          <h1 class="h2 mb-0 ls-tight">IG58M</h1>
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <!-- <div *ngIf="sessionDetails.length!=0">
+          <h1 class="h2 mb-0 ls-tight mt-5">{{ sessionDetails[0].patientByPatient?.identifier }}</h1> -->
+          <h1 class="h2 mb-0 ls-tight mt-5">{{ patientIdentifier }}</h1>
+
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
           <div class="mx-n1">
-            <a routerLink="#!" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
-              <span>Export Report</span>
-            </a>
-            <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm btn-outline-primary mx-1">
+            <!-- <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
+              <span>Select Dates</span>
+            </a> -->
+            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
+              <mat-date-range-input [rangePicker]="picker1">
+                <input matStartDate placeholder="Start Date">
+                <input matEndDate placeholder="End Date">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="picker1">
+                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-date-range-picker #picker1></mat-date-range-picker>
+            </mat-form-field>
+            <!-- <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1"> -->
+            <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span class="pe-2">
                 <i class="bi bi-play-btn"></i>
               </span>
@@ -25,15 +40,15 @@
       <!-- Nav -->
       <ul class="nav nav-tabs overflow-x mt-2">
         <li class="nav-item">
-          <a class="nav-link font-regular active">All
+          <a class="clickable nav-link font-regular active">All
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-regular">Starred
+          <a class="clickable nav-link font-regular">Starred
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link font-regular">Labbeled
+          <a class="clickable nav-link font-regular">Labbeled
           </a>
         </li>
       </ul>
@@ -42,46 +57,230 @@
 </header>
 
 <!-- Charts -->
-<div class="container mt-8">
+<div class="container mt-8" *ngIf="dataSource.data.length!=0">
   <div class="row">
-    <div class="col">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <!-- Title -->
-          <h3 class="h4">Insert Chart 1 here</h3>
+          <div class="card-header">
+            <h4 style="color: #000066;">Patient Engagement</h4>
+            <!-- <span>
+              <h5 style="color: #000066;">
+                {{ startDate | date }} - {{ endDate | date }}
+              </h5>
+            </span> -->
+
+            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
+              <mat-date-range-input [rangePicker]="engagement">
+                <input matStartDate placeholder="Start Date" [value]="engagementStartDate"
+                  (dateChange)="changeEngagementChart('start', $event.value)">
+                <input matEndDate placeholder="End Date" [value]="engagementEndDate"
+                  (dateChange)="changeEngagementChart('end', $event.value)">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="engagement">
+                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-date-range-picker #engagement></mat-date-range-picker>
+            </mat-form-field>
+
+          </div>
+          <canvas class="chart-canvas" id="engagementChart" width="500" height="500"></canvas>
         </div>
       </div>
     </div>
-    <div class="col">
+    <div class="col-md-6">
       <div class="card">
         <div class="card-body">
-          <!-- Title -->
-          <h3 class="h4">Insert Chart 2 here</h3>
+          <div class="card-header">
+            <h4 style="color: #000066;">Achievement Ratio</h4>
+            <!-- <span>
+              <h5 style="color: #000066;">
+                {{ startDate | date }} - {{ endDate | date }}
+              </h5>
+            </span> <br> -->
+            <!-- <div class="form-group">
+              <select class="form-control" id="sessionVal" name="isActive" (change)="changeSessionsChart()">
+                <option value="allSessions">All Sessions</option>
+                <option value="cognitiveSkillsII">Cognitive Skills II</option>
+              </select>
+            </div> -->
+
+            <div class="dropdown">
+              <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
+                  <div *ngFor="let filterOption of activityFilterOptions"
+                    class="dropdown-item py-1 d-flex align-items-center">
+                    <div class="text-lg">
+                      <input class="form-check-input" type="checkbox" id={{filterOption}} value={{filterOption}}
+                        aria-label='...'>
+                    </div>
+                    <div class="ms-3 me-5">
+                      <label for={{filterOption}}>{{filterOption.split('_').join(' ') | titlecase}}</label>
+                    </div>
+                  </div>
+                  <div class="dropdown-item">
+                    <button type="submit" class="btn btn-sm btn-primary w-full">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
+              <mat-date-range-input [rangePicker]="achievements">
+                <input matStartDate placeholder="Start Date" [value]="achievementStartDate"
+                  (dateChange)="changeAchievementChart('start', $event.value)">
+                <input matEndDate placeholder="End Date" [value]="achievementEndDate"
+                  (dateChange)="changeAchievementChart('end', $event.value)">
+              </mat-date-range-input>
+              <mat-datepicker-toggle matSuffix [for]="achievements">
+                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
+              </mat-datepicker-toggle>
+              <mat-date-range-picker #achievements></mat-date-range-picker>
+            </mat-form-field>
+
+          </div>
+          <canvas class="chart-canvas" id="achievementChart" width="500" height="500"></canvas>
         </div>
       </div>
     </div>
   </div>
 </div>
+<div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && noSessionAssignedPlan==0">
+  <div class="p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-12 mb-3 mb-md-0">
+        <div class="no_careplan_notice_alignment">
+          <img src="/assets/images/no_session_img.svg" />
+          <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has not completed any
+            sessions yet.</h2>
+          <div class="mx-n1 mt-7">
+            <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
+              <span class="pe-2">
+                <i class="bi bi-play-btn"></i>
+              </span>
+              <span>Start New Session</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container-xl mt-5" *ngIf="noSessionAssignedPlan == 1">
+  <div class="p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-12 mb-3 mb-md-0">
+        <div class="no_careplan_notice_alignment">
+          <img src="/assets/images/no_assigned.svg" />
+          <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has no care plan
+            assigned to them yet.</h2>
+          <div class="mx-n1 mt-7">
+            <a (click)="openCarePlanDialog()"
+              class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+              <mat-icon>add</mat-icon><span>Add Care Plan</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Assigned care plan -->
+<div class="container-xl mt-5" *ngIf="noSessionAssignedPlan == 0">
+  <div class="bg-light p-5 assigned_care_plan_card">
+    <div class="row custom_alignment">
+      <div class="col-12 mb-3 mb-md-0" *ngIf="activeCarePlans.length == 0">
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
+        <div class="no_careplan_notice_alignment">
+          <img src="/assets/images/no_assigned.svg" />
+          <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No care plans assigned for {{ patientIdentifier
+            }}</h2>
+          <div class="mx-n1 mt-7">
+            <a (click)="openCarePlanDialog()"
+              class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button no_care_plan_assigned">
+              <mat-icon>add</mat-icon><span>Add Care Plan</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="activeCarePlans.length != 0">
+        <!-- Title -->
+        <h1 class="active_care_plan_card_title">Assigned Care Plans</h1>
+      </div>
+      <!-- Actions -->
+      <div class="col-md-6 col-12 text-md-end" *ngIf="activeCarePlans.length != 0">
+        <div class="mx-n1">
+          <a (click)="openCarePlanDialog()"
+            class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+            <mat-icon>add</mat-icon><span>Add New</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row custom_alignment assigned_care_plan_row">
+      <div class="col-md-6 col-12 mb-3 mb-md-0 careplan" *ngFor="let carePlan of activeCarePlans">
 
+        <div class="list-group list-group-flush">
+          <div class="list-group-item d-flex align-items-center px-0">
+            <div class="flex-fill align_care_plan">
+
+              <avatar text="{{carePlan.careplanByCareplan?.name}}" [bgAuto]="true" size="sm"></avatar>
+              <div class="careplan_details">
+                <span class="start-session" ngbPopover="Start a New Session With Care Plan"
+                  (click)="openStartSessionFromCareplanModal(carePlan.careplanByCareplan?.id, confirmStartSession)"
+                  triggers="mouseenter:mouseleave">
+                  <i class="fa fa-solid fa-play text-primary"></i>
+                </span>
+                <span class="remove" ngbPopover="Remove Care Plan from Patient" triggers="mouseenter:mouseleave"
+                  (click)="openRemoveCareplanFromPatientModal(carePlan.careplanByCareplan?.id, confirmDeletion)">
+                  <i class="fa fa-solid fa-trash text-danger"></i>
+                </span>
+                <a role="button" (click)="openCarePlanDetails(carePlan.careplanByCareplan?.id)"
+                  class="d-block h6 mb-1 care_plan_title">{{carePlan.careplanByCareplan?.name}}</a>
+                <p>Includes
+                  <span>{{getActivityCount}}</span>
+                  <span *ngIf="getActivityCount > 1"> activities</span>
+                  <span *ngIf="getActivityCount == 1"> activity</span>
+                  for a {{ getEstimatedActivityDuration }}
+                  <span *ngIf="getEstimatedActivityDuration > 1">minutes</span>
+                  <span *ngIf="getEstimatedActivityDuration == 1">minute</span>
+                  session
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- Search Bar -->
-<div class="container-xl mb-5 mt-5">
-  <div class="input-group input-group-sm input-group-inline">
-    <span class="input-group-text pe-2">
-      <i class="bi bi-search"></i>
-    </span>
-    <input type="text" class="form-control" placeholder="Search session details" aria-label="Search"
-      aria-describedby="">
+<div class="container-xl mb-5 mt-5" *ngIf="dataSource.data.length!=0">
+  <div class="align_search_filter">
+    <div class="input-group input-group-sm input-group-inline input_box_icons_alignment">
+      <span class="input-group-text pe-2">
+        <i class="bi bi-search"></i>
+      </span>
+      <input type="text" class="form-control" placeholder="Search session details" aria-label="Search"
+        aria-describedby="" [(ngModel)]="filterEntity.careplanByCareplan">
+    </div>
+    <img src="/assets/images/filter_icon.svg" (click)="toggleFilterDiv()" class="icons_align" />
+    <img src="/assets/images/setting.svg" class="filter_align icons_align" />
   </div>
 </div>
 
 <!-- Filters dropdowns -->
-<div class="container">
+<div class="container filter_options_container" [hidden]="isShowFilter">
   <div class="row">
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
-          Session Plan
+          Care Plan
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
           <form>
@@ -106,10 +305,17 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Condition">
+          <mat-option *ngFor="let active_careplan of activeCarePlans"
+            [value]="active_careplan.careplanByCareplan?.name">{{active_careplan.careplanByCareplan?.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Activity Type
@@ -137,10 +343,16 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Activity Type">
+          <mat-option [value]="1">Physical</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
           Time
@@ -168,47 +380,90 @@
             </div>
           </form>
         </div>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Time">
+          <mat-option [value]="15">15 mins. or less</mat-option>
+          <mat-option [value]="30">30 mins. or less</mat-option>
+          <mat-option [value]="45">45 mins. or less</mat-option>
+          <mat-option [value]="60">60 mins. or less</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
     <div class="col-sm">
-      Date
+      <mat-form-field class="details_page alignment_date condition_select" appearance="fill">
+        <input matInput [matDatepicker]="picker" placeholder="Date">
+        <mat-datepicker-toggle matSuffix [for]="picker">
+          <!-- <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon> -->
+        </mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
     </div>
     <div class="col-sm">
-      <div class="dropdown">
+      <!-- <div class="dropdown">
         <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
           data-bs-toggle="dropdown" aria-expanded="false">
-          Performance
+          Achievement Ratio
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="#">High Performance (&gt;75%)</a></li>
-          <li><a class="dropdown-item" href="#">Avg Performance (&lt;75%)</a></li>
-          <li><a class="dropdown-item" href="#">Low Performance (&lt;50%)</a></li>
-          <li><a class="dropdown-item" href="#">Poor Performance (&lt;25%)</a></li>
+          <li><a class="dropdown-item" href="#">75% or more</a></li>
+          <li><a class="dropdown-item" href="#">50% - 75%</a></li>
+          <li><a class="dropdown-item" href="#">25% - 50%</a></li>
+          <li><a class="dropdown-item" href="#">25% or less</a></li>
         </ul>
-      </div>
+      </div> -->
+      <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
+        <!-- <mat-label>Conditions</mat-label> -->
+        <mat-select multiple [(value)]="selected" placeholder="Achievement Ratio">
+          <mat-option [value]="75">75% or more</mat-option>
+          <mat-option [value]="50">50% - 75%</mat-option>
+          <mat-option [value]="25">25% - 50%</mat-option>
+          <mat-option [value]="0">25% or less</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 </div>
+<!-- <div class="container-xl mt-5">
+  <div class="rounded-top bg-light p-5 custom_rounded_top">
+    <div class="row custom_alignment">
+      <div class="col-md-6 col-12 mb-3 mb-md-0">
+         Title
+        <h1 class="h2 mb-0 ls-tight">Active Care Plans</h1>
+      </div>
+       Actions
+      <div class="col-md-6 col-12 text-md-end">
+        <div class="mx-n1">
+          <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
+            <span>Add New</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
 
 <!-- Session table -->
 <div class="container-xl mt-5">
-  <div class="rounded-top bg-light p-5">
-    <div class="row">
-      <div class="col">
-        <h6>Sessions</h6>
+  <div class="session_table" *ngIf="dataSource.data.length!=0">
+    <div class="rounded-top bg-light p-5 custom_rounded_top">
+      <div class="row">
+        <div class="col">
+          <h6>Sessions</h6>
+        </div>
+        <div class="col text-end">
+          <!-- <mat-paginator [pageSize]="5"
+        #TableOnePaginator="matPaginator" showFirstLastButtons class="top_pagination">
+      </mat-paginator> -->
+        </div>
       </div>
-      <div class="col text-end">
-        <span class="me-3">1-10 of 36</span>
-        <span role="button" class="me-1">&#60;</span>
-        <span role="button">&#62;</span>
-      </div>
-    </div>
 
-    <!-- Put a divider -->
-    <hr>
+      <!-- Put a divider -->
+      <!-- <hr> -->
 
-    <!-- Put action icons that'd act on selected rows -->
-    <ul class="nav nav-pills">
+      <!-- Put action icons that'd act on selected rows -->
+      <!-- <ul class="nav nav-pills">
       <li class="nav-item">
         <button (click)="this.toogleRowsCheck()" class="nav-link">
           <i class="bi bi-check-square me-2"></i>Check all
@@ -229,69 +484,80 @@
           <i class="bi bi-archive me-2"></i>Archive
         </button>
       </li>
-    </ul>
+    </ul> -->
 
-  </div>
-  <div class="table-responsive">
-    <table class="table table-hover table-nowrap">
-      <thead class="thead-light">
-        <tr>
-          <th class="text-lg" scope="col">
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap patients_detail_table" matTableFilter [exampleEntity]="filterEntity"
+        [filterType]="filterType" mat-table [dataSource]="dataSource" matSort>
+        <ng-container matColumnDef="total_count">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header">
             <div class="form-check">
-              <input (click)="this.toogleRowsCheck()" class="form-check-input" type="checkbox" value=""
-                id="flexCheckAll">
-              <label class="form-check-label" for="flexCheckAll"></label>
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
             </div>
           </th>
-          <th></th>
-          <th scope="col">Session Plan</th>
-          <th scope="col">Activity Type</th>
-          <th scope="col">Time</th>
-          <th scope="col">Date</th>
-          <th scope="col">Performance</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <!-- Checkbox & Star button -->
-          <td class="text-lg" scope="col">
+          <td mat-cell *matCellDef="let element">
             <div class="form-check">
-              <input class="form-check-input row-check-input" type="checkbox" value="" id="flexCheckRow1">
-              <label class="form-check-label" for="flexCheckRow1"></label>
+              <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
             </div>
           </td>
-
-          <td class="text-lg" scope="col">
-            <i class="bi bi-star"></i>
+        </ng-container>
+        <ng-container matColumnDef="label_star">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
+          <td mat-cell *matCellDef="let element" class="clicked_class">
+            <i class="bi bi-star custom_star_color"></i>
           </td>
-
-          <td>
-            <a class="text-heading font-semibold" href="/app/sessions/123">
-              Music and Movement
-            </a>
+        </ng-container>
+        <ng-container matColumnDef="careplanByCareplan">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header">Care Plan
+            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.careplanByCareplan" value="{{searchValue}}">
+          </th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <span class="text-heading font-semibold">
+              {{ element.careplanByCareplan?.name }}
+            </span>
           </td>
-          <td>
+        </ng-container>
+        <ng-container matColumnDef="activity_type">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header">Activity Type</th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <!-- <span>{{ session.activityType }}</span> -->
             <span>Physical</span>
           </td>
-          <td>
-            <span>45 minutes</span>
+        </ng-container>
+        <ng-container matColumnDef="timeDuration">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Time</th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <span>{{ element.timeDuration || 'In Progress' }}</span>
           </td>
-          <td>
-            <span>Jan 20, 2022</span>
+        </ng-container>
+        <ng-container matColumnDef="createdAt">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Date</th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <span>{{ element.createdAt | date }}</span>
           </td>
-          <td>
-            <div class="d-flex align-items-center">
-              <span class="me-2">95%</span>
+        </ng-container>
+        <ng-container matColumnDef="totalPerformanceRatio">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Performance</th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <div *ngIf="element.totalPerformanceRatio" class="d-flex align-items-center">
+              <span class="me-2">{{element.totalPerformanceRatio}}%</span>
               <div>
                 <div class="progress">
-                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 95%"
-                    aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class="progress-bar rounded-pill" role="progressbar"
+                    [style.width]="element.totalPerformanceRatio + '%'" style="background-color: #A6B7D4">
+                  </div>
                 </div>
               </div>
             </div>
+            <div *ngIf="!element.totalPerformanceRatio">
+              <span>In Progress</span>
+            </div>
           </td>
-          <td class="text-end">
+        </ng-container>
+        <ng-container matColumnDef="activity_action">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
+          <td mat-cell *matCellDef="let element">
             <div class="dropdown">
               <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                 aria-expanded="false">
@@ -310,66 +576,39 @@
               </div>
             </div>
           </td>
-        </tr>
-        <tr>
-          <!-- Checkbox & Star button -->
-          <td class="text-lg" scope=" col">
-            <div class="form-check">
-              <input class="form-check-input row-check-input" type="checkbox" value="" id="flexCheckRow1">
-              <label class="form-check-label" for="flexCheckRow1"></label>
-            </div>
-          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
+      </table>
+      <mat-paginator [pageSize]="10" #TableOnePaginator="matPaginator" showFirstLastButtons>
+      </mat-paginator>
+      <!-- <nav>
+      <pagination-controls (pageChange)="this.pageChanged($event)">
+      </pagination-controls>
+    </nav> -->
 
-          <td class="text-lg" scope=" col">
-            <i class="bi bi-star"></i>
-          </td>
-
-          <td>
-            <a class="text-heading font-semibold" href="#">
-              Cognitive Skills
-            </a>
-          </td>
-          <td>
-            <span>Problem Solving</span>
-          </td>
-          <td>
-            <span>30 minutes</span>
-          </td>
-          <td>
-            <span>Jan 24, 2022</span>
-          </td>
-          <td>
-            <div class="d-flex align-items-center">
-              <span class="me-2">50%</span>
-              <div>
-                <div class="progress">
-                  <div class="progress-bar bg-tint-dark rounded-pill" role="progressbar" style="width: 50%"
-                    aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-              </div>
-            </div>
-          </td>
-          <td class="text-end">
-            <div class="dropdown">
-              <a class="text-muted" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <i class="bi bi-three-dots-vertical"></i>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end">
-                <a href="#!" class="dropdown-item">
-                  Edit Session Entry
-                </a>
-                <a href="#!" class="dropdown-item">
-                  Archive Session Entry
-                </a>
-                <a href="#!" class="dropdown-item">
-                  Delete Session Entry
-                </a>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    </div>
   </div>
 </div>
+
+<ng-template #confirmDeletion let-modal>
+  <div class="modal-body">
+    <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+    <div class="text-end mt-2">
+      <button type="button" class="btn btn-sm btn-danger me-5" (click)="removeCarePlanFromPatient(modal)">Yes,
+        Remove</button>
+      <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #confirmStartSession let-modal>
+  <div class="modal-body">
+    <p>This will start a new Session.</p>
+    <div class="text-end mt-5">
+      <button type="button" class="btn btn-sm btn-primary me-5" (click)="startSessionFromCareplan()">Start
+        Session</button>
+      <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+    </div>
+  </div>
+</ng-template>

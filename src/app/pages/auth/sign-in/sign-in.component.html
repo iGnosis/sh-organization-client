@@ -39,7 +39,7 @@
                         <div *ngFor="let error of errors" class="alert bg-danger text-white m-5" role="alert">
                             {{error}}
                         </div>
-                        <div class="mb-5">
+                        <!-- <div class="mb-5">
                             <label class="form-label" for="email">Email address</label>
                             <input type="email" [(ngModel)]="email" class="form-control form-control-muted" id="email">
                         </div>
@@ -47,15 +47,15 @@
                             <label class="form-label" for="password">Password</label>
                             <input type="password" [(ngModel)]="password" class="form-control form-control-muted" id="password" autocomplete="current-password">
                         </div>
-                        <div class="mb-5">
+                        <div class="mb-5 d-none">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="check_example" id="check_example">
                                 <label class="form-check-label" for="check_example">
                                     Keep me logged in
                                 </label>
                             </div>
-                        </div>
-                        
+                        </div> -->
+
                         <div>
                             <a (click)="onSignIn()" class="btn btn-primary w-full">
                                 Sign in

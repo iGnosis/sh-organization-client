@@ -7,11 +7,11 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 })
 export class PatientService {
 
-  constructor() {
+  constructor(private graphqlService: GraphqlService) {
   }
 
   // TODO make it more strictly typed
-  insertPatient(patient: any) {
-    return GraphqlService.client.request(GqlConstants.INSERT_PATIENT, patient)
+  async insertPatient(patient: any) {
+    return this.graphqlService.client.request(GqlConstants.INSERT_PATIENT, patient)
   }
 }

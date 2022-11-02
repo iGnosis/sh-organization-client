@@ -1,7 +1,9 @@
-export const environment = {
+import { Environment } from "src/app/pointmotion";
+
+export const environment: Environment = {
+  name: 'prod',
   production: true,
-  cognitoUserPoolID: 'us-east-1_INWkmpaSb',
-  cognitoClientID: '4pc04vcpfodcgac8nk5svm911i',
-  gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
-  servicesEndpoint: 'http://localhost:9000'
+  gqlEndpoint: 'https://api.prod.pointmotioncontrol.com/v1/graphql',
+  servicesEndpoint: 'https://services.prod.pointmotioncontrol.com',
+  activityEndpoint: 'https://session.prod.pointmotioncontrol.com'
 };
