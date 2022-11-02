@@ -780,6 +780,7 @@ export class PatientDetailsComponent implements OnInit {
         break;
       case 'end':
         if (date !== this.engagementEndDate) {
+          date.setHours(24, 0, 0, 0);
           this.engagementEndDate = date;
         }
         break;
