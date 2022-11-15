@@ -12,6 +12,7 @@ import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/s
 import { AccountComponent } from './pages/home/account/account.component';
 import { ActivitiesDetailsComponent } from './pages/home/activities/activities-details/activities-details';
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
+import { AdminComponent } from './pages/home/admin/admin.component';
 import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
@@ -92,7 +93,8 @@ const routes: Routes = [
       // { path: 'sessions', component: SessionsDetailsComponent },
       { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Session Details" } },
 
-      {path: 'account', component: AccountComponent},
+      { path: 'account', component: AccountComponent },
+      { path: 'admin', component:  AdminComponent},
 
     ]
   },

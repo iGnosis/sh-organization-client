@@ -59,6 +59,10 @@ import { AccountComponent } from './pages/home/account/account.component';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/sms-otp-login.component';
 import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap/patients-heatmap.component';
+import { AdminComponent } from './pages/home/admin/admin.component';
+import { CustomizationComponent } from './pages/home/admin/customization/customization.component';
+import { BillingComponent } from './pages/home/admin/billing/billing.component';
+import { UsersAccessComponent } from './pages/home/admin/users-access/users-access.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -98,6 +102,10 @@ import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap
     CallbackComponent,
     SmsOtpLoginComponent,
     PatientsHeatmapComponent,
+    AdminComponent,
+    CustomizationComponent,
+    BillingComponent,
+    UsersAccessComponent,
   ],
   imports: [
     BrowserModule,

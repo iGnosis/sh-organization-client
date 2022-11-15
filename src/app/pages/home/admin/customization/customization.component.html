@@ -1,0 +1,61 @@
+<div class="container-xl mb-5">
+
+  <div class="row custom-card p-4">
+    <div class="col-md-1 text-center">
+      <avatar text="AA" size="md"></avatar>
+    </div>
+    <div class="col-md-9 d-flex align-items-center">
+      Please use a picture that is atleast 98x98 px and 4MB or less. Accepted file formats are JPEG and PNG.
+    </div>
+    <div class="col-md-2 d-flex align-items-center justify-content-center">
+      <input hidden type="file" #uploader (change)="uploadLogo($event)" />
+      <button class="btn btn-secondary" (click)="uploader.click()">
+        <i class="bi bi-chat"></i>
+        &nbsp;Change Logo</button>
+    </div>
+  </div>
+
+  <div class="my-5">
+    <h5 class="text-dark">Account Information</h5>
+
+    <!--label and input box for organization's name-->
+
+    <div class="mt-5">
+      <label for="organizationName" class="form-label">Organization Name</label>
+      <input type="text" class="form-control" id="organizationName" placeholder="Organization Name">
+    </div>
+
+    <div class="mt-5">
+      <label for="organizationType" class="form-label col-12">Organization Type</label>
+      <mat-form-field appearance="fill" class="col-12 details_page alignment_date condition_select">
+        <mat-select placeholder="Select Organization Type" [(value)]="selectedOrgType">
+          <mat-option value="clinic">Clinic</mat-option>
+          <mat-option value="hospital">Hospital</mat-option>
+          <mat-option value="seniorHomeFacility">Senior Home Facility</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="mt-5">
+      <label for="brandColor" class="form-label">Brand Colors</label>
+      <p>Update your brand colours on Sound Health by using the colour picker or the Hex code below. This will help your
+        users
+        identify with the product better.</p>
+
+      <div class="row mt-5">
+        <div class="col-md-4">
+          dasdasda
+        </div>
+        <div class="col-md-4">dsadas</div>
+        <div class="col-md-4">dsadas</div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-4">dsadas</div>
+        <div class="col-md-4">dsadas</div>
+        <div class="col-md-4">dsadas</div>
+      </div>
+
+    </div>
+  </div>
+</div>
