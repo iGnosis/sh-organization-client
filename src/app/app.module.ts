@@ -63,6 +63,11 @@ import { AdminComponent } from './pages/home/admin/admin.component';
 import { CustomizationComponent } from './pages/home/admin/customization/customization.component';
 import { BillingComponent } from './pages/home/admin/billing/billing.component';
 import { UsersAccessComponent } from './pages/home/admin/users-access/users-access.component';
+import {
+  MAT_COLOR_FORMATS,
+  NgxMatColorPickerModule,
+  NGX_MAT_COLOR_FORMATS,
+} from '@angular-material-components/color-picker';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -133,17 +138,19 @@ import { UsersAccessComponent } from './pages/home/admin/users-access/users-acce
     MatDialogModule,
     CarouselModule,
     Ng2SearchPipeModule,
+    NgxMatColorPickerModule,
     // PerfectScrollbarModule
   ],
   providers: [
     PrivateGuard,
     PublicGuard,
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
+
     // {
     //   provide: PERFECT_SCROLLBAR_CONFIG,
     //   useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     // }
-
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

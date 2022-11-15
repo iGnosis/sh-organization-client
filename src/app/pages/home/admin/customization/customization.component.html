@@ -15,20 +15,19 @@
     </div>
   </div>
 
-  <div class="my-5">
+  <div class="my-10">
     <h5 class="text-dark">Account Information</h5>
-
-    <!--label and input box for organization's name-->
 
     <div class="mt-5">
       <label for="organizationName" class="form-label">Organization Name</label>
-      <input type="text" class="form-control" id="organizationName" placeholder="Organization Name">
+      <input type="text" [(ngModel)]="orgName" class="form-control" id="organizationName"
+        placeholder="Organization Name">
     </div>
 
     <div class="mt-5">
       <label for="organizationType" class="form-label col-12">Organization Type</label>
-      <mat-form-field appearance="fill" class="col-12 details_page alignment_date condition_select">
-        <mat-select placeholder="Select Organization Type" [(value)]="selectedOrgType">
+      <mat-form-field appearance="fill" class="col-12  condition_select">
+        <mat-select placeholder="Select Organization Type" [(ngModel)]="orgType">
           <mat-option value="clinic">Clinic</mat-option>
           <mat-option value="hospital">Hospital</mat-option>
           <mat-option value="seniorHomeFacility">Senior Home Facility</mat-option>
@@ -37,25 +36,74 @@
     </div>
 
     <div class="mt-5">
-      <label for="brandColor" class="form-label">Brand Colors</label>
+      <label class="h5 form-label">Brand Colors</label>
       <p>Update your brand colours on Sound Health by using the colour picker or the Hex code below. This will help your
         users
         identify with the product better.</p>
 
       <div class="row mt-5">
-        <div class="col-md-4">
-          dasdasda
+        <div class="col-md-3">
+          <label for="primary" class="form-label d-block">Primary Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.primary" [ngxMatColorPicker]="primary">
+            <ngx-mat-color-toggle matSuffix [for]="primary"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #primary [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
         </div>
-        <div class="col-md-4">dsadas</div>
-        <div class="col-md-4">dsadas</div>
+        <div class="col-md-3">
+          <label for="secondary" class="form-label d-block">Secondary Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.secondary" [ngxMatColorPicker]="secondary">
+            <ngx-mat-color-toggle matSuffix [for]="secondary"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #secondary [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <label for="tertiary" class="form-label d-block">Tertiary Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.tertiary" [ngxMatColorPicker]="tertiary">
+            <ngx-mat-color-toggle matSuffix [for]="tertiary"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #tertiary [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
       </div>
 
       <div class="row mt-5">
-        <div class="col-md-4">dsadas</div>
-        <div class="col-md-4">dsadas</div>
-        <div class="col-md-4">dsadas</div>
+        <div class="col-md-3">
+          <label for="success" class="form-label d-block">Success Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.success" [ngxMatColorPicker]="success">
+            <ngx-mat-color-toggle matSuffix [for]="success"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #success [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <label for="warning" class="form-label d-block">Warning Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.warning" [ngxMatColorPicker]="warning">
+            <ngx-mat-color-toggle matSuffix [for]="warning"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #warning [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <label for="danger" class="form-label d-block">Danger Color</label>
+          <mat-form-field>
+            <input matInput [(ngModel)]="colors.danger" [ngxMatColorPicker]="danger">
+            <ngx-mat-color-toggle matSuffix [for]="danger"></ngx-mat-color-toggle>
+            <ngx-mat-color-picker #danger [touchUi]="true"></ngx-mat-color-picker>
+          </mat-form-field>
+        </div>
       </div>
 
+    </div>
+
+    <div class="mt-5">
+      <label for="typeface" class="form-label col-12">Typeface</label>
+      <mat-form-field appearance="fill" class="col-12 condition_select">
+        <mat-select placeholder="Select Organization Type" [(ngModel)]="orgTypeface">
+          <mat-option *ngFor="let typeface of availableTypefaces" value={{typeface}}>{{typeface}}</mat-option>
+        </mat-select>
+      </mat-form-field>
     </div>
   </div>
 </div>
