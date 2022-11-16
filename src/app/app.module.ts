@@ -68,6 +68,8 @@ import {
   NgxMatColorPickerModule,
   NGX_MAT_COLOR_FORMATS,
 } from '@angular-material-components/color-picker';
+import { LatestSessionsComponent } from './pages/home/patients/latest-sessions/latest-sessions.component';
+import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -111,6 +113,8 @@ import {
     CustomizationComponent,
     BillingComponent,
     UsersAccessComponent,
+    LatestSessionsComponent,
+    RelativeTimePipe,
   ],
   imports: [
     BrowserModule,
