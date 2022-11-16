@@ -1,13 +1,4 @@
 export const GqlConstants = {
-  SEARCH_USER: `query SignIn($email:String, $password:String) {
-    user(where: {_and: {email: {_eq: $email}, password: {_eq: $password}}, type: {_eq: provider}}) {
-      firstName
-      lastName
-      password
-      email
-    }
-  }`,
-
   GET_ALL_PATIENTS: `query PatientList {
     patient_aggregate(where: {nickname: {_is_null: false}}) {
       aggregate {
@@ -29,27 +20,6 @@ export const GqlConstants = {
       }
     }
   }`,
-
-  GET_CAREPLANS: `query GetCarePlans {
-    careplan {
-      createdAt
-      careplan_activities_aggregate {
-        aggregate {
-          count
-        }
-      }
-      user_careplans_aggregate {
-        aggregate {
-          count
-        }
-      }
-      name
-      createdBy
-      id
-      tags
-    }
-  }`,
-
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
     patient_by_pk(id: $patientId) {
       createdAt
@@ -74,54 +44,6 @@ export const GqlConstants = {
         id
     }
   }`,
-
-  GET_PATIENT_DETAILS: `query GetUserDetails($user:uuid!) {
-    user_by_pk(id: $user) {
-      createdAt
-      firstName
-      id
-      lastActive
-      lastName
-      sessions {
-        id
-        createdAt
-        endedAt
-      }
-      status
-      sessions_aggregate {
-        aggregate {
-          count
-        }
-      }
-      subscriptions {
-        expiry
-      }
-      user_profile {
-        dob
-        gender
-        medicalConditions
-        onboardedOn
-        otherConditions
-        phone
-        preferredGenre
-      }
-      userRelationsByTo {
-        userFrom {
-          firstName
-          lastName
-          lastActive
-          status
-          email
-          user_profile {
-            createdAt
-            dob
-            gender
-            onboardedOn
-            phone
-          }
-        }
-      }}}`,
-
   GET_GAMES: `query GetGames($offset: Int, $limit: Int, $patientId: uuid) {
         game_aggregate(where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
           aggregate {
@@ -161,21 +83,6 @@ export const GqlConstants = {
       data
     }
   }`,
-  GET_SESSION_BY_PK: `query GetSessionByPk($sessionId: uuid = "") {
-    session_by_pk(id: $sessionId) {
-      id
-      createdAt
-      endedAt
-      careplanByCareplan {
-        name
-      }
-      patientByPatient {
-        identifier
-        medicalConditions
-      }
-    }
-  }`,
-
   GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
     patient(where: {id: {_eq: $patient}}) {
       id
