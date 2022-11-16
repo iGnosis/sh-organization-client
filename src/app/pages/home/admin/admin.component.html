@@ -1,0 +1,29 @@
+<header class="px-3 px-lg-7 pt-7 custom_header">
+  <div class="container-xl">
+    <div>
+      <div class="row custom_alignment p-5">
+        <div class="col-md-6 col-12 mb-3 mb-md-0">
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <router-outlet></router-outlet>
+          <h1 class="h2 mb-0 ls-tight heading_text mt-5">{{currentTab}}</h1>
+          <ul class="nav nav-tabs">
+            <li *ngFor="let tab of tabs" class="nav-item" (click)="setCurrentTab(tab)" style="cursor: pointer">
+              <p class="nav-link" [ngClass]="{'active' : currentTab === tab}">
+                {{tab}}
+              </p>
+            </li>
+          </ul>
+        </div>
+        <!-- Actions -->
+        <div class="col-md-6 col-12 text-md-end">
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Main content -->
+<main [ngSwitch]="currentTab" class="px-3 px-lg-7 py-7">
+  <app-customization *ngSwitchCase="'Customization'"></app-customization>
+  <app-billing *ngSwitchCase="'Billing'"></app-billing>
+  <app-users-access *ngSwitchCase="'Users and Access'"></app-users-access>
+</main>
