@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Tabs } from 'src/app/pointmotion';
 import { CustomizationComponent } from './customization/customization.component';
+import { UsersAccessComponent } from './users-access/users-access.component';
 
 @Component({
   selector: 'app-admin',
@@ -9,10 +10,12 @@ import { CustomizationComponent } from './customization/customization.component'
 })
 export class AdminComponent implements OnInit {
   @ViewChild(CustomizationComponent)
-  private customizationTab: CustomizationComponent;
+  private customizationComponent: CustomizationComponent;
+
+  @ViewChild(UsersAccessComponent) usersAccessComponent: UsersAccessComponent;
 
   tabs: Tabs[] = ['Customization', 'Billing', 'Users and Access'];
-  currentTab: Tabs = 'Customization';
+  currentTab: Tabs = 'Users and Access';
   customizable = false;
   changesInCustomizationTab = true;
 
@@ -34,6 +37,12 @@ export class AdminComponent implements OnInit {
 
   saveCustomization() {
     this.customizable = false;
-    this.customizationTab.saveChanges();
+    this.customizationComponent.saveChanges();
+  }
+
+  openAddMemberModal() {
+    this.usersAccessComponent.openAddMemberModal(
+      this.usersAccessComponent.addMemberModal
+    );
   }
 }

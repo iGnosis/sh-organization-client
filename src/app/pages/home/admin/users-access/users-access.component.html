@@ -1,1 +1,70 @@
-<p>users-access works!</p>
+<div class="container-xl mb-5">
+
+
+  <div class="card my-sm-4 my-md-10">
+    <div class="row">
+      <div class="col-md-8">
+        <p class="h3 px-4 py-8 mx-lg-4 mx-md-2">
+          Staff Members
+        </p>
+      </div>
+      <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <button class="btn btn-secondary text-info bg-white btn-border"> <i class="bi bi-plus-lg"></i>&nbsp; Add new
+          Staff Member</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card my-sm-4 my-md-10">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="px-4 py-8 mx-lg-4 mx-md-2">
+          <p class="h3 ">
+            Patients
+          </p>
+          <mat-checkbox>
+            <p class="h3 text-info checkbox-text">&nbsp;Allow only invitational sign-ups</p>
+          </mat-checkbox>
+        </div>
+
+      </div>
+      <div class="col-md-4 d-flex justify-content-center align-items-center">
+        <button class="btn btn-secondary text-info bg-white btn-border"> <i class="bi bi-plus-lg"></i>&nbsp; Add New
+          Patient</button>
+      </div>
+    </div>
+    <div class="row d-flex align-items-center justify-content-center">
+    </div>
+  </div>
+
+
+  <ng-template #addMemberModal let-modal>
+    <div class="modal-header d-flex justify-content-center align-items-center">
+      <h3 class="modal-title text-primary"><i class="bi bi-plus-lg"></i>&nbsp; Add Members</h3>
+      <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+          class="bi bi-x-lg"></i></button>
+    </div>
+    <div class="modal-body">
+      <div class="row d-flex align-items-center justify-content-center">
+        <div class="col-8 form-check pb-md-4">
+          <input class="form-check-input" type="radio" name="addMember" id="addPatient">
+          <label class="form-check-label h3 mx-1 text-primary" for="addPatient">
+            Add Patient
+          </label>
+        </div>
+        <div class="col-8 form-check">
+          <input class="form-check-input" type="radio" name="addMember" id="addStaffMember">
+          <label class="form-check-label h3 mx-1 text-primary" for="addStaffMember">
+            Add Staff Member
+          </label>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer d-flex align-items-center justify-content-center">
+      <button type="button" class="btn btn-info btn-block">Next</button>
+    </div>
+  </ng-template>
+
+</div>
