@@ -79,13 +79,6 @@ import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
 //   suppressScrollX: true
 // };
 
-export const CUSTOM_MAT_COLOR_FORMATS: MatColorFormats = {
-  display: {
-    colorInput: 'hex',
-  },
-};
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -159,7 +152,7 @@ export const CUSTOM_MAT_COLOR_FORMATS: MatColorFormats = {
   providers: [
     PrivateGuard,
     PublicGuard,
-    { provide: MAT_COLOR_FORMATS, useValue: CUSTOM_MAT_COLOR_FORMATS },
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
 
     // {
     //   provide: PERFECT_SCROLLBAR_CONFIG,
