@@ -52,12 +52,17 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
-        data: { breadcrumb: {skip: true} },
+        data: { 
+          breadcrumb: {
+            label: 'Therapist',
+            info: 'Therapist',
+          } 
+        },
       },
       { path: "patients", data: { breadcrumb: "Patients" }, component: PatientsComponent },
       { path: 'patients/new', component: PatientAddComponent, data: { breadcrumb: "New Patient" } },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      { path: 'patients/:id', component: PatientDetailsComponent, data: { breadcrumb: "Patient Details" },
+      { path: 'patients/:id', component: PatientDetailsComponent, data: { breadcrumb: "Patient" },
         // children: [
         //   {
         //     path: 'session/:id',
@@ -91,7 +96,7 @@ const routes: Routes = [
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       // { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Session Details" } },
+      { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Activity" } },
 
       { path: 'account', component: AccountComponent },
       { path: 'admin', component:  AdminComponent},

@@ -71,6 +71,7 @@ export class Patient {
   sessions?: Array<Session>;
   sessions_aggregate: any;
   primaryTherapistUser?: Therapist;
+  games?: { [key: string]: any }[];
 }
 export class User {
   id: string;

@@ -12,10 +12,13 @@ export const GqlConstants = {
       preferredGenres
       games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
         createdAt
+        game
       }
-      games_aggregate(where: {endedAt: {_is_null: false}}) {
+      games_aggregate {
         aggregate {
-          count
+          sum {
+            totalDuration
+          }
         }
       }
     }
@@ -69,6 +72,7 @@ export const GqlConstants = {
       repsCompleted
       totalDuration
       calibrationDuration
+      analytics
     }
   }`,
   GET_PATIENT_CHARTS: `

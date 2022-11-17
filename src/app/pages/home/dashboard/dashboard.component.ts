@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { fromEvent, map, merge, of, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,20 +9,63 @@ import { environment } from 'src/environments/environment';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  patientAdherenceChart: Chart
-  patientOverviewChart: Chart
-  currentDate: Date
+  patientAdherenceChart: Chart;
+  patientOverviewChart: Chart;
+
+  currentDate: Date;
+  previousDate: Date;
+
+  isOnline = false;
+  networkStatusSubscription: Subscription;
+
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+  ];
+  selectedDateRange = this.dateFilter[0].range;
 
   constructor() {
     this.currentDate = new Date();
+    this.previousDate = this.currentDate;
     console.log('Environment ', environment.name);
   }
 
   ngOnInit(): void {
+    this.getNetworkStatus();
     this.initPatientAdherenceChart();
     this.initPatientOverviewChart();
+  }
+
+  ngOnDestroy(): void {
+    this.networkStatusSubscription.unsubscribe();
+  }
+
+  getNetworkStatus() {
+    this.isOnline = navigator.onLine;
+    this.networkStatusSubscription = merge(
+      of(null),
+      fromEvent(window, 'online'),
+      fromEvent(window, 'offline')
+    )
+      .pipe(map(() => navigator.onLine))
+      .subscribe(status => {
+        this.isOnline = status;
+      });
+  }
+
+  setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.previousDate = new Date(this.currentDate);
+    this.previousDate.setDate(this.previousDate.getDate() - range);
+
+    if (range == 0) this.previousDate = this.currentDate;
   }
 
   initPatientAdherenceChart() {

@@ -31,7 +31,7 @@ export class PatientsListComponent implements OnInit {
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session', 'sessions_aggregate','therapist','actions'];
+  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session', 'last_activity', 'sessions_aggregate','actions'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
@@ -69,9 +69,25 @@ export class PatientsListComponent implements OnInit {
   }
   async reloadPatientList(filters: any) {
     const response = await this.graphqlService.gqlRequest(GqlConstants.GET_ALL_PATIENTS, {}, true);
-    this.patients = response.patient
-    console.log(response.patient)
-    this.dataSource.data = response.patient;
+    this.patients = response.patient;
+
+    const renamedGame = (gameObj: any) => {
+      const spacedName = gameObj['game'].replace(/_/g, ' ');
+
+      return {
+        ...gameObj,
+        game: spacedName,
+      };
+  };
+
+    this.patients = this.patients?.map((patient) => {
+      return {
+        ...patient, 
+        games: patient.games?.map(renamedGame)
+      };
+    });
+
+    this.dataSource.data = this.patients as any[];
   }
 
   openPatientDetailsPage(patientId: any) {
