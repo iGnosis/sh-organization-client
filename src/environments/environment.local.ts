@@ -1,7 +1,7 @@
-import { Environment } from "src/app/pointmotion";
+import { Environment } from 'src/app/pointmotion';
 
 export const environment: Environment = {
-  production: true,
+  production: false,
   name: 'local',
   gqlEndpoint: 'http://localhost:8080/v1/graphql',
   servicesEndpoint: 'http://localhost:9000',

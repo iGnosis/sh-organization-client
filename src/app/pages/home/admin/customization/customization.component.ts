@@ -1,17 +1,18 @@
+import { Color } from '@angular-material-components/color-picker';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import {
-  Color,
-  NgxMatColorPickerInputEvent,
-} from '@angular-material-components/color-picker';
-import { Component, OnInit } from '@angular/core';
+  BrandColorType,
+  OrganizationType,
+  TypeFace,
+} from 'src/app/pointmotion';
 
-type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
-type BrandColorType =
-  | 'primary'
-  | 'secondary'
-  | 'tertiary'
-  | 'success'
-  | 'warning'
-  | 'danger';
+interface CustomizationOptions {
+  orgName: string;
+  orgType: OrganizationType;
+  brandColors: { [key in BrandColorType]: string };
+  orgLogoUrl: string;
+  orgTypeFace: TypeFace;
+}
 
 @Component({
   selector: 'app-customization',
@@ -19,61 +20,94 @@ type BrandColorType =
   styleUrls: ['./customization.component.scss'],
 })
 export class CustomizationComponent implements OnInit {
-  orgName: 'string' | undefined = undefined;
-  orgType: OrganizationType | undefined = undefined;
+  @Input() customizable: boolean;
+  @Output() changesMade: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  // TODO: change these to be dynamic
-  availableTypefaces = ['Abel', 'Inter', 'Roboto', 'Open Sans'];
-
-  // default brand color and typeface
-
-  orgTypeface = 'Inter';
-  colors: { [key in BrandColorType]: Color } = {
-    primary: this.hexToRgb('#000066'),
-    secondary: this.hexToRgb('#2F51AE'),
-    tertiary: this.hexToRgb('#FFA2AD'),
-    success: this.hexToRgb('#00BD3E'),
-    warning: this.hexToRgb('#FFB000'),
-    danger: this.hexToRgb('#EB0000'),
+  private defaultOptions: Partial<CustomizationOptions> = {
+    brandColors: {
+      primary: '#000066',
+      secondary: '#2F51AE',
+      tertiary: '#FFA2AD',
+      success: '#00BD3E',
+      warning: '#FFB000',
+      danger: '#EB0000',
+    },
+    orgLogoUrl: 'assets/images/logo.png',
+    orgTypeFace: 'Inter',
   };
 
-  constructor() {
+  private oldData: Partial<CustomizationOptions>;
+  customizationOptions: Partial<CustomizationOptions>;
+
+  // TODO: change these to be dynamic
+  availableTypefaces: TypeFace[] = ['Abel', 'Inter', 'Roboto', 'Open Sans'];
+
+  constructor() {}
+
+  ngOnInit(): void {
     this.initValues();
   }
 
-  ngOnInit(): void {}
-
-  initValues() {
-    // TODO: get data from backend
+  initValues(): void {
+    // TODO: get data from backend and update customizationOptions or use defaultOptions.
+    this.customizationOptions = this.defaultOptions;
+    this.oldData = {
+      ...this.customizationOptions,
+      brandColors: {
+        ...this.customizationOptions.brandColors!,
+      },
+    };
   }
 
-  // credit: https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-  hexToRgb(hex: string): Color {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    if (result) {
-      return new Color(
-        parseInt(result[1], 16),
-        parseInt(result[2], 16),
-        parseInt(result[3], 16)
-      );
-    } else {
-      throw new Error('Invalid hex color');
-    }
+  setOrganizationType(orgType: OrganizationType): void {
+    this.customizationOptions.orgType = orgType;
   }
 
-  setOrganizationType(orgType: OrganizationType) {
-    this.orgType = orgType;
-  }
-
-  uploadLogo(event: Event) {
+  uploadLogo(event: Event): void {
     const element = event.currentTarget as HTMLInputElement;
     const fileList: FileList | null = element.files;
     if (fileList) {
       console.log('FileUpload -> files', fileList);
+      // TODO: upload and update logoUrl
     }
   }
 
-  setColor(type: BrandColorType, event: NgxMatColorPickerInputEvent) {
-    console.log(event);
+  checkIfChangesAreMade(): void {
+    const changesMade: boolean =
+      JSON.stringify(this.customizationOptions) !==
+      JSON.stringify(this.oldData);
+    this.changesMade.emit(!changesMade);
+  }
+
+  setColor(type: BrandColorType, color: Color): void {
+    const hexCode: string = ('#' + color.hex).toUpperCase();
+    this.customizationOptions.brandColors![type] = hexCode;
+    this.checkIfChangesAreMade();
+  }
+
+  setOrgType(orgType: OrganizationType): void {
+    this.customizationOptions.orgType = orgType;
+    this.checkIfChangesAreMade();
+  }
+
+  setOrgName(evt: Event): void {
+    const element = evt.currentTarget as HTMLInputElement;
+    this.customizationOptions.orgName = element.value;
+    if (element.value.trim() === '') {
+      delete this.customizationOptions.orgName;
+      this.checkIfChangesAreMade();
+      return;
+    }
+    this.checkIfChangesAreMade();
+  }
+
+  setTypeFace(typeFace: TypeFace): void {
+    this.customizationOptions.orgTypeFace = typeFace;
+    this.checkIfChangesAreMade();
+  }
+
+  saveChanges(): void {
+    // TODO: send data to hasura and reinit values
+    console.log('send:changes::', this.customizationOptions);
   }
 }

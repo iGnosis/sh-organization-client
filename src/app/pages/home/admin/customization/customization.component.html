@@ -1,8 +1,10 @@
 <div class="container-xl mb-5">
 
-  <div class="row custom-card p-4">
+  <img *ngIf="!customizable" class="logo-img" [src]="customizationOptions.orgLogoUrl" alt="organization-logo">
+  <div *ngIf="customizable" class="row custom-card p-4">
     <div class="col-md-1 text-center">
-      <avatar text="AA" size="md"></avatar>
+      <!-- <avatar text="AA" size="md"></avatar> -->
+      <img class="logo-circle md" [src]="customizationOptions.orgLogoUrl" alt="organization-logo" />
     </div>
     <div class="col-md-9 d-flex align-items-center">
       Please use a picture that is atleast 98x98 px and 4MB or less. Accepted file formats are JPEG and PNG.
@@ -20,14 +22,15 @@
 
     <div class="mt-5">
       <label for="organizationName" class="form-label">Organization Name</label>
-      <input type="text" [(ngModel)]="orgName" class="form-control" id="organizationName"
-        placeholder="Organization Name">
+      <input type="text" (input)="setOrgName($event)" class="form-control" id="organizationName"
+        placeholder="Organization Name" [disabled]="!customizable">
     </div>
 
     <div class="mt-5">
       <label for="organizationType" class="form-label col-12">Organization Type</label>
       <mat-form-field appearance="fill" class="col-12  condition_select">
-        <mat-select placeholder="Select Organization Type" [(ngModel)]="orgType">
+        <mat-select placeholder="Select Organization Type" (valueChange)="setOrgType($event)"
+          [disabled]="!customizable">
           <mat-option value="clinic">Clinic</mat-option>
           <mat-option value="hospital">Hospital</mat-option>
           <mat-option value="seniorHomeFacility">Senior Home Facility</mat-option>
@@ -45,7 +48,9 @@
         <div class="col-md-3">
           <label for="primary" class="form-label d-block">Primary Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.primary" [ngxMatColorPicker]="primary">
+            <input matInput (ngModelChange)="setColor('primary', $event)"
+              [ngModel]="customizationOptions.brandColors!.primary | hexToColor " [ngxMatColorPicker]="primary"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="primary"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #primary [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -53,7 +58,9 @@
         <div class="col-md-3">
           <label for="secondary" class="form-label d-block">Secondary Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.secondary" [ngxMatColorPicker]="secondary">
+            <input matInput (ngModelChange)="setColor('secondary', $event)"
+              [ngModel]="customizationOptions.brandColors!.secondary | hexToColor " [ngxMatColorPicker]="secondary"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="secondary"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #secondary [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -61,7 +68,9 @@
         <div class="col-md-3">
           <label for="tertiary" class="form-label d-block">Tertiary Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.tertiary" [ngxMatColorPicker]="tertiary">
+            <input matInput (ngModelChange)="setColor('tertiary', $event)"
+              [ngModel]="customizationOptions.brandColors!.tertiary | hexToColor " [ngxMatColorPicker]="tertiary"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="tertiary"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #tertiary [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -72,7 +81,9 @@
         <div class="col-md-3">
           <label for="success" class="form-label d-block">Success Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.success" [ngxMatColorPicker]="success">
+            <input matInput (ngModelChange)="setColor('success', $event)"
+              [ngModel]="customizationOptions.brandColors!.success | hexToColor " [ngxMatColorPicker]="success"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="success"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #success [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -80,7 +91,9 @@
         <div class="col-md-3">
           <label for="warning" class="form-label d-block">Warning Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.warning" [ngxMatColorPicker]="warning">
+            <input matInput (ngModelChange)="setColor('warning', $event)"
+              [ngModel]="customizationOptions.brandColors!.warning | hexToColor " [ngxMatColorPicker]="warning"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="warning"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #warning [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -88,7 +101,9 @@
         <div class="col-md-3">
           <label for="danger" class="form-label d-block">Danger Color</label>
           <mat-form-field>
-            <input matInput [(ngModel)]="colors.danger" [ngxMatColorPicker]="danger">
+            <input matInput (ngModelChange)="setColor('danger', $event)"
+              [ngModel]="customizationOptions.brandColors!.danger | hexToColor " [ngxMatColorPicker]="danger"
+              [disabled]="!customizable">
             <ngx-mat-color-toggle matSuffix [for]="danger"></ngx-mat-color-toggle>
             <ngx-mat-color-picker #danger [touchUi]="true"></ngx-mat-color-picker>
           </mat-form-field>
@@ -100,7 +115,8 @@
     <div class="mt-5">
       <label for="typeface" class="form-label col-12">Typeface</label>
       <mat-form-field appearance="fill" class="col-12 condition_select">
-        <mat-select placeholder="Select Organization Type" [(ngModel)]="orgTypeface">
+        <mat-select placeholder="Select Organization Type" [ngModel]="customizationOptions.orgTypeFace"
+          (ngModelChange)="setTypeFace($event)" [disabled]="!customizable">
           <mat-option *ngFor="let typeface of availableTypefaces" value={{typeface}}>{{typeface}}</mat-option>
         </mat-select>
       </mat-form-field>

@@ -211,3 +211,15 @@ export type Environment = {
   servicesEndpoint: string;
   activityEndpoint: string;
 };
+
+export type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
+export type BrandColorType =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'success'
+  | 'warning'
+  | 'danger';
+
+export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
+export type Tabs = 'Customization' | 'Billing' | 'Users and Access';

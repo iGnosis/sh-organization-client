@@ -64,18 +64,28 @@ import { CustomizationComponent } from './pages/home/admin/customization/customi
 import { BillingComponent } from './pages/home/admin/billing/billing.component';
 import { UsersAccessComponent } from './pages/home/admin/users-access/users-access.component';
 import {
+  MatColorFormats,
   MAT_COLOR_FORMATS,
   NgxMatColorPickerModule,
   NGX_MAT_COLOR_FORMATS,
 } from '@angular-material-components/color-picker';
 import { LatestSessionsComponent } from './pages/home/patients/latest-sessions/latest-sessions.component';
 import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
+import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 // const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 //   suppressScrollX: true
 // };
+
+export const CUSTOM_MAT_COLOR_FORMATS: MatColorFormats = {
+  display: {
+    colorInput: 'hex',
+  },
+};
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -115,6 +125,7 @@ import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
     UsersAccessComponent,
     LatestSessionsComponent,
     RelativeTimePipe,
+    HexToColorPipe,
   ],
   imports: [
     BrowserModule,
@@ -148,7 +159,7 @@ import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
   providers: [
     PrivateGuard,
     PublicGuard,
-    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
+    { provide: MAT_COLOR_FORMATS, useValue: CUSTOM_MAT_COLOR_FORMATS },
 
     // {
     //   provide: PERFECT_SCROLLBAR_CONFIG,
