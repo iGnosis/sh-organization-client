@@ -205,6 +205,7 @@ export class EngagementRatio {
 }
 
 export type Environment = {
+  organizationName: string;
   name: string;
   production: boolean;
   gqlEndpoint: string;

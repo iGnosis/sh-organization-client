@@ -20,8 +20,7 @@ jobs:
           echo "Current path: $(pwd)"
           ls -la
           npm ci --ignore-scripts
-          # TODO: Change this to use org's config
-          npm run build -- -c "production"
+          npm run build -- -c "${GITHUB_REF#*/*/}"
 
       - uses: jakejarvis/s3-sync-action@v0.5.1
         with:

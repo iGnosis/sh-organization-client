@@ -5,6 +5,7 @@
 import { Environment } from "src/app/pointmotion";
 
 export const environment: Environment = {
+  organizationName: 'pmc',
   production: false,
   name: 'local',
   gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
