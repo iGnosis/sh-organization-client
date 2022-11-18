@@ -16,7 +16,7 @@
           <div class="row justify-content-end">
             <div class="col d-flex justify-content-end">
               <!-- Dropdown -->
-              <div class="dropdown">
+              <div *ngIf="!showEmptyState" class="dropdown">
                 <button class="btn btn-primary position-relative w-40 text-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ dateFilter[selectedDateRange].label }}
                   <span class="position-absolute top-1/2 end-3 translate-middle-y"><i class="bi bi-chevron-down"></i></span>
@@ -82,7 +82,12 @@
 <main class="pb-7">
   <!-- Put Charts here -->
   <div class="container mt-8 mb-8">
-    <div class="row">
+    <div *ngIf="showEmptyState" class="d-flex flex-column align-items-center">
+      <img src="/assets/images/empty_inbox.png" alt="empty inbox">
+      <h2 class="text-black text-center my-10">Your Dashboard looks empty<br>Let’s get started.</h2>
+      <button class="btn btn-primary w-64" routerLink="/app/patients">Add Patients</button>
+    </div>
+    <div *ngIf="!showEmptyState" class="row">
       <div class="col-md-6">
         <div class="card h-full">
           <div class="card-body">

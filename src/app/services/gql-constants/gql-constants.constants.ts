@@ -87,6 +87,26 @@ export const GqlConstants = {
       data
     }
   }`,
+  GET_PATIENT_ADHERENCE_CHART: `
+  query PatientAdherenceChart($startDate: String!, $endDate: String!, $groupBy: GroupByEnum!) {
+    patientAdherenceChart(startDate: $startDate, endDate: $endDate, groupBy: $groupBy) {
+      data {
+        activePatientsCount
+        totalNumOfPatients
+      }
+    }
+  }`,
+  GET_PATIENT_OVERVIEW_CHART: `
+  query PatientOverviewChart($startDate: String!, $endDate: String!) {
+    patientOverviewChart(startDate: $startDate, endDate: $endDate) {
+      data {
+        patient
+        gamesPlayedCount
+        engagementRatio
+        avgAchievementPercentage
+      }
+    }
+  }`,
   GET_TOP_PATIENTS: `
   query TopPatients {
     patient(limit: 5, order_by: {games_aggregate: {max: {createdAt: desc}}}, where: {nickname: {_is_null: false}}) {

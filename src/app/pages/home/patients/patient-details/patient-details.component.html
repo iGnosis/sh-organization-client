@@ -17,20 +17,31 @@
             <!-- <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span>Select Dates</span>
             </a> -->
-            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
-              <mat-date-range-input [rangePicker]="picker1">
-                <input matStartDate placeholder="Start Date">
-                <input matEndDate placeholder="End Date">
-              </mat-date-range-input>
-              <mat-datepicker-toggle matSuffix [for]="picker1">
-                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-date-range-picker #picker1></mat-date-range-picker>
-            </mat-form-field>
+            <div class="dropdown">
+              <button class="btn btn-primary position-relative w-32 text-start d-inline-flex btn-sm custom_btn_class mx-3" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ dateFilter[selectedDateRange].label }}
+                <span class="position-absolute top-1/2 end-3 translate-middle-y"><i class="bi bi-chevron-down"></i></span>
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <form>
+                  <div *ngFor="let filter of dateFilter; let i=index" class="dropdown-item py-1 d-flex align-items-center">
+                    <div class="text-lg">
+                      <input class="form-check-input" type="checkbox" id="flexCheck1" value="i" aria-label="..." [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
+                    </div>
+                    <div class="ms-3 me-5">
+                      <label for="flexCheck1">{{ filter.label }}</label>
+                    </div>
+                  </div>
+                  <div class="dropdown-item">
+                    <button type="button" class="btn btn-sm btn-primary w-full">Save</button>
+                  </div>
+                </form>
+              </div>
+            </div>
             <!-- <a (click)="this.createNewSessionAndRedirect()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1"> -->
             <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span class="pe-2">
-                <i class="bi bi-play-btn"></i>
+                <i class="bi bi-play-fill"></i>
               </span>
               <span>Start New Session</span>
             </a>
@@ -58,95 +69,96 @@
 
 <!-- Charts -->
 <div class="container mt-8" *ngIf="dataSource.data.length!=0">
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-header">
-            <h4 style="color: #000066;">Patient Engagement</h4>
-            <!-- <span>
-              <h5 style="color: #000066;">
-                {{ startDate | date }} - {{ endDate | date }}
-              </h5>
-            </span> -->
-
-            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
-              <mat-date-range-input [rangePicker]="engagement">
-                <input matStartDate placeholder="Start Date" [value]="engagementStartDate"
-                  (dateChange)="changeEngagementChart('start', $event.value)">
-                <input matEndDate placeholder="End Date" [value]="engagementEndDate"
-                  (dateChange)="changeEngagementChart('end', $event.value)">
-              </mat-date-range-input>
-              <mat-datepicker-toggle matSuffix [for]="engagement">
-                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-date-range-picker #engagement></mat-date-range-picker>
-            </mat-form-field>
-
-          </div>
-          <canvas class="chart-canvas" id="engagementChart" width="500" height="500"></canvas>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card">
-        <div class="card-body">
-          <div class="card-header">
-            <h4 style="color: #000066;">Achievement Ratio</h4>
-            <!-- <span>
-              <h5 style="color: #000066;">
-                {{ startDate | date }} - {{ endDate | date }}
-              </h5>
-            </span> <br> -->
-            <!-- <div class="form-group">
-              <select class="form-control" id="sessionVal" name="isActive" (change)="changeSessionsChart()">
-                <option value="allSessions">All Sessions</option>
-                <option value="cognitiveSkillsII">Cognitive Skills II</option>
-              </select>
-            </div> -->
-
-            <div class="dropdown">
-              <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
-              </button>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
-                  <div *ngFor="let filterOption of activityFilterOptions"
-                    class="dropdown-item py-1 d-flex align-items-center">
-                    <div class="text-lg">
-                      <input class="form-check-input" type="checkbox" id={{filterOption}} value={{filterOption}}
-                        aria-label='...'>
+  <div class="row mx-5">
+    <owl-carousel-o [options]="customOptions">
+      <ng-template carouselSlide>
+        <div class="card h-full mx-2">
+          <div class="card-body">
+            <div class="card-header">
+              <h4 style="color: #000066;">Patient Engagement</h4>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
+                    <div *ngFor="let filterOption of activityFilterOptions"
+                      class="dropdown-item py-1 d-flex align-items-center">
+                      <div class="text-lg">
+                        <input class="form-check-input" type="checkbox" id={{filterOption}} value={{filterOption}}
+                          aria-label='...'>
+                      </div>
+                      <div class="ms-3 me-5">
+                        <label for={{filterOption}}>{{filterOption.split('_').join(' ') | titlecase}}</label>
+                      </div>
                     </div>
-                    <div class="ms-3 me-5">
-                      <label for={{filterOption}}>{{filterOption.split('_').join(' ') | titlecase}}</label>
+                    <div class="dropdown-item">
+                      <button type="submit" class="btn btn-sm btn-primary w-full">Save</button>
                     </div>
-                  </div>
-                  <div class="dropdown-item">
-                    <button type="submit" class="btn btn-sm btn-primary w-full">Save</button>
-                  </div>
-                </form>
+                  </form>
+                </div>
               </div>
             </div>
-
-            <mat-form-field class="details_page alignment_date condition_select select_dates" appearance="standard">
-              <mat-date-range-input [rangePicker]="achievements">
-                <input matStartDate placeholder="Start Date" [value]="achievementStartDate"
-                  (dateChange)="changeAchievementChart('start', $event.value)">
-                <input matEndDate placeholder="End Date" [value]="achievementEndDate"
-                  (dateChange)="changeAchievementChart('end', $event.value)">
-              </mat-date-range-input>
-              <mat-datepicker-toggle matSuffix [for]="achievements">
-                <mat-icon matDatepickerToggleIcon>expand_more</mat-icon>
-              </mat-datepicker-toggle>
-              <mat-date-range-picker #achievements></mat-date-range-picker>
-            </mat-form-field>
-
+            <canvas class="chart-canvas" id="engagementChart" width="500" height="500"></canvas>
           </div>
-          <canvas class="chart-canvas" id="achievementChart" width="500" height="500"></canvas>
         </div>
-      </div>
-    </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="card h-full mx-2">
+          <div class="card-body">
+            <div class="card-header">
+              <h4 style="color: #000066;">Achievement Ratio</h4>
+              <div class="dropdown">
+                <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                  data-bs-toggle="dropdown" aria-expanded="false">
+                  {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
+                    <div *ngFor="let filterOption of activityFilterOptions"
+                      class="dropdown-item py-1 d-flex align-items-center">
+                      <div class="text-lg">
+                        <input class="form-check-input" type="checkbox" id={{filterOption}} value={{filterOption}}
+                          aria-label='...'>
+                      </div>
+                      <div class="ms-3 me-5">
+                        <label for={{filterOption}}>{{filterOption.split('_').join(' ') | titlecase}}</label>
+                      </div>
+                    </div>
+                    <div class="dropdown-item">
+                      <button type="submit" class="btn btn-sm btn-primary w-full">Save</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+            <canvas class="chart-canvas" id="achievementChart" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="card h-full mx-2">
+          <div class="card-body">
+            <div class="card-header">
+              <h3 class="text-primary">Total Time of Movement</h3>
+              <h4 class="text-primary">Total Time of Movement: {{95}} Minutes</h4>
+            </div>
+            <canvas class="chart-canvas" id="movementTimeChart" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template carouselSlide>
+        <div class="card h-full mx-2">
+          <div class="card-body">
+            <div class="card-header">
+              <h3 class="text-primary">Mood Variations</h3>
+            </div>
+            <canvas class="chart-canvas" id="moodVariationsChart" width="500" height="500"></canvas>
+          </div>
+        </div>
+      </ng-template>
+    </owl-carousel-o>
   </div>
 </div>
 <div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && noSessionAssignedPlan==0">

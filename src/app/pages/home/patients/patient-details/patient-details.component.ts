@@ -29,6 +29,7 @@ import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { groupBy as lodashGroupBy, capitalize } from 'lodash';
 import * as moment from 'moment';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 export class Captain {
   careplanByCareplan: string;
@@ -111,6 +112,27 @@ export class PatientDetailsComponent implements OnInit {
   gameDetails: Array<Game>;
   selectedCarePlanId: string;
 
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+  ];
+  selectedDateRange = 0;
+
+  customOptions: OwlOptions = {
+    loop: false,
+    dots: false,
+    navSpeed: 700,
+    responsive: {
+      940: {
+        items: 2
+      }
+    },
+    nav: true,
+    navText: [ '<i class="bi bi-chevron-left"></i>', '<i class="bi bi-chevron-right"></i>'],
+  };
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -144,8 +166,8 @@ export class PatientDetailsComponent implements OnInit {
 
         // by default, get data for past 7 days
         this.endDate = new Date();
-        this.startDate = new Date(new Date().setDate(new Date().getDate() - 7));
-        this.startDate.setHours(0, 0, 0, 0);
+        this.endDate.setHours(0, 0, 0, 0);
+        this.startDate = this.endDate;
 
         this.changeAchievementChart('start', this.startDate);
         this.changeAchievementChart('end', this.endDate);
@@ -154,6 +176,20 @@ export class PatientDetailsComponent implements OnInit {
         this.changeEngagementChart('end', this.endDate);
       }
     });
+  }
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.startDate = new Date(this.endDate || new Date());
+    this.startDate.setDate(this.startDate.getDate() - range);
+
+    if (range == 0) this.startDate = this.endDate;
+
+    this.changeAchievementChart('end', this.endDate!);
+    this.changeEngagementChart('end', this.endDate!);
   }
 
   openDialog() {

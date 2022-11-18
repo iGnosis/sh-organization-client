@@ -31,7 +31,7 @@ export class PatientsListComponent implements OnInit {
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session', 'last_activity', 'sessions_aggregate','actions'];
+  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
@@ -52,6 +52,7 @@ export class PatientsListComponent implements OnInit {
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
     this.filterType = MatTableFilter.ANYWHERE;
+    this.toggleDisplayedColumns();
   }
 
   ngAfterViewInit() {
@@ -59,6 +60,12 @@ export class PatientsListComponent implements OnInit {
     this.dataSource.paginator = this.tableOnePaginator;
     // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
     // element.click();
+  }
+
+  toggleDisplayedColumns() {
+    const isPatientsList = this.router.url === '/app/patients';
+
+    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'achievement_ratio', 'actions'] : ['last_activity', 'sessions_aggregate', 'actions'])];
   }
 
   togglefilterDiv(){
