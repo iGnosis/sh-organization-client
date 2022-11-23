@@ -9,6 +9,7 @@
 @import "@webpixels/css/utilities";
 @import '/node_modules/ngx-owl-carousel-o/lib/styles/scss/owl.carousel.scss';
 @import '/node_modules/ngx-owl-carousel-o/lib/styles/scss/owl.theme.default.scss';
+
 // Should not be global... or should be...?
 label.form-label {color: #425466;font-weight: 500;}
 .lg-modal .modal-dialog {max-width: 90vw;}
@@ -292,3 +293,13 @@ a.toggle-patients {cursor: pointer;text-align: center;font-weight: 600;font-size
 .owl-carousel .owl-item .card-body {flex: 1 1 auto;padding: 1.5rem 1.5rem;color: #525F7F;min-height: 15em;display: flex;flex-direction: column;justify-content: center;}
 .activities-carousel .owl-theme .owl-nav {order: 1;text-align: right;margin-top: -3em;}
 img.card-img.performance_click {cursor: pointer;}
+
+.custom-modal-dialog{
+  max-width: 400px;
+}
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+.custom-modal-size-md {
+  max-width: 500px;
+}
