@@ -11,8 +11,7 @@ export class GraphqlService {
 
   constructor(private jwtService: JwtService) {
     const additionalHeaders: any = {
-      'x-pointmotion-origin': window.location.origin,
-      'x-pointmotion-user': 'therapist',
+      'x-pointmotion-user-type': 'staff',
     };
     if (environment.name == 'local') {
       additionalHeaders['x-pointmotion-debug'] = 'true';
@@ -49,8 +48,7 @@ export class GraphqlService {
     auth = true,
     additionalHeaders: any = {}
   ) {
-    additionalHeaders['x-pointmotion-origin'] = window.location.origin;
-    additionalHeaders['x-pointmotion-user'] = 'therapist';
+    additionalHeaders['x-pointmotion-user-type'] = 'staff';
 
     if (environment.name == 'local') {
       additionalHeaders['x-pointmotion-debug'] = 'true';

@@ -106,15 +106,6 @@ export class SmsOtpLoginComponent {
             }
           );
 
-          if (
-            !resp ||
-            !resp.requestLoginOtp ||
-            !resp.requestLoginOtp.data.message
-          ) {
-            this.showError('Something went wrong while sending OTP.');
-            return;
-          }
-
           // increment step
           this.formErrorMsg = '';
           this.step++;
@@ -128,6 +119,8 @@ export class SmsOtpLoginComponent {
             this.showError(
               'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
             );
+          } else {
+            this.showError('Something went wrong while sending OTP.');
           }
         }
       }
