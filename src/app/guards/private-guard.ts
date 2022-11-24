@@ -21,6 +21,9 @@ export class PrivateGuard implements CanActivateChild, CanActivate {
     }
 
     canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): any {
+        const allowPublicInvitation = state.url.includes('/app/admin/invite');
+        if (allowPublicInvitation) return true;
+
         return this.handleActivate()
     }
 }

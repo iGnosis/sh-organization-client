@@ -253,4 +253,18 @@ export const GqlConstants = {
     }
   }
 }`,
+  GET_ORGANIZATION_CONFIG: `
+  query OrganizationConfig {
+    organization {
+      configuration
+    }
+  }`,
+  CREATE_ORGANIZATION: `
+  mutation CreateOrganization($createOrganizationInput: CreateOrganizationInput!) {
+    createOrganization(createOrganizationInput: $createOrganizationInput) {
+      data {
+        message
+      }
+    }
+  }`,
 };
