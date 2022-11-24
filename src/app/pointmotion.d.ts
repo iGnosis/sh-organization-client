@@ -224,3 +224,13 @@ export type BrandColorType =
 
 export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
 export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
+
+export interface Theme {
+  colors: {
+    [key: string]: any;
+  };
+  font: {
+    family: string;
+    url: string;
+  }
+}
