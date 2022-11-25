@@ -102,7 +102,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent },
       { path: 'admin', data: { breadcrumb: 'Admin' }, children: [
         { path: '', component:  AdminComponent, pathMatch: 'full' },
-        { path: 'invite/:code', component:  AddOrganizationComponent, data: { breadcrumb: 'Add Admin' } },
+        { path: 'add-organization/:inviteCode', component:  AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
       ]
     },
 

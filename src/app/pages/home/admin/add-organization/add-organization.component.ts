@@ -23,7 +23,7 @@ export class AddOrganizationComponent implements OnInit {
   allowSavingChanges = false;
 
   constructor(private graphqlService: GraphqlService, private router: Router, private route: ActivatedRoute) {
-    this.inviteCode = this.route.snapshot.paramMap.get('code') || '';
+    this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
   }
 
   ngOnInit(): void {
