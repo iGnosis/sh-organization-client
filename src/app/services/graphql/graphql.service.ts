@@ -49,6 +49,7 @@ export class GraphqlService {
     additionalHeaders: any = {}
   ) {
     additionalHeaders['x-pointmotion-user-type'] = 'staff';
+    additionalHeaders['x-organization-name'] = environment.organizationName;
 
     if (environment.name == 'local') {
       additionalHeaders['x-pointmotion-debug'] = 'true';
