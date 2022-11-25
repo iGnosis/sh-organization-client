@@ -1,5 +1,5 @@
 export const environment = {
-  organizationName: 'pmc',
+  organizationName: 'pointmotion',
   production: false,
   name: 'stage',
   gqlEndpoint: 'https://api.stage.pointmotioncontrol.com/v1/graphql',
