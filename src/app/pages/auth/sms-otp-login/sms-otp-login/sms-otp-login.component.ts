@@ -66,70 +66,64 @@ export class SmsOtpLoginComponent {
       // call the Resend OTP API, since phone number did not change.
       if (this.tempFullPhoneNumber === this.fullPhoneNumber) {
         console.log('resend OTP API called');
-        try {
-          const resp = await this.graphQlService.gqlRequest(
-            GqlConstants.RESEND_LOGIN_OTP,
-            {
-              phoneCountryCode: this.countryCode,
-              phoneNumber: this.phoneNumber,
-            },
-            false
-          );
-          if (
-            !resp ||
-            !resp.resendLoginOtp ||
-            !resp.resendLoginOtp.data.message
-          ) {
-            this.showError('Something went wrong while sending OTP.');
-            return;
-          }
+        const resp = await this.graphQlService.gqlRequest(
+          GqlConstants.RESEND_LOGIN_OTP,
+          {
+            phoneCountryCode: this.countryCode,
+            phoneNumber: this.phoneNumber,
+          },
+          false
+        );
 
-          // increment step
-          this.formErrorMsg = '';
-          this.step++;
-        } catch (err) {
-          console.log('Err::', err);
-          if (
-            err &&
-            err.response &&
-            err.response.errors[0].extensions.statusCode === 401
-          ) {
-            this.showError(
-              'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
-            );
-          }
+        if (resp.toString().toLowerCase().includes('unauthorized')) {
+          this.showError(
+            'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
+          );
+          return;
         }
+
+        else if (
+          !resp ||
+          !resp.resendLoginOtp ||
+          !resp.resendLoginOtp.data.message
+        ) {
+          this.showError('Something went wrong while sending OTP.');
+          return;
+        }
+
+        // increment step
+        this.formErrorMsg = '';
+        this.step++;
       }
       // call Request Login OTP API, since the phone number changed.
       else {
-        try {
-          const resp = await this.graphQlService.gqlRequest(
-            GqlConstants.REQUEST_LOGIN_OTP,
-            {
-              phoneCountryCode: this.countryCode,
-              phoneNumber: this.phoneNumber,
-              inviteCode: this.inviteCode,
-            },
-            false
+        const resp = await this.graphQlService.gqlRequest(
+          GqlConstants.REQUEST_LOGIN_OTP,
+          {
+            phoneCountryCode: this.countryCode,
+            phoneNumber: this.phoneNumber,
+            inviteCode: this.inviteCode,
+          },
+          false
+        );
+        if (resp.toString().toLowerCase().includes('unauthorized')) {
+          this.showError(
+            'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
           );
-
-          // increment step
-          this.formErrorMsg = '';
-          this.step++;
-        } catch (err) {
-          console.log('Err::', err);
-          if (
-            err &&
-            err.response &&
-            err.response.errors[0].extensions.statusCode === 401
-          ) {
-            this.showError(
-              'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
-            );
-          } else {
-            this.showError('Something went wrong while sending OTP.');
-          }
+          return;
         }
+
+        else if (
+          !resp ||
+          !resp.requestLoginOtp ||
+          !resp.requestLoginOtp.data.message
+        ) {
+          this.showError('Something went wrong while sending OTP.');
+          return;
+        }
+        // increment step
+        this.formErrorMsg = '';
+        this.step++;
       }
     }
 
