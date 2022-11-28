@@ -63,12 +63,13 @@ export class SmsOtpLoginComponent {
       if (this.tempFullPhoneNumber === this.fullPhoneNumber) {
         console.log('resend OTP API called');
         try {
-          const resp = await this.graphQlService.publicClient.request(
+          const resp = await this.graphQlService.gqlRequest(
             GqlConstants.RESEND_LOGIN_OTP,
             {
               phoneCountryCode: this.countryCode,
               phoneNumber: this.phoneNumber,
-            }
+            },
+            false
           );
           if (
             !resp ||
@@ -98,12 +99,13 @@ export class SmsOtpLoginComponent {
       // call Request Login OTP API, since the phone number changed.
       else {
         try {
-          const resp = await this.graphQlService.publicClient.request(
+          const resp = await this.graphQlService.gqlRequest(
             GqlConstants.REQUEST_LOGIN_OTP,
             {
               phoneCountryCode: this.countryCode,
               phoneNumber: this.phoneNumber,
-            }
+            },
+            false
           );
 
           // increment step
