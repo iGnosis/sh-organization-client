@@ -267,6 +267,38 @@ export const GqlConstants = {
     update_organization_by_pk(pk_columns: {id: $organizationId}, _set: {name: $name, type: $type}) {
       id
     }
-  }  
+  }
   `,
+
+  // run by guest user
+  CREATE_PATIENT: `mutation CreatePatient($firstName: String!, $lastName: String!, $namePrefix: String!, $phoneCountryCode: String!, $phoneNumber: String!, $email: String!, $inviteCode: String!) {
+  createPatient(firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, email: $email, inviteCode: $inviteCode) {
+    data {
+      message
+    }
+  }
+}`,
+
+  // run by guest user
+  CREATE_STAFF: `mutation CreateStaff($email: String!, $firstName: String!, $inviteCode: String!, $lastName: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
+  createStaff(email: $email, firstName: $firstName, inviteCode: $inviteCode, lastName: $lastName, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber) {
+    data {
+      message
+    }
+  }
+}`,
+  INVITE_STAFF: `query InviteStaff($staffType: StaffType!) {
+  inviteStaff(staffType: $staffType) {
+    data {
+      inviteCode
+    }
+  }
+}`,
+  INVITE_PATIENT: `query InvitePatient {
+  invitePatient {
+    data {
+      inviteCode
+    }
+  }
+}`,
 };

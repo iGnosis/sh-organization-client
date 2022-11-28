@@ -74,6 +74,8 @@ import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
 import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
 import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
 import { InviteGuard } from './guards/invite-guard';
+import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
+import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -122,6 +124,8 @@ import { InviteGuard } from './guards/invite-guard';
     RelativeTimePipe,
     HexToColorPipe,
     AddOrganizationComponent,
+    AddPatientComponent,
+    AddStaffComponent,
   ],
   imports: [
     BrowserModule,

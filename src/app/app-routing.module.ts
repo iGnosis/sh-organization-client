@@ -15,6 +15,7 @@ import { ActivitiesDetailsComponent } from './pages/home/activities/activities-d
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
 import { AdminComponent } from './pages/home/admin/admin.component';
+import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
 import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
 import { DashboardComponent } from './pages/home/dashboard/dashboard.component';
@@ -22,6 +23,8 @@ import { PatientAddComponent } from './pages/home/patients/patient-add/patient-a
 import { PatientDetailsComponent } from './pages/home/patients/patient-details/patient-details.component';
 import { PatientsComponent } from './pages/home/patients/patients.component';
 import { SessionsDetailsComponent } from './pages/home/sessions/session-details/sessions-details.component';
+import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
+import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 import { SessionComponent } from './pages/session/session.component';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
@@ -55,11 +58,11 @@ const routes: Routes = [
       {
         path: 'dashboard',
         component: DashboardComponent,
-        data: { 
+        data: {
           breadcrumb: {
             label: 'Therapist',
             info: 'Therapist',
-          } 
+          }
         },
       },
       { path: "patients", data: { breadcrumb: "Patients" }, component: PatientsComponent },
@@ -111,7 +114,10 @@ const routes: Routes = [
     ]
   },
   { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]},
-  {path: 'fhir', component: CallbackComponent, canActivate: [PrivateGuard]},
+  { path: 'fhir', component: CallbackComponent, canActivate: [PrivateGuard] },
+
+  {path:'invite/patient', component: AddPatientComponent},
+  {path:'invite/staff', component: AddStaffComponent},
 ];
 
 @NgModule({
