@@ -73,6 +73,7 @@ import { LatestSessionsComponent } from './pages/home/patients/latest-sessions/l
 import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
 import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
 import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
+import { InviteGuard } from './guards/invite-guard';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -154,6 +155,7 @@ import { AddOrganizationComponent } from './pages/home/admin/add-organization/ad
   providers: [
     PrivateGuard,
     PublicGuard,
+    InviteGuard,
     { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
 
     // {

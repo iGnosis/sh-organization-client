@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
+import { InviteGuard } from './guards/invite-guard';
 import { PrivateGuard } from './guards/private-guard';
 import { PublicGuard } from './guards/public-guard';
 import { PrivateComponent } from './layouts/private/private.component';
@@ -27,6 +28,7 @@ import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
+  { path: 'invite/:inviteCode', canActivate: [InviteGuard], children: [] },
   {
     path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
       { path: 'auth/sign-in', component: SignInComponent },
@@ -102,7 +104,7 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent },
       { path: 'admin', data: { breadcrumb: 'Admin' }, children: [
         { path: '', component:  AdminComponent, pathMatch: 'full' },
-        { path: 'add-organization/:inviteCode', component:  AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
+        { path: 'add-organization', component:  AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
       ]
     },
 

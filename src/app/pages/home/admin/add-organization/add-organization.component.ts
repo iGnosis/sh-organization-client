@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { take } from 'rxjs';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -42,8 +41,7 @@ export class AddOrganizationComponent implements OnInit {
   }
 
   async saveChanges() {
-    console.log('save changes');
-    await this.graphqlService.publicClient.request(
+    await this.graphqlService.gqlRequest(
       GqlConstants.CREATE_ORGANIZATION,
       {
         createOrganizationInput: {
