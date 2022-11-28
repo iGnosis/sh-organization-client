@@ -259,12 +259,14 @@ export const GqlConstants = {
       configuration
     }
   }`,
-  CREATE_ORGANIZATION: `
-  mutation CreateOrganization($createOrganizationInput: CreateOrganizationInput!) {
-    createOrganization(createOrganizationInput: $createOrganizationInput) {
-      data {
-        message
-      }
+  EDIT_ORGANIZATION_DETAILS: `
+  mutation EditOrganizationDetails($name: String!, $type: organization_type_enum = clinic, $adminEmail: String!, $staffId: uuid!, $organizationId: uuid!) {
+    update_staff_by_pk(pk_columns: {id: $staffId}, _set: {email: $adminEmail}) {
+      id
     }
-  }`,
+    update_organization_by_pk(pk_columns: {id: $organizationId}, _set: {name: $name, type: $type}) {
+      id
+    }
+  }  
+  `,
 };

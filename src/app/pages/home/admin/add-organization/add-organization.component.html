@@ -14,7 +14,7 @@
           <!-- Actions -->
           <div class="col-5 text-md-end d-flex">
             <button [disabled]="!allowSavingChanges" (click)="saveChanges()" class="btn btn-primary btn-sm ms-2">Save Changes</button>
-            <button [disabled]="!allowSavingChanges" (click)="registerOrganization()" class="btn btn-primary btn-sm ms-2"><i class="bi bi-person-check"></i>&nbsp;Register Organization</button>
+            <button [disabled]="!allowRegistration" (click)="registerOrganization()" class="btn btn-primary btn-sm ms-2"><i class="bi bi-person-check"></i>&nbsp;Register Organization</button>
           </div>
         </div>
       </div>
@@ -47,21 +47,7 @@
             <div class="col-md-12 mb-5">
               <div class="">
                 <label class="form-label" for="formInputExample">Primary Admin E-mail</label>
-                <input type="email" class="form-control form-control-sm" id="formInputExample" [(ngModel)]="adminDetails.email" (ngModelChange)="validateForm()">
-              </div>
-            </div>
-            <div class="col-md-12 mb-5">
-              <div class="">
-                <label class="form-label" for="formInputExample">Primary Admin Phone Number</label>
-                <div class="input-group mb-3">
-                  <div class="input-group-prepend">
-                    <select class="form-select" [(ngModel)]="adminDetails.phoneCountryCode" (ngModelChange)="validateForm()">
-                        <option value="+1">+1</option>
-                        <option value="+91">+91</option>
-                    </select>
-                  </div>
-                  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" [(ngModel)]="adminDetails.phoneNumber" (ngModelChange)="validateForm()">
-                </div>
+                <input type="email" class="form-control form-control-sm" id="formInputExample" [(ngModel)]="organizationDetails.adminEmail" (ngModelChange)="validateForm()">
               </div>
             </div>
           </div>

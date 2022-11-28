@@ -165,7 +165,11 @@ export class SmsOtpLoginComponent {
       });
       console.log('user set successfully');
 
-      this.router.navigate(['/app/dashboard']);
+      if (this.inviteCode) {
+        this.router.navigate(['/app/admin/add-organization']);
+      } else {
+        this.router.navigate(['/app/dashboard']);
+      }
     }
   }
 
