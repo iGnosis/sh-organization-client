@@ -3,7 +3,7 @@ import { phone } from 'phone';
 // import countryCodes from 'country-codes-list'
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -28,13 +28,17 @@ export class SmsOtpLoginComponent {
   // The Resend OTP API is called if numbers haven't changed.
   tempFullPhoneNumber?: string;
   fullPhoneNumber?: string;
+  inviteCode?: string;
 
   constructor(
     private graphQlService: GraphqlService,
     private router: Router,
     private jwtService: JwtService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) {
+    this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
+  }
 
   ngOnInit(): void {}
 
@@ -104,6 +108,7 @@ export class SmsOtpLoginComponent {
             {
               phoneCountryCode: this.countryCode,
               phoneNumber: this.phoneNumber,
+              inviteCode: this.inviteCode,
             },
             false
           );
@@ -160,7 +165,11 @@ export class SmsOtpLoginComponent {
       });
       console.log('user set successfully');
 
-      this.router.navigate(['/app/dashboard']);
+      if (this.inviteCode) {
+        this.router.navigate(['/app/admin/add-organization']);
+      } else {
+        this.router.navigate(['/app/dashboard']);
+      }
     }
   }
 
