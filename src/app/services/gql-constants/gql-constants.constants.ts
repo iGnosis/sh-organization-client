@@ -328,7 +328,7 @@ export const GqlConstants = {
 
   GET_STAFF: `
   query GetStaff {
-  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}], firstName: {_is_null: false}, lastName: {_is_null: false}}) {
+  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}) {
     id
     firstName
     lastName

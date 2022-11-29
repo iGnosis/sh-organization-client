@@ -15,9 +15,9 @@
           Staff Member</button>
       </div>
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
-        <div class="staff-entry row py-md-4 py-lg-6" *ngFor="let staff of staffList">
+        <div class="staff-entry row py-md-4 py-lg-4" *ngFor="let staff of staffList">
           <div class="col-md-6">
-            <p class="h3 details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
+            <p class="h4 details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
             <p class="text-gray">{{staff.type.split('_').join(' ')| titlecase}}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
@@ -52,9 +52,9 @@
         </mat-checkbox>
       </div>
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
-        <div class="staff-entry row py-md-4 py-lg-6" *ngFor="let patient of patientList">
+        <div class="staff-entry row py-md-3 py-lg-3" *ngFor="let patient of patientList">
           <div class="col-md-6 d-flex align-items-center">
-            <p class="h3 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
+            <p class="h4 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
             <button type="button" class="mx-lg-3 mx-md-2 details-button">View Staff Details</button>
