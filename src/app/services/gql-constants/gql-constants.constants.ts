@@ -269,7 +269,16 @@ export const GqlConstants = {
     }
   }
   `,
-
+  UPLOAD_ORGANIZATION_LOGO_URL: `
+  mutation UploadOrganizationLogoUrl {
+    uploadOrganizationLogo {
+      data {
+        uploadUrl
+        logoAccessUrl
+      }
+    }
+  }
+  `,
   // run by guest user
   CREATE_PATIENT: `mutation CreatePatient($firstName: String!, $lastName: String!, $namePrefix: String!, $phoneCountryCode: String!, $phoneNumber: String!, $email: String!, $inviteCode: String!) {
   createPatient(firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, email: $email, inviteCode: $inviteCode) {

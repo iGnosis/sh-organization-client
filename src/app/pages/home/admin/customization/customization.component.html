@@ -10,7 +10,7 @@
       Please use a picture that is atleast 98x98 px and 4MB or less. Accepted file formats are JPEG and PNG.
     </div>
     <div class="col-md-2 d-flex align-items-center justify-content-center">
-      <input hidden type="file" #uploader (change)="uploadLogo($event)" />
+      <input hidden type="file" accept="image/*" #uploader (change)="uploadLogo($event)" />
       <button class="btn btn-secondary" (click)="uploader.click()">
         <i class="bi bi-chat"></i>
         &nbsp;Change Logo</button>

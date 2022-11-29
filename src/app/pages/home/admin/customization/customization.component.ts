@@ -5,6 +5,8 @@ import {
   OrganizationType,
   TypeFace,
 } from 'src/app/pointmotion';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
 interface CustomizationOptions {
   orgName: string;
@@ -22,6 +24,8 @@ interface CustomizationOptions {
 export class CustomizationComponent implements OnInit {
   @Input() customizable: boolean;
   @Output() changesMade: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+  imageList: FileList | null;
 
   private defaultOptions: Partial<CustomizationOptions> = {
     brandColors: {
@@ -42,7 +46,7 @@ export class CustomizationComponent implements OnInit {
   // TODO: change these to be dynamic
   availableTypefaces: TypeFace[] = ['Abel', 'Inter', 'Roboto', 'Open Sans'];
 
-  constructor() {}
+  constructor(private graphqlService: GraphqlService) {}
 
   ngOnInit(): void {
     this.initValues();
@@ -68,14 +72,15 @@ export class CustomizationComponent implements OnInit {
     const fileList: FileList | null = element.files;
     if (fileList) {
       console.log('FileUpload -> files', fileList);
-      // TODO: upload and update logoUrl
+      this.imageList = fileList;
     }
+    this.checkIfChangesAreMade();
   }
 
   checkIfChangesAreMade(): void {
     const changesMade: boolean =
       JSON.stringify(this.customizationOptions) !==
-      JSON.stringify(this.oldData);
+      JSON.stringify(this.oldData) || !!this.imageList;
     this.changesMade.emit(!changesMade);
   }
 
@@ -106,7 +111,31 @@ export class CustomizationComponent implements OnInit {
     this.checkIfChangesAreMade();
   }
 
-  saveChanges(): void {
+  async saveLogo(): Promise<void> {
+    if (!this.imageList) return;
+
+    // only sends one image for now
+    for (let i = 0; i < this.imageList.length; i++) {
+      const image = this.imageList[i];
+      
+      const result = await this.graphqlService.gqlRequest(GqlConstants.UPLOAD_ORGANIZATION_LOGO_URL);
+      if (!result.uploadOrganizationLogo) return;
+      const urls = result.uploadOrganizationLogo.data;
+      console.log(image.type);
+
+      const putResult = await fetch(urls.uploadUrl, {
+        method: 'PUT',
+        body: image,
+        headers: new Headers({
+          'Content-Type': image.type,
+        }),
+      });
+      console.log(putResult);
+    }
+  }
+
+  async saveChanges(): Promise<void> {
+    await this.saveLogo();
     // TODO: send data to hasura and reinit values
     console.log('send:changes::', this.customizationOptions);
   }
