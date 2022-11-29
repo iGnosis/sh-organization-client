@@ -7,9 +7,11 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timeout } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { phone as validatePhone } from 'phone';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 
 @Component({
   selector: 'app-users-access',
@@ -34,22 +36,24 @@ export class UsersAccessComponent implements OnInit {
   expiryDate: string | undefined = undefined;
 
   // TODO: fetch data from the backend
-  staffList = [
-    { name: 'Arbor Acres', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Leia', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Ethan Hunt', role: 'Org Admin', id: 'some_uuid' },
-  ];
-
-  patientList = [
-    { name: 'Benjamin', id: 'some_uuid' },
-    { name: 'Anakin', id: 'some_uuid' },
-    { name: 'Luke', id: 'some_uuid' },
-  ];
-
-  private patientDetails: Partial<{
+  staffList: {
     firstName: string;
     lastName: string;
-    // namePrefix: string;
+    id: string;
+    type: string;
+  }[];
+
+  patientList: {
+    firstName: string;
+    lastName: string;
+    id: string;
+    email: string;
+  }[];
+
+  patientDetails: Partial<{
+    firstName: string;
+    lastName: string;
+    namePrefix: string;
     email: string;
     phoneNumber: string;
     phoneCountryCode: string;
@@ -61,12 +65,18 @@ export class UsersAccessComponent implements OnInit {
     email: string;
     phoneNumber: string;
     phoneCountryCode: string;
-    staffType: string;
+    staffType: 'org_admin' | 'therapist';
   }> = {};
 
-  constructor(private modalService: NgbModal, private clipboard: Clipboard) {}
+  constructor(
+    private modalService: NgbModal,
+    private clipboard: Clipboard,
+    private gqlService: GraphqlService
+  ) {}
 
   ngOnInit(): void {
+    this.initTables();
+
     this.copyStatusSubject.subscribe((status) => {
       if (status === 'copied') {
         setTimeout(() => {
@@ -74,6 +84,17 @@ export class UsersAccessComponent implements OnInit {
         }, 1000);
       }
     });
+  }
+
+  async initTables() {
+    const staff = await this.gqlService.client.request(GqlConstants.GET_STAFF);
+    console.log(staff);
+    this.staffList = staff.staff;
+
+    const patients = await this.gqlService.client.request(
+      GqlConstants.GET_PATIENTS
+    );
+    this.patientList = patients.patient;
   }
 
   openAddMemberModal(content: TemplateRef<any>): void {
@@ -121,16 +142,75 @@ export class UsersAccessComponent implements OnInit {
     });
   }
 
-  addNewStaff() {
-    // TODO: add new staff to the db
+  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
+  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
 
-    // emtpy the fields, so that admin can add another staff
-    this.staffDetails = {};
+  async addNewStaff() {
+    try {
+      await this.gqlService.client.request(GqlConstants.CREATE_NEW_STAFF, {
+        firstName: this.staffDetails.firstName,
+        lastName: this.staffDetails.lastName,
+        email: this.staffDetails.email,
+        phoneNumber: this.staffDetails.phoneNumber,
+        phoneCountryCode: this.staffDetails.phoneCountryCode,
+        type: this.staffDetails.staffType,
+      });
+
+      this.addNewStaffStatus = {
+        status: 'success',
+        text: 'Added new staff member successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
+
+      this.staffDetails = {};
+    } catch (err) {
+      console.log('Error::', err);
+      this.addNewStaffStatus = {
+        status: 'error',
+        text: 'Failed to add new staff member.',
+      };
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
+    }
   }
-  addNewPatient() {
-    // TODO: add new patient to the db
 
-    this.patientDetails = {};
+  async addNewPatient() {
+    try {
+      await this.gqlService.client.request(GqlConstants.CREATE_NEW_PATIENT, {
+        firstName: this.patientDetails.firstName,
+        lastName: this.patientDetails.lastName,
+        email: this.patientDetails.email,
+        phoneNumber: this.patientDetails.phoneNumber,
+        phoneCountryCode: this.patientDetails.phoneCountryCode,
+        namePrefix: this.patientDetails.namePrefix,
+      });
+
+      this.addNewPatientStatus = {
+        status: 'success',
+        text: 'Added new Patient successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewPatientStatus = {};
+      }, 3000);
+
+      this.patientDetails = {};
+    } catch (err) {
+      console.log('Error::', err);
+      this.addNewPatientStatus = {
+        status: 'error',
+        text: 'Failed to add new Patient.',
+      };
+      setTimeout(() => {
+        this.addNewPatientStatus = {};
+      }, 3000);
+    }
   }
 
   openArchiveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
@@ -172,7 +252,8 @@ export class UsersAccessComponent implements OnInit {
         !this.patientDetails.lastName ||
         !this.patientDetails.email ||
         !this.patientDetails.phoneNumber ||
-        !this.patientDetails.phoneCountryCode
+        !this.patientDetails.phoneCountryCode ||
+        !this.patientDetails.namePrefix
       ) {
         return false;
       } else if (!emailRegex.test(this.patientDetails.email)) {
@@ -226,7 +307,7 @@ export class UsersAccessComponent implements OnInit {
 
   setSelect(
     type: 'patient' | 'staff',
-    inputType: 'phoneCountryCode' | 'staffType',
+    inputType: 'phoneCountryCode' | 'staffType' | 'namePrefix',
     selectChange: MatSelectChange
   ) {
     if (type === 'patient') {
@@ -234,6 +315,7 @@ export class UsersAccessComponent implements OnInit {
       this.patientDetails[inputType] = selectChange.value;
       this.enableSaveButton = this.validateFields('patient');
     } else {
+      if (inputType === 'namePrefix') return;
       this.staffDetails[inputType] = selectChange.value;
       this.enableSaveButton = this.validateFields('staff');
     }

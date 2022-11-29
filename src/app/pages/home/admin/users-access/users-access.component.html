@@ -17,14 +17,14 @@
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
         <div class="staff-entry row py-md-4 py-lg-6" *ngFor="let staff of staffList">
           <div class="col-md-6">
-            <p class="h3 details-name">{{staff.name}}</p>
-            <p class="text-gray">{{staff.role}}</p>
+            <p class="h3 details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
+            <p class="text-gray">{{staff.type.split('_').join(' ')| titlecase}}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
             <button type="button" class="mx-lg-3 mx-md-2 details-button">View Staff Details</button>
             <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
             <button type="button" class="mx-lg-3 mx-md-2 text-danger details-button"
-              (click)="openArchiveMemberModal(staff.id, staff.name, 'staff')">Archive Staff
+              (click)="openArchiveMemberModal(staff.id, staff.firstName + ' ' + staff.lastName, 'staff')">Archive Staff
               Member</button>
           </div>
         </div>
@@ -54,13 +54,14 @@
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
         <div class="staff-entry row py-md-4 py-lg-6" *ngFor="let patient of patientList">
           <div class="col-md-6 d-flex align-items-center">
-            <p class="h3 details-name">{{patient.name}}</p>
+            <p class="h3 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
             <button type="button" class="mx-lg-3 mx-md-2 details-button">View Staff Details</button>
             <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
             <button type="button" class="mx-lg-3 mx-md-2 text-danger details-button"
-              (click)="openArchiveMemberModal(patient.id, patient.name, 'patient')">Archive Patient</button>
+              (click)="openArchiveMemberModal(patient.id, patient.firstName +' '+ patient.lastName, 'patient')">Archive
+              Patient</button>
           </div>
         </div>
       </div>
@@ -207,12 +208,12 @@
       <div class="row">
         <div class="col-md-6 col-sm-10">
           <label for="fname" class="form-label col-12">First Name</label>
-          <input (input)="setInput('staff','firstName', $event)" id="fname" type="text"
-            class="form-control form-control-muted" required placeholder="Enter First name">
+          <input [ngModel]="staffDetails.firstName" (input)="setInput('staff','firstName', $event)" id="fname"
+            type="text" class="form-control form-control-muted" required placeholder="Enter First name">
         </div>
         <div class="col-md-6 col-sm-10">
           <label for="lname" class="form-label col-12">Last Name</label>
-          <input (input)="setInput('staff','lastName', $event)" id="lname" type="text"
+          <input [ngModel]="staffDetails.lastName" (input)="setInput('staff','lastName', $event)" id="lname" type="text"
             class="form-control form-control-muted" required placeholder="Enter Last name">
         </div>
       </div>
@@ -220,15 +221,15 @@
     <div class="col-md-12 mb-4">
       <label for="email" class="form-label col-12">Staff Email</label>
       <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
-        (input)="setInput('staff','email', $event)" required>
+        [ngModel]="staffDetails.email" (input)="setInput('staff','email', $event)" required>
     </div>
     <div class="col-md-12 mb-8">
       <div class="row">
         <div class="col-md-4">
           <label for="countryCode" class="form-label col-12">Country Code</label>
           <mat-form-field id="countryCode" appearance="standard" class="col-12 condition_select form-control-muted">
-            <mat-select placeholder="Country Code" (selectionChange)="setSelect('staff','phoneCountryCode', $event)"
-              required>
+            <mat-select [ngModel]="staffDetails.phoneCountryCode" placeholder="Country Code"
+              (selectionChange)="setSelect('staff','phoneCountryCode', $event)" required>
               <mat-option value='+1'>+1 USA</mat-option>
               <mat-option value='+1'>+1 Canada</mat-option>
               <mat-option value='+91'>+91 India</mat-option>
@@ -237,8 +238,8 @@
         </div>
         <div class="col-md-8">
           <label for="mobile" class="form-label col-12">Staff Phone Number</label>
-          <input id="mobile" type="number" class="form-control form-control-muted" placeholder="Enter phone number"
-            (input)="setInput('staff','phoneNumber', $event)" required>
+          <input id="mobile" [ngModel]="staffDetails.phoneNumber" type="number" class="form-control form-control-muted"
+            placeholder="Enter phone number" (input)="setInput('staff','phoneNumber', $event)" required>
         </div>
       </div>
     </div>
@@ -247,11 +248,15 @@
         <div class="col-md-6">
           <!-- <label for="staffType" class="form-label col-12">Staff Type</label> -->
           <mat-form-field id="staffType" appearance="standard" class="col-12 condition_select form-control-muted">
-            <mat-select placeholder="Staff Type" (selectionChange)="setSelect('staff','staffType', $event)" required>
+            <mat-select [ngModel]="staffDetails.staffType" placeholder="Staff Type"
+              (selectionChange)="setSelect('staff','staffType', $event)" required>
               <mat-option value='therapist'>Therapist</mat-option>
-              <mat-option value='admin'>Admin</mat-option>
+              <mat-option value='org_admin'>Admin</mat-option>
             </mat-select>
           </mat-form-field>
+          <p *ngIf="addNewStaffStatus" class="mx-2 py-2"
+            [ngClass]="addNewStaffStatus.status === 'success' ? 'text-success' : 'text-danger'">
+            {{addNewStaffStatus.text}}</p>
         </div>
         <div class="col-md-6 d-flex justify-content-end align-items-end">
           <button class="btn btn-info" (click)="addNewStaff()" [disabled]="!enableSaveButton">Add New Staff
@@ -271,30 +276,42 @@
     </div>
     <div class="col-md-12 mb-4">
       <div class="row">
-        <div class="col-md-6 col-sm-10">
-          <label for="fname" class="form-label col-12">First Name</label>
-          <input (input)="setInput('patient','firstName', $event)" id="fname" type="text"
-            class="form-control form-control-muted" required placeholder="Enter First name">
+        <div class="col-md-2 col-sm-2">
+          <label for="prefix" class="form-label col-12">Prefix</label>
+          <mat-form-field id="prefix" appearance="standard" class="col-12 condition_select form-control-muted">
+            <mat-select [ngModel]="patientDetails.namePrefix" placeholder="Prefix"
+              (selectionChange)="setSelect('patient','namePrefix',$event)">
+              <mat-option value='Mr.'>Mr.</mat-option>
+              <mat-option value='Mrs.'>Mrs.</mat-option>
+              <mat-option value='Ms.'>Ms.</mat-option>
+              <mat-option value='Dr.'>Dr.</mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
-        <div class="col-md-6 col-sm-10">
+        <div class="col-md-5 col-sm-10">
+          <label for="fname" class="form-label col-12">First Name</label>
+          <input [ngModel]="patientDetails.firstName" (input)="setInput('patient','firstName', $event)" id="fname"
+            type="text" class="form-control form-control-muted" required placeholder="Enter First name">
+        </div>
+        <div class="col-md-5 col-sm-10">
           <label for="lname" class="form-label col-12">Last Name</label>
-          <input (input)="setInput('patient','lastName', $event)" id="lname" type="text"
-            class="form-control form-control-muted" required placeholder="Enter Last name">
+          <input [ngModel]="patientDetails.lastName" (input)="setInput('patient','lastName', $event)" id="lname"
+            type="text" class="form-control form-control-muted" required placeholder="Enter Last name">
         </div>
       </div>
     </div>
     <div class="col-md-12 mb-4">
       <label for="email" class="form-label col-12">Patient Email</label>
       <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
-        (input)="setInput('patient','email', $event)" required>
+        [ngModel]="patientDetails.email" (input)="setInput('patient','email', $event)" required>
     </div>
     <div class="col-md-12 mb-8">
       <div class="row">
         <div class="col-md-4">
           <label for="countryCode" class="form-label col-12">Country Code</label>
           <mat-form-field id="countryCode" appearance="fill" class="col-12 condition_select form-control-muted">
-            <mat-select placeholder="Country Code" (selectionChange)="setSelect('patient', 'phoneCountryCode', $event)"
-              required>
+            <mat-select placeholder="Country Code" [ngModel]="patientDetails.phoneCountryCode"
+              (selectionChange)="setSelect('patient', 'phoneCountryCode', $event)" required>
               <mat-option value='+1'>+1 USA</mat-option>
               <mat-option value='+1'>+1 Canada</mat-option>
               <mat-option value='+91'>+91 India</mat-option>
@@ -303,7 +320,8 @@
         </div>
         <div class="col-md-8">
           <label for="mobile" class="form-label col-12">Patient Phone Number</label>
-          <input id="mobile" type="number" class="form-control form-control-muted" placeholder="Enter phone number"
+          <input id="mobile" [ngModel]="patientDetails.phoneNumber" type="number"
+            class="form-control form-control-muted" placeholder="Enter phone number"
             (input)="setInput('patient','phoneNumber', $event)" required>
         </div>
       </div>
@@ -311,6 +329,9 @@
     <div class="col-md-12 mb-4">
       <div class="row">
         <div class="col-md-6">
+          <p *ngIf="addNewPatientStatus" class="mx-2 py-2"
+            [ngClass]="addNewPatientStatus.status === 'success' ? 'text-success' : 'text-danger'">
+            {{addNewPatientStatus.text}}</p>
         </div>
         <div class="col-md-6 d-flex justify-content-end align-items-end">
           <button class="btn btn-info" (click)="addNewPatient()" [disabled]="!enableSaveButton">Add New Patient</button>
