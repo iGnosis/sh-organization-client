@@ -301,7 +301,7 @@ export class PatientDetailsComponent implements OnInit {
       GqlConstants.GET_PATIENT_IDENTIFIER,
       { patientId: this.patientId }
     );
-    this.patientIdentifier = identifier_response.patient[0].identifier;
+    this.patientIdentifier = identifier_response.patient[0].nickname;
     //console.log(this.patient_identifier,'getpatient');
 
     //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
