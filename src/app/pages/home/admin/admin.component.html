@@ -40,7 +40,7 @@
   </div>
 </header>
 <!-- Main content -->
-<main [ngSwitch]="currentTab" class="px-3 px-lg-7 py-7">
+<main [ngSwitch]="currentTab" class="px-3 px-lg-7">
   <app-customization *ngSwitchCase="'Customization'" (changesMade)="handleChangeEvent($event)"
     [customizable]="customizable"></app-customization>
   <app-billing *ngSwitchCase="'Billing'"></app-billing>

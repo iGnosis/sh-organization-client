@@ -168,7 +168,7 @@ export const GqlConstants = {
 
   GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
     patient(where: {id: {_eq: $patientId}}) {
-      identifier
+      nickname
     }
   }`,
   GETCAREPLANDETAILS: `query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
@@ -255,6 +255,7 @@ export const GqlConstants = {
   query OrganizationConfig {
     organization {
       configuration
+      logoUrl
     }
   }`,
   EDIT_ORGANIZATION_DETAILS: `
@@ -308,4 +309,38 @@ export const GqlConstants = {
     }
   }
 }`,
+
+  // run as org_admin
+  CREATE_NEW_PATIENT: `
+  mutation InsertPatient($firstName: String!, $lastName: String!, $namePrefix: String!, $email: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
+  insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+    email
+  }
+}
+`,
+  CREATE_NEW_STAFF: `
+    mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
+  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: invited, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
+    email
+  }
+}`,
+
+  GET_STAFF: `
+  query GetStaff {
+  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}) {
+    id
+    firstName
+    lastName
+    type
+  }
+}`,
+  GET_PATIENTS: `
+  query GetPatients {
+  patient {
+    firstName
+    lastName
+    id
+  }
+}
+`,
 };

@@ -102,7 +102,7 @@ const routes: Routes = [
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       // { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'sessions/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Activity" } },
+      { path: 'game/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Activity" } },
 
       { path: 'account', component: AccountComponent },
       { path: 'admin', data: { breadcrumb: 'Admin' }, children: [

@@ -226,11 +226,12 @@ export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
 export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
 
 export interface Theme {
-  colors: {
+  colors?: {
     [key: string]: any;
   };
-  font: {
+  font?: {
     family: string;
     url: string;
-  }
+  };
+  logoUrl?: string;
 }
