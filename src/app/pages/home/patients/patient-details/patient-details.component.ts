@@ -65,7 +65,13 @@ export class PatientDetailsComponent implements OnInit {
 
   engagementChartFilter?: string = undefined;
 
-  activityFilterOptions = ['sit_stand_achieve', 'beat_boxer', 'sound_explorer'];
+  availableGames = [
+    'sit_stand_achieve',
+    'beat_boxer',
+    'sound_explorer',
+    'moving_tones',
+  ];
+  activityFilterOptions = this.availableGames;
 
   toggleFilterDiv() {
     this.isShowFilter = !this.isShowFilter;
@@ -126,11 +132,14 @@ export class PatientDetailsComponent implements OnInit {
     navSpeed: 700,
     responsive: {
       940: {
-        items: 2
-      }
+        items: 2,
+      },
     },
     nav: true,
-    navText: [ '<i class="bi bi-chevron-left"></i>', '<i class="bi bi-chevron-right"></i>'],
+    navText: [
+      '<i class="bi bi-chevron-left"></i>',
+      '<i class="bi bi-chevron-right"></i>',
+    ],
   };
 
   constructor(
@@ -677,7 +686,7 @@ export class PatientDetailsComponent implements OnInit {
 
     let games: string[];
     if (!filter) {
-      games = ['sit_stand_achieve', 'beat_boxer', 'sound_explorer'];
+      games = this.availableGames;
     } else {
       games = filter;
     }
@@ -798,7 +807,7 @@ export class PatientDetailsComponent implements OnInit {
   // }
 
   openSessionDetailsPage(sessionId: string) {
-    this.router.navigate(['/app/sessions/', sessionId]);
+    this.router.navigate(['/app/game/', sessionId]);
   }
 
   engagementStartDate: Date;
