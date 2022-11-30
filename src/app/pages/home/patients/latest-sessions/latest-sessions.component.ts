@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Patient } from 'src/app/pointmotion';
+import { groupBy, uniqBy } from 'lodash';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -19,40 +19,33 @@ export class LatestSessionsComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.loadPatientList();
-    this.dataSource.data = await Promise.all(
-      this.patients?.map(async (patient) => {
-        const res = await this.loadLatestSessions(patient);
-        return res;
-      })
-    );
+    this.dataSource.data = this.patients;
   }
 
   async loadPatientList() {
-    const response = await this.graphqlService.gqlRequest(GqlConstants.GET_TOP_PATIENTS);
-    this.patients = response.patient;
-  }
+    const response = await this.graphqlService.gqlRequest(GqlConstants.GET_LATEST_GAMES, {
+      limit: 10,
+      offset: 0,
+    });
+    const groupByPatient = groupBy(response.game, 'patientByPatient.id');
 
-  async loadLatestSessions(patient: any) {
-    if (!patient.games.length) return patient;
-
-    const sessionDate = new Date(patient.games[0].createdAt);
-    patient.lastSession = sessionDate;
-
-    sessionDate.setHours(0,0,0,0);
-
-    const response = await this.graphqlService.gqlRequest(GqlConstants.GET_LATEST_SESSIONS, {
-      createdAt: sessionDate.toISOString(),
-      patientId: patient.id,
+    Object.keys(groupByPatient).forEach((key) => {
+      groupByPatient[key] = uniqBy(groupByPatient[key], 'game');
     });
 
-    patient.games = response.game.map((game: { game: string; id: string }) => {
+    this.patients = Object.entries(groupByPatient).map((entry: any) => {
+      const [key, value] = entry;
       return {
-        name: game.game.replace(/_/g, ' '),
-        id: game.id,
-      };
+        id: key,
+        nickname: value[0]?.patientByPatient.nickname,
+        firstName: value[0]?.patientByPatient.firstName,
+        lastName: value[0]?.patientByPatient.lastName,
+        games: value.map((game: any) => ({
+          id: game.id,
+          name: game.game.replace(/_/g, ' '),
+          createdAt: game.createdAt,
+        })),
+      }
     });
-
-    return patient;
   }
-
 }
