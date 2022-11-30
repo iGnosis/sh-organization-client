@@ -257,6 +257,7 @@ export const GqlConstants = {
   query OrganizationConfig {
     organization {
       configuration
+      logoUrl
     }
   }`,
   EDIT_ORGANIZATION_DETAILS: `

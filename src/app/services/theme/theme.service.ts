@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Theme } from 'src/app/pointmotion';
 import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
 
@@ -6,21 +8,24 @@ import { GraphqlService } from '../graphql/graphql.service';
   providedIn: 'root'
 })
 export class ThemeService {
+  logoSubject = new Subject<string>();
   constructor(private graphqlService: GraphqlService) {}
 
   /**
    * Getting the organization configuration.
    *
-   * @param {string} name
-   * @returns {Promise<any>}
+   * @returns {Promise<Theme>}
    */
-  async getOrganizationConfig(): Promise<any> {
+  private async getOrganizationConfig(): Promise<Theme> {
     try {
       const response = await this.graphqlService.gqlRequest(GqlConstants.GET_ORGANIZATION_CONFIG);
-
-      return response.organization ? response.organization[0].configuration : {};
+      return response.organization ? { 
+        ...response.organization[0].configuration,
+        logoUrl: response.organization[0].logoUrl,
+      } : {};
     } catch (err) {
       console.log(err);
+      return err;
     }
   }
 
@@ -30,7 +35,7 @@ export class ThemeService {
    * @param {{ [key: string]: any }} colors
    * @returns {void}
    */
-  setColors(colors: { [key: string]: any }) {
+  private setColors(colors: { [key: string]: any }) {
     if (!colors) return;
 
     Object.keys(colors).forEach((color) => {
@@ -39,12 +44,32 @@ export class ThemeService {
   }
 
   /**
+   * Setting the theme of the application.
+   * 
+   * @returns {Promise<void>}
+   */
+  async setTheme(): Promise<void> {
+    const theme = await this.getOrganizationConfig(); 
+    if (theme) {
+      if (theme.colors) {
+        this.setColors(theme.colors);
+      }
+      if (theme.font) {
+        this.loadFont(theme.font);
+      }
+      if (theme.logoUrl) {
+        this.setLogoUrl(theme.logoUrl);
+      }
+    }
+  }
+
+  /**
    * Setting the typography of the entire application.
    *
    * @param {{ family: string url: string }} font
    * @returns {void}
    */
-  loadFont(font: {
+  private loadFont(font: {
     family: string;
     url: string;
   }) {
@@ -56,5 +81,9 @@ export class ThemeService {
     document.getElementsByTagName('head')[0].appendChild(link);
 
     document.documentElement.style.setProperty(`--font-family`, `'${font.family}', Inter, 'Times New Roman', Times, serif`);
+  }
+
+  private setLogoUrl(url: string) {
+    this.logoSubject.next(url);
   }
 }
