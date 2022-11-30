@@ -107,23 +107,21 @@ export const GqlConstants = {
       }
     }
   }`,
-  GET_TOP_PATIENTS: `
-  query TopPatients {
-    patient(limit: 5, order_by: {games_aggregate: {max: {createdAt: desc}}}, where: {nickname: {_is_null: false}}) {
+  GET_LATEST_GAMES: `
+  query LatestGames($offset: Int!, $limit: Int!) {
+    game(order_by: {createdAt: desc}, offset: $offset, limit: $limit, where: {endedAt: {_is_null: false}}) {
       id
-      nickname
-      games(limit: 1) {
-        createdAt
+      game
+      createdAt
+      patientByPatient {
+        id
+        nickname
+        firstName
+        lastName
       }
     }
-  }`,
-  GET_LATEST_SESSIONS: `
-  query LatestSessions($createdAt: timestamptz = "", $patientId: uuid = "") {
-    game(where: {endedAt: {_is_null: false}, createdAt: {_gte: $createdAt}, patient: {_eq: $patientId}}, distinct_on: game) {
-      game
-      id
-    }
-  }`,
+  }
+  `,
   GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
     patient(where: {id: {_eq: $patient}}) {
       id
