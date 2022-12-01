@@ -343,4 +343,16 @@ export const GqlConstants = {
   }
 }
 `,
+
+  ARCHIVE_PATIENT: `
+  mutation ArchivePatient($patientId: uuid!, $status: user_status_enum = archived) {
+  update_patient_by_pk(pk_columns: {id: $patientId}, _set: {status: $status}) {
+    id
+  }
+}`,
+  ARCHIVE_STAFF: `mutation ArchiveStaff($staffId: uuid!) {
+  update_staff_by_pk(pk_columns: {id: $staffId}, _set: {status: archived}) {
+    id
+  }
+}`,
 };

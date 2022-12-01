@@ -76,6 +76,7 @@ import { AddOrganizationComponent } from './pages/home/admin/add-organization/ad
 import { InviteGuard } from './guards/invite-guard';
 import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
 import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
+import { ArchiveMemberModalComponent } from './components/archive-member-modal/archive-member-modal.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -126,6 +127,7 @@ import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component'
     AddOrganizationComponent,
     AddPatientComponent,
     AddStaffComponent,
+    ArchiveMemberModalComponent,
   ],
   imports: [
     BrowserModule,

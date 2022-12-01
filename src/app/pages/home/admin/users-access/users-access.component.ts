@@ -12,6 +12,8 @@ import { MatSelectChange } from '@angular/material/select';
 import { phone as validatePhone } from 'phone';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphQLError } from 'graphql-request/dist/types';
+import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 
 @Component({
   selector: 'app-users-access',
@@ -214,7 +216,7 @@ export class UsersAccessComponent implements OnInit {
   }
 
   openArchiveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
-    const modalRef = this.modalService.open(ArchiveMemberModal);
+    const modalRef = this.modalService.open(ArchiveMemberModalComponent);
     modalRef.componentInstance.name = name;
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.type = type;
@@ -318,60 +320,6 @@ export class UsersAccessComponent implements OnInit {
       if (inputType === 'namePrefix') return;
       this.staffDetails[inputType] = selectChange.value;
       this.enableSaveButton = this.validateFields('staff');
-    }
-  }
-}
-
-@Component({
-  selector: 'archive-member-modal',
-  template: `
-    <div class="py-4 px-8">
-      <p class="h2 modal-title text-dark col-12">
-        <i class="bi bi-exclamation-triangle-fill text-warning mx-3"></i>
-        Archive
-        {{ name }}
-      </p>
-    </div>
-
-    <div class="px-8 mb-6">
-      <p class="text-black col-12">
-        Are you sure you want to remove this
-        {{ type === 'staff' ? 'staff member' : type }} ?
-      </p>
-    </div>
-
-    <div class="px-8 row mb-6">
-      <div class="col-md-6"></div>
-      <div class="col-md-6">
-        <button
-          class="btn btn-warning py-2 px-3"
-          (click)="removeFromOrg(id, type)"
-        >
-          Remove
-        </button>
-        <button
-          class="btn btn-secondary py-2 px-3 mx-4"
-          ngbAutofocus
-          (click)="activeModal.close('Cancel click')"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  `,
-})
-export class ArchiveMemberModal {
-  @Input() name: string;
-  @Input() id: string;
-  @Input() type: 'patient' | 'staff';
-
-  constructor(public activeModal: NgbActiveModal) {}
-  removeFromOrg(id: string, type: 'patient' | 'staff') {
-    console.log('remove:member:id::', id);
-    if (type === 'patient') {
-      // TODO: remove patient from the orgainzation
-    } else {
-      // TODO: remove patient from the orgainzation
     }
   }
 }
