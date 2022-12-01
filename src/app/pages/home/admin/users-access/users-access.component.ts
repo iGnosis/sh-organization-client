@@ -14,6 +14,7 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphQLError } from 'graphql-request/dist/types';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-access',
@@ -73,7 +74,8 @@ export class UsersAccessComponent implements OnInit {
   constructor(
     private modalService: NgbModal,
     private clipboard: Clipboard,
-    private gqlService: GraphqlService
+    private gqlService: GraphqlService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -321,5 +323,9 @@ export class UsersAccessComponent implements OnInit {
       this.staffDetails[inputType] = selectChange.value;
       this.enableSaveButton = this.validateFields('staff');
     }
+  }
+
+  redirectToDetailsPage(type: 'staff' | 'patient', id: string) {
+    this.router.navigate(['app/admin/user-details', type, id]);
   }
 }

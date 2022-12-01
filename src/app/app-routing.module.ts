@@ -15,6 +15,7 @@ import { ActivitiesDetailsComponent } from './pages/home/activities/activities-d
 import { ActivitiesComponent } from './pages/home/activities/activities.component';
 import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
 import { AdminComponent } from './pages/home/admin/admin.component';
+import { UserDetailsComponent } from './pages/home/admin/user-details/user-details.component';
 import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
 import { CarePlanDetailComponent } from './pages/home/care-plan/care-plan-detail/care-plan-detail.component';
 import { CarePlanComponent } from './pages/home/care-plan/care-plan.component';
@@ -107,7 +108,9 @@ const routes: Routes = [
       { path: 'account', component: AccountComponent },
       { path: 'admin', data: { breadcrumb: 'Admin' }, children: [
         { path: '', component:  AdminComponent, pathMatch: 'full' },
-        { path: 'add-organization', component:  AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
+        { path: 'add-organization', component: AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
+        {path: 'user-details', redirectTo: '/app/admin', pathMatch :'full'},
+        {path: 'user-details/:type/:id', component: UserDetailsComponent, data: { breadcrumb: 'User Details' } , pathMatch :'full'},
       ]
     },
 

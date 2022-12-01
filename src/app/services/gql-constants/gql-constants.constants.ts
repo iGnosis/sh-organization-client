@@ -355,4 +355,55 @@ export const GqlConstants = {
     id
   }
 }`,
+
+  GET_STFF_BY_PK: `
+  query GetStaffByPK($id: uuid!) {
+  staff_by_pk(id: $id) {
+    email
+    firstName
+    id
+    lastName
+    phoneNumber
+    phoneCountryCode
+    type
+  }
+}`,
+
+  GET_PATIENT_BY_PK: `
+  query GetPatientByPK($id: uuid!) {
+  patient_by_pk(id: $id) {
+    email
+    firstName
+    lastName
+    namePrefix
+    phoneNumber
+    phoneCountryCode
+  }
+}`,
+
+  UPDATE_PATIENT_BY_PK: `
+  mutation UpdatePatientByPK($id: uuid!, $email: String!, $firstName: String!, $lastName: String!, $namePrefix: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
+  update_patient_by_pk(pk_columns: {id: $id}, _set: {email: $email, firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+    firstName
+    id
+    lastName
+    namePrefix
+    phoneNumber
+    phoneCountryCode
+  }
+}
+`,
+
+  UPDATE_STAFF_BY_PK: `
+  mutation UpdateStaffByPK($id: uuid!, $email: String!, $firstName: String!, $lastName: String!, $phoneCountryCode: String!, $phoneNumber: String!, $type: user_type_enum!) {
+  update_staff_by_pk(pk_columns: {id: $id}, _set: {email: $email, firstName: $firstName, lastName: $lastName, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, type: $type}) {
+    email
+    firstName
+    id
+    lastName
+    phoneNumber
+    phoneCountryCode
+    type
+  }
+}`,
 };

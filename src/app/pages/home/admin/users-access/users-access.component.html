@@ -21,7 +21,9 @@
             <p class="text-gray">{{staff.type.split('_').join(' ')| titlecase}}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
-            <button type="button" class="mx-lg-3 mx-md-2 details-button">View Staff Details</button>
+            <button type="button" (click)="redirectToDetailsPage('staff',staff.id)"
+              class="mx-lg-3 mx-md-2 details-button">View
+              Staff Details</button>
             <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
             <button type="button" class="mx-lg-3 mx-md-2 text-danger details-button"
               (click)="openArchiveMemberModal(staff.id, staff.firstName + ' ' + staff.lastName, 'staff')">Archive Staff
@@ -57,7 +59,8 @@
             <p class="h4 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
-            <button type="button" class="mx-lg-3 mx-md-2 details-button">View Staff Details</button>
+            <button type="button" (click)="redirectToDetailsPage('patient',patient.id)"
+              class="mx-lg-3 mx-md-2 details-button">View Patient Details</button>
             <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
             <button type="button" class="mx-lg-3 mx-md-2 text-danger details-button"
               (click)="openArchiveMemberModal(patient.id, patient.firstName +' '+ patient.lastName, 'patient')">Archive
