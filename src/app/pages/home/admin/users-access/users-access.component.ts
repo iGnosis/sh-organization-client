@@ -31,6 +31,7 @@ export class UsersAccessComponent implements OnInit {
 
   enableSaveButton = false;
 
+  shareableLink: string | undefined = undefined;
   copyStatusSubject = new BehaviorSubject<'copy' | 'copied'>('copy');
   allowOnyInvitationalSignups = false;
 
@@ -136,14 +137,26 @@ export class UsersAccessComponent implements OnInit {
     this.addMemberModalRef && this.addMemberModalRef.dismiss();
     this.modalService.open(this.invitePatientModal, {
       size: 'lg',
+      beforeDismiss: () => {
+        this.shareableLink = undefined;
+        return true;
+      },
     });
+
+    this.generateShareableLink('patient');
   }
 
   openInviteStaffModal(type?: 'staff' | 'admin') {
     this.addMemberModalRef && this.addMemberModalRef.dismiss();
     this.modalService.open(this.inviteStaffModal, {
       size: 'lg',
+      beforeDismiss: () => {
+        this.shareableLink = undefined;
+        return true;
+      },
     });
+
+    this.generateShareableLink('staff');
   }
 
   addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
@@ -237,11 +250,40 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  generateShareableLink(
+  async generateShareableLink(
     type: 'staff' | 'patient',
     willExpireIn?: 'in1Day' | 'in1Week' | 'in2Weeks'
-  ): string {
+  ): Promise<string> {
     // TODO: generate sharable link with the new expiry date
+
+    if (type === 'patient') {
+      try {
+        const code = await this.gqlService.client.request(
+          GqlConstants.INVITE_PATIENT,
+          {}
+        );
+
+        this.shareableLink = `${window.location.origin}/patient/invite?inviteCode=${code.invitePatient.data.inviteCode}`;
+      } catch (err) {
+        console.log('Error::', err);
+        return err;
+      }
+    } else {
+      try {
+        const code = await this.gqlService.client.request(
+          GqlConstants.INVITE_STAFF,
+          {
+            staffType: 'therapist',
+          }
+        );
+
+        this.shareableLink = `${window.location.origin}/staff/invite?inviteCode=${code.inviteStaff.data.inviteCode}`;
+      } catch (err) {
+        console.log('Error::', err);
+        return err;
+      }
+    }
+
     return 'demo_link';
   }
 

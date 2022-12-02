@@ -295,20 +295,6 @@ export const GqlConstants = {
     }
   }
 }`,
-  INVITE_STAFF: `query InviteStaff($staffType: StaffType!) {
-  inviteStaff(staffType: $staffType) {
-    data {
-      inviteCode
-    }
-  }
-}`,
-  INVITE_PATIENT: `query InvitePatient {
-  invitePatient {
-    data {
-      inviteCode
-    }
-  }
-}`,
 
   // run as org_admin
   CREATE_NEW_PATIENT: `
@@ -404,6 +390,23 @@ export const GqlConstants = {
     phoneNumber
     phoneCountryCode
     type
+  }
+}`,
+  INVITE_STAFF: `
+  query InviteStaff($shouldSendEmail: Boolean = false, $email: String = "", $staffType: StaffType!, $expiryAt: String = "") {
+  inviteStaff(shouldSendEmail: $shouldSendEmail, email: $email, staffType: $staffType, expiryAt: $expiryAt) {
+    data {
+      inviteCode
+    }
+  }
+}
+`,
+  INVITE_PATIENT: `
+  query InvitePatient($email: String = "", $shouldSendEmail: Boolean = false, $expiryAt: String = "") {
+  invitePatient(email: $email, shouldSendEmail: $shouldSendEmail, expiryAt: $expiryAt) {
+    data {
+      inviteCode
+    }
   }
 }`,
 };

@@ -124,7 +124,7 @@
     </div>
     <div class="col-md-12 mb-4">
       <p class="h3 text-primary my-1">Link</p>
-      <div class="input-group" *ngIf="generateShareableLink('patient') as shareableLink">
+      <div class="input-group" *ngIf="shareableLink">
         <input type="text" class="form-control" [value]="shareableLink" readonly>
         <div class="input-group-append">
           <button class="btn btn-link-primary" type="button"
@@ -171,7 +171,7 @@
     </div>
     <div class="col-md-12 mb-4">
       <p class="h3 text-primary my-1">Link</p>
-      <div *ngIf="generateShareableLink('staff') as shareableLink" class="input-group">
+      <div *ngIf="shareableLink" class="input-group">
         <input type="text" class="form-control" [value]="shareableLink" readonly>
         <div class="input-group-append">
           <button class="btn btn-link-primary" type="button"

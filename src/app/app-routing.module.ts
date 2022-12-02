@@ -119,8 +119,8 @@ const routes: Routes = [
   { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]},
   { path: 'fhir', component: CallbackComponent, canActivate: [PrivateGuard] },
 
-  {path:'invite/patient', component: AddPatientComponent},
-  {path:'invite/staff', component: AddStaffComponent},
+  {path:'patient/invite', component: AddPatientComponent},
+  {path:'staff/invite', component: AddStaffComponent},
 ];
 
 @NgModule({
