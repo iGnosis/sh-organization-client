@@ -72,6 +72,11 @@ export class UsersAccessComponent implements OnInit {
     staffType: 'org_admin' | 'therapist';
   }> = {};
 
+  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
+  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
+
   constructor(
     private modalService: NgbModal,
     private clipboard: Clipboard,
@@ -158,11 +163,6 @@ export class UsersAccessComponent implements OnInit {
 
     this.generateShareableLink('staff');
   }
-
-  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
-    {};
-  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
-    {};
 
   async addNewStaff() {
     try {
@@ -253,7 +253,7 @@ export class UsersAccessComponent implements OnInit {
   async generateShareableLink(
     type: 'staff' | 'patient',
     willExpireIn?: 'in1Day' | 'in1Week' | 'in2Weeks'
-  ): Promise<string> {
+  ) {
     // TODO: generate sharable link with the new expiry date
 
     if (type === 'patient') {
@@ -263,7 +263,7 @@ export class UsersAccessComponent implements OnInit {
           {}
         );
 
-        this.shareableLink = `${window.location.origin}/patient/invite?inviteCode=${code.invitePatient.data.inviteCode}`;
+        this.shareableLink = `${window.location.origin}/invite/patient?inviteCode=${code.invitePatient.data.inviteCode}`;
       } catch (err) {
         console.log('Error::', err);
         return err;
@@ -277,14 +277,37 @@ export class UsersAccessComponent implements OnInit {
           }
         );
 
-        this.shareableLink = `${window.location.origin}/staff/invite?inviteCode=${code.inviteStaff.data.inviteCode}`;
+        this.shareableLink = `${window.location.origin}/invite/staff?inviteCode=${code.inviteStaff.data.inviteCode}`;
       } catch (err) {
         console.log('Error::', err);
         return err;
       }
     }
+  }
 
-    return 'demo_link';
+  patientEmail!: string;
+  staffEmail!: string;
+  async sendInviteViaEmail(type: 'staff' | 'patient') {
+    if (type === 'patient') {
+      try {
+        await this.gqlService.client.request(GqlConstants.INVITE_PATIENT, {
+          shouldSendEmail: true,
+          email: this.patientEmail,
+        });
+      } catch (err) {
+        console.log('Error::', err);
+      }
+    } else {
+      try {
+        await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
+          shouldSendEmail: true,
+          email: this.staffEmail,
+          staffType: 'therapist',
+        });
+      } catch (err) {
+        console.log('Error::', err);
+      }
+    }
   }
 
   validateFields(type: 'patient' | 'staff'): boolean {

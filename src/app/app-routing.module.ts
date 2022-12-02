@@ -32,14 +32,19 @@ import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
+  { path: 'invite/patient', component: AddPatientComponent },
+  { path: 'invite/staff', component: AddStaffComponent },
   { path: 'invite/:inviteCode', canActivate: [InviteGuard], children: [] },
   {
-    path: 'public', component: PublicComponent, canActivateChild: [PublicGuard], children: [
+    path: 'public',
+    component: PublicComponent,
+    canActivateChild: [PublicGuard],
+    children: [
       { path: 'auth/sign-in', component: SignInComponent },
-      {path:'auth/sms-login', component: SmsOtpLoginComponent},
+      { path: 'auth/sms-login', component: SmsOtpLoginComponent },
       { path: 'auth/forgot-password', component: ForgotPasswordComponent },
-      { path: 'auth/set-password/:code', component: SetPasswordComponent }
-    ]
+      { path: 'auth/set-password/:code', component: SetPasswordComponent },
+    ],
   },
   {
     path: 'app',
@@ -49,10 +54,10 @@ const routes: Routes = [
       breadcrumb: {
         label: 'Home',
         info: 'Home',
-        routeInterceptor: (routeLink: any, breadcrumb: any)=> {
+        routeInterceptor: (routeLink: any, breadcrumb: any) => {
           //console.log(breadcrumb);
           return '/app/dashboard';
-        }
+        },
       },
     },
     children: [
@@ -63,13 +68,24 @@ const routes: Routes = [
           breadcrumb: {
             label: 'Therapist',
             info: 'Therapist',
-          }
+          },
         },
       },
-      { path: "patients", data: { breadcrumb: "Patients" }, component: PatientsComponent },
-      { path: 'patients/new', component: PatientAddComponent, data: { breadcrumb: "New Patient" } },
+      {
+        path: 'patients',
+        data: { breadcrumb: 'Patients' },
+        component: PatientsComponent,
+      },
+      {
+        path: 'patients/new',
+        component: PatientAddComponent,
+        data: { breadcrumb: 'New Patient' },
+      },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      { path: 'patients/:id', component: PatientDetailsComponent, data: { breadcrumb: "Patient" },
+      {
+        path: 'patients/:id',
+        component: PatientDetailsComponent,
+        data: { breadcrumb: 'Patient' },
         // children: [
         //   {
         //     path: 'session/:id',
@@ -79,48 +95,65 @@ const routes: Routes = [
         // ]
       },
 
-      { path: 'care-plans',
-        data: { breadcrumb: "Care Plans" },
+      {
+        path: 'care-plans',
+        data: { breadcrumb: 'Care Plans' },
         children: [
           {
-            path: "new",
+            path: 'new',
             component: CreateCareplanComponent,
-            data: { breadcrumb: "Add Care Plan" },
+            data: { breadcrumb: 'Add Care Plan' },
           },
           {
             path: '',
-            pathMatch: "full",
+            pathMatch: 'full',
             component: CarePlanComponent,
           },
           {
-            path: ":id",
+            path: ':id',
             component: CarePlanDetailComponent,
-            data: { breadcrumb: "Care Plan Details" },
+            data: { breadcrumb: 'Care Plan Details' },
           },
-        ]
+        ],
       },
       //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
       // { path: 'sessions', component: SessionsDetailsComponent },
-      { path: 'game/:id', component: SessionsDetailsComponent, data: { breadcrumb: "Activity" } },
+      {
+        path: 'game/:id',
+        component: SessionsDetailsComponent,
+        data: { breadcrumb: 'Activity' },
+      },
 
       { path: 'account', component: AccountComponent },
-      { path: 'admin', data: { breadcrumb: 'Admin' }, children: [
-        { path: '', component:  AdminComponent, pathMatch: 'full' },
-        { path: 'add-organization', component: AddOrganizationComponent, data: { breadcrumb: 'Add Organization' } },
-        {path: 'user-details', redirectTo: '/app/admin', pathMatch :'full'},
-        {path: 'user-details/:type/:id', component: UserDetailsComponent, data: { breadcrumb: 'User Details' } , pathMatch :'full'},
-      ]
-    },
-
-    ]
+      {
+        path: 'admin',
+        data: { breadcrumb: 'Admin' },
+        children: [
+          { path: '', component: AdminComponent, pathMatch: 'full' },
+          {
+            path: 'add-organization',
+            component: AddOrganizationComponent,
+            data: { breadcrumb: 'Add Organization' },
+          },
+          { path: 'user-details', redirectTo: '/app/admin', pathMatch: 'full' },
+          {
+            path: 'user-details/:type/:id',
+            component: UserDetailsComponent,
+            data: { breadcrumb: 'User Details' },
+            pathMatch: 'full',
+          },
+        ],
+      },
+    ],
   },
-  { path: 'session/:id', component: SessionComponent, canActivate: [PrivateGuard]},
+  {
+    path: 'session/:id',
+    component: SessionComponent,
+    canActivate: [PrivateGuard],
+  },
   { path: 'fhir', component: CallbackComponent, canActivate: [PrivateGuard] },
-
-  {path:'patient/invite', component: AddPatientComponent},
-  {path:'staff/invite', component: AddStaffComponent},
 ];
 
 @NgModule({

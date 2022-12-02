@@ -116,10 +116,11 @@
     </div>
     <div class="col-md-12 row verticle-line-top mb-6">
       <div class=" col-md-9">
-        <input type="text" class="form-control form-control-muted" placeholder="Enter email" />
+        <input type="text" [(ngModel)]="patientEmail" class="form-control form-control-muted"
+          placeholder="Enter email" />
       </div>
       <div class="col-md-3">
-        <button class="btn btn-info w-full">Send Invite</button>
+        <button (click)="sendInviteViaEmail('patient')" class="btn btn-info w-full">Send Invite</button>
       </div>
     </div>
     <div class="col-md-12 mb-4">
@@ -163,10 +164,10 @@
     </div>
     <div class="col-md-12 row verticle-line-top mb-6">
       <div class=" col-md-9">
-        <input type="text" class="form-control form-control-muted" placeholder="Enter email" />
+        <input [(ngModel)]="staffEmail" type="text" class="form-control form-control-muted" placeholder="Enter email" />
       </div>
       <div class="col-md-3">
-        <button class="btn btn-info w-full">Send Invite</button>
+        <button (click)="sendInviteViaEmail('staff')" class="btn btn-info w-full">Send Invite</button>
       </div>
     </div>
     <div class="col-md-12 mb-4">
