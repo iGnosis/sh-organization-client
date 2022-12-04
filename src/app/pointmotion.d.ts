@@ -71,6 +71,7 @@ export class Patient {
   sessions?: Array<Session>;
   sessions_aggregate: any;
   primaryTherapistUser?: Therapist;
+  games?: { [key: string]: any }[];
 }
 export class User {
   id: string;
@@ -204,9 +205,33 @@ export class EngagementRatio {
 }
 
 export type Environment = {
+  organizationName: string;
   name: string;
   production: boolean;
   gqlEndpoint: string;
   servicesEndpoint: string;
   activityEndpoint: string;
 };
+
+export type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
+export type BrandColorType =
+  | 'primary'
+  | 'secondary'
+  | 'tertiary'
+  | 'success'
+  | 'warning'
+  | 'danger';
+
+export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
+export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
+
+export interface Theme {
+  colors?: {
+    [key: string]: any;
+  };
+  font?: {
+    family: string;
+    url: string;
+  };
+  logoUrl?: string;
+}

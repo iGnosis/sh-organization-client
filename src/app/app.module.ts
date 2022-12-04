@@ -59,12 +59,32 @@ import { AccountComponent } from './pages/home/account/account.component';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/sms-otp-login.component';
 import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap/patients-heatmap.component';
+import { AdminComponent } from './pages/home/admin/admin.component';
+import { CustomizationComponent } from './pages/home/admin/customization/customization.component';
+import { BillingComponent } from './pages/home/admin/billing/billing.component';
+import { UsersAccessComponent } from './pages/home/admin/users-access/users-access.component';
+import {
+  MatColorFormats,
+  MAT_COLOR_FORMATS,
+  NgxMatColorPickerModule,
+  NGX_MAT_COLOR_FORMATS,
+} from '@angular-material-components/color-picker';
+import { LatestSessionsComponent } from './pages/home/patients/latest-sessions/latest-sessions.component';
+import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
+import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
+import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
+import { InviteGuard } from './guards/invite-guard';
+import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
+import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
+import { ArchiveMemberModalComponent } from './components/archive-member-modal/archive-member-modal.component';
+import { UserDetailsComponent } from './pages/home/admin/user-details/user-details.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 // const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 //   suppressScrollX: true
 // };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -98,6 +118,18 @@ import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap
     CallbackComponent,
     SmsOtpLoginComponent,
     PatientsHeatmapComponent,
+    AdminComponent,
+    CustomizationComponent,
+    BillingComponent,
+    UsersAccessComponent,
+    LatestSessionsComponent,
+    RelativeTimePipe,
+    HexToColorPipe,
+    AddOrganizationComponent,
+    AddPatientComponent,
+    AddStaffComponent,
+    ArchiveMemberModalComponent,
+    UserDetailsComponent,
   ],
   imports: [
     BrowserModule,
@@ -125,17 +157,20 @@ import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap
     MatDialogModule,
     CarouselModule,
     Ng2SearchPipeModule,
+    NgxMatColorPickerModule,
     // PerfectScrollbarModule
   ],
   providers: [
     PrivateGuard,
     PublicGuard,
+    InviteGuard,
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
+
     // {
     //   provide: PERFECT_SCROLLBAR_CONFIG,
     //   useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     // }
-
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

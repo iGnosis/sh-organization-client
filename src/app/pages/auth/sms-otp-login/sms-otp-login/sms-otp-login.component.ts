@@ -3,7 +3,7 @@ import { phone } from 'phone';
 // import countryCodes from 'country-codes-list'
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -28,13 +28,17 @@ export class SmsOtpLoginComponent {
   // The Resend OTP API is called if numbers haven't changed.
   tempFullPhoneNumber?: string;
   fullPhoneNumber?: string;
+  inviteCode?: string;
 
   constructor(
     private graphQlService: GraphqlService,
     private router: Router,
     private jwtService: JwtService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) {
+    this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
+  }
 
   ngOnInit(): void {}
 
@@ -62,74 +66,64 @@ export class SmsOtpLoginComponent {
       // call the Resend OTP API, since phone number did not change.
       if (this.tempFullPhoneNumber === this.fullPhoneNumber) {
         console.log('resend OTP API called');
-        try {
-          const resp = await this.graphQlService.publicClient.request(
-            GqlConstants.RESEND_LOGIN_OTP,
-            {
-              phoneCountryCode: this.countryCode,
-              phoneNumber: this.phoneNumber,
-            }
-          );
-          if (
-            !resp ||
-            !resp.resendLoginOtp ||
-            !resp.resendLoginOtp.data.message
-          ) {
-            this.showError('Something went wrong while sending OTP.');
-            return;
-          }
+        const resp = await this.graphQlService.gqlRequest(
+          GqlConstants.RESEND_LOGIN_OTP,
+          {
+            phoneCountryCode: this.countryCode,
+            phoneNumber: this.phoneNumber,
+          },
+          false
+        );
 
-          // increment step
-          this.formErrorMsg = '';
-          this.step++;
-        } catch (err) {
-          console.log('Err::', err);
-          if (
-            err &&
-            err.response &&
-            err.response.errors[0].extensions.statusCode === 401
-          ) {
-            this.showError(
-              'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
-            );
-          }
+        if (resp.toString().toLowerCase().includes('unauthorized')) {
+          this.showError(
+            'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
+          );
+          return;
         }
+
+        else if (
+          !resp ||
+          !resp.resendLoginOtp ||
+          !resp.resendLoginOtp.data.message
+        ) {
+          this.showError('Something went wrong while sending OTP.');
+          return;
+        }
+
+        // increment step
+        this.formErrorMsg = '';
+        this.step++;
       }
       // call Request Login OTP API, since the phone number changed.
       else {
-        try {
-          const resp = await this.graphQlService.publicClient.request(
-            GqlConstants.REQUEST_LOGIN_OTP,
-            {
-              phoneCountryCode: this.countryCode,
-              phoneNumber: this.phoneNumber,
-            }
+        const resp = await this.graphQlService.gqlRequest(
+          GqlConstants.REQUEST_LOGIN_OTP,
+          {
+            phoneCountryCode: this.countryCode,
+            phoneNumber: this.phoneNumber,
+            inviteCode: this.inviteCode,
+          },
+          false
+        );
+        if (resp.toString().toLowerCase().includes('unauthorized')) {
+          this.showError(
+            'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
           );
-
-          if (
-            !resp ||
-            !resp.requestLoginOtp ||
-            !resp.requestLoginOtp.data.message
-          ) {
-            this.showError('Something went wrong while sending OTP.');
-            return;
-          }
-
-          // increment step
-          this.formErrorMsg = '';
-          this.step++;
-        } catch (err) {
-          console.log('Err::', err);
-          if (
-            err &&
-            err.response &&
-            err.response.errors[0].extensions.statusCode === 401
-          ) {
-            this.showError(
-              'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
-            );
-          }
+          return;
         }
+
+        else if (
+          !resp ||
+          !resp.requestLoginOtp ||
+          !resp.requestLoginOtp.data.message
+        ) {
+          this.showError('Something went wrong while sending OTP.');
+          return;
+        }
+        // increment step
+        this.formErrorMsg = '';
+        this.step++;
       }
     }
 
@@ -165,7 +159,11 @@ export class SmsOtpLoginComponent {
       });
       console.log('user set successfully');
 
-      this.router.navigate(['/app/dashboard']);
+      if (this.inviteCode) {
+        this.router.navigate(['/app/admin/add-organization']);
+      } else {
+        this.router.navigate(['/app/dashboard']);
+      }
     }
   }
 

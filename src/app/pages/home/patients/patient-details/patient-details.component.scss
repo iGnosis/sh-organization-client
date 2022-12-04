@@ -45,3 +45,29 @@ html {
     display: inline;
   }
 }
+
+::ng-deep {
+  .owl-stage {
+    display: flex;
+  }
+  .owl-nav {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .owl-theme .owl-nav [class*=owl-] {
+    color: #000;
+    font-size: 2rem;
+    background: none;
+    position: relative;
+  }
+  .owl-prev {
+    left: -3rem;
+  }
+  .owl-next {
+    right: -3rem;
+  }
+}

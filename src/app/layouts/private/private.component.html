@@ -11,7 +11,7 @@
       </button>
       <!-- Brand -->
       <a class="navbar-brand py-lg-5 mb-lg-5 px-lg-6 me-0" href="#">
-        <img src="assets/images/logo-white.png">
+        <img [src]="logoUrl">
       </a>
       <!-- User menu (mobile) -->
       <div class="navbar-user d-lg-none">
@@ -60,6 +60,11 @@
         <div class="mt-auto"></div>
         <!-- User (md) -->
         <ul class="navbar-nav mb-5">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/app/admin">
+              <i class="bi bi-buildings"></i> Administration
+            </a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" routerLink="/app/account">
               <i class="bi bi-person"></i> Account

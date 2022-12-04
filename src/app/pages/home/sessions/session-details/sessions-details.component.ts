@@ -8,6 +8,7 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { environment } from 'src/environments/environment';
 import { capitalize } from 'lodash';
+import { OwlOptions } from 'ngx-owl-carousel-o';
 
 type GameObj = {
   calibrationDuration: number;
@@ -26,6 +27,18 @@ type GameObj = {
   styleUrls: ['./sessions-details.component.scss'],
 })
 export class SessionsDetailsComponent implements OnInit {
+  customOptions: OwlOptions = {
+    loop: false,
+    dots: false,
+    navSpeed: 700,
+    responsive: {
+      940: {
+        items: 2
+      }
+    },
+    nav: true,
+    navText: [ '<i class="bi bi-chevron-left"></i>', '<i class="bi bi-chevron-right"></i>'],
+  };
   gameId: string;
   sessionCompletionRatio?: number;
   patientConditions = '';
@@ -34,6 +47,19 @@ export class SessionsDetailsComponent implements OnInit {
   sessionReactionTimeChart: Chart;
   sessionAchievementChart: Chart;
   showDownloadSession = false;
+
+  fastestInitiationTime: number;
+  averageInitiationTime: number;
+  slowestInitiationTime: number;
+
+  totalDuration = {
+    minutes: '0',
+    seconds: '0',
+  };
+  movementDuration = {
+    minutes: '0',
+    seconds: '0',
+  };
 
   constructor(
     private router: Router,
@@ -58,6 +84,10 @@ export class SessionsDetailsComponent implements OnInit {
       );
 
       this.gameDetails = gameDetails.game_by_pk;
+
+      this.totalDuration = this.getDurationInMinutes(this.gameDetails.totalDuration);
+      this.movementDuration = this.getDurationInMinutes(this.gameDetails.calibrationDuration);
+
       console.log('gameDetails:', this.gameDetails);
 
       this.initAchievementChart(this.gameDetails.id);
@@ -189,6 +219,35 @@ export class SessionsDetailsComponent implements OnInit {
   //     );
   //   }
   // }
+
+  /**
+   * Takes in the time (in seconds) and converts it into an object with minutes and seconds
+   *
+   * @param {number} totalSeconds
+   * @returns {{ minutes: string; seconds: string; }}
+   */
+  getDurationInMinutes(totalSeconds: number): {
+    minutes: string;
+    seconds: string;
+  } {
+    let minutes = 0;
+    if (totalSeconds >= 60) {
+      minutes = Math.floor(totalSeconds / 60);
+      totalSeconds -= 60 * minutes;
+    }
+    let time = { minutes: '0', seconds: '0' };
+    time = {
+      minutes:
+        minutes < 10
+          ? (time.minutes = '' + minutes.toString())
+          : (time.minutes = minutes.toString()),
+      seconds:
+        totalSeconds < 10
+          ? (time.seconds = '' + totalSeconds.toString())
+          : (time.seconds = totalSeconds.toString()),
+    };
+    return time;
+  }
 
   initInitiationTimeChart(gameId: string, game: string) {
     // building chartjs DS

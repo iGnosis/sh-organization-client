@@ -8,14 +8,14 @@ import { JwtService } from '../jwt/jwt.service';
 export class GraphqlService {
   public client: GraphQLClient;
   public publicClient: GraphQLClient;
+  private additionalHeaders: {[key: string]: any} = {
+    'x-pointmotion-user-type': 'staff',
+    'x-organization-name': environment.organizationName
+  }
 
   constructor(private jwtService: JwtService) {
-    const additionalHeaders: any = {
-      'x-pointmotion-origin': window.location.origin,
-      'x-pointmotion-user': 'therapist',
-    };
     if (environment.name == 'local') {
-      additionalHeaders['x-pointmotion-debug'] = 'true';
+      this.additionalHeaders['x-pointmotion-debug'] = 'true';
     }
 
     this.client = new GraphQLClient(environment.gqlEndpoint, {
@@ -23,12 +23,8 @@ export class GraphqlService {
         {
           Authorization: 'Bearer ' + this.jwtService.getToken(),
         },
-        additionalHeaders
+        this.additionalHeaders
       ),
-    });
-
-    this.publicClient = new GraphQLClient(environment.gqlEndpoint, {
-      headers: Object.assign({}, additionalHeaders),
     });
 
     this.jwtService.watchToken().subscribe((token: string) => {
@@ -37,7 +33,7 @@ export class GraphqlService {
           {
             Authorization: 'Bearer ' + token,
           },
-          additionalHeaders
+          this.additionalHeaders
         ),
       });
     });
@@ -47,13 +43,11 @@ export class GraphqlService {
     query: string,
     variables: any = {},
     auth = true,
-    additionalHeaders: any = {}
+    additionalHeaders: {[key: string]: any} = {}
   ) {
-    additionalHeaders['x-pointmotion-origin'] = window.location.origin;
-    additionalHeaders['x-pointmotion-user'] = 'therapist';
 
-    if (environment.name == 'local') {
-      additionalHeaders['x-pointmotion-debug'] = 'true';
+    for (const [key, value] of Object.entries(additionalHeaders)) {
+      this.additionalHeaders[key] = value;
     }
 
     // make authenticated request.
@@ -62,13 +56,13 @@ export class GraphqlService {
       this.client = new GraphQLClient(environment.gqlEndpoint, {
         headers: Object.assign({
           Authorization: 'Bearer ' + token,
-          ...additionalHeaders,
+          ...this.additionalHeaders,
         }),
       });
     } else {
       this.client = new GraphQLClient(environment.gqlEndpoint, {
         headers: {
-          ...additionalHeaders,
+          ...this.additionalHeaders,
         },
       });
     }
@@ -80,10 +74,4 @@ export class GraphqlService {
       return err;
     }
   }
-}
-
-function _getItem(key: string) {
-  const value = localStorage.getItem(key);
-  console.log('_getItem:key:value -', key, value);
-  return value;
 }

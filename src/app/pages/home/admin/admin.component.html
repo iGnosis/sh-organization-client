@@ -1,0 +1,48 @@
+<header class="px-3 px-lg-7 pt-7 custom_header">
+  <div class="container-xl">
+    <div>
+      <div class="row custom_alignment p-5">
+        <div class="col-md-12 col-12 mb-3 mb-md-0">
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <router-outlet></router-outlet>
+          <div class="row">
+            <div class="col-6">
+              <h1 class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{currentTab}}</h1>
+            </div>
+            <div class="col-6 d-flex align-items-end justify-content-end">
+              <button *ngIf="currentTab === 'Customization' && !customizable" (click)="customizable=true"
+                class="btn btn-primary"><i class="bi bi-pencil-square"></i>
+                &nbsp; Customize</button>
+
+              <button *ngIf="currentTab === 'Customization' && customizable" (click)="saveCustomization()"
+                [disabled]="changesInCustomizationTab" class="btn btn-primary"><i class="bi bi-check-lg"></i>
+                &nbsp; Done</button>
+
+              <button *ngIf="currentTab === 'Users and Access' " (click)="openAddMemberModal()"
+                class="btn btn-primary"><i class="bi bi-plus-lg"></i>
+                &nbsp; Add Members</button>
+
+            </div>
+          </div>
+          <ul class="nav nav-tabs">
+            <li *ngFor="let tab of tabs" class="nav-item" (click)="setCurrentTab(tab)" style="cursor: pointer">
+              <p class="nav-link" [ngClass]="{'active' : currentTab === tab}">
+                {{tab}}
+              </p>
+            </li>
+          </ul>
+        </div>
+        <!-- Actions -->
+        <div class="col-md-6 col-12 text-md-end">
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- Main content -->
+<main [ngSwitch]="currentTab" class="px-3 px-lg-7">
+  <app-customization *ngSwitchCase="'Customization'" (changesMade)="handleChangeEvent($event)"
+    [customizable]="customizable"></app-customization>
+  <app-billing *ngSwitchCase="'Billing'"></app-billing>
+  <app-users-access *ngSwitchCase="'Users and Access'"></app-users-access>
+</main>

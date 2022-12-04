@@ -1,0 +1,76 @@
+<div class="bg-surface-secondary">
+
+  <header class="px-3 px-lg-7 pt-7 custom_header">
+    <div class="container-xl">
+      <div>
+        <div class="row custom_alignment p-5">
+          <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <div class="row">
+              <div class="col-6">
+                <h1 class="h1 mb-0 ls-tight text-primary heading_text mt-5">
+                  Add New Staff Member
+                </h1>
+              </div>
+              <div class="col-6 d-flex align-items-end justify-content-end">
+                <button (click)="saveUserDetails()" class="btn btn-primary" [disabled]="!enableSaveButton"><i
+                    class="bi bi-save mx-2"></i>
+                  Save Changes</button>
+              </div>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="col-md-6 col-12 text-md-end">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main content -->
+  <main class="h-screen flex-grow-1 overflow-y-lg-auto px-md-3 px-lg-7 py-7">
+    <div class="container-xl">
+      <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+        <div class="p-md-6 p-sm-4 ">
+          <div class="h3 mb-md-8 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-8">
+            <div class="col-md-6 mb-sm-4 col-sm-10">
+              <label for="fname" class="form-label col-12">First Name</label>
+              <input (input)="setInput('firstName', $event)" id="fname" type="text"
+                class="form-control form-control-muted" required placeholder="Enter First name">
+            </div>
+            <div class="col-md-6 mb-sm-4 col-sm-10">
+              <label for="lname" class="form-label col-12">Last Name</label>
+              <input (input)="setInput('lastName', $event)" id="lname" type="text"
+                class="form-control form-control-muted" required placeholder="Enter Last name">
+            </div>
+          </div>
+          <div class="mb-md-8 mb-sm-4">
+            <label for="email" class="form-label col-12">Staff Email</label>
+            <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
+              (input)="setInput('email', $event)" required>
+          </div>
+
+          <div class="mb-md-8 mb-sm-4">
+            <div class="row">
+              <div class="col-md-2">
+                <label for="countryCode" class="form-label col-12">Country Code</label>
+                <mat-form-field id="countryCode" appearance="standard"
+                  class="col-12 condition_select form-control-muted">
+                  <mat-select placeholder="Country Code" (selectionChange)="setCountryCode($event)" required>
+                    <mat-option value='+1'>+1 USA</mat-option>
+                    <mat-option value='+1'>+1 Canada</mat-option>
+                    <mat-option value='+91'>+91 India</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <label for="mobile" class="form-label col-12">Staff Phone Number</label>
+                <input id="mobile" type="number" class="form-control form-control-muted"
+                  placeholder="Enter phone number" (input)="setInput('phoneNumber',$event)" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

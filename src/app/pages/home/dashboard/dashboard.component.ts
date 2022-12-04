@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { fromEvent, map, merge, of, Subscription } from 'rxjs';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -8,27 +11,88 @@ import { environment } from 'src/environments/environment';
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
-  patientAdherenceChart: Chart
-  patientOverviewChart: Chart
-  currentDate: Date
+  patientAdherenceChart: Chart;
+  patientOverviewChart: Chart;
 
-  constructor() {
+  currentDate: Date;
+  previousDate: Date;
+
+  isOnline = false;
+  networkStatusSubscription: Subscription;
+
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+  ];
+  selectedDateRange = 0;
+
+  showEmptyState = false;
+
+  constructor(private graphqlService: GraphqlService) {
     this.currentDate = new Date();
+    this.previousDate = this.currentDate;
     console.log('Environment ', environment.name);
   }
 
-  ngOnInit(): void {
-    this.initPatientAdherenceChart();
-    this.initPatientOverviewChart();
+  async ngOnInit(): Promise<void> {
+    this.getNetworkStatus();
+    await this.initPatientAdherenceChart();
+    await this.initPatientOverviewChart();
   }
 
-  initPatientAdherenceChart() {
+  ngOnDestroy(): void {
+    this.networkStatusSubscription.unsubscribe();
+  }
+
+  getNetworkStatus() {
+    this.isOnline = navigator.onLine;
+    this.networkStatusSubscription = merge(
+      of(null),
+      fromEvent(window, 'online'),
+      fromEvent(window, 'offline')
+    )
+      .pipe(map(() => navigator.onLine))
+      .subscribe(status => {
+        this.isOnline = status;
+      });
+  }
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.previousDate = new Date(this.currentDate);
+    this.previousDate.setDate(this.previousDate.getDate() - range);
+
+    if (range == 0) this.previousDate = this.currentDate;
+
+    await this.initPatientAdherenceChart();
+    await this.initPatientOverviewChart();
+  }
+
+  async initPatientAdherenceChart() {
+
+    const result = await this.graphqlService.client.request(
+      GqlConstants.GET_PATIENT_ADHERENCE_CHART,
+      {
+        startDate: this.previousDate.toISOString(),
+        endDate: this.currentDate.toISOString(),
+        groupBy: "month",
+      }
+    );
+
+    if (!result.patientAdherenceChart || !result.patientAdherenceChart.data) return;
+
+    if (result.patientAdherenceChart.data.totalNumOfPatients == 0) this.showEmptyState = true;
 
     const apiResponse = {
       labels: ['Active Patients', 'Inactive Patients'],
-      pieChartDataset: [11, 4],
+      pieChartDataset: [result.patientAdherenceChart.data.activePatientsCount || 0, result.patientAdherenceChart.data.totalNumOfPatients || 0],
       backgroundColor: ['#ffa2ad', '#2f51ae'],
     }
 
@@ -83,41 +147,46 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  initPatientOverviewChart() {
+  async initPatientOverviewChart() {
 
-    const apiResponse = {
-      data: [
-        { x: 20, y: 30, r: 10, pid: 'anakin' },
-        { x: 40, y: 10, r: 25, pid: 'obiwan' },
-        { x: 55, y: 47, r: 18, pid: 'leia' }
-      ]
-    }
+    const result = await this.graphqlService.client.request(
+      GqlConstants.GET_PATIENT_OVERVIEW_CHART,
+      {
+        startDate: this.previousDate.toISOString(),
+        endDate: this.currentDate.toISOString(),
+      }
+    );
+
+
+    const chartData = 
+      !result.patientOverviewChart || !result.patientOverviewChart.data.length ? [
+        {
+          pid: '',
+          x: 0,
+          y: 0,
+          r: 0,
+        }
+      ] 
+      : result.patientOverviewChart.data.map((item: any) => {
+        return {
+          pid: item.patient,
+          x: item.engagementRatio * 100,
+          y: item.avgAchievementPercentage,
+          r: item.gamesPlayedCount,
+        };
+      });
+
+      console.log('Patient Overview Chart ', chartData);
 
     const data = {
-      datasets: [{
-        label: 'Dementia',
-        data: apiResponse.data,
-        backgroundColor: '#2f51ae',
-        clip: false
-      },
-      {
-        label: 'Alzheimers',
-        data: [
-          { x: 80, y: 30, r: 10, pid: 'han' },
-          { x: 80, y: 10, r: 15, pid: 'leia' }
-        ],
-        backgroundColor: '#007f6e',
-        clip: false
-      },
-      {
-        label: 'Parkinsons',
-        data: [
-          { x: 100, y: 10, r: 10, pid: 'obiwan' },
-          { x: 42, y: 90, r: 15, pid: 'leia' }
-        ],
-        backgroundColor: '#ffa2ad',
-        clip: false
-      }]
+      datasets: [
+        {
+          label: 'Parkinsons',
+          data: chartData,
+          backgroundColor: '#007f6e',
+          clip: false
+        }
+      ]
     };
 
     const quadrants = {
@@ -145,7 +214,7 @@ export class DashboardComponent implements OnInit {
       options: {
         plugins: {
           legend: {
-            position: 'right',
+            position: 'bottom',
             labels: {
               font: {
                 size: 14

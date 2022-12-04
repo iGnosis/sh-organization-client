@@ -1,10 +1,10 @@
-import { Environment } from "src/app/pointmotion";
+import { Environment } from 'src/app/pointmotion';
 
 export const environment: Environment = {
-  production: true,
+  organizationName: 'pointmotion',
+  production: false,
   name: 'local',
-  gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
-  servicesEndpoint: 'https://services.dev.pointmotioncontrol.com',
-  // activityEndpoint: 'https://session.dev.pointmotioncontrol.com'
+  gqlEndpoint: 'http://localhost:8080/v1/graphql',
+  servicesEndpoint: 'http://localhost:9000',
   activityEndpoint: 'http://localhost:4201'
 };

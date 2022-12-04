@@ -1,0 +1,56 @@
+<header class="px-3 px-lg-7 pt-7 custom_header">
+    <div class="container-xl">
+      <div>
+        <div class="row custom_alignment p-5">
+          <div class="col-7 mb-3 mb-md-0">
+            <xng-breadcrumb separator=">"></xng-breadcrumb>
+            <router-outlet></router-outlet>
+            <div class="row">
+              <div class="col-6">
+                <h1 class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{'Add Organization'}}</h1>
+              </div>
+            </div>
+          </div>
+          <!-- Actions -->
+          <div class="col-5 text-md-end d-flex">
+            <button [disabled]="!allowSavingChanges" (click)="saveChanges()" class="btn btn-primary btn-sm ms-2">Save Changes</button>
+            <button [disabled]="!allowRegistration" (click)="registerOrganization()" class="btn btn-primary btn-sm ms-2"><i class="bi bi-person-check"></i>&nbsp;Register Organization</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</header>
+
+<div class="container my-5 row">
+    <div class="card shadow-3 col-8 offset-2">
+        <div class="card-header d-flex align-items-center">
+          <!-- Title -->
+          <h5>Basic Information</h5>
+        </div>
+        <div class="card-body pt-0">
+          <div>
+            <div class="col-md-12 mb-5">
+              <div class="">
+                <label class="form-label" for="formInputExample">Organization Name</label>
+                <input type="text" class="form-control form-control-sm" id="formInputExample" [(ngModel)]="organizationDetails.name" (ngModelChange)="validateForm()">
+              </div>
+            </div>
+            <div class="col-md-12 mb-5">
+              <div class="">
+                <label class="form-label" for="formInputExample">Organization Type</label>
+                <select class="form-select form-select-sm" [(ngModel)]="organizationDetails.type" (change)="validateForm()">
+                    <option value="senior_home_facility">Senior Home Facility</option>
+                    <option value="clinic">Clinic</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-12 mb-5">
+              <div class="">
+                <label class="form-label" for="formInputExample">Primary Admin E-mail</label>
+                <input type="email" class="form-control form-control-sm" id="formInputExample" [(ngModel)]="organizationDetails.adminEmail" (ngModelChange)="validateForm()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
