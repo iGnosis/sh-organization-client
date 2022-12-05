@@ -195,6 +195,9 @@
             },
             "local": {
               "browserTarget": "sh-provider-client:build:local"
+            },
+            "local-pure": {
+              "browserTarget": "sh-provider-client:build:local-pure"
             }
           },
           "defaultConfiguration": "local"
