@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { filter } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
+import { ThemeService } from 'src/app/services/theme/theme.service';
 import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/invite-patient.component';
 
 @Component({
@@ -10,8 +11,11 @@ import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/inv
   styleUrls: ['./private.component.scss']
 })
 export class PrivateComponent implements OnInit {
+  logoUrl = "assets/images/logo-white.png";
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private themeService: ThemeService, private router: Router) {
+    this.themeService.logoSubject.pipe(take(1)).subscribe((url) => this.logoUrl = url);
+  }
 
   ngOnInit(): void {
     this.router.events.subscribe((event: Event) => {

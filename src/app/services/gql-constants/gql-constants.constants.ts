@@ -107,23 +107,21 @@ export const GqlConstants = {
       }
     }
   }`,
-  GET_TOP_PATIENTS: `
-  query TopPatients {
-    patient(limit: 5, order_by: {games_aggregate: {max: {createdAt: desc}}}, where: {nickname: {_is_null: false}}) {
+  GET_LATEST_GAMES: `
+  query LatestGames($offset: Int!, $limit: Int!) {
+    game(order_by: {createdAt: desc}, offset: $offset, limit: $limit, where: {endedAt: {_is_null: false}}) {
       id
-      nickname
-      games(limit: 1) {
-        createdAt
+      game
+      createdAt
+      patientByPatient {
+        id
+        nickname
+        firstName
+        lastName
       }
     }
-  }`,
-  GET_LATEST_SESSIONS: `
-  query LatestSessions($createdAt: timestamptz = "", $patientId: uuid = "") {
-    game(where: {endedAt: {_is_null: false}, createdAt: {_gte: $createdAt}, patient: {_eq: $patientId}}, distinct_on: game) {
-      game
-      id
-    }
-  }`,
+  }
+  `,
   GET_ACTIVE_PLANS: `query GetPatientCarePlan($patient: uuid) {
     patient(where: {id: {_eq: $patient}}) {
       id
@@ -170,7 +168,7 @@ export const GqlConstants = {
 
   GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
     patient(where: {id: {_eq: $patientId}}) {
-      identifier
+      nickname
     }
   }`,
   GETCAREPLANDETAILS: `query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
@@ -257,6 +255,7 @@ export const GqlConstants = {
   query OrganizationConfig {
     organization {
       configuration
+      logoUrl
     }
   }`,
   EDIT_ORGANIZATION_DETAILS: `
@@ -269,7 +268,16 @@ export const GqlConstants = {
     }
   }
   `,
-
+  UPLOAD_ORGANIZATION_LOGO_URL: `
+  mutation UploadOrganizationLogoUrl {
+    uploadOrganizationLogo {
+      data {
+        uploadUrl
+        logoAccessUrl
+      }
+    }
+  }
+  `,
   // run by guest user
   CREATE_PATIENT: `mutation CreatePatient($firstName: String!, $lastName: String!, $namePrefix: String!, $phoneCountryCode: String!, $phoneNumber: String!, $email: String!, $inviteCode: String!) {
   createPatient(firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, email: $email, inviteCode: $inviteCode) {
@@ -287,15 +295,115 @@ export const GqlConstants = {
     }
   }
 }`,
-  INVITE_STAFF: `query InviteStaff($staffType: StaffType!) {
-  inviteStaff(staffType: $staffType) {
+
+  // run as org_admin
+  CREATE_NEW_PATIENT: `
+  mutation InsertPatient($firstName: String!, $lastName: String!, $namePrefix: String!, $email: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
+  insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+    email
+  }
+}
+`,
+  CREATE_NEW_STAFF: `
+    mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
+  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: invited, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
+    email
+  }
+}`,
+
+  GET_STAFF: `
+  query GetStaff {
+  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}) {
+    id
+    firstName
+    lastName
+    type
+  }
+}`,
+  GET_PATIENTS: `
+  query GetPatients {
+  patient {
+    firstName
+    lastName
+    id
+  }
+}
+`,
+
+  ARCHIVE_PATIENT: `
+  mutation ArchivePatient($patientId: uuid!, $status: user_status_enum = archived) {
+  update_patient_by_pk(pk_columns: {id: $patientId}, _set: {status: $status}) {
+    id
+  }
+}`,
+  ARCHIVE_STAFF: `mutation ArchiveStaff($staffId: uuid!) {
+  update_staff_by_pk(pk_columns: {id: $staffId}, _set: {status: archived}) {
+    id
+  }
+}`,
+
+  GET_STFF_BY_PK: `
+  query GetStaffByPK($id: uuid!) {
+  staff_by_pk(id: $id) {
+    email
+    firstName
+    id
+    lastName
+    phoneNumber
+    phoneCountryCode
+    type
+  }
+}`,
+
+  GET_PATIENT_BY_PK: `
+  query GetPatientByPK($id: uuid!) {
+  patient_by_pk(id: $id) {
+    email
+    firstName
+    lastName
+    namePrefix
+    phoneNumber
+    phoneCountryCode
+  }
+}`,
+
+  UPDATE_PATIENT_BY_PK: `
+  mutation UpdatePatientByPK($id: uuid!, $email: String!, $firstName: String!, $lastName: String!, $namePrefix: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
+  update_patient_by_pk(pk_columns: {id: $id}, _set: {email: $email, firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+    firstName
+    id
+    lastName
+    namePrefix
+    phoneNumber
+    phoneCountryCode
+  }
+}
+`,
+
+  UPDATE_STAFF_BY_PK: `
+  mutation UpdateStaffByPK($id: uuid!, $email: String!, $firstName: String!, $lastName: String!, $phoneCountryCode: String!, $phoneNumber: String!, $type: user_type_enum!) {
+  update_staff_by_pk(pk_columns: {id: $id}, _set: {email: $email, firstName: $firstName, lastName: $lastName, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber, type: $type}) {
+    email
+    firstName
+    id
+    lastName
+    phoneNumber
+    phoneCountryCode
+    type
+  }
+}`,
+  INVITE_STAFF: `
+  query InviteStaff($shouldSendEmail: Boolean = false, $email: String = "", $staffType: StaffType!, $expiryAt: String = "") {
+  inviteStaff(shouldSendEmail: $shouldSendEmail, email: $email, staffType: $staffType, expiryAt: $expiryAt) {
     data {
       inviteCode
     }
   }
-}`,
-  INVITE_PATIENT: `query InvitePatient {
-  invitePatient {
+}
+`,
+  INVITE_PATIENT: `
+  query InvitePatient($email: String = "", $shouldSendEmail: Boolean = false, $expiryAt: String = "") {
+  invitePatient(email: $email, shouldSendEmail: $shouldSendEmail, expiryAt: $expiryAt) {
     data {
       inviteCode
     }

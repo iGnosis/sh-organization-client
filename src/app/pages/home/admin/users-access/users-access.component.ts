@@ -7,7 +7,14 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, timeout } from 'rxjs';
+import { MatSelectChange } from '@angular/material/select';
+import { phone as validatePhone } from 'phone';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphQLError } from 'graphql-request/dist/types';
+import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
+import { Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-users-access',
@@ -17,32 +24,69 @@ import { BehaviorSubject } from 'rxjs';
 export class UsersAccessComponent implements OnInit {
   addMemberModalValue: string | undefined = undefined;
   @ViewChild('addMemberModal') addMemberModal: TemplateRef<any>;
-  @ViewChild('addNewPatient') addNewPatientModal: TemplateRef<any>;
-  @ViewChild('addNewStaff') addNewStaffModal: TemplateRef<any>;
+  @ViewChild('invitePatient') invitePatientModal: TemplateRef<any>;
+  @ViewChild('inviteStaff') inviteStaffModal: TemplateRef<any>;
+  @ViewChild('addPatient') addPatientModal: TemplateRef<any>;
+  @ViewChild('addStaff') addStaffModal: TemplateRef<any>;
 
-  copyStatusSubject = new BehaviorSubject<'copy' | 'copied'>('copy');
+  enableSaveButton = false;
+
   shareableLink: string | undefined = undefined;
+  copyStatusSubject = new BehaviorSubject<'copy' | 'copied'>('copy');
+  allowOnyInvitationalSignups = false;
 
   addMemberModalRef: NgbActiveModal;
   toggleLinkExpiry = false;
   expiryDate: string | undefined = undefined;
 
   // TODO: fetch data from the backend
-  adminList = [
-    { name: 'Arbor Acres', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Leia', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Ethan Hunt', role: 'Org Admin', id: 'some_uuid' },
-  ];
+  staffList: {
+    firstName: string;
+    lastName: string;
+    id: string;
+    type: string;
+  }[];
 
-  patientList = [
-    { name: 'Benjamin', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Anakin', role: 'Org Admin', id: 'some_uuid' },
-    { name: 'Luke', role: 'Org Admin', id: 'some_uuid' },
-  ];
+  patientList: {
+    firstName: string;
+    lastName: string;
+    id: string;
+    email: string;
+  }[];
 
-  constructor(private modalService: NgbModal, private clipboard: Clipboard) {}
+  patientDetails: Partial<{
+    firstName: string;
+    lastName: string;
+    namePrefix: string;
+    email: string;
+    phoneNumber: string;
+    phoneCountryCode: string;
+  }> = {};
+
+  staffDetails: Partial<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phoneNumber: string;
+    phoneCountryCode: string;
+    staffType: 'org_admin' | 'therapist';
+  }> = {};
+
+  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
+  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+    {};
+
+  constructor(
+    private modalService: NgbModal,
+    private clipboard: Clipboard,
+    private gqlService: GraphqlService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
+    this.initTables();
+
     this.copyStatusSubject.subscribe((status) => {
       if (status === 'copied') {
         setTimeout(() => {
@@ -50,6 +94,17 @@ export class UsersAccessComponent implements OnInit {
         }, 1000);
       }
     });
+  }
+
+  async initTables() {
+    const staff = await this.gqlService.client.request(GqlConstants.GET_STAFF);
+    console.log(staff);
+    this.staffList = staff.staff;
+
+    const patients = await this.gqlService.client.request(
+      GqlConstants.GET_PATIENTS
+    );
+    this.patientList = patients.patient;
   }
 
   openAddMemberModal(content: TemplateRef<any>): void {
@@ -62,32 +117,121 @@ export class UsersAccessComponent implements OnInit {
     });
   }
 
-  openAddNewPatientModal() {
+  openAddPatientModal() {
+    this.modalService.open(this.addPatientModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.patientDetails = {};
+        this.validateFields('patient');
+        return true;
+      },
+    });
+  }
+  openAddStaffModal() {
+    this.modalService.open(this.addStaffModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.staffDetails = {};
+        this.validateFields('staff');
+        return true;
+      },
+    });
+  }
+
+  openInvitePatientModal() {
     this.addMemberModalRef && this.addMemberModalRef.dismiss();
-    this.generateShareableLink();
-    this.modalService.open(this.addNewPatientModal, {
+    this.modalService.open(this.invitePatientModal, {
       size: 'lg',
       beforeDismiss: () => {
         this.shareableLink = undefined;
         return true;
       },
     });
+
+    this.generateShareableLink('patient');
   }
 
-  openAddNewStaffModal(type?: 'staff' | 'admin') {
+  openInviteStaffModal(type?: 'staff' | 'admin') {
     this.addMemberModalRef && this.addMemberModalRef.dismiss();
-    this.generateShareableLink();
-    this.modalService.open(this.addNewStaffModal, {
+    this.modalService.open(this.inviteStaffModal, {
       size: 'lg',
       beforeDismiss: () => {
         this.shareableLink = undefined;
         return true;
       },
     });
+
+    this.generateShareableLink('staff');
   }
 
-  openRemoveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
-    const modalRef = this.modalService.open(RemoveMemberModal);
+  async addNewStaff() {
+    try {
+      await this.gqlService.client.request(GqlConstants.CREATE_NEW_STAFF, {
+        firstName: this.staffDetails.firstName,
+        lastName: this.staffDetails.lastName,
+        email: this.staffDetails.email,
+        phoneNumber: this.staffDetails.phoneNumber,
+        phoneCountryCode: this.staffDetails.phoneCountryCode,
+        type: this.staffDetails.staffType,
+      });
+
+      this.addNewStaffStatus = {
+        status: 'success',
+        text: 'Added new staff member successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
+
+      this.staffDetails = {};
+    } catch (err) {
+      console.log('Error::', err);
+      this.addNewStaffStatus = {
+        status: 'error',
+        text: 'Failed to add new staff member.',
+      };
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
+    }
+  }
+
+  async addNewPatient() {
+    try {
+      await this.gqlService.client.request(GqlConstants.CREATE_NEW_PATIENT, {
+        firstName: this.patientDetails.firstName,
+        lastName: this.patientDetails.lastName,
+        email: this.patientDetails.email,
+        phoneNumber: this.patientDetails.phoneNumber,
+        phoneCountryCode: this.patientDetails.phoneCountryCode,
+        namePrefix: this.patientDetails.namePrefix,
+      });
+
+      this.addNewPatientStatus = {
+        status: 'success',
+        text: 'Added new Patient successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewPatientStatus = {};
+      }, 3000);
+
+      this.patientDetails = {};
+    } catch (err) {
+      console.log('Error::', err);
+      this.addNewPatientStatus = {
+        status: 'error',
+        text: 'Failed to add new Patient.',
+      };
+      setTimeout(() => {
+        this.addNewPatientStatus = {};
+      }, 3000);
+    }
+  }
+
+  openArchiveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
+    const modalRef = this.modalService.open(ArchiveMemberModalComponent);
     modalRef.componentInstance.name = name;
     modalRef.componentInstance.id = id;
     modalRef.componentInstance.type = type;
@@ -106,61 +250,147 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  generateShareableLink() {
-    //TODO: generate sharable link from the backend
-  }
+  async generateShareableLink(
+    type: 'staff' | 'patient',
+    willExpireIn?: 'in1Day' | 'in1Week' | 'in2Weeks'
+  ) {
+    // TODO: generate sharable link with the new expiry date
 
-  regenerateSharableLink(willExpireIn: 'in1Day' | 'in1Week' | 'in2Weeks') {
-    // TODO: regenerate sharable link with the new expiry date
-  }
-}
-
-@Component({
-  selector: 'remove-member-modal',
-  template: `
-    <div class="py-4 px-8">
-      <p class="h2 modal-title text-dark col-12">Remove {{ name }}</p>
-    </div>
-
-    <div class="px-8 mb-6">
-      <p class="text-black col-12">
-        Are you sure you want to remove this
-        {{ type === 'staff' ? 'staff member' : type }} ?
-      </p>
-    </div>
-
-    <div class="px-8 row mb-6">
-      <div class="col-md-6"></div>
-      <div class="col-md-6">
-        <button
-          class="btn btn-danger py-2 px-3"
-          (click)="removeFromOrg(id, type)"
-        >
-          Remove
-        </button>
-        <button
-          class="btn btn-secondary py-2 px-3 mx-4"
-          ngbAutofocus
-          (click)="activeModal.close('Cancel click')"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  `,
-})
-export class RemoveMemberModal {
-  @Input() name: string;
-  @Input() id: string;
-  @Input() type: 'patient' | 'staff';
-
-  constructor(public activeModal: NgbActiveModal) {}
-  removeFromOrg(id: string, type: 'patient' | 'staff') {
-    console.log('remove:member:id::', id);
     if (type === 'patient') {
-      // TODO: remove patient from the orgainzation
+      try {
+        const code = await this.gqlService.client.request(
+          GqlConstants.INVITE_PATIENT,
+          {}
+        );
+
+        this.shareableLink = `${window.location.origin}/invite/patient?inviteCode=${code.invitePatient.data.inviteCode}`;
+      } catch (err) {
+        console.log('Error::', err);
+        return err;
+      }
     } else {
-      // TODO: remove patient from the orgainzation
+      try {
+        const code = await this.gqlService.client.request(
+          GqlConstants.INVITE_STAFF,
+          {
+            staffType: 'therapist',
+          }
+        );
+
+        this.shareableLink = `${window.location.origin}/invite/staff?inviteCode=${code.inviteStaff.data.inviteCode}`;
+      } catch (err) {
+        console.log('Error::', err);
+        return err;
+      }
     }
+  }
+
+  patientEmail!: string;
+  staffEmail!: string;
+  async sendInviteViaEmail(type: 'staff' | 'patient') {
+    if (type === 'patient') {
+      try {
+        await this.gqlService.client.request(GqlConstants.INVITE_PATIENT, {
+          shouldSendEmail: true,
+          email: this.patientEmail,
+        });
+      } catch (err) {
+        console.log('Error::', err);
+      }
+    } else {
+      try {
+        await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
+          shouldSendEmail: true,
+          email: this.staffEmail,
+          staffType: 'therapist',
+        });
+      } catch (err) {
+        console.log('Error::', err);
+      }
+    }
+  }
+
+  validateFields(type: 'patient' | 'staff'): boolean {
+    const emailRegex =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+
+    if (type === 'patient') {
+      console.log(this.patientDetails);
+      if (
+        !this.patientDetails.firstName ||
+        !this.patientDetails.lastName ||
+        !this.patientDetails.email ||
+        !this.patientDetails.phoneNumber ||
+        !this.patientDetails.phoneCountryCode ||
+        !this.patientDetails.namePrefix
+      ) {
+        return false;
+      } else if (!emailRegex.test(this.patientDetails.email)) {
+        return false;
+      } else if (
+        !validatePhone(
+          `${this.patientDetails.phoneCountryCode}${this.patientDetails.phoneNumber}`
+        ).isValid
+      ) {
+        return false;
+      } else {
+        return true;
+      }
+    } else {
+      if (
+        !this.staffDetails.firstName ||
+        !this.staffDetails.lastName ||
+        !this.staffDetails.email ||
+        !this.staffDetails.phoneNumber ||
+        !this.staffDetails.phoneCountryCode ||
+        !this.staffDetails.staffType
+      )
+        return false;
+      if (!emailRegex.test(this.staffDetails.email)) return false;
+      if (
+        !validatePhone(
+          `${this.staffDetails.phoneCountryCode}${this.staffDetails.phoneNumber}`
+        ).isValid
+      ) {
+        return false;
+      }
+
+      return true;
+    }
+  }
+
+  setInput(
+    type: 'patient' | 'staff',
+    inputType: 'firstName' | 'lastName' | 'email' | 'phoneNumber',
+    evt: Event
+  ) {
+    const element = evt.target as HTMLInputElement;
+    if (type === 'patient') {
+      this.patientDetails[inputType] = element.value;
+      this.enableSaveButton = this.validateFields('patient');
+    } else {
+      this.staffDetails[inputType] = element.value;
+      this.enableSaveButton = this.validateFields('staff');
+    }
+  }
+
+  setSelect(
+    type: 'patient' | 'staff',
+    inputType: 'phoneCountryCode' | 'staffType' | 'namePrefix',
+    selectChange: MatSelectChange
+  ) {
+    if (type === 'patient') {
+      if (inputType === 'staffType') return;
+      this.patientDetails[inputType] = selectChange.value;
+      this.enableSaveButton = this.validateFields('patient');
+    } else {
+      if (inputType === 'namePrefix') return;
+      this.staffDetails[inputType] = selectChange.value;
+      this.enableSaveButton = this.validateFields('staff');
+    }
+  }
+
+  redirectToDetailsPage(type: 'staff' | 'patient', id: string) {
+    this.router.navigate(['app/admin/user-details', type, id]);
   }
 }

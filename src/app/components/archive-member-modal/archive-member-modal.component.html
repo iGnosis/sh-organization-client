@@ -1,0 +1,34 @@
+<button type="button" class="custom-btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+  <i class="bi bi-x-lg"></i>
+</button>
+<div class="py-4 px-8">
+  <p class="h2 modal-title text-dark col-12">
+    <i class="bi bi-exclamation-triangle-fill text-warning mx-3"></i>
+    Archive
+    {{ name }}
+  </p>
+</div>
+
+<div class="px-8 mb-6 mt-4">
+  <p class="text-black col-12 px-3">
+    You are about to archive this
+    {{ type === 'staff' ? 'staff member' : type }} and all attached data
+    from the Sound Health platform.
+  </p>
+</div>
+
+<div class="px-8 row mb-6">
+  <div class="col-md-6"></div>
+  <div class="col-md-6 d-flex justify-content-evenly">
+    <div>
+      <button class="btn btn-warning py-2 px-3" (click)="archiveFromOrg(id, type)">
+        Archive
+      </button>
+    </div>
+    <div>
+      <button class="btn btn-secondary py-2 px-3" ngbAutofocus (click)="activeModal.close('Cancel click')">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
