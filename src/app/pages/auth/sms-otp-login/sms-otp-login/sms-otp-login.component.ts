@@ -6,6 +6,7 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { ThemeService } from 'src/app/services/theme/theme.service';
 
 // TODO: Decouple this Component (checkins, onboardings... etc)
 @Component({
@@ -35,6 +36,7 @@ export class SmsOtpLoginComponent {
     private router: Router,
     private jwtService: JwtService,
     private userService: UserService,
+    private themeService: ThemeService,
     private route: ActivatedRoute
   ) {
     this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
@@ -161,6 +163,12 @@ export class SmsOtpLoginComponent {
         id: userId,
       });
       console.log('user set successfully');
+
+      // set-up RBAC permissons
+      const orgConfig = await this.themeService.getOrganizationConfig();
+      if (orgConfig && orgConfig.authRules) {
+        this.userService.setRbacRules(orgConfig.authRules);
+      }
 
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);

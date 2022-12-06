@@ -15,6 +15,7 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { GraphQLError } from 'graphql-request/dist/types';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 import { Route, Router } from '@angular/router';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-users-access',
@@ -81,10 +82,12 @@ export class UsersAccessComponent implements OnInit {
     private modalService: NgbModal,
     private clipboard: Clipboard,
     private gqlService: GraphqlService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
     this.initTables();
 
     this.copyStatusSubject.subscribe((status) => {
@@ -115,6 +118,7 @@ export class UsersAccessComponent implements OnInit {
         return true;
       },
     });
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
   }
 
   openAddPatientModal() {
@@ -126,7 +130,9 @@ export class UsersAccessComponent implements OnInit {
         return true;
       },
     });
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
   }
+
   openAddStaffModal() {
     this.modalService.open(this.addStaffModal, {
       size: 'lg',
@@ -136,6 +142,7 @@ export class UsersAccessComponent implements OnInit {
         return true;
       },
     });
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
   }
 
   openInvitePatientModal() {
@@ -147,8 +154,8 @@ export class UsersAccessComponent implements OnInit {
         return true;
       },
     });
-
     this.generateShareableLink('patient');
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
   }
 
   openInviteStaffModal(type?: 'staff' | 'admin') {
@@ -160,8 +167,8 @@ export class UsersAccessComponent implements OnInit {
         return true;
       },
     });
-
     this.generateShareableLink('staff');
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
   }
 
   async addNewStaff() {

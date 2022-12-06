@@ -28,14 +28,6 @@ export class SignInComponent implements OnInit {
 
   async onSignIn() {
     this.router.navigate(['/public/auth/sms-login']);
-    // this.errors = []
-    // this.authService.login({ email: this.email, password: this.password }).subscribe((data: any) => {
-    //   this.jwtService.setToken(data.token)
-    //   this.userService.set(data.user)
-    //   this.next()
-    // }, (error) => {
-    //   this.errors = error.error.message
-    // })
   }
 
   next() {

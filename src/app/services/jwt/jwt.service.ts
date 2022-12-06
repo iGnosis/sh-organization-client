@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import jwtDecode from 'jwt-decode';
 import { Observable, Subject } from 'rxjs';
+import { JwtToken } from 'src/app/pointmotion';
+import { UserRole } from '../auth/auth.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -22,10 +24,7 @@ export class JwtService {
       return false;
     }
 
-    const decodedToken: {
-      iat: number;
-      exp: number;
-    } = jwtDecode(accessToken);
+    const decodedToken: JwtToken = jwtDecode(accessToken);
 
     const nowUnixEpochInSecs = new Date().getTime() / 1000;
     const diffInSecs = nowUnixEpochInSecs - decodedToken.exp;
@@ -49,5 +48,14 @@ export class JwtService {
   getToken() {
     const token = localStorage.getItem('accessToken');
     return token;
+  }
+
+  getRole(): UserRole | void {
+    if (!this.isAuthenticated()) {
+      return
+    }
+    const token = this.getToken() || '';
+    const decodedToken: JwtToken = jwtDecode(token);
+    return decodedToken['https://hasura.io/jwt/claims']['x-hasura-default-role'];
   }
 }

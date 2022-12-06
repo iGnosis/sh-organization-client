@@ -1,25 +1,34 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Theme } from 'src/app/pointmotion';
+import { OrganizationConfiguration } from 'src/app/pointmotion';
 import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
   logoSubject = new Subject<string>();
-  constructor(private graphqlService: GraphqlService) {}
+  constructor(
+    private graphqlService: GraphqlService,
+    private userService: UserService
+  ) {}
 
   /**
    * Getting the organization configuration.
    *
-   * @returns {Promise<Theme>}
+   * @returns {Promise<OrganizationConfiguration>}
    */
-  private async getOrganizationConfig(): Promise<Theme> {
+  async getOrganizationConfig(): Promise<OrganizationConfiguration> {
     try {
-      const response = await this.graphqlService.gqlRequest(GqlConstants.GET_ORGANIZATION_CONFIG);
-      return response.organization ? { 
+      const response: {
+        organization: {
+          configuration: OrganizationConfiguration;
+          logoUrl: string;
+        }[]
+      } = await this.graphqlService.gqlRequest(GqlConstants.GET_ORGANIZATION_CONFIG);
+      return response.organization ? {
         ...response.organization[0].configuration,
         logoUrl: response.organization[0].logoUrl,
       } : {};
@@ -44,22 +53,25 @@ export class ThemeService {
   }
 
   /**
-   * Setting the theme of the application.
-   * 
+   * Sets the theme & RBAC of the application.
+   *
    * @returns {Promise<void>}
    */
-  async setTheme(): Promise<void> {
-    const theme = await this.getOrganizationConfig(); 
-    if (theme) {
-      if (theme.colors) {
-        this.setColors(theme.colors);
-      }
-      if (theme.font) {
-        this.loadFont(theme.font);
-      }
-      if (theme.logoUrl) {
-        this.setLogoUrl(theme.logoUrl);
-      }
+  async setupApp(): Promise<void> {
+    const orgConfig = await this.getOrganizationConfig();
+    if (!orgConfig) return
+
+    if (orgConfig.colors) {
+      this.setColors(orgConfig.colors);
+    }
+    if (orgConfig.font) {
+      this.loadFont(orgConfig.font);
+    }
+    if (orgConfig.logoUrl) {
+      this.setLogoUrl(orgConfig.logoUrl);
+    }
+    if (orgConfig.authRules) {
+      this.userService.setRbacRules(orgConfig.authRules);
     }
   }
 

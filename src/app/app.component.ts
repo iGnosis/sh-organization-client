@@ -9,6 +9,6 @@ import { ThemeService } from './services/theme/theme.service';
 export class AppComponent {
   title = 'sh-provider-client';
   constructor(private themeService: ThemeService) {
-    this.themeService.setTheme();
+    this.themeService.setupApp();
   }
 }

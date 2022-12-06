@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Tabs } from 'src/app/pointmotion';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { CustomizationComponent } from './customization/customization.component';
 import { UsersAccessComponent } from './users-access/users-access.component';
 
@@ -19,9 +20,11 @@ export class AdminComponent implements OnInit {
   customizable = false;
   changesInCustomizationTab = true;
 
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
+  }
 
   setCurrentTab(tabName: Tabs) {
     this.currentTab = tabName;

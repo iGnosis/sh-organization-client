@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { User } from 'src/app/pointmotion';
+import { RbacAuthRules, User } from 'src/app/pointmotion';
 
 @Injectable({
   providedIn: 'root',
@@ -18,5 +18,14 @@ export class UserService {
   get(): User {
     const user = this.user || JSON.parse(localStorage.getItem('user') || '{}');
     return user as User;
+  }
+
+  setRbacRules(authRules: RbacAuthRules) {
+    window.sessionStorage.setItem('authRules', JSON.stringify(authRules));
+  }
+
+  getRbacRules(): RbacAuthRules {
+    const authRules = window.sessionStorage.getItem('authRules');
+    return authRules ? JSON.parse(authRules) : {}
   }
 }

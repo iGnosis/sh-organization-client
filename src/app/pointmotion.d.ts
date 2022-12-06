@@ -1,3 +1,5 @@
+import { UserRole } from "./services/auth/auth.enum";
+
 export class Activity {
   id?: string;
   createdAt?: number; // unix epoch time in milliseconds
@@ -171,14 +173,6 @@ export class SessionData {
   [key: string]: Session;
 }
 
-// class Session {
-//     [key: string]: Activity
-// }
-
-// class Activity {
-//     events?: Array<Event>
-// }
-
 declare class Event {
   activityName?: string;
   taskName?: string;
@@ -225,7 +219,11 @@ export type BrandColorType =
 export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
 export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
 
-export interface Theme {
+export interface RbacAuthRules {
+  [key: string]: UserRole[]
+}
+
+export interface OrganizationConfiguration {
   colors?: {
     [key: string]: any;
   };
@@ -234,4 +232,17 @@ export interface Theme {
     url: string;
   };
   logoUrl?: string;
+  authRules?: RbacAuthRules
+}
+
+export class JwtToken {
+  id: string;
+  iat: number;
+  exp: number;
+  "https://hasura.io/jwt/claims": {
+    "x-hasura-allowed-roles": UserRole[]
+    "x-hasura-default-role": UserRole;
+    "x-hasura-user-id": string;
+    "x-hasura-organization-id": string;
+  };
 }

@@ -5,6 +5,7 @@ import {
   OrganizationType,
   TypeFace,
 } from 'src/app/pointmotion';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -46,9 +47,10 @@ export class CustomizationComponent implements OnInit {
   // TODO: change these to be dynamic
   availableTypefaces: TypeFace[] = ['Abel', 'Inter', 'Roboto', 'Open Sans'];
 
-  constructor(private graphqlService: GraphqlService) {}
+  constructor(private graphqlService: GraphqlService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.rbac(document.querySelectorAll('[data-auth-key]'));
     this.initValues();
   }
 
@@ -117,7 +119,7 @@ export class CustomizationComponent implements OnInit {
     // only sends one image for now
     for (let i = 0; i < this.imageList.length; i++) {
       const image = this.imageList[i];
-      
+
       const result = await this.graphqlService.gqlRequest(GqlConstants.UPLOAD_ORGANIZATION_LOGO_URL);
       if (!result.uploadOrganizationLogo) return;
       const urls = result.uploadOrganizationLogo.data;
