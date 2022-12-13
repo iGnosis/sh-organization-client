@@ -20,7 +20,6 @@ export class DefaultRouteGuard implements CanActivate {
     if (user && user.type && user.type === 'org_admin') {
       defaultRoute = 'app/admin'
     }
-    console.log('default-route guard is running...')
     this.router.navigate([defaultRoute]);
     return true
   }
