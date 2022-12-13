@@ -38,10 +38,6 @@ export class SignInComponent implements OnInit {
     // })
   }
 
-  next() {
-    this.router.navigate(['/app/dashboard'])
-  }
-
   forgotPassword() {
     this.router.navigate(['/public/auth/forgot-password'])
   }

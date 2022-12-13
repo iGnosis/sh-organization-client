@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
+import { DefaultRouteGuard } from './guards/default-route.guard';
 import { InviteGuard } from './guards/invite-guard';
 import { PrivateGuard } from './guards/private-guard';
 import { PublicGuard } from './guards/public-guard';
@@ -29,9 +30,8 @@ import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component'
 import { SessionComponent } from './pages/session/session.component';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
-
 const routes: Routes = [
-  { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
+  { path: '', canActivate: [DefaultRouteGuard], pathMatch: 'full', children: [] },
   { path: 'invite/patient', component: AddPatientComponent },
   { path: 'invite/staff', component: AddStaffComponent },
   { path: 'invite/:inviteCode', canActivate: [InviteGuard], children: [] },

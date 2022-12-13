@@ -174,8 +174,10 @@ export class SmsOtpLoginComponent {
 
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);
-      } else {
+      } else if (userRole === 'therapist') {
         this.router.navigate(['/app/dashboard']);
+      } else if (userRole === 'org_admin') {
+        this.router.navigate(['/app/admin']);
       }
     }
   }
