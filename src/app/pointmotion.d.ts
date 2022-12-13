@@ -76,21 +76,15 @@ export class Patient {
 export class User {
   id: string;
   email: string;
-  password: string;
   createdAt: Date;
   updatedAt: Date;
   lastActive: Date;
   firstName: string;
   lastName: string;
-  type: string;
+  type: UserRole;
   status: string;
-  provider: string;
   phoneCountryCode: string;
   phoneNumber: string;
-  auth: {
-    otp: number;
-    issuedAt: number;
-  };
 }
 declare class PatientFrom {
   userFrom?: Patient;
@@ -225,6 +219,11 @@ export type BrandColorType =
 export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
 export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
 
+// export type Tabs = {
+//   authKey: string;
+//   name: 'Customization' | 'Billing' | 'Users and Access';
+// }
+
 export interface Theme {
   colors?: {
     [key: string]: any;
@@ -234,4 +233,53 @@ export interface Theme {
     url: string;
   };
   logoUrl?: string;
+}
+
+export enum UserRole {
+  ORG_ADMIN = 'org_admin',
+  SH_ADMIN = 'sh_admin',
+  THERAPIST = 'therapist',
+}
+export class JwtToken {
+  id: string;
+  iat: number;
+  exp: number;
+  "https://hasura.io/jwt/claims": {
+    "x-hasura-allowed-roles": UserRole[]
+    "x-hasura-default-role": UserRole;
+    "x-hasura-user-id": string;
+    "x-hasura-organization-id": string;
+  };
+}
+
+interface Rule {
+  title: string;
+  description: string;
+  key: string;
+  access: UserRole[];
+}
+
+interface RouteRule {
+  title: string;
+  description: string;
+  path: string;
+  rules: Rule[];
+}
+
+interface UiRbac {
+  navigationBar: Rule[];
+  routes: RouteRule[];
+}
+
+interface HasuraRbac {
+  select_permissions: string[];
+  insert_permissions: string[];
+  update_permissions: string[];
+  delete_permissions: boolean;
+  table: string;
+}
+
+export interface Rbac {
+  uiRbac: UiRbac;
+  hasuraRbac: HasuraRbac[];
 }

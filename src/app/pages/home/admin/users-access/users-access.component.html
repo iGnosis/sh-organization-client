@@ -1,6 +1,5 @@
 <div class="container-xl">
-
-  <div class="card mt-sm-4 mt-md-10">
+  <div accessControl authKey="list_staff_members" class="card mt-sm-4 mt-md-10">
     <div class="col-md-11 mx-auto row pt-md-4 pt-lg-6">
       <div class="col-md-6 d-flex align-items-center">
         <p class="h3">
@@ -34,7 +33,7 @@
     </div>
   </div>
 
-  <div class="card my-sm-4 my-md-10">
+  <div accessControl authKey="list_patients" class="card my-sm-4 my-md-10">
     <div class="col-md-11 mx-auto row pt-md-4 pt-lg-6 ">
       <div class="col-md-6 d-flex align-items-center">
         <p class="h3">
@@ -81,7 +80,7 @@
   </div>
   <div class="modal-body py-2">
     <div class="row">
-      <div class="col-md-6 offset-md-2  py-4 ">
+      <div accessControl authKey="add_patient" class="col-md-6 offset-md-2  py-4 ">
         <input class="form-check-input" (click)="handleMemberSelect($event)" type="radio" value="patient"
           name="addMember" id="addPatient">
         <label class="form-check-label h3 mx-4"
@@ -90,7 +89,7 @@
         </label>
       </div>
 
-      <div class="col-md-8 offset-md-2  py-4">
+      <div accessControl authKey="add_staff" class="col-md-8 offset-md-2  py-4">
         <input class="form-check-input" (click)="handleMemberSelect($event)" type="radio" value="staff" name="addMember"
           id="addStaffMember">
         <label class="form-check-label h3 mx-4 align-items-middle"

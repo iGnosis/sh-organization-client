@@ -6,6 +6,8 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { UserRole } from 'src/app/pointmotion';
 
 // TODO: Decouple this Component (checkins, onboardings... etc)
 @Component({
@@ -35,6 +37,7 @@ export class SmsOtpLoginComponent {
     private router: Router,
     private jwtService: JwtService,
     private userService: UserService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {
     this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
@@ -157,10 +160,17 @@ export class SmsOtpLoginComponent {
       const accessTokenData = this.decodeJwt(resp.verifyLoginOtp.data.token);
       const userId =
         accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+
+      const userRole: UserRole =
+        accessTokenData['https://hasura.io/jwt/claims']['x-hasura-default-role'];
+
       this.userService.set({
         id: userId,
+        type: userRole
       });
       console.log('user set successfully');
+
+      await this.authService.initRbac();
 
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);
