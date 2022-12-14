@@ -6,8 +6,8 @@ import { UserService } from '../services/user/user.service';
   selector: '[acl]'
 })
 export class AccessControlDirective implements OnInit {
-  @Input("navKey") navKey?: string;
-  @Input("authKey") authKey?: string;
+  @Input("nav") nav?: string;
+  @Input("feature") feature?: string;
 
   constructor(
     private elementRef: ElementRef,
@@ -16,7 +16,7 @@ export class AccessControlDirective implements OnInit {
   ) {}
 
   ngOnInit() {
-    // console.log({ navKey: this.navKey, authKey: this.authKey })
+    // console.log({ nav: this.nav, feature: this.feature })
     this.elementRef.nativeElement.style.display = "none";
     this.checkAccess();
   }
@@ -27,18 +27,18 @@ export class AccessControlDirective implements OnInit {
 
     const rbac = this.authService.getRbac();
 
-    if (this.navKey) {
+    if (this.nav) {
       rbac.uiRbac.navigationBar.forEach(nav => {
-        if (this.navKey === nav.key && nav.access.includes(currentUserRole)) {
+        if (this.nav === nav.key && nav.access.includes(currentUserRole)) {
           this.elementRef.nativeElement.style.display = 'block';
         }
       })
     }
 
-    if (this.authKey) {
+    if (this.feature) {
       rbac.uiRbac.routes.forEach(route => {
         route.rules.forEach(rule => {
-          if (this.authKey === rule.key && rule.access.includes(currentUserRole)) {
+          if (this.feature === rule.key && rule.access.includes(currentUserRole)) {
             this.elementRef.nativeElement.style.display = 'block';
           }
         })

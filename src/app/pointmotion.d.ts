@@ -222,7 +222,7 @@ export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
 export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
 
 // export type Tabs = {
-//   authKey: string;
+//   feature: string;
 //   name: 'Customization' | 'Billing' | 'Users and Access';
 // }
 
