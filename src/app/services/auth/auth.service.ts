@@ -24,9 +24,13 @@ export class AuthService {
     window.sessionStorage.setItem('rbac', JSON.stringify(resp.fetchUserRbac.data as HasuraRbac));
   }
 
-  getRbac(): Rbac {
-    const rbac = window.sessionStorage.getItem('rbac');
-    return rbac ? JSON.parse(rbac) : {}
+  async getRbac(): Promise<Rbac> {
+    let rbac = window.sessionStorage.getItem('rbac');
+    if (!rbac) {
+      const resp = await this.initRbac();
+      rbac = window.sessionStorage.getItem('rbac');
+    }
+    return rbac ? JSON.parse(rbac) : {};
   }
 
   requestResetLink(email: string) {

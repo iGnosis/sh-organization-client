@@ -15,17 +15,17 @@ export class AccessControlDirective implements OnInit {
     private userService: UserService,
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     // console.log({ nav: this.nav, feature: this.feature })
     this.elementRef.nativeElement.style.display = "none";
-    this.checkAccess();
+    await this.checkAccess();
   }
 
-  checkAccess() {
+  async checkAccess() {
     const currentUserRole = this.userService.get().type;
     // console.log('currentUserRole:', currentUserRole);
 
-    const rbac = this.authService.getRbac();
+    const rbac = await this.authService.getRbac();
 
     if (this.nav) {
       rbac.uiRbac.navigationBar.forEach(nav => {
