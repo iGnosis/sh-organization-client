@@ -6,6 +6,12 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { environment } from 'src/environments/environment';
+
+enum UserRole {
+  THERAPIST = "therapist",
+  ORG_ADMIN = "org_admin",
+}
 
 // TODO: Decouple this Component (checkins, onboardings... etc)
 @Component({
@@ -14,6 +20,9 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./sms-otp-login.component.scss'],
 })
 export class SmsOtpLoginComponent {
+  UserRole = UserRole
+  environment = environment
+
   shScreen = false;
   isMusicEnded = false;
   step = 0;
@@ -184,6 +193,22 @@ export class SmsOtpLoginComponent {
     setTimeout(() => {
       this.formErrorMsg = '';
     }, timeout);
+  }
+
+  async mockLogin(userRole: UserRole) {
+    console.log('mock login:', userRole);
+    const resp = await this.graphQlService.gqlRequest(GqlConstants.MOCK_LOGIN, { userRole }, false);
+    const token = resp.mockStaffJwt.data.jwt;
+
+    this.jwtService.setToken(token);
+    const accessTokenData = this.decodeJwt(token);
+    const userId =
+      accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+    this.userService.set({
+      id: userId,
+    });
+    console.log('user set successfully');
+    this.router.navigate(['/app/dashboard']);
   }
 
   decodeJwt(token: string | undefined) {
