@@ -78,6 +78,7 @@ import { AddPatientComponent } from './pages/invite/add-patient/add-patient.comp
 import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 import { ArchiveMemberModalComponent } from './components/archive-member-modal/archive-member-modal.component';
 import { UserDetailsComponent } from './pages/home/admin/user-details/user-details.component';
+import { AccessControlDirective } from './guards/access-control.directive';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -130,6 +131,7 @@ import { UserDetailsComponent } from './pages/home/admin/user-details/user-detai
     AddStaffComponent,
     ArchiveMemberModalComponent,
     UserDetailsComponent,
+    AccessControlDirective,
   ],
   imports: [
     BrowserModule,
