@@ -42,6 +42,17 @@
               </div>
             </div>
 
+            <div *ngIf="environment.name === 'local' || environment.name === 'dev'">
+              <div class="col-sm">
+                <a type="button" [routerLink]="" (click)="mockLogin(UserRole.THERAPIST)">Sign in as test <span
+                    class="text-danger">Therapist</span></a>
+              </div>
+              <div class="col-sm mt-2">
+                <a type="button" [routerLink]="" (click)="mockLogin(UserRole.ORG_ADMIN)">Sign in as test <span
+                    class="text-success">Organization Admin</span></a>
+              </div>
+            </div>
+
           </div>
           <div class=" p-2 terms">
             <p><span>By signing up, you agree to our terms of service and privacy policy.</span></p>
