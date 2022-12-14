@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
 
 @Directive({
-  selector: '[accessControl]'
+  selector: '[acl]'
 })
 export class AccessControlDirective implements OnInit {
   @Input("navKey") navKey?: string;
