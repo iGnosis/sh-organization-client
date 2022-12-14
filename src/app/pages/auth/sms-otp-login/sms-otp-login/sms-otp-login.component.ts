@@ -7,7 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { UserRole } from 'src/app/pointmotion';
+import { environment } from 'src/environments/environment';
+import { UserRole } from 'src/app/users.enum';
 
 // TODO: Decouple this Component (checkins, onboardings... etc)
 @Component({
@@ -16,6 +17,9 @@ import { UserRole } from 'src/app/pointmotion';
   styleUrls: ['./sms-otp-login.component.scss'],
 })
 export class SmsOtpLoginComponent {
+  environment = environment;
+  UserRole = UserRole;
+
   shScreen = false;
   isMusicEnded = false;
   step = 0;
@@ -174,10 +178,9 @@ export class SmsOtpLoginComponent {
 
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);
-      } else if (userRole === 'therapist') {
-        this.router.navigate(['/app/dashboard']);
-      } else if (userRole === 'org_admin') {
-        this.router.navigate(['/app/admin']);
+      } else {
+        const defaultRoute = this.userService.getDefaultRoute(userRole);
+        this.router.navigate([defaultRoute]);
       }
     }
   }
@@ -196,6 +199,24 @@ export class SmsOtpLoginComponent {
     setTimeout(() => {
       this.formErrorMsg = '';
     }, timeout);
+  }
+
+  async mockLogin(userRole: UserRole) {
+    console.log('mock login:', userRole);
+    const resp = await this.graphQlService.gqlRequest(GqlConstants.MOCK_LOGIN, { userRole }, false);
+    const token = resp.mockStaffJwt.data.jwt;
+
+    this.jwtService.setToken(token);
+    const accessTokenData = this.decodeJwt(token);
+    const userId =
+      accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+    this.userService.set({
+      id: userId,
+      type: userRole,
+    });
+    console.log('user set successfully');
+    const route = this.userService.getDefaultRoute(userRole as UserRole);
+    this.router.navigate([route]);
   }
 
   decodeJwt(token: string | undefined) {

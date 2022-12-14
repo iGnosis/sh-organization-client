@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
-import { UserRole } from '../pointmotion';
 import { UserService } from '../services/user/user.service';
+import { UserRole } from '../users.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +16,7 @@ export class DefaultRouteGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const user = this.userService.get();
-    let defaultRoute = 'app/dashboard'
-    if (user && user.type && user.type === 'org_admin') {
-      defaultRoute = 'app/admin'
-    }
+    const defaultRoute = this.userService.getDefaultRoute(user.type);
     this.router.navigate([defaultRoute]);
     return true
   }

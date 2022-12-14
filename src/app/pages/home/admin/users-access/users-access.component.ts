@@ -97,11 +97,11 @@ export class UsersAccessComponent implements OnInit {
   }
 
   async initTables() {
-    const staff = await this.gqlService.client.request(GqlConstants.GET_STAFF);
+    const staff = await this.gqlService.gqlRequest(GqlConstants.GET_STAFF);
     console.log(staff);
     this.staffList = staff.staff;
 
-    const patients = await this.gqlService.client.request(
+    const patients = await this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENTS
     );
     this.patientList = patients.patient;
@@ -166,7 +166,7 @@ export class UsersAccessComponent implements OnInit {
 
   async addNewStaff() {
     try {
-      await this.gqlService.client.request(GqlConstants.CREATE_NEW_STAFF, {
+      await this.gqlService.gqlRequest(GqlConstants.CREATE_NEW_STAFF, {
         firstName: this.staffDetails.firstName,
         lastName: this.staffDetails.lastName,
         email: this.staffDetails.email,
@@ -199,7 +199,7 @@ export class UsersAccessComponent implements OnInit {
 
   async addNewPatient() {
     try {
-      await this.gqlService.client.request(GqlConstants.CREATE_NEW_PATIENT, {
+      await this.gqlService.gqlRequest(GqlConstants.CREATE_NEW_PATIENT, {
         firstName: this.patientDetails.firstName,
         lastName: this.patientDetails.lastName,
         email: this.patientDetails.email,
@@ -258,7 +258,7 @@ export class UsersAccessComponent implements OnInit {
 
     if (type === 'patient') {
       try {
-        const code = await this.gqlService.client.request(
+        const code = await this.gqlService.gqlRequest(
           GqlConstants.INVITE_PATIENT,
           {}
         );
@@ -270,7 +270,7 @@ export class UsersAccessComponent implements OnInit {
       }
     } else {
       try {
-        const code = await this.gqlService.client.request(
+        const code = await this.gqlService.gqlRequest(
           GqlConstants.INVITE_STAFF,
           {
             staffType: 'therapist',
@@ -290,7 +290,7 @@ export class UsersAccessComponent implements OnInit {
   async sendInviteViaEmail(type: 'staff' | 'patient') {
     if (type === 'patient') {
       try {
-        await this.gqlService.client.request(GqlConstants.INVITE_PATIENT, {
+        await this.gqlService.gqlRequest(GqlConstants.INVITE_PATIENT, {
           shouldSendEmail: true,
           email: this.patientEmail,
         });
@@ -299,7 +299,7 @@ export class UsersAccessComponent implements OnInit {
       }
     } else {
       try {
-        await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
+        await this.gqlService.gqlRequest(GqlConstants.INVITE_STAFF, {
           shouldSendEmail: true,
           email: this.staffEmail,
           staffType: 'therapist',

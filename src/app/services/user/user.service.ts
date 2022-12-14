@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from 'src/app/pointmotion';
-
+import { UserRole } from 'src/app/users.enum';
 @Injectable({
   providedIn: 'root',
 })
@@ -18,5 +18,12 @@ export class UserService {
   get(): User {
     const user = this.user || JSON.parse(localStorage.getItem('user') || '{}');
     return user as User;
+  }
+
+  getDefaultRoute(userRole: UserRole): string {
+    if (userRole === UserRole.ORG_ADMIN) {
+      return '/app/admin'
+    }
+    return '/app/dashboard'
   }
 }

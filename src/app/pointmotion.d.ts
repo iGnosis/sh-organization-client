@@ -1,3 +1,5 @@
+import { UserRole } from "./users.enum";
+
 export class Activity {
   id?: string;
   createdAt?: number; // unix epoch time in milliseconds
@@ -235,11 +237,6 @@ export interface Theme {
   logoUrl?: string;
 }
 
-export enum UserRole {
-  ORG_ADMIN = 'org_admin',
-  SH_ADMIN = 'sh_admin',
-  THERAPIST = 'therapist',
-}
 export class JwtToken {
   id: string;
   iat: number;
