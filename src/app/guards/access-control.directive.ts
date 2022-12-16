@@ -1,4 +1,5 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
 
@@ -13,6 +14,7 @@ export class AccessControlDirective implements OnInit {
     private elementRef: ElementRef,
     private authService: AuthService,
     private userService: UserService,
+    private router: Router,
   ) {}
 
   async ngOnInit() {
@@ -23,6 +25,10 @@ export class AccessControlDirective implements OnInit {
 
   async checkAccess() {
     const currentUserRole = this.userService.get().type;
+    if (!currentUserRole) {
+      window.localStorage.clear();
+      this.router.navigate(['/']);
+    }
     // console.log('currentUserRole:', currentUserRole);
 
     const rbac = await this.authService.getRbac();
