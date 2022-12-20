@@ -32,6 +32,7 @@ export class AccessControlDirective implements OnInit {
     // console.log('currentUserRole:', currentUserRole);
 
     const rbac = await this.authService.getRbac();
+    if (!rbac || !rbac.uiRbac || Object.keys(rbac.uiRbac).length === 0) return
 
     if (this.nav) {
       rbac.uiRbac.navigationBar.forEach(nav => {

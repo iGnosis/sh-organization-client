@@ -27,6 +27,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { label: 'Past 7 days', range: 7 },
     { label: 'Past 14 days', range: 14 },
     { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
   ];
   selectedDateRange = 0;
 

@@ -123,6 +123,8 @@ export class PatientDetailsComponent implements OnInit {
     { label: 'Past 7 days', range: 7 },
     { label: 'Past 14 days', range: 14 },
     { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
   ];
   selectedDateRange = 0;
 
@@ -197,7 +199,10 @@ export class PatientDetailsComponent implements OnInit {
 
     if (range == 0) this.startDate = this.endDate;
 
+    this.changeAchievementChart('start', this.startDate!);
     this.changeAchievementChart('end', this.endDate!);
+
+    this.changeEngagementChart('start', this.startDate!);
     this.changeEngagementChart('end', this.endDate!);
   }
 
