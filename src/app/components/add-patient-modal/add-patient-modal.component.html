@@ -1,0 +1,72 @@
+
+  <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+    class="bi bi-x-lg"></i></button>
+<div class="row px-8 py-8">
+  <div class="col-md-12 mb-8">
+    <p class="h3 text-primary">Add New Patient</p>
+  </div>
+  <div class="col-md-12 mb-4">
+    <div class="row">
+      <div class="col-md-2 col-sm-2">
+        <label for="prefix" class="form-label col-12">Prefix</label>
+        <mat-form-field id="prefix" appearance="standard" class="col-12 condition_select form-control-muted">
+          <mat-select [ngModel]="patientDetails.namePrefix" placeholder="Prefix"
+            (selectionChange)="setSelect('namePrefix',$event)">
+            <mat-option value='Mr.'>Mr.</mat-option>
+            <mat-option value='Mrs.'>Mrs.</mat-option>
+            <mat-option value='Ms.'>Ms.</mat-option>
+            <mat-option value='Dr.'>Dr.</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-5 col-sm-10">
+        <label for="fname" class="form-label col-12">First Name</label>
+        <input [ngModel]="patientDetails.firstName" (input)="setInput('firstName', $event)" id="fname"
+          type="text" class="form-control form-control-muted" required placeholder="Enter First name">
+      </div>
+      <div class="col-md-5 col-sm-10">
+        <label for="lname" class="form-label col-12">Last Name</label>
+        <input [ngModel]="patientDetails.lastName" (input)="setInput('lastName', $event)" id="lname"
+          type="text" class="form-control form-control-muted" required placeholder="Enter Last name">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 mb-4">
+    <label for="email" class="form-label col-12">Patient Email</label>
+    <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
+      [ngModel]="patientDetails.email" (input)="setInput('email', $event)" required>
+  </div>
+  <div class="col-md-12 mb-8">
+    <div class="row">
+      <div class="col-md-4">
+        <label for="countryCode" class="form-label col-12">Country Code</label>
+        <mat-form-field id="countryCode" appearance="fill" class="col-12 condition_select form-control-muted">
+          <mat-select placeholder="Country Code" [ngModel]="patientDetails.phoneCountryCode"
+            (selectionChange)="setSelect( 'phoneCountryCode', $event)" required>
+            <mat-option value='+1'>+1 USA</mat-option>
+            <mat-option value='+1'>+1 Canada</mat-option>
+            <mat-option value='+91'>+91 India</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <label for="mobile" class="form-label col-12">Patient Phone Number</label>
+        <input id="mobile" [ngModel]="patientDetails.phoneNumber" type="number"
+          class="form-control form-control-muted" placeholder="Enter phone number"
+          (input)="setInput('phoneNumber', $event)" required>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 mb-4">
+    <div class="row">
+      <div class="col-md-6">
+        <p *ngIf="addNewPatientStatus" class="mx-2 py-2"
+          [ngClass]="addNewPatientStatus.status === 'success' ? 'text-success' : 'text-danger'">
+          {{addNewPatientStatus.text}}</p>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end align-items-end">
+        <button class="btn btn-info" (click)="addNewPatient()" [disabled]="!enableSaveButton">Add New Patient</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+  <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+      class="bi bi-x-lg"></i></button>
+  <div class="row px-8 py-6">
+    <div class="col-md-12 mb-8">
+      <p class="h2 modal-title text-primary col-12">Send Form</p>
+      <p class="text-black col-12">Send an invite or custom link to the patient to enter details.</p>
+    </div>
+    <div class="col-md-12 row verticle-line-top mb-6">
+      <div class=" col-md-9">
+        <input type="text" [(ngModel)]="patientEmail" class="form-control form-control-muted"
+          placeholder="Enter email" />
+      </div>
+      <div class="col-md-3">
+        <button (click)="sendInviteViaEmail()" class="btn btn-info w-full">Send Invite</button>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <p class="h3 text-primary my-1">Link</p>
+      <div class="input-group" *ngIf="shareableLink">
+        <input type="text" class="form-control" [value]="shareableLink" readonly>
+        <div class="input-group-append">
+          <button class="btn btn-link-primary" type="button"
+            (click)="copyToClipboard(shareableLink)">{{copyStatusSubject.getValue()|
+            titlecase}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <mat-checkbox class="mx-2" [(ngModel)]="toggleLinkExpiry">
+        <p class="h5 text-black checkbox-text mx-2">Link Expiry</p>
+      </mat-checkbox>
+      <div *ngIf="toggleLinkExpiry" class="my-4">
+        <label for="expiryDate" class="form-label col-12">Choose Expiry Date</label>
+        <mat-form-field appearance="fill" class="col-12 condition_select">
+          <mat-select placeholder="Choose Expiry Date" [ngModel]="expiryDate"
+            (ngModelChange)="generateShareableLink()">
+            <mat-option value='in1Day'>In 1 day</mat-option>
+            <mat-option value='in1Week'>In 1 week</mat-option>
+            <mat-option value='in2Weeks'>In 2 weeks</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>

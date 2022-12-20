@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { BehaviorSubject, timeout } from 'rxjs';
+import { BehaviorSubject, Subject, timeout } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { phone as validatePhone } from 'phone';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -76,6 +76,9 @@ export class UsersAccessComponent implements OnInit {
     {};
   addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
     {};
+
+  addPatientModalState: Subject<boolean> = new Subject<boolean>();
+  invitePatientModalState: Subject<boolean> = new Subject<boolean>();
 
   constructor(
     private modalService: NgbModal,
@@ -197,39 +200,6 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  async addNewPatient() {
-    try {
-      await this.gqlService.gqlRequest(GqlConstants.CREATE_NEW_PATIENT, {
-        firstName: this.patientDetails.firstName,
-        lastName: this.patientDetails.lastName,
-        email: this.patientDetails.email,
-        phoneNumber: this.patientDetails.phoneNumber,
-        phoneCountryCode: this.patientDetails.phoneCountryCode,
-        namePrefix: this.patientDetails.namePrefix,
-      });
-
-      this.addNewPatientStatus = {
-        status: 'success',
-        text: 'Added new Patient successfully.',
-      };
-
-      setTimeout(() => {
-        this.addNewPatientStatus = {};
-      }, 3000);
-
-      this.patientDetails = {};
-    } catch (err) {
-      console.log('Error::', err);
-      this.addNewPatientStatus = {
-        status: 'error',
-        text: 'Failed to add new Patient.',
-      };
-      setTimeout(() => {
-        this.addNewPatientStatus = {};
-      }, 3000);
-    }
-  }
-
   openArchiveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
     const modalRef = this.modalService.open(ArchiveMemberModalComponent);
     modalRef.componentInstance.name = name;
@@ -250,10 +220,7 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  async generateShareableLink(
-    type: 'staff' | 'patient',
-    willExpireIn?: 'in1Day' | 'in1Week' | 'in2Weeks'
-  ) {
+  async generateShareableLink(type: 'staff' | 'patient') {
     // TODO: generate sharable link with the new expiry date
 
     if (type === 'patient') {
@@ -287,26 +254,15 @@ export class UsersAccessComponent implements OnInit {
 
   patientEmail!: string;
   staffEmail!: string;
-  async sendInviteViaEmail(type: 'staff' | 'patient') {
-    if (type === 'patient') {
-      try {
-        await this.gqlService.gqlRequest(GqlConstants.INVITE_PATIENT, {
-          shouldSendEmail: true,
-          email: this.patientEmail,
-        });
-      } catch (err) {
-        console.log('Error::', err);
-      }
-    } else {
-      try {
-        await this.gqlService.gqlRequest(GqlConstants.INVITE_STAFF, {
-          shouldSendEmail: true,
-          email: this.staffEmail,
-          staffType: 'therapist',
-        });
-      } catch (err) {
-        console.log('Error::', err);
-      }
+  async sendInviteViaEmail() {
+    try {
+      await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
+        shouldSendEmail: true,
+        email: this.staffEmail,
+        staffType: 'therapist',
+      });
+    } catch (err) {
+      console.log('Error::', err);
     }
   }
 
@@ -360,34 +316,21 @@ export class UsersAccessComponent implements OnInit {
   }
 
   setInput(
-    type: 'patient' | 'staff',
     inputType: 'firstName' | 'lastName' | 'email' | 'phoneNumber',
     evt: Event
   ) {
     const element = evt.target as HTMLInputElement;
-    if (type === 'patient') {
-      this.patientDetails[inputType] = element.value;
-      this.enableSaveButton = this.validateFields('patient');
-    } else {
-      this.staffDetails[inputType] = element.value;
-      this.enableSaveButton = this.validateFields('staff');
-    }
+    this.staffDetails[inputType] = element.value;
+    this.enableSaveButton = this.validateFields('staff');
   }
 
   setSelect(
-    type: 'patient' | 'staff',
     inputType: 'phoneCountryCode' | 'staffType' | 'namePrefix',
     selectChange: MatSelectChange
   ) {
-    if (type === 'patient') {
-      if (inputType === 'staffType') return;
-      this.patientDetails[inputType] = selectChange.value;
-      this.enableSaveButton = this.validateFields('patient');
-    } else {
-      if (inputType === 'namePrefix') return;
-      this.staffDetails[inputType] = selectChange.value;
-      this.enableSaveButton = this.validateFields('staff');
-    }
+    if (inputType === 'namePrefix') return;
+    this.staffDetails[inputType] = selectChange.value;
+    this.enableSaveButton = this.validateFields('staff');
   }
 
   redirectToDetailsPage(type: 'staff' | 'patient', id: string) {
