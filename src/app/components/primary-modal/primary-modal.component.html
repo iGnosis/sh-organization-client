@@ -1,0 +1,20 @@
+<div class="modal-content shadow-4">
+    <div class="modal-body pb-0">
+        <div class="py-3 px-5">
+        <!-- Title -->
+        <h2 class="mb-4">
+            <span *ngIf="modalConfig.type === 'warning'">
+                <i class="bi bi-exclamation-triangle-fill text-danger"></i>&nbsp;
+            </span>{{ modalConfig.title }}
+        </h2>
+        <!-- Text -->
+        <p class="text-black">
+            {{ modalConfig.body }}
+        </p>
+        </div>
+    </div>
+    <div class="modal-footer pt-0">
+        <button *ngIf="modalConfig.closeButtonLabel" (click)="modalConfig.onClose ? modalConfig.onClose() : modal.dismiss('Cross click')" type="button" class="btn btn-sm btn-outline-primary">{{ modalConfig.closeButtonLabel }}</button>
+        <button *ngIf="modalConfig.submitButtonLabel" (click)="modalConfig.onSubmit && modalConfig.onSubmit()" type="button" class="btn btn-sm btn-primary">{{ modalConfig.submitButtonLabel }}</button>
+    </div>
+</div>

@@ -280,3 +280,13 @@ export interface Rbac {
   uiRbac: UiRbac;
   hasuraRbac: HasuraRbac[];
 }
+
+export interface ModalConfig {
+  type?: 'primary' | 'warning';
+  title?: string;
+  body?: string;
+  closeButtonLabel?: string;
+  submitButtonLabel?: string;
+  onClose?(): Promise<boolean> | boolean | void;
+  onSubmit?(): Promise<boolean> | boolean | void;
+}

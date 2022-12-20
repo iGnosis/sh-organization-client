@@ -71,7 +71,7 @@
             </a>
           </li>
           <li acl nav="logout" class="nav-item">
-            <a role="button" class="nav-link" (click)="logout()">
+            <a role="button" class="nav-link" (click)="openLogoutModal()">
               <i class="bi bi-box-arrow-left"></i> Logout
             </a>
           </li>
@@ -84,3 +84,7 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<ng-template #logoutModal let-modal>
+  <primary-modal [modal]="modal" [modalConfig]="logoutModalConfig"></primary-modal>
+</ng-template>
