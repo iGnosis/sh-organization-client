@@ -6,6 +6,9 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { ActivatedRoute, Router } from '@angular/router';
 import { JwtService } from 'src/app/services/jwt/jwt.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { environment } from 'src/environments/environment';
+import { UserRole } from 'src/app/users.enum';
 
 // TODO: Decouple this Component (checkins, onboardings... etc)
 @Component({
@@ -14,6 +17,9 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./sms-otp-login.component.scss'],
 })
 export class SmsOtpLoginComponent {
+  environment = environment;
+  UserRole = UserRole;
+
   shScreen = false;
   isMusicEnded = false;
   step = 0;
@@ -35,6 +41,7 @@ export class SmsOtpLoginComponent {
     private router: Router,
     private jwtService: JwtService,
     private userService: UserService,
+    private authService: AuthService,
     private route: ActivatedRoute
   ) {
     this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
@@ -157,15 +164,23 @@ export class SmsOtpLoginComponent {
       const accessTokenData = this.decodeJwt(resp.verifyLoginOtp.data.token);
       const userId =
         accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+
+      const userRole: UserRole =
+        accessTokenData['https://hasura.io/jwt/claims']['x-hasura-default-role'];
+
       this.userService.set({
         id: userId,
+        type: userRole
       });
       console.log('user set successfully');
+
+      await this.authService.initRbac();
 
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);
       } else {
-        this.router.navigate(['/app/dashboard']);
+        const defaultRoute = this.userService.getDefaultRoute(userRole);
+        this.router.navigate([defaultRoute]);
       }
     }
   }
@@ -184,6 +199,24 @@ export class SmsOtpLoginComponent {
     setTimeout(() => {
       this.formErrorMsg = '';
     }, timeout);
+  }
+
+  async mockLogin(userRole: UserRole) {
+    console.log('mock login:', userRole);
+    const resp = await this.graphQlService.gqlRequest(GqlConstants.MOCK_LOGIN, { userRole }, false);
+    const token = resp.mockStaffJwt.data.jwt;
+
+    this.jwtService.setToken(token);
+    const accessTokenData = this.decodeJwt(token);
+    const userId =
+      accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+    this.userService.set({
+      id: userId,
+      type: userRole,
+    });
+    console.log('user set successfully');
+    const route = this.userService.getDefaultRoute(userRole as UserRole);
+    this.router.navigate([route]);
   }
 
   decodeJwt(token: string | undefined) {

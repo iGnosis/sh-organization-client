@@ -77,7 +77,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async initPatientAdherenceChart() {
 
-    const result = await this.graphqlService.client.request(
+    const result = await this.graphqlService.gqlRequest(
       GqlConstants.GET_PATIENT_ADHERENCE_CHART,
       {
         startDate: this.previousDate.toISOString(),
@@ -149,7 +149,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async initPatientOverviewChart() {
 
-    const result = await this.graphqlService.client.request(
+    const result = await this.graphqlService.gqlRequest(
       GqlConstants.GET_PATIENT_OVERVIEW_CHART,
       {
         startDate: this.previousDate.toISOString(),
@@ -158,7 +158,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
 
 
-    const chartData = 
+    const chartData =
       !result.patientOverviewChart || !result.patientOverviewChart.data.length ? [
         {
           pid: '',
@@ -166,7 +166,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           y: 0,
           r: 0,
         }
-      ] 
+      ]
       : result.patientOverviewChart.data.map((item: any) => {
         return {
           pid: item.patient,

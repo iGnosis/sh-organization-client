@@ -242,7 +242,13 @@ export const GqlConstants = {
       }
     }
   }`,
-
+  MOCK_LOGIN: `query MockLogin($userRole: StaffType!) {
+    mockStaffJwt(userRole: $userRole) {
+      data {
+        jwt
+      }
+    }
+  }`,
   GAME_ACHIEVEMENT_CHART: `query GameAchievementRatio($gameId: ID!) {
   gameAchievementRatio(gameId: $gameId) {
     data {
