@@ -422,6 +422,7 @@ export class SessionsDetailsComponent implements OnInit {
           legend: {
             position: 'bottom',
             labels: {
+              padding: 22,
               font: {
                 size: 16,
               },
@@ -433,6 +434,9 @@ export class SessionsDetailsComponent implements OnInit {
               weight: 'bold',
             },
             color: ['#000000', '#ffffff'],
+            display: function (context) {
+              return context.dataset.data[context.dataIndex] !== 0
+            }
           },
         },
       },

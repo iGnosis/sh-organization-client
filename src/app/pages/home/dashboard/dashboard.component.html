@@ -58,7 +58,7 @@
           <div class="card-body">
             <div class="card-header">
               <h3 class="text-primary">Patient Adherence</h3>
-              <h4 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h4>
+              <h6 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h6>
             </div>
             <canvas class="chart-canvas" id="patientAdherenceChart" width="500" height="500"></canvas>
           </div>
@@ -69,7 +69,7 @@
           <div class="card-body">
             <div class="card-header">
               <h3 class="text-primary">Patient Overview</h3>
-              <h4 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h4>
+              <h6 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h6>
               <i>Bubble Radius is proportional to the number of activities done by the patient.</i>
             </div>
             <canvas class="chart-canvas" id="patientOverviewChart" width="500" height="500"></canvas>

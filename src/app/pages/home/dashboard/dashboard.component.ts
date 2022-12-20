@@ -122,6 +122,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           legend: {
             position: 'bottom',
             labels: {
+              padding: 22,
               font: {
                 size: 16
               }
@@ -132,7 +133,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
               size: 26,
               weight: 'bold'
             },
-            color: ['#000066', '#ffffff']
+            color: ['#000066', '#ffffff'],
+            display: function (context) {
+              return context.dataset.data[context.dataIndex] !== 0
+            }
           }
         }
       },
