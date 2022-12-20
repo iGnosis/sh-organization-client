@@ -11,6 +11,9 @@ import {SelectionModel} from '@angular/cdk/collections';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatTableFilter } from 'mat-table-filter';
 import {FormControl} from '@angular/forms';
+import { TemplateRef } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
 export class Captain {
   identifier: string;
   surname: string;
@@ -33,16 +36,42 @@ export class SpaceCraft {
 
 export class PatientsComponent implements OnInit {
   
+  @ViewChild('invitePatient') invitePatientModal: TemplateRef<any>;
+  @ViewChild('addPatient') addPatientModal: TemplateRef<any>;
+  addPatientModalState: Subject<boolean> = new Subject<boolean>();
+  invitePatientModalState: Subject<boolean> = new Subject<boolean>();
   
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   
   
   
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   async ngOnInit() {
     
+  }
+
+  openInvitePatientModal() {
+    this.modalService.open(this.invitePatientModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.invitePatientModalState.next(false);
+        return true;
+      },
+    });
+
+    this.invitePatientModalState.next(true);
+  }
+
+  openAddPatientModal() {
+    this.modalService.open(this.addPatientModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.addPatientModalState.next(false);
+        return true;
+      },
+    });
   }
 
   selectDataSegment(condition: string) {
