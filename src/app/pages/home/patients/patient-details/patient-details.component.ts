@@ -66,6 +66,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementChartFilter?: string = undefined;
 
   availableGames = [
+    'all_activities',
     'sit_stand_achieve',
     'beat_boxer',
     'sound_explorer',
@@ -101,7 +102,6 @@ export class PatientDetailsComponent implements OnInit {
   filterType: MatTableFilter;
   displayedColumns: string[] = [
     'total_count',
-    'label_star',
     'careplanByCareplan',
     'activity_type',
     'timeDuration',

@@ -9,7 +9,7 @@ table.mat-table.patients_table {
 
 	tr.mat-header-row {
 		--x-bg-opacity: 1;
-		background-color: rgba(var(--x-secondary-rgb), var(--x-bg-opacity)) !important;
+		background-color: rgba(#FAFAFB, var(--x-bg-opacity)) !important;
 	}
 
 	td.mat-cell {

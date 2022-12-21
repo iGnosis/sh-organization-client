@@ -6,12 +6,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { MatTableFilter } from 'mat-table-filter';
 import { Patient } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { JwtService } from 'src/app/services/jwt/jwt.service';
-import { Captain, SpaceCraft } from '../patient-details/patient-details.component';
 
 @Component({
   selector: 'app-patients-list',
@@ -19,39 +16,28 @@ import { Captain, SpaceCraft } from '../patient-details/patient-details.componen
   styleUrls: ['./patients-list.component.scss']
 })
 export class PatientsListComponent implements OnInit {
-
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
 
-
-  searchValue:string;
-  filterEntity: SpaceCraft;
-  filterType: MatTableFilter;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count','label_star','identifier', 'medical_condition', 'last_session'];
+  displayedColumns: string[] = ['total_count', 'nickname', 'lastActive'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
-  selection:any;
-  row : any;
-  conditionFilter = new FormControl();
+  selection: any;
+  row: any;
   isShowDiv = true;
   isShowFilter = true;
-  selected : any;
-  patientsData?: Array<Patient>;
-
+  selected: any;
 
   constructor(private router: Router, private graphqlService: GraphqlService,private _liveAnnouncer: LiveAnnouncer) { }
 
   ngOnInit(): void {
     this.reloadPatientList(null);
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
-    this.filterEntity = new SpaceCraft();
-    this.filterEntity.captain = new Captain();
-    this.filterType = MatTableFilter.ANYWHERE;
     this.toggleDisplayedColumns();
   }
 
@@ -62,10 +48,14 @@ export class PatientsListComponent implements OnInit {
     // element.click();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   toggleDisplayedColumns() {
     const isPatientsList = this.router.url === '/app/patients';
-
-    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'achievement_ratio', 'actions'] : ['last_activity', 'sessions_aggregate', 'actions'])];
+    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'actions'] : ['lastGame', 'sessions_aggregate', 'actions'])];
   }
 
   togglefilterDiv(){
@@ -89,19 +79,22 @@ export class PatientsListComponent implements OnInit {
 
     this.patients = this.patients?.map((patient) => {
       return {
-        ...patient, 
+        ...patient,
         games: patient.games?.map(renamedGame)
       };
     });
 
     this.dataSource.data = this.patients as any[];
+    this.dataSource.data.forEach((data: any) => {
+      data.lastActive = data.games[0] && data.games[0].createdAt ? data.games[0].createdAt : null
+      data.lastGame = data.games[0] && data.games[0].game ? data.games[0].game : ''
+    })
+    console.log(this.dataSource.data);
   }
 
   openPatientDetailsPage(patientId: any) {
     this.router.navigate(['/app/patients/', patientId])
   }
-
-
 
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
