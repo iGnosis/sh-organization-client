@@ -82,6 +82,7 @@ import { InvitePatientModalComponent } from './components/invite-patient-modal/i
 import { AddPatientModalComponent } from './components/add-patient-modal/add-patient-modal.component';
 import { AccessControlDirective } from './guards/access-control.directive';
 import { PrimaryModalComponent } from './components/primary-modal/primary-modal.component';
+import { TimeagoModule } from 'ngx-timeago';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -166,6 +167,7 @@ import { PrimaryModalComponent } from './components/primary-modal/primary-modal.
     CarouselModule,
     Ng2SearchPipeModule,
     NgxMatColorPickerModule,
+    TimeagoModule.forRoot(),
     // PerfectScrollbarModule
   ],
   providers: [

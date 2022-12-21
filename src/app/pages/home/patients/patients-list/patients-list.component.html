@@ -119,7 +119,7 @@
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Active </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
             <span *ngFor="let game of element.games">
-              {{ game.createdAt | date:'short'}}
+              {{ game.createdAt | timeago}}
               <!-- Hacky shit. Expects the API to only return 1 result here. -->
             </span>
           </td>
