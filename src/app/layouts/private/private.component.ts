@@ -12,7 +12,7 @@ import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/inv
   styleUrls: ['./private.component.scss']
 })
 export class PrivateComponent implements OnInit {
-  logoUrl = "assets/images/logo-white.png";
+  logoUrl = "assets/images/sh_logo_white.png";
   logoutModalConfig: ModalConfig;
   @ViewChild('logoutModal') logoutModal: TemplateRef<any>;
 
