@@ -102,7 +102,6 @@ export class PatientDetailsComponent implements OnInit {
   filterType: MatTableFilter;
   displayedColumns: string[] = [
     'total_count',
-    'label_star',
     'careplanByCareplan',
     'activity_type',
     'timeDuration',
