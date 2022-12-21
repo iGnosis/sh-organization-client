@@ -64,7 +64,7 @@ export class PatientsListComponent implements OnInit {
 
   toggleDisplayedColumns() {
     const isPatientsList = this.router.url === '/app/patients';
-    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'achievement_ratio', 'actions'] : ['lastGame', 'sessions_aggregate', 'actions'])];
+    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'actions'] : ['lastGame', 'sessions_aggregate', 'actions'])];
   }
 
   togglefilterDiv(){
