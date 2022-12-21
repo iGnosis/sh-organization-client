@@ -51,6 +51,7 @@ html {
     display: flex;
   }
   .owl-nav {
+    z-index: -1;
     position: absolute;
     display: flex;
     width: 100%;

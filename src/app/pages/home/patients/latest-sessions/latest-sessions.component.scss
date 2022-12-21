@@ -9,7 +9,7 @@ table.mat-table.patients_table {
 
 	tr.mat-header-row {
 		--x-bg-opacity: 1;
-		background-color: rgba(var(--x-secondary-rgb), var(--x-bg-opacity)) !important;
+		background-color: rgba(#FAFAFB, var(--x-bg-opacity)) !important;
 	}
 
 	td.mat-cell {
@@ -34,6 +34,11 @@ table.mat-table.patients_table {
 		border-bottom-width: 1px;
 		white-space: nowrap;
 		vertical-align: middle;
+	}
+}
+::ng-deep {
+	tbody tr.mat-row:last-child td {
+		border-bottom: none;
 	}
 }
 
