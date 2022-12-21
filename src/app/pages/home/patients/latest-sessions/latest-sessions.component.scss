@@ -36,6 +36,11 @@ table.mat-table.patients_table {
 		vertical-align: middle;
 	}
 }
+::ng-deep {
+	tbody tr.mat-row:last-child td {
+		border-bottom: none;
+	}
+}
 
 td.mat-cell.custom_table_text {
 	color: #525F7F;
