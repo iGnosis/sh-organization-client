@@ -6,12 +6,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { MatTableFilter } from 'mat-table-filter';
 import { Patient } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { JwtService } from 'src/app/services/jwt/jwt.service';
-import { Captain, SpaceCraft } from '../patient-details/patient-details.component';
 
 @Component({
   selector: 'app-patients-list',
@@ -19,14 +16,9 @@ import { Captain, SpaceCraft } from '../patient-details/patient-details.componen
   styleUrls: ['./patients-list.component.scss']
 })
 export class PatientsListComponent implements OnInit {
-
   allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
   selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
 
-
-  searchValue:string;
-  filterEntity: SpaceCraft;
-  filterType: MatTableFilter;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
@@ -35,23 +27,17 @@ export class PatientsListComponent implements OnInit {
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
-  selection:any;
-  row : any;
-  conditionFilter = new FormControl();
+  selection: any;
+  row: any;
   isShowDiv = true;
   isShowFilter = true;
-  selected : any;
-  patientsData?: Array<Patient>;
-
+  selected: any;
 
   constructor(private router: Router, private graphqlService: GraphqlService,private _liveAnnouncer: LiveAnnouncer) { }
 
   ngOnInit(): void {
     this.reloadPatientList(null);
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
-    this.filterEntity = new SpaceCraft();
-    this.filterEntity.captain = new Captain();
-    this.filterType = MatTableFilter.ANYWHERE;
     this.toggleDisplayedColumns();
   }
 
@@ -60,6 +46,11 @@ export class PatientsListComponent implements OnInit {
     this.dataSource.paginator = this.tableOnePaginator;
     // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
     // element.click();
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   toggleDisplayedColumns() {

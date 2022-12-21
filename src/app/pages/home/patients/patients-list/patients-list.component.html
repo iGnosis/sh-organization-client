@@ -4,7 +4,7 @@
       <span class="input-group-text pe-2">
         <i class="bi bi-search"></i>
       </span>
-      <input type="text" class="form-control" [(ngModel)]="searchValue || filterEntity.identifier" placeholder="Search Patient Details" aria-label="Search" aria-describedby="">
+      <input type="text" class="form-control" (keyup)="applyFilter($event)" placeholder="Search Patient Details">
       </div>
       <!-- <img src="/assets/images/filter_icon.svg"(click)="togglefilterDiv()" class="icons_align"/>
       <img src="/assets/images/setting.svg" class="filter_align icons_align"/> -->
@@ -19,23 +19,6 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <!-- <div class="col-sm">
-        <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
-          <mat-select multiple [(value)]="selected" placeholder="Activity Type">
-            <mat-option [value]="1">Physical</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="col-sm">
-        <mat-form-field appearance="fill" class="details_page alignment_date condition_select">
-          <mat-select multiple [(value)]="selected" placeholder="Time">
-            <mat-option [value]="15">15 mins. or less</mat-option>
-            <mat-option [value]="30">30 mins. or less</mat-option>
-            <mat-option [value]="45">45 mins. or less</mat-option>
-            <mat-option [value]="60">60 mins. or less</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div> -->
       <div class="col-sm-2">
         <mat-form-field class="details_page alignment_date condition_select" appearance="fill">
           <input matInput [matDatepicker]="picker" placeholder="Date">
@@ -48,22 +31,13 @@
 
     </div>
   </div>
-  <!-- Container -->
+
   <div class="container-xl mt-5">
     <div class="rounded-top bg-light p-5">
       <div class="row">
         <div class="col">
           <h6>Patient List</h6>
         </div>
-        <!-- <div class="col text-end">
-          <span class="me-3">1-10 of 67 </span>
-
-          <span role="button" class="me-1">
-            < </span>
-              <span role="button"> > </span>
-               <i class="fa fa-less-than me-1"></i>
-            <i class="fa fa-greater-than"></i>
-        </div> -->
       </div>
     </div>
     <div class="table-responsive">
