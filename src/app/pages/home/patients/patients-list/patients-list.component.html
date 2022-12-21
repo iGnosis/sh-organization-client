@@ -67,17 +67,13 @@
       </div>
     </div>
     <div class="table-responsive">
-      <table mat-table [dataSource]="dataSource" matTableFilter [exampleEntity]="filterEntity"
-      [filterType]="filterType" matSort class="mat-elevation-z8" class="patients_table" >
-
-        <!--- Note that these columns can be defined in any order.
-              The actual rendered columns are set as a property on the row definition" -->
-
-        <!-- Position Column -->
+      <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8 patients_table" >
         <ng-container matColumnDef="total_count">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> <div class="form-check">
-            <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
-          </div> </th>
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="form-check">
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
+            </div>
+          </th>
           <td mat-cell *matCellDef="let element">
             <div class="form-check">
               <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
@@ -85,71 +81,48 @@
           </td>
         </ng-container>
         <ng-container matColumnDef="label_star">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <i class="bi bi-star custom_star_color"></i>
           </td>
         </ng-container>
-        <!-- Name Column -->
-        <ng-container matColumnDef="identifier">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header class="custom_table_header"> Identifier
-            <!-- <button (click)=toggleDisplayDiv()><mat-icon>filter_alt</mat-icon></button> -->
-            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.identifier" value="{{searchValue}}">
-          </th>
+        <ng-container matColumnDef="nickname">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Identifier </th>
           <td mat-cell *matCellDef="let element" class="clicked_class" routerLink="/app/patients/{{element.id}}">
             <span class="text-heading font-semibold"> {{element.nickname}} </span>
-              <!-- <a class="text-heading font-semibold" href="/app/patients/{{element.id}}">click</a> -->
           </td>
         </ng-container>
-
-        <!-- Weight Column -->
         <ng-container matColumnDef="medical_condition">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"> Condition
-            <input [hidden]="isShowDiv" matInput [(ngModel)]="filterEntity.medicalConditions" value="{{searchValue}}">
-          </th>
+          <th mat-header-cell *matHeaderCellDef> Condition </th>
           <td mat-cell *matCellDef="let element" class="clicked_class" routerLink="/app/patients/{{element.id}}">
-            <p></p>
-            <!-- <span class="badge bg-primary m-2"
-                                                                                      *ngFor="let condition of element.medicalConditions | keyvalue">{{condition.key}}</span> -->
           </td>
         </ng-container>
-
-        <!-- Symbol Column -->
-        <ng-container matColumnDef="last_session">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Active </th>
+        <ng-container matColumnDef="lastActive">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Active </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
-            <span *ngFor="let game of element.games">
-              {{ game.createdAt | timeago}}
-              <!-- Hacky shit. Expects the API to only return 1 result here. -->
-            </span>
+            {{ element.lastActive | timeago}}
           </td>
         </ng-container>
-
-        <ng-container matColumnDef="last_activity">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Last Activity </th>
+        <ng-container matColumnDef="lastGame">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Last Activity </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
-            <span *ngFor="let game of element.games">
-              {{ game.game | titlecase }}
-            </span>
+            {{ element.lastGame | titlecase }}
           </td>
         </ng-container>
-
         <ng-container matColumnDef="time_spent">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Time Spent </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Time Spent </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
               {{ element.games_aggregate && element.games_aggregate.aggregate ? element.games_aggregate.aggregate.sum.totalDuration : 0 }} minutes
           </td>
         </ng-container>
-
         <ng-container matColumnDef="sessions_aggregate">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Total Time of Movement </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Time of Movement </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
               {{ element.games_aggregate && element.games_aggregate.aggregate ? element.games_aggregate.aggregate.sum.totalDuration : 0 }} minutes
           </td>
         </ng-container>
-
         <ng-container matColumnDef="achievement_ratio">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header> Achievement Ratio </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Achievement Ratio </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
             <div class="row align-items-center">
               <div class="col-2">{{'90'}}%</div>
@@ -161,9 +134,8 @@
             </div>
           </td>
         </ng-container>
-
         <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
               <div class="dropdown">
                 <a class="text-muted" (click)="null" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -184,13 +156,9 @@
               </div>
             </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
       </table>
-      <mat-paginator [pageSize]="10"
-        #TableOnePaginator="matPaginator" showFirstLastButtons>
-      </mat-paginator>
+      <mat-paginator [pageSize]="10" #TableOnePaginator="matPaginator" showFirstLastButtons></mat-paginator>
     </div>
-
   </div>

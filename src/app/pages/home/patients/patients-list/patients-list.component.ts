@@ -27,11 +27,11 @@ export class PatientsListComponent implements OnInit {
   searchValue:string;
   filterEntity: SpaceCraft;
   filterType: MatTableFilter;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count','identifier', 'medical_condition', 'last_session'];
+  displayedColumns: string[] = ['total_count', 'nickname', 'medical_condition', 'lastActive'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
@@ -64,8 +64,7 @@ export class PatientsListComponent implements OnInit {
 
   toggleDisplayedColumns() {
     const isPatientsList = this.router.url === '/app/patients';
-
-    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'achievement_ratio', 'actions'] : ['last_activity', 'sessions_aggregate', 'actions'])];
+    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'achievement_ratio', 'actions'] : ['lastGame', 'sessions_aggregate', 'actions'])];
   }
 
   togglefilterDiv(){
@@ -89,19 +88,22 @@ export class PatientsListComponent implements OnInit {
 
     this.patients = this.patients?.map((patient) => {
       return {
-        ...patient, 
+        ...patient,
         games: patient.games?.map(renamedGame)
       };
     });
 
     this.dataSource.data = this.patients as any[];
+    this.dataSource.data.forEach((data: any) => {
+      data.lastActive = data.games[0] && data.games[0].createdAt ? data.games[0].createdAt : null
+      data.lastGame = data.games[0] && data.games[0].game ? data.games[0].game : ''
+    })
+    console.log(this.dataSource.data);
   }
 
   openPatientDetailsPage(patientId: any) {
     this.router.navigate(['/app/patients/', patientId])
   }
-
-
 
   announceSortChange(sortState: Sort) {
     // This example uses English messages. If your application supports
