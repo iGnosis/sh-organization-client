@@ -1,5 +1,5 @@
 <!-- Header -->
-<header class="px-3 px-lg-7 pt-7 custom_header">
+<header class="px-3 px-lg-7 pt-7 pb-7 custom_header">
   <div class="container-xl">
     <div>
       <div class="row custom_alignment">
@@ -49,20 +49,6 @@
         </div>
       </div>
       <!-- Nav -->
-      <ul class="nav nav-tabs overflow-x mt-2">
-        <li class="nav-item">
-          <a class="clickable nav-link font-regular active">All
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="clickable nav-link font-regular">Starred
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="clickable nav-link font-regular">Labbeled
-          </a>
-        </li>
-      </ul>
     </div>
   </div>
 </header>
@@ -168,7 +154,7 @@
         <div class="no_careplan_notice_alignment">
           <img src="/assets/images/no_session_img.svg" />
           <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has not completed any
-            sessions yet.</h2>
+            activities yet.</h2>
           <div class="mx-n1 mt-7">
             <a (click)="openDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
               <span class="pe-2">
@@ -277,7 +263,7 @@
       <span class="input-group-text pe-2">
         <i class="bi bi-search"></i>
       </span>
-      <input type="text" class="form-control" placeholder="Search session details" aria-label="Search"
+      <input type="text" class="form-control" placeholder="Search activity details" aria-label="Search"
         aria-describedby="" [(ngModel)]="filterEntity.careplanByCareplan">
     </div>
     <!-- <img src="/assets/images/filter_icon.svg" (click)="toggleFilterDiv()" class="icons_align" />
@@ -462,7 +448,7 @@
     <div class="rounded-top bg-light p-5 custom_rounded_top">
       <div class="row">
         <div class="col">
-          <h6>Sessions</h6>
+          <h6>Activities</h6>
         </div>
         <div class="col text-end">
           <!-- <mat-paginator [pageSize]="5"
@@ -577,13 +563,13 @@
               </a>
               <div class="dropdown-menu dropdown-menu-end">
                 <a href="#!" class="dropdown-item">
-                  Edit Session Entry
+                  Edit Activity Entry
                 </a>
                 <a href="#!" class="dropdown-item">
-                  Archive Session Entry
+                  Archive Activity Entry
                 </a>
                 <a href="#!" class="dropdown-item">
-                  Delete Session Entry
+                  Delete Activity Entry
                 </a>
               </div>
             </div>
