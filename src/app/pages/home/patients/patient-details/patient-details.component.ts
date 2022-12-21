@@ -66,6 +66,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementChartFilter?: string = undefined;
 
   availableGames = [
+    'all_activities',
     'sit_stand_achieve',
     'beat_boxer',
     'sound_explorer',

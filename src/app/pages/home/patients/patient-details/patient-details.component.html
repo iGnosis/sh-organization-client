@@ -77,11 +77,11 @@
             <div class="card-header">
               <h4 style="color: #000066;">Patient Engagement</h4>
               <div class="dropdown">
-                <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                <button class="btn btn-sm btn-neutral dropdown-toggle w-48 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton"
                   data-bs-toggle="dropdown" aria-expanded="false">
                   {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu mt-3 w-48" aria-labelledby="dropdownMenuButton">
                   <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
                     <div *ngFor="let filterOption of activityFilterOptions"
                       class="dropdown-item py-1 d-flex align-items-center">
@@ -110,11 +110,11 @@
             <div class="card-header">
               <h4 style="color: #000066;">Achievement Ratio</h4>
               <div class="dropdown">
-                <button class="btn btn-sm btn-neutral dropdown-toggle" type="button" id="dropdownMenuButton"
+                <button class="btn btn-sm btn-neutral dropdown-toggle w-48 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton"
                   data-bs-toggle="dropdown" aria-expanded="false">
                   {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <div class="dropdown-menu mt-3 w-48" aria-labelledby="dropdownMenuButton">
                   <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
                     <div *ngFor="let filterOption of activityFilterOptions"
                       class="dropdown-item py-1 d-flex align-items-center">
