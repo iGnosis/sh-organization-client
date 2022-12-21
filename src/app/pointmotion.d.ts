@@ -1,4 +1,4 @@
-import { UserRole } from "./users.enum";
+import { UserRole } from './users.enum';
 
 export class Activity {
   id?: string;
@@ -87,6 +87,7 @@ export class User {
   status: string;
   phoneCountryCode: string;
   phoneNumber: string;
+  orgId: string;
 }
 declare class PatientFrom {
   userFrom?: Patient;
@@ -213,7 +214,7 @@ export type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
 export type BrandColorType =
   | 'primary'
   | 'secondary'
-  | 'tertiary'
+  | 'info'
   | 'success'
   | 'warning'
   | 'danger';
@@ -241,11 +242,11 @@ export class JwtToken {
   id: string;
   iat: number;
   exp: number;
-  "https://hasura.io/jwt/claims": {
-    "x-hasura-allowed-roles": UserRole[]
-    "x-hasura-default-role": UserRole;
-    "x-hasura-user-id": string;
-    "x-hasura-organization-id": string;
+  'https://hasura.io/jwt/claims': {
+    'x-hasura-allowed-roles': UserRole[];
+    'x-hasura-default-role': UserRole;
+    'x-hasura-user-id': string;
+    'x-hasura-organization-id': string;
   };
 }
 

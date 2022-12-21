@@ -16,7 +16,7 @@ export class UserDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private gqlService: GraphqlService
-  ) {}
+  ) { }
 
   enableSaveButton = false;
   isEditable = false;

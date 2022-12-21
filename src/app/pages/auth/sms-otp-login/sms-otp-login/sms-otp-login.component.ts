@@ -58,8 +58,8 @@ export class SmsOtpLoginComponent {
       }
       this.phoneNumber = event.target.phoneNumber.value;
 
-      this.countryCode = this.countryCode ? this.countryCode.trim() : ''
-      this.phoneNumber = this.phoneNumber ? this.phoneNumber.trim() : ''
+      this.countryCode = this.countryCode ? this.countryCode.trim() : '';
+      this.phoneNumber = this.phoneNumber ? this.phoneNumber.trim() : '';
       console.log('submit:countryCode:', this.countryCode);
       console.log('submit:phoneNumber:', this.phoneNumber);
 
@@ -90,9 +90,7 @@ export class SmsOtpLoginComponent {
             'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
           );
           return;
-        }
-
-        else if (
+        } else if (
           !resp ||
           !resp.resendLoginOtp ||
           !resp.resendLoginOtp.data.message
@@ -121,9 +119,7 @@ export class SmsOtpLoginComponent {
             'You do not have permission to access this page. Please contact your administrator if you think this is a mistake.'
           );
           return;
-        }
-
-        else if (
+        } else if (
           !resp ||
           !resp.requestLoginOtp ||
           !resp.requestLoginOtp.data.message
@@ -166,11 +162,13 @@ export class SmsOtpLoginComponent {
         accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
 
       const userRole: UserRole =
-        accessTokenData['https://hasura.io/jwt/claims']['x-hasura-default-role'];
+        accessTokenData['https://hasura.io/jwt/claims'][
+          'x-hasura-default-role'
+        ];
 
       this.userService.set({
         id: userId,
-        type: userRole
+        type: userRole,
       });
       console.log('user set successfully');
 
@@ -203,16 +201,26 @@ export class SmsOtpLoginComponent {
 
   async mockLogin(userRole: UserRole) {
     console.log('mock login:', userRole);
-    const resp = await this.graphQlService.gqlRequest(GqlConstants.MOCK_LOGIN, { userRole }, false);
+    const resp = await this.graphQlService.gqlRequest(
+      GqlConstants.MOCK_LOGIN,
+      { userRole },
+      false
+    );
+    console.log(resp);
     const token = resp.mockStaffJwt.data.jwt;
 
     this.jwtService.setToken(token);
     const accessTokenData = this.decodeJwt(token);
     const userId =
       accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
+    const orgId =
+      accessTokenData['https://hasura.io/jwt/claims'][
+        'x-hasura-organization-id'
+      ];
     this.userService.set({
       id: userId,
       type: userRole,
+      orgId: orgId,
     });
     console.log('user set successfully');
     const route = this.userService.getDefaultRoute(userRole as UserRole);
