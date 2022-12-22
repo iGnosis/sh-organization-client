@@ -196,7 +196,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         return {
           pid: item.patient,
           nickname: item.nickname,
-          x: item.engagementRatio * 100,
+          x: (item.engagementRatio * 100).toFixed(2),
           y: item.avgAchievementPercentage,
           r: item.gamesPlayedCount > max_size ? max_size : item.gamesPlayedCount,
         };
