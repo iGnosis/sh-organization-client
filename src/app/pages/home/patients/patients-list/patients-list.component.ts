@@ -6,7 +6,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Patient } from 'src/app/pointmotion';
+import { Store } from '@ngrx/store';
+import { map, Observable, Subscription } from 'rxjs';
+import { DashboardState, Patient } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -23,7 +25,7 @@ export class PatientsListComponent implements OnInit {
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count', 'nickname', 'lastActive'];
+  displayedColumns: string[] = ['total_count', 'nickname', 'lastActive', 'numOfActivities', 'numOfActiveDays'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
@@ -33,12 +35,25 @@ export class PatientsListComponent implements OnInit {
   isShowFilter = true;
   selected: any;
 
-  constructor(private router: Router, private graphqlService: GraphqlService,private _liveAnnouncer: LiveAnnouncer) { }
+  dateSubscription: Subscription;
+  patientListSubscription: Subscription;
 
-  ngOnInit(): void {
-    this.reloadPatientList(null);
-    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
-    this.toggleDisplayedColumns();
+  constructor(
+    private router: Router, 
+    private graphqlService: GraphqlService,
+    private _liveAnnouncer: LiveAnnouncer,
+    private store: Store<{ dashboard: DashboardState }>
+  ) { }
+
+  async ngOnInit(): Promise<void> {
+    this.dateSubscription = this.store.select('dashboard').subscribe(async (state: any) => {
+      await this.reloadPatientList(state.dateRange);
+      this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
+    });
+  }
+  ngOnDestroy(): void {
+    this.patientListSubscription.unsubscribe();
+    this.dateSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -53,44 +68,64 @@ export class PatientsListComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  toggleDisplayedColumns() {
-    const isPatientsList = this.router.url === '/app/patients';
-    this.displayedColumns = [...this.displayedColumns, ...(isPatientsList ? ['time_spent', 'actions'] : ['lastGame', 'sessions_aggregate', 'actions'])];
-  }
-
   togglefilterDiv(){
     this.isShowFilter=!this.isShowFilter;
   }
   toggleDisplayDiv() {
     this.isShowDiv = !this.isShowDiv;
   }
-  async reloadPatientList(filters: any) {
-    const response = await this.graphqlService.gqlRequest(GqlConstants.GET_ALL_PATIENTS, {}, true);
-    this.patients = response.patient;
 
-    const renamedGame = (gameObj: any) => {
-      const spacedName = gameObj['game'].replace(/_/g, ' ');
 
-      return {
-        ...gameObj,
-        game: spacedName,
-      };
-  };
+  async reloadPatientList(dateRange: number) {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - dateRange);
 
-    this.patients = this.patients?.map((patient) => {
-      return {
-        ...patient,
-        games: patient.games?.map(renamedGame)
-      };
+    this.dataSource.data = await new Promise((resolve, reject) => {
+      const patientListResponse = new Observable(observer => {
+        this.graphqlService.gqlRequest(GqlConstants.GET_ALL_PATIENTS, {
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        }, true).then(data => {
+          observer.next(data);
+          observer.complete();
+        }).catch(error => {
+          observer.error(error);
+        });
+      });
+
+      this.patientListSubscription = 
+        this.transformPatientList(patientListResponse)
+        .subscribe((patientsWithActiveDays: any) => {
+          resolve(patientsWithActiveDays || []);
+        });
     });
-
-    this.dataSource.data = this.patients as any[];
-    this.dataSource.data.forEach((data: any) => {
-      data.lastActive = data.games[0] && data.games[0].createdAt ? data.games[0].createdAt : null
-      data.lastGame = data.games[0] && data.games[0].game ? data.games[0].game : ''
-    })
-    console.log(this.dataSource.data);
   }
+
+  transformPatientList(patientsList: Observable<any>): Observable<any[]> {
+    return patientsList.pipe(
+    map((data: any) => data.patient),
+    map((patients: any[]) => {
+      return patients.map((patient: any) => {
+        const activeDays = patient.games.reduce((acc: any, game: any) => {
+          const createdAt = new Date(game.createdAt);
+          if (!acc.includes(createdAt.toDateString())) {
+            acc.push(createdAt.toDateString());
+          }
+          return acc;
+        }, []).length;
+        const lastActive = patient.games[0] ? patient.games[0].createdAt : null;
+        const activities = patient.games.length;
+        return {
+          ...patient,
+          activeDays,
+          lastActive,
+          activities
+        }
+      });
+    })
+  )
+}
 
   openPatientDetailsPage(patientId: any) {
     this.router.navigate(['/app/patients/', patientId])
