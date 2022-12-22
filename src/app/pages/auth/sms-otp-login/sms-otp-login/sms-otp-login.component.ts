@@ -40,6 +40,8 @@ export class SmsOtpLoginComponent {
 
   mockLoginUserRole: UserRole;
 
+  throttledSubmit: (...args: any[]) => void;
+  throttledResend: (...args: any[]) => void;
   constructor(
     private graphQlService: GraphqlService,
     private router: Router,
@@ -49,9 +51,30 @@ export class SmsOtpLoginComponent {
     private route: ActivatedRoute
   ) {
     this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
+    this.throttledSubmit = this.throttle((event: any) => {
+      this.submit(event);
+    }, 500);
+    this.throttledResend = this.throttle(() => {
+      this.resendOTP();
+    }, 1000);
   }
 
   ngOnInit(): void { }
+
+
+  throttle(fn: any, wait = 500) {
+    let isCalled = false;
+    return function (...args: any[]) {
+      if (!isCalled) {
+        fn(...args);
+        isCalled = true;
+        setTimeout(function () {
+          isCalled = false;
+        }, wait);
+      }
+    };
+  }
+
 
   async submit(event: any) {
     // call API to send an OTP
@@ -137,7 +160,7 @@ export class SmsOtpLoginComponent {
       }
 
       this.showResendOtpTimerText = true;
-      this.resendOtpTimer = 5;
+      this.resendOtpTimer = 60;
       const timerInt = setInterval(() => {
         this.resendOtpTimer--;
         if (this.resendOtpTimer === 0) {
@@ -274,7 +297,7 @@ export class SmsOtpLoginComponent {
       false
     );
     this.showResendOtpTimerText = true;
-    this.resendOtpTimer = 5;
+    this.resendOtpTimer = 60;
     const timerInt = setInterval(() => {
       this.resendOtpTimer--;
       if (this.resendOtpTimer === 0) {

@@ -11,7 +11,7 @@
         </div>
       </div>
 
-      <form (ngSubmit)="submit($event)">
+      <form (ngSubmit)="throttledSubmit($event)">
 
         <div *ngIf="step === 0">
           <div class="p-8 pmc-logo">
@@ -90,7 +90,7 @@
                 Resend code in {{'00:'+resendOtpTimer}}
               </div>
               <div *ngIf="!showResendOtpTimerText" class="col-sm-12 text-center mt-8 text-dark">
-                <span class="p-0 m-0 text-info clickable" (click)=" resendOTP()">RESEND CODE</span>
+                <span class="p-0 m-0 text-info clickable" (click)="throttledResend()">RESEND CODE</span>
               </div>
               <div class="col-sm-12 mt-6 py-1">
                 <button type="submit" class="btn btn-primary continue-btn">Continue</button>
