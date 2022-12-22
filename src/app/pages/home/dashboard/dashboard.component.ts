@@ -197,6 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       : result.patientOverviewChart.data.map((item: any) => {
         return {
           pid: item.patient,
+          nickname: item.nickname,
           x: item.engagementRatio * 100,
           y: item.avgAchievementPercentage,
           r: item.gamesPlayedCount > max_size ? max_size : item.gamesPlayedCount,
@@ -242,6 +243,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
+            align: 'start',
             labels: {
               font: {
                 size: 14
@@ -266,7 +268,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             },
             caretSize: 15,
             callbacks: {
-              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].pid,
+              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].nickname,
               label: function (tooltipItem: any) {
                 const dataIndex = tooltipItem.dataIndex
                 const data = tooltipItem.dataset.data[dataIndex]
