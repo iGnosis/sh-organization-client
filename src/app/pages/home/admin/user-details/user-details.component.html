@@ -186,9 +186,9 @@
           <div class="mb-md-8 mb-sm-4">
             <div class="row">
               <div class="col-md-6">
-                <label for="staffType" class="form-label col-12">Staff Type</label>
+                <label for="staffType" class="form-label col-12">Staff Role</label>
                 <mat-form-field id="staffType" appearance="standard" class="col-12 condition_select form-control-muted">
-                  <mat-select [ngModel]="staffDetails.type" placeholder="Staff Type"
+                  <mat-select [ngModel]="staffDetails.type" placeholder="Staff Role"
                     (selectionChange)="setSelect('staff', 'type',$event)" required>
                     <mat-option value='therapist'>Therapist</mat-option>
                     <mat-option value='org_admin'>Organization Admin</mat-option>
