@@ -7,7 +7,7 @@ const getInitialDateRange = () => {
   if (dateRange) {
     return parseInt(dateRange, 10);
   }
-  return 0;
+  return 7;
 };
 
 const initialState: DashboardState = {
