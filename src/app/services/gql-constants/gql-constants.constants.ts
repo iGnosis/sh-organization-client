@@ -47,21 +47,15 @@ export const GqlConstants = {
         id
     }
   }`,
-  GET_GAMES: `query GetGames($offset: Int, $limit: Int, $patientId: uuid) {
-        game_aggregate(where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
-          aggregate {
-            count
-          }
-        }
-        game(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
-          id
-          game
-          createdAt
-          endedAt
-          totalDuration
-        }
-      }`,
-
+  GET_GAMES: `query GetGames($patientId: uuid) {
+    game(order_by: {createdAt: desc}, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+      id
+      game
+      createdAt
+      endedAt
+      totalDuration
+    }
+  }`,
   GET_GAME_BY_PK: `query GetGameByPK($gameId: uuid!) {
     game_by_pk(id: $gameId) {
       game

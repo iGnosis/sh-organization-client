@@ -6,10 +6,7 @@
         <div *ngIf="gameDetails" class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
           <xng-breadcrumb separator=">"></xng-breadcrumb>
-          <!-- <div *ngIf="sessionDetails.length!=0">
-          <h1 class="h2 mb-0 ls-tight mt-5">{{ sessionDetails[0].patientByPatient?.identifier }}</h1> -->
           <h1 class="h2 mb-0 ls-tight mt-5">{{ patientIdentifier }}</h1>
-
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
@@ -144,7 +141,7 @@
     </owl-carousel-o>
   </div>
 </div>
-<div class="container-xl mt-5" *ngIf="dataSource.data.length==0 && noSessionAssignedPlan==0">
+<div class="container-xl mt-5" *ngIf="dataSource && dataSource.data && dataSource.data.length==0 && noSessionAssignedPlan==0">
   <div class="p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
       <div class="col-12 mb-3 mb-md-0">
@@ -153,12 +150,6 @@
           <h2 class="active_care_plan_card_title mt-5 no_careplan_title">{{ patientIdentifier }} has not completed any
             activities yet.</h2>
           <div class="mx-n1 mt-7">
-            <!-- <a (click)="openDialog()" class="btn d-inline-flex btn-sm btn-primary mx-1">
-              <span class="pe-2">
-                <i class="bi bi-play-btn"></i>
-              </span>
-              <span>Start New Session</span>
-            </a> -->
           </div>
         </div>
       </div>
@@ -254,7 +245,7 @@
   </div>
 </div>
 <!-- Search Bar -->
-<div class="container-xl mb-5 mt-5" *ngIf="dataSource.data.length!=0">
+<div class="container-xl mb-5 mt-5" *ngIf="dataSource && dataSource.data && dataSource.data.length!=0">
   <div class="align_search_filter">
     <div class="input-group input-group-sm input-group-inline input_box_icons_alignment">
       <span class="input-group-text pe-2">
@@ -420,71 +411,21 @@
     </div>
   </div>
 </div>
-<!-- <div class="container-xl mt-5">
-  <div class="rounded-top bg-light p-5 custom_rounded_top">
-    <div class="row custom_alignment">
-      <div class="col-md-6 col-12 mb-3 mb-md-0">
-         Title
-        <h1 class="h2 mb-0 ls-tight">Active Care Plans</h1>
-      </div>
-       Actions
-      <div class="col-md-6 col-12 text-md-end">
-        <div class="mx-n1">
-          <a routerLink="#!" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1">
-            <span>Add New</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
 
-<!-- Session table -->
+<!-- Games list table -->
 <div class="container-xl mt-5">
-  <div class="session_table" *ngIf="dataSource.data.length!=0">
+  <div class="session_table" *ngIf="dataSource && dataSource.data && dataSource.data.length!=0">
     <div class="rounded-top bg-light p-5 custom_rounded_top">
       <div class="row">
         <div class="col">
           <h6>Activities</h6>
         </div>
         <div class="col text-end">
-          <!-- <mat-paginator [pageSize]="5"
-        #TableOnePaginator="matPaginator" showFirstLastButtons class="top_pagination">
-      </mat-paginator> -->
         </div>
       </div>
-
-      <!-- Put a divider -->
-      <!-- <hr> -->
-
-      <!-- Put action icons that'd act on selected rows -->
-      <!-- <ul class="nav nav-pills">
-      <li class="nav-item">
-        <button (click)="this.toogleRowsCheck()" class="nav-link">
-          <i class="bi bi-check-square me-2"></i>Check all
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link">
-          <i class="bi bi-trash me-2"></i>Delete
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link">
-          <i class="bi bi-bookmark-plus me-2"></i>Label
-        </button>
-      </li>
-      <li class="nav-item">
-        <button class="nav-link">
-          <i class="bi bi-archive me-2"></i>Archive
-        </button>
-      </li>
-    </ul> -->
-
     </div>
     <div class="table-responsive">
-      <table class="table table-hover table-nowrap patients_detail_table" matTableFilter [exampleEntity]="filterEntity"
-        [filterType]="filterType" mat-table [dataSource]="dataSource" matSort>
+      <table class="table table-hover table-nowrap patients_detail_table" mat-table [dataSource]="dataSource" matSort>
         <ng-container matColumnDef="total_count">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header">
             <div class="form-check">
@@ -532,7 +473,13 @@
             <span>{{ element.createdAt | date }}</span>
           </td>
         </ng-container>
-        <ng-container matColumnDef="totalPerformanceRatio">
+        <ng-container matColumnDef="game">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Game</th>
+          <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
+            <span>{{ element.game.split('_').join(' ') | titlecase }}</span>
+          </td>
+        </ng-container>
+        <!-- <ng-container matColumnDef="totalPerformanceRatio">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Performance</th>
           <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
             <div *ngIf="element.totalPerformanceRatio" class="d-flex align-items-center">
@@ -545,11 +492,8 @@
                 </div>
               </div>
             </div>
-            <div *ngIf="!element.totalPerformanceRatio">
-              <span>In Progress</span>
-            </div>
           </td>
-        </ng-container>
+        </ng-container> -->
         <ng-container matColumnDef="activity_action">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
           <td mat-cell *matCellDef="let element">
@@ -575,13 +519,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
       </table>
-      <mat-paginator [pageSize]="10" #TableOnePaginator="matPaginator" showFirstLastButtons>
-      </mat-paginator>
-      <!-- <nav>
-      <pagination-controls (pageChange)="this.pageChanged($event)">
-      </pagination-controls>
-    </nav> -->
-
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
     </div>
   </div>
 </div>
