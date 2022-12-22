@@ -80,8 +80,8 @@
   </div>
   <div class="modal-body py-2">
     <div class="row">
-      <div acl feature="add_patient" class="col-md-6 offset-md-2  py-4 ">
-        <input class="form-check-input w-5 h-5" (click)="handleMemberSelect($event)" type="radio" value="patient"
+      <div acl feature="add_patient" class="col-md-6 offset-md-2 py-4 d-flex">
+        <input class="form-check-input w-5 h-5 my-auto" (click)="handleMemberSelect($event)" type="radio" value="patient"
           name="addMember" id="addPatient" [checked]="addMemberModalValue == 'patient'">
         <label class="form-check-label h3 mx-4"
           [ngClass]="addMemberModalValue !== 'patient'? 'text-muted': 'text-primary'" for="addPatient">
@@ -89,8 +89,8 @@
         </label>
       </div>
 
-      <div acl feature="add_staff" class="col-md-8 offset-md-2  py-4">
-        <input class="form-check-input w-5 h-5" (click)="handleMemberSelect($event)" type="radio" value="staff" name="addMember"
+      <div acl feature="add_staff" class="col-md-8 offset-md-2 py-4 d-flex">
+        <input class="form-check-input w-5 h-5 my-auto" (click)="handleMemberSelect($event)" type="radio" value="staff" name="addMember"
           id="addStaffMember" [checked]="addMemberModalValue == 'staff'">
         <label class="form-check-label h3 mx-4 align-items-middle"
           [ngClass]="addMemberModalValue !== 'staff' ? 'text-muted': 'text-primary'" for="addStaffMember">
