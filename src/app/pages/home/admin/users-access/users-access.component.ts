@@ -22,7 +22,7 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./users-access.component.scss'],
 })
 export class UsersAccessComponent implements OnInit {
-  addMemberModalValue: string | undefined = undefined;
+  addMemberModalValue: string | undefined = 'patient';
   @ViewChild('addMemberModal') addMemberModal: TemplateRef<any>;
   @ViewChild('invitePatient') invitePatientModal: TemplateRef<any>;
   @ViewChild('inviteStaff') inviteStaffModal: TemplateRef<any>;
