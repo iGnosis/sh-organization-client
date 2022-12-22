@@ -72,13 +72,13 @@
             {{ element.lastActive ? (element.lastActive | timeago) : '' }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="numOfActivities">
+        <ng-container matColumnDef="activities">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Number of activities </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
             {{ element.activities }}
           </td>
         </ng-container>
-        <ng-container matColumnDef="numOfActiveDays">
+        <ng-container matColumnDef="activeDays">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Number of active days </th>
           <td mat-cell *matCellDef="let element" class="custom_table_text clicked_class" routerLink="/app/patients/{{element.id}}">
             {{ element.activeDays }}

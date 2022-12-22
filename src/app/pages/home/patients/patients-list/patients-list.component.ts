@@ -25,7 +25,7 @@ export class PatientsListComponent implements OnInit {
   @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
   patients?: Array<Patient>;
 
-  displayedColumns: string[] = ['total_count', 'nickname', 'lastActive', 'numOfActivities', 'numOfActiveDays'];
+  displayedColumns: string[] = ['total_count', 'nickname', 'lastActive', 'activities', 'activeDays'];
   dataSource = new MatTableDataSource();
   initialSelection = [];
   allowMultiSelect = true;
