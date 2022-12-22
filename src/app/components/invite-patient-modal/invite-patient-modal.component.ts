@@ -18,10 +18,15 @@ export class InvitePatientModalComponent implements OnInit {
   toggleLinkExpiry = false;
   expiryDate: any;
 
+  throttledSendInviteViaEmail: (...args: any[]) => void;
   constructor(
     private gqlService: GraphqlService,
     private clipboard: Clipboard
-  ) {}
+  ) {
+    this.throttledSendInviteViaEmail = this.throttle(() => {
+      this.sendInviteViaEmail();
+    }, 1000);
+  }
 
   ngOnInit(): void {
     this.modalState.subscribe((state) => {
@@ -56,8 +61,9 @@ export class InvitePatientModalComponent implements OnInit {
       });
     } catch (err) {
       console.log('Error::', err);
+    } finally {
+      this.modal.dismiss();
     }
-    this.modal.dismiss();
   }
 
   async generateShareableLink() {
@@ -71,5 +77,18 @@ export class InvitePatientModalComponent implements OnInit {
       console.log('Error::', err);
       return err;
     }
+  }
+
+  throttle(fn: any, wait = 500) {
+    let isCalled = false;
+    return function (...args: any[]) {
+      if (!isCalled) {
+        fn(...args);
+        isCalled = true;
+        setTimeout(function () {
+          isCalled = false;
+        }, wait);
+      }
+    };
   }
 }
