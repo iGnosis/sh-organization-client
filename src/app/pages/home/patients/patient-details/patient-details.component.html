@@ -26,10 +26,10 @@
                 <form>
                   <div *ngFor="let filter of dateFilter; let i=index" class="dropdown-item py-1 d-flex align-items-center">
                     <div class="text-lg">
-                      <input class="form-check-input" type="checkbox" id="flexCheck1" value="i" aria-label="..." [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
+                      <input class="form-check-input" type="checkbox" id={{filter.label}} value="i" aria-label="..." [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
                     </div>
                     <div class="ms-3 me-5">
-                      <label for="flexCheck1">{{ filter.label }}</label>
+                      <label class="clickable" for={{filter.label}}>{{ filter.label }}</label>
                     </div>
                   </div>
                 </form>
