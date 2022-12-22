@@ -47,6 +47,7 @@
     "ngx-owl-carousel-o": "^7.0.2",
     "ngx-pagination": "^5.1.1",
     "ngx-perfect-scrollbar": "^10.1.1",
+    "ngx-timeago": "^2.0.0",
     "node-fetch": "^3.2.4",
     "phone": "^3.1.27",
     "rxjs": "~7.4.0",

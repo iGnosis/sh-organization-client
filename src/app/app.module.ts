@@ -86,6 +86,7 @@ import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from 'src/environments/environment';
 import { dashboardReducer } from './store/reducers/dashboard.reducer';
+import { TimeagoModule } from 'ngx-timeago';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -177,6 +178,7 @@ import { dashboardReducer } from './store/reducers/dashboard.reducer';
       name: 'Organization Portal',
       logOnly: environment.production,
     }),
+    TimeagoModule.forRoot(),
     // PerfectScrollbarModule
   ],
   providers: [

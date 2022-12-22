@@ -182,7 +182,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     );
 
-
+    const max_size = 50;
     const chartData =
       !result.patientOverviewChart || !result.patientOverviewChart.data.length ? [
         {
@@ -197,7 +197,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           pid: item.patient,
           x: item.engagementRatio * 100,
           y: item.avgAchievementPercentage,
-          r: item.gamesPlayedCount,
+          r: item.gamesPlayedCount > max_size ? max_size : item.gamesPlayedCount,
         };
       });
 

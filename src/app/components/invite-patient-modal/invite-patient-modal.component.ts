@@ -7,7 +7,7 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 @Component({
   selector: 'invite-patient-modal',
   templateUrl: './invite-patient-modal.component.html',
-  styleUrls: ['./invite-patient-modal.component.scss']
+  styleUrls: ['./invite-patient-modal.component.scss'],
 })
 export class InvitePatientModalComponent implements OnInit {
   @Input() modal: any;
@@ -20,9 +20,8 @@ export class InvitePatientModalComponent implements OnInit {
 
   constructor(
     private gqlService: GraphqlService,
-    private clipboard: Clipboard,
-  ) {
-  }
+    private clipboard: Clipboard
+  ) {}
 
   ngOnInit(): void {
     this.modalState.subscribe((state) => {
@@ -58,6 +57,7 @@ export class InvitePatientModalComponent implements OnInit {
     } catch (err) {
       console.log('Error::', err);
     }
+    this.modal.dismiss();
   }
 
   async generateShareableLink() {
@@ -72,7 +72,4 @@ export class InvitePatientModalComponent implements OnInit {
       return err;
     }
   }
-
-  
-
 }

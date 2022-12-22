@@ -264,6 +264,7 @@ export class UsersAccessComponent implements OnInit {
     } catch (err) {
       console.log('Error::', err);
     }
+    this.modalService.dismissAll();
   }
 
   validateFields(type: 'patient' | 'staff'): boolean {
