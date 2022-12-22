@@ -195,11 +195,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         await this.fetchSessions(0);
         // await this.GetAssignedCarePlan();
 
-        // by default, get data for past 7 days
-        this.endDate = new Date();
-        this.endDate.setHours(0, 0, 0, 0);
-        this.startDate = this.endDate;
-
         this.changeAchievementChart('start', this.startDate);
         this.changeAchievementChart('end', this.endDate);
 
