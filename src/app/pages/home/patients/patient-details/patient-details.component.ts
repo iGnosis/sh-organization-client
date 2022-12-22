@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -30,6 +30,7 @@ import * as moment from 'moment';
 import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Store } from '@ngrx/store';
 import { dashboard } from 'src/app/store/actions/dashboard.actions';
+import { Subscription } from 'rxjs';
 
 export class Captain {
   careplanByCareplan: string;
@@ -51,7 +52,7 @@ export class SpaceCraft {
   templateUrl: './patient-details.component.html',
   styleUrls: ['./patient-details.component.scss'],
 })
-export class PatientDetailsComponent implements OnInit {
+export class PatientDetailsComponent implements OnInit, OnDestroy {
   isShowDiv = true;
   selected: any;
   isShowFilter = true;
@@ -89,8 +90,12 @@ export class PatientDetailsComponent implements OnInit {
   isRowsChecked = false;
   achievementChart: Chart;
   engagementChart: Chart;
-  startDate?: Date;
-  endDate?: Date;
+
+  startDate: Date;
+  endDate: Date;
+
+  dateSubscription: Subscription;
+
   noSessionAssignedPlan: number;
   // code for mat tab starts here
   @ViewChild('TableOnePaginator', { static: true })
@@ -158,12 +163,19 @@ export class PatientDetailsComponent implements OnInit {
     public eventEmitterService: EventEmitterService,
     private store: Store<{ dashboard: DashboardState }>,
   ) {
-    this.store.select('dashboard').subscribe(async (state) => {
+    this.endDate = new Date();
+    this.startDate = this.endDate;
+
+    this.dateSubscription = this.store.select('dashboard').subscribe(async (state) => {
       this.selectedDateRange = this.dateFilter.findIndex(
         (item) => item.range === state.dateRange
       );
       await this.updateChartTimeline(state.dateRange);
     });
+  }
+
+  ngOnDestroy(): void {
+    this.dateSubscription.unsubscribe();
   }
 
   //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
@@ -198,7 +210,7 @@ export class PatientDetailsComponent implements OnInit {
   }
 
   async updateChartTimeline(range: number) {
-    this.startDate = new Date(this.endDate || new Date());
+    this.startDate = new Date(this.endDate);
     this.startDate.setDate(this.startDate.getDate() - range);
 
     if (range == 0) this.startDate = this.endDate;
@@ -213,9 +225,9 @@ export class PatientDetailsComponent implements OnInit {
   async setDateFilter(idx: number) {
     this.selectedDateRange = idx;
     const range = this.dateFilter[this.selectedDateRange].range;
+
     this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
     await this.updateChartTimeline(range);
-
   }
 
   openDialog() {
@@ -830,6 +842,7 @@ export class PatientDetailsComponent implements OnInit {
   engagementStartDate: Date;
   engagementEndDate?: Date;
   changeEngagementChart(type: 'start' | 'end', date: Date) {
+    date = new Date(date)
     console.log(`${type}: ${date}`);
     if (!date) return;
     switch (type) {

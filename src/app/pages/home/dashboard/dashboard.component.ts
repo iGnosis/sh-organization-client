@@ -36,6 +36,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   selectedDateRange = 0;
 
   showEmptyState = false;
+  dateSubscription: Subscription;
 
   constructor(
     private graphqlService: GraphqlService,
@@ -47,7 +48,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.previousDate = this.currentDate;
     console.log('Environment ', environment.name);
 
-    this.store.select('dashboard').subscribe(async (state) => {
+    this.dateSubscription = this.store.select('dashboard').subscribe(async (state) => {
       this.selectedDateRange = this.dateFilter.findIndex(
         (item) => item.range === state.dateRange
       );
@@ -63,6 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.networkStatusSubscription.unsubscribe();
+    this.dateSubscription.unsubscribe();
   }
 
   getNetworkStatus() {
