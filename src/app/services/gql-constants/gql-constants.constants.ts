@@ -101,6 +101,7 @@ export const GqlConstants = {
     patientOverviewChart(startDate: $startDate, endDate: $endDate) {
       data {
         patient
+        nickname
         gamesPlayedCount
         engagementRatio
         avgAchievementPercentage
