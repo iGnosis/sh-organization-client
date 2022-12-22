@@ -82,6 +82,10 @@ import { InvitePatientModalComponent } from './components/invite-patient-modal/i
 import { AddPatientModalComponent } from './components/add-patient-modal/add-patient-modal.component';
 import { AccessControlDirective } from './guards/access-control.directive';
 import { PrimaryModalComponent } from './components/primary-modal/primary-modal.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { dashboardReducer } from './store/reducers/dashboard.reducer';
 import { TimeagoModule } from 'ngx-timeago';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -167,6 +171,13 @@ import { TimeagoModule } from 'ngx-timeago';
     CarouselModule,
     Ng2SearchPipeModule,
     NgxMatColorPickerModule,
+    StoreModule.forRoot({
+      dashboard: dashboardReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      name: 'Organization Portal',
+      logOnly: environment.production,
+    }),
     TimeagoModule.forRoot(),
     // PerfectScrollbarModule
   ],

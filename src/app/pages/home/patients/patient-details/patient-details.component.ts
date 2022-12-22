@@ -19,17 +19,17 @@ import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
 import {
-  AchievementRatio,
-  EngagementRatio,
+  DashboardState,
   Game,
   Patient,
   Session,
 } from 'src/app/pointmotion';
 import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { groupBy as lodashGroupBy, capitalize } from 'lodash';
 import * as moment from 'moment';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { Store } from '@ngrx/store';
+import { dashboard } from 'src/app/store/actions/dashboard.actions';
 
 export class Captain {
   careplanByCareplan: string;
@@ -155,8 +155,16 @@ export class PatientDetailsComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private modalService: NgbModal,
-    public eventEmitterService: EventEmitterService
-  ) {}
+    public eventEmitterService: EventEmitterService,
+    private store: Store<{ dashboard: DashboardState }>,
+  ) {
+    this.store.select('dashboard').subscribe(async (state) => {
+      this.selectedDateRange = this.dateFilter.findIndex(
+        (item) => item.range === state.dateRange
+      );
+      await this.updateChartTimeline(state.dateRange);
+    });
+  }
 
   //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
 
@@ -189,11 +197,7 @@ export class PatientDetailsComponent implements OnInit {
     });
   }
 
-  async setDateFilter(idx: number) {
-    this.selectedDateRange = idx;
-
-    const range = this.dateFilter[this.selectedDateRange].range;
-
+  async updateChartTimeline(range: number) {
     this.startDate = new Date(this.endDate || new Date());
     this.startDate.setDate(this.startDate.getDate() - range);
 
@@ -204,6 +208,14 @@ export class PatientDetailsComponent implements OnInit {
 
     this.changeEngagementChart('start', this.startDate!);
     this.changeEngagementChart('end', this.endDate!);
+  }
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    const range = this.dateFilter[this.selectedDateRange].range;
+    this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
+    await this.updateChartTimeline(range);
+
   }
 
   openDialog() {

@@ -15,13 +15,13 @@ export class AdminComponent implements OnInit {
   @ViewChild(UsersAccessComponent) usersAccessComponent: UsersAccessComponent;
 
   tabs: Tabs[] = ['Customization', 'Billing', 'Users and Access'];
-  currentTab: Tabs = 'Users and Access';
+  currentTab: Tabs = 'Customization';
   customizable = false;
   changesInCustomizationTab = true;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   setCurrentTab(tabName: Tabs) {
     this.currentTab = tabName;

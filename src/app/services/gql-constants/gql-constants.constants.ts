@@ -415,4 +415,20 @@ export const GqlConstants = {
     }
   }
 }`,
+
+  GET_ORG_CONFIG: `
+query GetOrganizationConfig {
+  organization {
+    configuration
+    logoUrl
+  }
+}
+`,
+  UPDATE_ORG_CONFIG: `
+mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
+  update_organization_by_pk(pk_columns: {id: $id}, _append: {configuration: $configuration}) {
+    configuration(path: "theme")
+  }
+}
+`,
 };
