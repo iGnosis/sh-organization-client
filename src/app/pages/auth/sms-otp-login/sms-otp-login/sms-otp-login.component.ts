@@ -33,7 +33,7 @@ export class SmsOtpLoginComponent {
   // required to figure out which OTP API to call.
   // The Resend OTP API is called if numbers haven't changed.
   tempFullPhoneNumber?: string;
-  fullPhoneNumber?: string = '+919393636688';
+  fullPhoneNumber?: string;
   showResendOtpTimerText = false;
   resendOtpTimer = 59;
   inviteCode?: string;
