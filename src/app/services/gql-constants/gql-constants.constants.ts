@@ -1,25 +1,13 @@
 export const GqlConstants = {
-  GET_ALL_PATIENTS: `query PatientList {
-    patient_aggregate(where: {nickname: {_is_null: false}}) {
-      aggregate {
-        count
-      }
-    }
+  GET_ALL_PATIENTS: `
+  query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
     patient(where: {nickname: {_is_null: false}}) {
       id
       createdAt
       nickname
-      preferredGenres
-      games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
+      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
         createdAt
         game
-      }
-      games_aggregate {
-        aggregate {
-          sum {
-            totalDuration
-          }
-        }
       }
     }
   }`,
