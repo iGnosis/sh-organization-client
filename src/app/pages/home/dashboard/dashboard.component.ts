@@ -240,6 +240,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
+            align: 'start',
             labels: {
               font: {
                 size: 14
