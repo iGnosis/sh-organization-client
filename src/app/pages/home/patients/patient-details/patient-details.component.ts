@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -6,15 +6,13 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
@@ -59,11 +57,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
   activeCarePlans: any | undefined;
-  patientIdentifier: any | undefined;
+  patientIdentifier: string;
   getActivityCount: number;
   getEstimatedActivityDuration: number;
-  // getCarePlanCount : number;
-
   engagementChartFilter?: string = undefined;
 
   availableGames = [
@@ -82,11 +78,11 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.isShowDiv = !this.isShowDiv;
   }
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  dataSource: MatTableDataSource<Game>;
 
   searchValue: any;
-  itemsPerPage = 10;
-  currentPage = 1;
   isRowsChecked = false;
   achievementChart: Chart;
   engagementChart: Chart;
@@ -95,14 +91,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   endDate: Date;
 
   dateSubscription: Subscription;
-
   noSessionAssignedPlan: number;
-  // code for mat tab starts here
-  @ViewChild('TableOnePaginator', { static: true })
-  tableOnePaginator: MatPaginator;
   selection: any;
   row: any;
-  dataSource = new MatTableDataSource<Game>();
   filterEntity: SpaceCraft;
   filterType: MatTableFilter;
   displayedColumns: string[] = [
@@ -111,12 +102,10 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     'activity_type',
     'timeDuration',
     'createdAt',
-    'totalPerformanceRatio',
+    'game',
+    // 'totalPerformanceRatio',
     'activity_action',
   ];
-  // displayedColumns: string[] = ['total_count','label_star', 'care_plan', 'activity_type', 'activity_time','activity_date','activity_performance','activity_action'];
-  // code for mat tab ends here
-
   patientId?: string;
   details?: Patient;
   totalGamesCount?: number;
@@ -157,7 +146,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     private graphqlService: GraphqlService,
     private sessionService: SessionService,
     private chartService: ChartService,
-    private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private modalService: NgbModal,
     public eventEmitterService: EventEmitterService,
@@ -178,8 +166,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.dateSubscription.unsubscribe();
   }
 
-  //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
-
   async ngOnInit() {
     this.selection = new SelectionModel(
       this.allowMultiSelect,
@@ -191,9 +177,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       this.patientId = params.get('id') || '';
       if (this.patientId) {
         console.log('patientId:', this.patientId);
-        // this.eventEmitterService.SentPatientID({data:this.patientId});
-        await this.fetchSessions(0);
-        // await this.GetAssignedCarePlan();
+        await this.fetchSessions();
 
         this.changeAchievementChart('start', this.startDate);
         this.changeAchievementChart('end', this.endDate);
@@ -204,17 +188,26 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }
+  }
+
   async updateChartTimeline(range: number) {
     this.startDate = new Date(this.endDate);
     this.startDate.setDate(this.startDate.getDate() - range);
 
     if (range == 0) this.startDate = this.endDate;
 
-    this.changeAchievementChart('start', this.startDate!);
-    this.changeAchievementChart('end', this.endDate!);
+    if (this.patientId) {
+      this.changeAchievementChart('start', this.startDate!);
+      this.changeAchievementChart('end', this.endDate!);
 
-    this.changeEngagementChart('start', this.startDate!);
-    this.changeEngagementChart('end', this.endDate!);
+      this.changeEngagementChart('start', this.startDate!);
+      this.changeEngagementChart('end', this.endDate!);
+    }
   }
 
   async setDateFilter(idx: number) {
@@ -225,14 +218,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     await this.updateChartTimeline(range);
   }
 
-  openDialog() {
-    const dialogRef = this.dialog.open(StartSessionPopUp);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-    this.eventEmitterService.SentPatientID(this.patientId);
-  }
-
   openCarePlanDialog() {
     const dialogRef = this.dialog.open(AddCareplan);
     // dialogRef.afterClosed().subscribe(result => {
@@ -241,45 +226,23 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.eventEmitterService.SentPatientID(this.patientId);
   }
 
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
-
   openCarePlanDetails(id: string) {
     this.router.navigate(['/app/care-plans/', id]);
   }
 
-  async fetchSessions(offset: number) {
-    // we need to show sessions of a patient.
+  async fetchSessions() {
     let games = await this.graphqlService.client.request(
       GqlConstants.GET_GAMES,
       {
         patientId: this.patientId,
-        limit: this.itemsPerPage,
-        offset,
       }
     );
 
-    console.log('offset:', offset);
-    console.log('fetchSessions:', games);
-
-    this.totalGamesCount = games.game_aggregate.aggregate.count;
-    console.log('fetchSessions:totalSessionsCount:', this.totalGamesCount);
-
-    // Array of sessions
     games = games.game;
 
     if (!games) return;
 
-    games.forEach((val: Session) => {
+    games.forEach((val: any) => {
       // work out time duration
       if (val.createdAt && val.endedAt) {
         val.timeDuration = this.analyticsService.calculateTimeDuration(
@@ -290,54 +253,17 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     });
 
     this.gameDetails = games;
+    this.dataSource = new MatTableDataSource(games);
+    setTimeout(() => {
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    }, 100)
 
-    // fetching analytics data for sessions
-    const gameIds = games.map((game: Game) => game.id);
-    console.log('fetchSessions:sessionIds:', gameIds);
-
-    // TODO: Calculate and show the performance ratio in the sessions/games table
-    // this.analyticsService.getAnalytics(gameIds).subscribe((sessionAnalytics: any) => {
-    //   console.log('fetchSessions:getAnalytics:', sessionAnalytics)
-
-    //   games.forEach((val: Session) => {
-    //     if (val.id && val.id in sessionAnalytics) {
-    //       let performanceRatio = 0
-    //       let totalEventsPerSession = 0
-    //       let avgReactionTime = 0
-
-    //       const session = sessionAnalytics[val.id]
-    //       val.sessionAnalytics = session
-
-    //       for (const activity in session) {
-    //         for (const event of session[activity].events) {
-    //           // console.log('event:', event)
-    //           performanceRatio += event.score * 100
-    //           avgReactionTime += event.reactionTime
-    //           totalEventsPerSession++
-    //         }
-    //       }
-    //       performanceRatio = performanceRatio / totalEventsPerSession
-    //       performanceRatio = Math.round(performanceRatio * 100) / 100
-    //       val.totalPerformanceRatio = performanceRatio
-    //       val.avgReactionTime = parseFloat((avgReactionTime / totalEventsPerSession).toFixed(2))
-    //     }
-    //   })
-
-    //   this.gameDetails = games
-    //   console.log('sessionDetails:', this.gameDetails)
-    // })
-
-    this.dataSource.data = this.gameDetails;
-    //console.log(this.dataSource.data, ">>>>>>>");
-
-    const identifier_response = await this.graphqlService.client.request(
+    const patient = await this.graphqlService.client.request(
       GqlConstants.GET_PATIENT_IDENTIFIER,
       { patientId: this.patientId }
     );
-    this.patientIdentifier = identifier_response.patient[0].nickname;
-    //console.log(this.patient_identifier,'getpatient');
-
-    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
+    this.patientIdentifier = patient.patient[0].nickname;
   }
 
   async GetAssignedCarePlan() {
@@ -797,12 +723,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.tableOnePaginator;
-    localStorage.getItem('reload');
-  }
-
   toogleRowsCheck() {
     const formCheckinputs = document.querySelectorAll('.row-check-input');
     if (this.isRowsChecked) {
@@ -816,19 +736,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }
     this.isRowsChecked = !this.isRowsChecked;
   }
-
-  async pageChanged(pageNumber: any) {
-    console.log('pageChanged:', pageNumber);
-    await this.fetchSessions((pageNumber - 1) * this.itemsPerPage);
-    this.currentPage = pageNumber;
-  }
-
-  // changeSessionsChart() {
-  //   const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
-  //   console.log('changeFinancials:', sessionVal)
-  //   this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
-  //   this.achievementChart.update()
-  // }
 
   openSessionDetailsPage(sessionId: string) {
     this.router.navigate(['/app/game/', sessionId]);
