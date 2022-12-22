@@ -33,8 +33,12 @@ export class SmsOtpLoginComponent {
   // required to figure out which OTP API to call.
   // The Resend OTP API is called if numbers haven't changed.
   tempFullPhoneNumber?: string;
-  fullPhoneNumber?: string;
+  fullPhoneNumber?: string = '+919393636688';
+  showResendOtpTimerText = false;
+  resendOtpTimer = 59;
   inviteCode?: string;
+
+  mockLoginUserRole: UserRole;
 
   constructor(
     private graphQlService: GraphqlService,
@@ -47,7 +51,7 @@ export class SmsOtpLoginComponent {
     this.inviteCode = this.route.snapshot.paramMap.get('inviteCode') || '';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async submit(event: any) {
     // call API to send an OTP
@@ -67,7 +71,7 @@ export class SmsOtpLoginComponent {
       console.log(phoneObj);
 
       if (!phoneObj.isValid) {
-        this.showError('Phone number is not valid');
+        this.formErrorMsg = ('Phone number is not valid');
         return;
       }
 
@@ -131,6 +135,16 @@ export class SmsOtpLoginComponent {
         this.formErrorMsg = '';
         this.step++;
       }
+
+      this.showResendOtpTimerText = true;
+      this.resendOtpTimer = 5;
+      const timerInt = setInterval(() => {
+        this.resendOtpTimer--;
+        if (this.resendOtpTimer === 0) {
+          clearInterval(timerInt);
+          this.showResendOtpTimerText = false;
+        }
+      }, 1000);
     }
 
     // call API to validate the code
@@ -163,7 +177,7 @@ export class SmsOtpLoginComponent {
 
       const userRole: UserRole =
         accessTokenData['https://hasura.io/jwt/claims'][
-          'x-hasura-default-role'
+        'x-hasura-default-role'
         ];
 
       this.userService.set({
@@ -181,6 +195,8 @@ export class SmsOtpLoginComponent {
         this.router.navigate([defaultRoute]);
       }
     }
+
+
   }
 
   resetForm() {
@@ -199,8 +215,20 @@ export class SmsOtpLoginComponent {
     }, timeout);
   }
 
-  async mockLogin(userRole: UserRole) {
+
+  setUserRole(userRole: UserRole) {
+    this.mockLoginUserRole = userRole;
+  }
+
+  async mockLogin() {
+    if (!this.mockLoginUserRole) {
+      this.showError('No User Role Selected.');
+      return;
+    }
+
+    const userRole = this.mockLoginUserRole;
     console.log('mock login:', userRole);
+
     const resp = await this.graphQlService.gqlRequest(
       GqlConstants.MOCK_LOGIN,
       { userRole },
@@ -215,7 +243,7 @@ export class SmsOtpLoginComponent {
       accessTokenData['https://hasura.io/jwt/claims']['x-hasura-user-id'];
     const orgId =
       accessTokenData['https://hasura.io/jwt/claims'][
-        'x-hasura-organization-id'
+      'x-hasura-organization-id'
       ];
     this.userService.set({
       id: userId,
@@ -235,4 +263,33 @@ export class SmsOtpLoginComponent {
       }
     }
   }
+
+  async resendOTP() {
+    const resp = await this.graphQlService.gqlRequest(
+      GqlConstants.RESEND_LOGIN_OTP,
+      {
+        phoneCountryCode: this.countryCode,
+        phoneNumber: this.phoneNumber,
+      },
+      false
+    );
+    this.showResendOtpTimerText = true;
+    this.resendOtpTimer = 5;
+    const timerInt = setInterval(() => {
+      this.resendOtpTimer--;
+      if (this.resendOtpTimer === 0) {
+        clearInterval(timerInt);
+        this.showResendOtpTimerText = false;
+      }
+    }, 1000);
+  }
+
+  async waitForTimeout(timeout: number) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve({});
+      }, timeout);
+    });
+  }
+
 }
