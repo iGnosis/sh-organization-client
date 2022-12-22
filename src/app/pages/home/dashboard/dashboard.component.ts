@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { fromEvent, map, merge, of, Subscription } from 'rxjs';
+import { DashboardState } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { dashboard } from 'src/app/store/actions/dashboard.actions';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -34,10 +37,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   showEmptyState = false;
 
-  constructor(private graphqlService: GraphqlService) {
+  constructor(
+    private graphqlService: GraphqlService,
+    private store: Store<{
+      dashboard: DashboardState;
+    }>
+  ) {
     this.currentDate = new Date();
     this.previousDate = this.currentDate;
     console.log('Environment ', environment.name);
+
+    this.store.select('dashboard').subscribe(async (state) => {
+      this.selectedDateRange = this.dateFilter.findIndex(
+        (item) => item.range === state.dateRange
+      );
+      await this.updateChartTimeline(state.dateRange);
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -63,11 +78,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  async setDateFilter(idx: number) {
-    this.selectedDateRange = idx;
-
-    const range = this.dateFilter[this.selectedDateRange].range;
-
+  async updateChartTimeline(range: number) {
     this.previousDate = new Date(this.currentDate);
     this.previousDate.setDate(this.previousDate.getDate() - range);
 
@@ -75,6 +86,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
     await this.initPatientAdherenceChart();
     await this.initPatientOverviewChart();
+  }
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
+    await this.updateChartTimeline(range);
   }
 
   async initPatientAdherenceChart() {

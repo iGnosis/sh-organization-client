@@ -290,3 +290,7 @@ export interface ModalConfig {
   onClose?(): Promise<boolean> | boolean | void;
   onSubmit?(): Promise<boolean> | boolean | void;
 }
+
+export interface DashboardState {
+  dateRange: number;
+}
