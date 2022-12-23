@@ -40,7 +40,6 @@ export class UsersAccessComponent implements OnInit {
   toggleLinkExpiry = false;
   expiryDate: string | undefined = undefined;
 
-  // TODO: fetch data from the backend
   staffList: {
     firstName: string;
     lastName: string;
