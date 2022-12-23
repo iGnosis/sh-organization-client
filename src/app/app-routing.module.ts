@@ -129,6 +129,12 @@ const routes: Routes = [
 
       { path: 'account', component: AccountComponent },
       {
+        path: 'user-details/:type/:id',
+        component: UserDetailsComponent,
+        data: { breadcrumb: 'User Details' },
+        pathMatch: 'full',
+      },
+      {
         path: 'admin',
         data: { breadcrumb: 'Admin' },
         children: [

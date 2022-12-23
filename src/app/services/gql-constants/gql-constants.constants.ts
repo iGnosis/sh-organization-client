@@ -311,13 +311,13 @@ export const GqlConstants = {
 
   GET_STAFF: `
   query GetStaff {
-  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}) {
-    id
-    firstName
-    lastName
-    type
-  }
-}`,
+    staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}, order_by: {firstName: asc}) {
+        id
+        firstName
+        lastName
+        type
+      }
+  }`,
   GET_PATIENTS: `
   query GetPatients {
   patient {
