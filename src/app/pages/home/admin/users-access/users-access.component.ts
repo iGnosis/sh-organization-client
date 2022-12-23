@@ -114,7 +114,6 @@ export class UsersAccessComponent implements OnInit {
 
   async initTables() {
     const staff = await this.gqlService.gqlRequest(GqlConstants.GET_STAFF);
-    console.log(staff);
     this.staffList = staff.staff;
 
     const patients = await this.gqlService.gqlRequest(
