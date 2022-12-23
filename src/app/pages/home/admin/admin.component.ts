@@ -14,12 +14,12 @@ export class AdminComponent implements OnInit {
 
   @ViewChild(UsersAccessComponent) usersAccessComponent: UsersAccessComponent;
 
-  tabs: Tabs[] = ['Customization', 'Billing', 'Users and Access'];
+  tabs: Tabs[] = ['Users and Access', 'Billing', 'Customization'];
   currentTab: Tabs = 'Users and Access';
   customizable = false;
   changesInCustomizationTab = true;
 
-  billingTabs : ('subscriptions' | 'transactions') []= ['subscriptions', 'transactions'];
+  billingTabs: ('subscriptions' | 'transactions')[] = ['subscriptions', 'transactions'];
   currentBillingTab: 'subscriptions' | 'transactions' = 'subscriptions';
   constructor() { }
 
