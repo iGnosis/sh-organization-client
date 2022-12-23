@@ -72,20 +72,28 @@ export class UsersAccessComponent implements OnInit {
     staffType: 'org_admin' | 'therapist';
   }> = {};
 
-  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
-  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
 
   addPatientModalState: Subject<boolean> = new Subject<boolean>();
   invitePatientModalState: Subject<boolean> = new Subject<boolean>();
+
+  patientEmail!: string;
+  staffEmail!: string;
+  throttledSendInviteViaEmail: (...args: any[]) => void;
 
   constructor(
     private modalService: NgbModal,
     private clipboard: Clipboard,
     private gqlService: GraphqlService,
     private router: Router
-  ) {}
+  ) {
+    this.throttledSendInviteViaEmail = this.throttle(() => {
+      this.sendInviteViaEmail();
+    }, 1000);
+  }
 
   ngOnInit(): void {
     this.initTables();
@@ -221,8 +229,6 @@ export class UsersAccessComponent implements OnInit {
   }
 
   async generateShareableLink(type: 'staff' | 'patient') {
-    // TODO: generate sharable link with the new expiry date
-
     if (type === 'patient') {
       try {
         const code = await this.gqlService.gqlRequest(
@@ -252,8 +258,6 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  patientEmail!: string;
-  staffEmail!: string;
   async sendInviteViaEmail() {
     try {
       await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
@@ -263,8 +267,9 @@ export class UsersAccessComponent implements OnInit {
       });
     } catch (err) {
       console.log('Error::', err);
+    } finally {
+      this.modalService.dismissAll();
     }
-    this.modalService.dismissAll();
   }
 
   validateFields(type: 'patient' | 'staff'): boolean {
@@ -336,5 +341,18 @@ export class UsersAccessComponent implements OnInit {
 
   redirectToDetailsPage(type: 'staff' | 'patient', id: string) {
     this.router.navigate(['app/admin/user-details', type, id]);
+  }
+
+  throttle(fn: any, wait = 500) {
+    let isCalled = false;
+    return function (...args: any[]) {
+      if (!isCalled) {
+        fn(...args);
+        isCalled = true;
+        setTimeout(function () {
+          isCalled = false;
+        }, wait);
+      }
+    };
   }
 }
