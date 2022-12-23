@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Tabs } from 'src/app/pointmotion';
+import { BreadcrumbService } from 'xng-breadcrumb';
 import { CustomizationComponent } from './customization/customization.component';
 import { UsersAccessComponent } from './users-access/users-access.component';
 
@@ -21,12 +22,19 @@ export class AdminComponent implements OnInit {
 
   billingTabs: ('subscriptions' | 'transactions')[] = ['subscriptions', 'transactions'];
   currentBillingTab: 'subscriptions' | 'transactions' = 'subscriptions';
-  constructor() { }
+  constructor(private breadCrumbService: BreadcrumbService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.breadCrumbService.set('/app/admin', this.currentTab);
+   }
 
   setCurrentTab(tabName: Tabs) {
     this.currentTab = tabName;
+    console.log('set::tab::', tabName);
+    this.breadCrumbService.set('/app/admin', tabName);
+    this.breadCrumbService.breadcrumbs$.subscribe((bc) => {
+      console.log(bc);
+    });
   }
 
   setCustomizable() {
