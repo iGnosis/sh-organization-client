@@ -479,21 +479,21 @@
             <span>{{ element.game.split('_').join(' ') | titlecase }}</span>
           </td>
         </ng-container>
-        <!-- <ng-container matColumnDef="totalPerformanceRatio">
+        <ng-container matColumnDef="avgAchievementRatio">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Performance</th>
           <td mat-cell *matCellDef="let element" (click)="openSessionDetailsPage(element.id!)" class="clicked_class">
-            <div *ngIf="element.totalPerformanceRatio" class="d-flex align-items-center">
-              <span class="me-2">{{element.totalPerformanceRatio}}%</span>
+            <div *ngIf="element.avgAchievementRatio" class="d-flex align-items-center">
+              <span class="me-2">{{element.avgAchievementRatio}}%</span>
               <div>
                 <div class="progress">
                   <div class="progress-bar rounded-pill" role="progressbar"
-                    [style.width]="element.totalPerformanceRatio + '%'" style="background-color: #A6B7D4">
+                    [style.width]="element.avgAchievementRatio + '%'" style="background-color: #A6B7D4">
                   </div>
                 </div>
               </div>
             </div>
           </td>
-        </ng-container> -->
+        </ng-container>
         <ng-container matColumnDef="activity_action">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header"></th>
           <td mat-cell *matCellDef="let element">

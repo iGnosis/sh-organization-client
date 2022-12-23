@@ -43,6 +43,15 @@ export const GqlConstants = {
       endedAt
       totalDuration
     }
+    aggregate_analytics(where: {patient: {_eq: $patientId}, key: {_eq: "avgAchievementRatio"}}, order_by: {createdAt: desc}) {
+      game
+      createdAt
+      organizationId
+      patient
+      key
+      value
+      noOfSamples
+    }
   }`,
   GET_GAME_BY_PK: `query GetGameByPK($gameId: uuid!) {
     game_by_pk(id: $gameId) {

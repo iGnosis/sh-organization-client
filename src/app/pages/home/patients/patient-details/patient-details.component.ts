@@ -102,7 +102,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     'timeDuration',
     'createdAt',
     'game',
-    // 'totalPerformanceRatio',
+    'avgAchievementRatio',
     'activity_action',
   ];
   patientId?: string;
@@ -230,19 +230,23 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   }
 
   async fetchSessions() {
-    let games = await this.graphqlService.client.request(
+    const resp = await this.graphqlService.client.request(
       GqlConstants.GET_GAMES,
       {
         patientId: this.patientId,
       }
     );
 
-    games = games.game;
+    const games = resp.game;
+    const aggregatedAnalytics = resp.aggregate_analytics;
 
-    if (!games) return;
+    const mergedArr = games.map((itm: any) => ({
+      ...aggregatedAnalytics.find((item: any) => (item.game === itm.id) && item),
+      ...itm
+    }));
 
-    games.forEach((val: any) => {
-      // work out time duration
+    mergedArr.forEach((val: any) => {
+      val.avgAchievementRatio = parseFloat((val.value * 100).toFixed(2));
       if (val.createdAt && val.endedAt) {
         val.timeDuration = this.analyticsService.calculateTimeDuration(
           val.createdAt,
@@ -251,8 +255,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.gameDetails = games;
-    this.dataSource = new MatTableDataSource(games);
+    this.gameDetails = mergedArr;
+    this.dataSource = new MatTableDataSource(mergedArr);
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
