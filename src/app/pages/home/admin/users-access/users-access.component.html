@@ -113,11 +113,11 @@
       <p class="h2 modal-title text-primary col-12">Send Form</p>
       <p class="text-black col-12">Send an invite or custom link to the staff member to enter details.</p>
     </div>
-    <div class="col-md-12 row verticle-line-top mb-6">
+    <div class="col-md-12 row verticle-line-top mb-6 pe-0">
       <div class=" col-md-9">
         <input [(ngModel)]="staffEmail" type="text" class="form-control form-control-muted" placeholder="Enter email" />
       </div>
-      <div class="col-md-3">
+      <div class="col-md-3 pe-0">
         <button (click)="throttledSendInviteViaEmail()" class="btn btn-info w-full">Send Invite</button>
       </div>
     </div>
