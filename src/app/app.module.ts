@@ -45,6 +45,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
 import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
@@ -168,6 +169,7 @@ import { TimeagoModule } from 'ngx-timeago';
     MatInputModule,
     BreadcrumbModule,
     MatDialogModule,
+    MatSnackBarModule,
     CarouselModule,
     Ng2SearchPipeModule,
     NgxMatColorPickerModule,

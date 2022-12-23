@@ -123,10 +123,10 @@
     </div>
     <div class="col-md-12 mb-4">
       <p class="h3 text-primary my-1">Link</p>
-      <div *ngIf="shareableLink" class="input-group">
-        <input type="text" class="form-control" [value]="shareableLink" readonly>
+      <div *ngIf="shareableLink" class="input-group shadow-none" [class.copied]="copyStatusSubject.getValue() === 'copied'">
+        <input type="text" class="form-control border-none" [value]="shareableLink" readonly>
         <div class="input-group-append">
-          <button class="btn btn-link-primary" type="button"
+          <button class="btn btn-link-primary shadow-none" type="button" [class.text-success]="copyStatusSubject.getValue() === 'copied'"
             (click)="copyToClipboard(shareableLink)">{{copyStatusSubject.getValue()|
             titlecase}}</button>
         </div>
@@ -146,6 +146,17 @@
             <mat-option value='in2Weeks'>In 2 weeks</mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="col-md-12">
+      <div class="">
+        <label class="form-label font-bold" for="staff-role">Select Staff Role<span class="text-danger">*</span></label>
+        <select [(ngModel)]="staffRole" class="form-select form-control-muted" id="staff-role" placeholder="Select Staff role">
+          <option selected disabled value="">Select Staff Role</option>
+          <option value="org_admin">Organization Admin</option>
+          <option value="therapist">Therapist</option>
+        </select>
       </div>
     </div>
   </div>
