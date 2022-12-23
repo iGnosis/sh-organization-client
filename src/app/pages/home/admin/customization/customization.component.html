@@ -1,8 +1,9 @@
 <div acl feature="customization" class="container-xl mb-5">
 
-  <div class="mt-5">
-    <div class='mt-5 row justify-content-start'>
-      <img *ngIf="!customizable" class="logo-img" [src]="orgLogoUrl" alt="organization-logo">
+  <div class="row mt-5">
+    <div *ngIf="!customizable" class='mt-5 col-md-10 offset-md-1 justify-content-start'>
+      <p class="h4 text-black">Organization Avatar</p>
+      <img class="logo-img mt-5 rounded-circle" [src]="orgLogoUrl" alt="organization-logo">
     </div>
 
     <div *ngIf="customizable" classs="mt-5">
@@ -54,7 +55,7 @@
                   [ngModel]="customizationOptions.colors!.primary | hexToColor " [ngxMatColorPicker]="primary"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="primary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #primary [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #primary></ngx-mat-color-picker>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -64,7 +65,7 @@
                   [ngModel]="customizationOptions.colors!.secondary | hexToColor " [ngxMatColorPicker]="secondary"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="secondary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #secondary [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #secondary></ngx-mat-color-picker>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -74,7 +75,7 @@
                   [ngModel]="customizationOptions.colors!.info | hexToColor " [ngxMatColorPicker]="tertiary"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="tertiary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #tertiary [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #tertiary></ngx-mat-color-picker>
               </mat-form-field>
             </div>
           </div>
@@ -88,7 +89,7 @@
                   [ngModel]="customizationOptions.colors!.success | hexToColor " [ngxMatColorPicker]="success"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="success"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #success [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #success></ngx-mat-color-picker>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -98,7 +99,7 @@
                   [ngModel]="customizationOptions.colors!.warning | hexToColor " [ngxMatColorPicker]="warning"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="warning"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #warning [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #warning></ngx-mat-color-picker>
               </mat-form-field>
             </div>
             <div class="col-md-4">
@@ -108,22 +109,12 @@
                   [ngModel]="customizationOptions.colors!.danger | hexToColor " [ngxMatColorPicker]="danger"
                   [disabled]="!customizable">
                 <ngx-mat-color-toggle matSuffix [for]="danger"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #danger [touchUi]="true"></ngx-mat-color-picker>
+                <ngx-mat-color-picker #danger></ngx-mat-color-picker>
               </mat-form-field>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- <div class="mt-5"> -->
-    <!--   <label for="typeface" class="form-label col-12">Typeface</label> -->
-    <!--   <mat-form-field appearance="fill" class="col-12 condition_select"> -->
-    <!--     <mat-select placeholder="Select Font" [ngModel]="customizationOptions.font.family" -->
-    <!--       (ngModelChange)="setTypeFace($event)" [disabled]="!customizable"> -->
-    <!--       <mat-option *ngFor="let typeface of availableTypefaces" value={{typeface}}>{{typeface}}</mat-option> -->
-    <!--     </mat-select> -->
-    <!--   </mat-form-field> -->
-    <!-- </div> -->
   </div>
 </div>
