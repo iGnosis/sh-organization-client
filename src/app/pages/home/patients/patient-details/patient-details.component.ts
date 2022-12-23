@@ -821,18 +821,20 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       }
     });
 
-    console.log(filters);
-
-    if (
-      filters.length > 0 &&
-      this.achievementEndDate &&
-      this.achievementStartDate
-    ) {
-      this.initAchievementChart(
-        this.achievementStartDate,
-        this.achievementEndDate,
-        filters
-      );
+    if (this.achievementEndDate && this.achievementStartDate) {
+      if (filters.length === 0 || (filters.length === 1 && filters.includes('all_activities'))) {
+        this.initAchievementChart(
+          this.achievementStartDate,
+          this.achievementEndDate,
+        );
+      }
+      else {
+        this.initAchievementChart(
+          this.achievementStartDate,
+          this.achievementEndDate,
+          filters
+        );
+      }
     }
   }
 }
