@@ -98,7 +98,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   filterType: MatTableFilter;
   displayedColumns: string[] = [
     'total_count',
-    'careplanByCareplan',
     'activity_type',
     'timeDuration',
     'createdAt',

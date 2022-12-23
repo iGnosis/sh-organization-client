@@ -47,10 +47,10 @@
 
   <!-- Charts -->
   <div class="my-8">
-    <div class="row mx-5">
-      <owl-carousel-o [options]="customOptions">
-        <ng-template carouselSlide>
-          <div class="card h-full mx-2">
+    <div class="row">
+      <!-- <owl-carousel-o [options]="customOptions">
+        <ng-template carouselSlide> -->
+          <div class="col card h-full mx-2">
             <div class="card-body">
               <div class="card-header">
                 <h2 style="color: #000066;">Achievement Ratio</h2><br>
@@ -58,9 +58,8 @@
               <canvas class="chart-canvas" id="sessionAchievementChart" width="500" height="500"></canvas>
             </div>
           </div>
-        </ng-template>
         <!-- <ng-template carouselSlide>
-            <div class="card mx-2 h-full">
+            <div class="col card mx-2 h-full">
               <div class="card-body p-5">
                 <div class="card-header py-0">
                   <h2 style="color: #000066;">Initiation Time</h2>
@@ -113,8 +112,8 @@
                 <canvas class="chart-canvas" id="sessionInitiationTimeChart" width="500" height="500"></canvas>
               </div>
             </div>
-        </ng-template> -->
-        <!-- <ng-template carouselSlide>
+        </ng-template>
+        <ng-template carouselSlide>
           <div class="card mx-2 h-full">
             <div class="card-body">
               <div class="card-header">
@@ -123,8 +122,9 @@
               <div class="card-body"></div>
             </div>
           </div>
-        </ng-template>   -->
+        </ng-template>
       </owl-carousel-o>
+     </ng-template> -->
     </div>
   </div>
 

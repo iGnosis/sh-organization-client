@@ -15,6 +15,7 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { GraphQLError } from 'graphql-request/dist/types';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 import { Route, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users-access',
@@ -82,13 +83,15 @@ export class UsersAccessComponent implements OnInit {
 
   patientEmail!: string;
   staffEmail!: string;
+  staffRole = "org_admin";
   throttledSendInviteViaEmail: (...args: any[]) => void;
 
   constructor(
     private modalService: NgbModal,
     private clipboard: Clipboard,
     private gqlService: GraphqlService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar,
   ) {
     this.throttledSendInviteViaEmail = this.throttle(() => {
       this.sendInviteViaEmail();
@@ -102,7 +105,7 @@ export class UsersAccessComponent implements OnInit {
       if (status === 'copied') {
         setTimeout(() => {
           this.copyStatusSubject.next('copy');
-        }, 1000);
+        }, 2000);
       }
     });
   }
@@ -226,6 +229,9 @@ export class UsersAccessComponent implements OnInit {
       this.clipboard.copy(text);
       this.copyStatusSubject.next('copied');
     }
+    this._snackBar.open('Copied to clipboard', 'Dismiss', {
+      duration: 2000,
+    });
   }
 
   async generateShareableLink(type: 'staff' | 'patient') {
@@ -263,7 +269,7 @@ export class UsersAccessComponent implements OnInit {
       await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
         shouldSendEmail: true,
         email: this.staffEmail,
-        staffType: 'therapist',
+        staffType: this.staffRole,
       });
     } catch (err) {
       console.log('Error::', err);
