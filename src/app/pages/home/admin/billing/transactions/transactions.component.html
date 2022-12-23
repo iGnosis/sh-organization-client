@@ -1,21 +1,12 @@
-<div class="container-xl mb-5">
-  <div class="align_search_filter">
-    <div class="input-group input-group-sm input-group-inline input_box_icons_alignment">
-    </div>
-    <!-- <img src="/assets/images/filter_icon.svg"(click)="togglefilterDiv()" class="icons_align"/>
-      <img src="/assets/images/setting.svg" class="filter_align icons_align"/> -->
-  </div>
-</div>
-
 <div class="container-xl my-5">
-  <div class="rounded-top bg-light p-5">
+  <div class="mx-md-4 mx-sm-2 rounded-top bg-light p-5">
     <div class="row">
       <div class="col">
         <h5 class="">Billing History</h5>
       </div>
     </div>
   </div>
-  <div class="table-responsive">
+  <div class="mx-md-4 mx-sm-2 table-responsive">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 transactions_table">
       <ng-container matColumnDef="label_star">
         <th mat-header-cell *matHeaderCellDef></th>

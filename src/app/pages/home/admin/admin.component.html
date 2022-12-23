@@ -24,17 +24,10 @@
 
             </div>
           </div>
-          <ul *ngIf="currentTab !== 'Billing'" class="nav nav-tabs">
+          <ul class="nav nav-tabs">
             <li *ngFor="let tab of tabs" class="nav-item" (click)="setCurrentTab(tab)" style="cursor: pointer">
               <p class="nav-link" [ngClass]="{'active' : currentTab === tab}">
                 {{tab}}
-              </p>
-            </li>
-          </ul>
-          <ul *ngIf="currentTab === 'Billing'" class="nav nav-tabs">
-            <li *ngFor="let tab of billingTabs" class="nav-item" (click)="setCurrentBillingTab(tab)" style="cursor: pointer">
-              <p class="nav-link" [ngClass]="{'active' : currentBillingTab === tab}">
-                {{tab | titlecase}}
               </p>
             </li>
           </ul>
