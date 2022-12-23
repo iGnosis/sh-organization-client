@@ -1,0 +1,83 @@
+<div class="h-screen flex-grow-1 overflow-y-lg-auto px-md-3 px-lg-7 py-7">
+  <div class="container-xl">
+    <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+      <div class="p-md-4 p-sm-4">
+        <div class="row mb-md-4 p-sm-2">
+          <div class="col-md-8">
+            <div class="h3">Subscriptions</div>
+          </div>
+          <div class="col-md-4 d-flex justify-content-end">
+            <!--Disabled the edit functionality-->
+            <button *ngIf="!isEditable && false" class="btn btn-primary py-2" (click)="isEditable = true">
+              <span class="bi bi-pencil-square mx-2"></span>
+              Edit
+            </button>
+            <button *ngIf="isEditable" class="btn btn-secondary" disabled="!changesMade">
+              <span class="bi bi-check-lg mx-2"></span>Done
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isEditable">
+          <div class="row mb-md-8 p-sm-2">
+            <div class="col-md-12 col-sm-2">
+              <label for="trialPeriod" class="text-dark form-label col-12 h5">Free Trial Period
+                <span class="text-muted mx-2">(if you do not wish to set a free trial period, set the value
+                  as 0)</span></label>
+              <input type="number" class="form-control form-control-muted" id="trialPeriod" />
+            </div>
+          </div>
+          <div class="row mb-md-8 p-sm-2">
+            <div class="col-md-12 col-sm-2">
+              <label class="text-dark form-label col-12 h5">Payment Method Setup</label>
+              <div class="my-2">
+                <div class="form-check form-check-inline mx-6">
+                  <input class="form-check-input" type="radio" id="inlineRadio1" name="payment" />
+                  <label class="form-check-label text-muted" for="inlineRadio1">During Sign Up</label>
+                </div>
+                <div class="form-check form-check-inline mx-4">
+                  <input class="form-check-input" type="radio" id="inlineRadio2" name="payment" />
+                  <label class="form-check-label text-muted" for="inlineRadio2">Later</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!isEditable && subscriptionPlan">
+          <div class="row mb-md-2 p-sm-2">
+            <div class="col-md-2 col-sm-6">
+              <p class="custom-title">Subscription Price :</p>
+            </div>
+            <div class="col-md-10 col-sm-6">
+              <p class="custom-value">
+                {{ "$ " + subscriptionPlan.subscriptionFee + "/month" }}
+              </p>
+            </div>
+          </div>
+          <div class="row mb-md-2 p-sm-2">
+            <div class="col-md-2 col-sm-6">
+              <p class="custom-title">Free Trial Period :</p>
+            </div>
+            <div class="col-md-10 col-sm-6">
+              <p class="custom-value">
+                {{ subscriptionPlan.trialPeriod + " days" }}
+              </p>
+            </div>
+          </div>
+          <div class="row mb-md-8 p-sm-2">
+            <div class="col-md-2 col-sm-6">
+              <p class="custom-title">Payment Method Setup :</p>
+            </div>
+            <div class="col-md-9 col-sm-6">
+              <p class="custom-value">
+                {{
+                subscriptionPlan.requirePaymentDetails ? "During Sign Up" : "Later"
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

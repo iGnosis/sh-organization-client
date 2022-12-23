@@ -39,7 +39,7 @@ export class PatientsListComponent implements OnInit {
   patientListSubscription: Subscription;
 
   constructor(
-    private router: Router, 
+    private router: Router,
     private graphqlService: GraphqlService,
     private _liveAnnouncer: LiveAnnouncer,
     private store: Store<{ dashboard: DashboardState }>
@@ -94,7 +94,7 @@ export class PatientsListComponent implements OnInit {
         });
       });
 
-      this.patientListSubscription = 
+      this.patientListSubscription =
         this.transformPatientList(patientListResponse)
         .subscribe((patientsWithActiveDays: any) => {
           resolve(patientsWithActiveDays || []);

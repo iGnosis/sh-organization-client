@@ -15,10 +15,12 @@ export class AdminComponent implements OnInit {
   @ViewChild(UsersAccessComponent) usersAccessComponent: UsersAccessComponent;
 
   tabs: Tabs[] = ['Customization', 'Billing', 'Users and Access'];
-  currentTab: Tabs = 'Customization';
+  currentTab: Tabs = 'Users and Access';
   customizable = false;
   changesInCustomizationTab = true;
 
+  billingTabs : ('subscriptions' | 'transactions') []= ['subscriptions', 'transactions'];
+  currentBillingTab: 'subscriptions' | 'transactions' = 'subscriptions';
   constructor() { }
 
   ngOnInit(): void { }
@@ -31,6 +33,9 @@ export class AdminComponent implements OnInit {
     this.customizable = !this.customizable;
   }
 
+  setCurrentBillingTab(tab: 'subscriptions' | 'transactions') {
+    this.currentBillingTab = tab;
+  }
   handleChangeEvent(data: boolean) {
     this.changesInCustomizationTab = data;
   }

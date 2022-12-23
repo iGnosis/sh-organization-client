@@ -70,8 +70,11 @@ export class UsersAccessComponent implements OnInit {
     email: string;
     phoneNumber: string;
     phoneCountryCode: string;
-    staffType: 'org_admin' | 'therapist';
-  }> = {};
+    staffType: 'org_admin' | 'therapist' | '';
+  }> = {
+    phoneCountryCode: '',
+    staffType: '',
+  };
 
   addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
@@ -338,7 +341,7 @@ export class UsersAccessComponent implements OnInit {
 
   setSelect(
     inputType: 'phoneCountryCode' | 'staffType' | 'namePrefix',
-    selectChange: MatSelectChange
+    selectChange: any
   ) {
     if (inputType === 'namePrefix') return;
     this.staffDetails[inputType] = selectChange.value;

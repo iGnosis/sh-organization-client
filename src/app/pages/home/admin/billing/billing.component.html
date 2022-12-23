@@ -1,1 +1,4 @@
-<p acl feature="billing">billing works!!</p>
+<div acl [ngSwitch]="tab" feature="billing">
+  <app-transactions *ngSwitchCase="'transactions'"></app-transactions>
+  <app-subscriptions *ngSwitchCase="'subscriptions'"></app-subscriptions>
+</div>
