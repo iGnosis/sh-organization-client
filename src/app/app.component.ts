@@ -8,7 +8,7 @@ import { ThemeService } from './services/theme/theme.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'sh-provider-client';
+  title = 'sh-organization-client';
   constructor(
     private themeService: ThemeService,
     private authService: AuthService

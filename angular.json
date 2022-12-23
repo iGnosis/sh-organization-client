@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "sh-provider-client": {
+    "sh-organization-client": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -20,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/sh-provider-client",
+            "outputPath": "dist/sh-organization-client",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -185,19 +185,19 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "sh-provider-client:build:production"
+              "browserTarget": "sh-organization-client:build:production"
             },
             "staging": {
-              "browserTarget": "sh-provider-client:build:staging"
+              "browserTarget": "sh-organization-client:build:staging"
             },
             "development": {
-              "browserTarget": "sh-provider-client:build:development"
+              "browserTarget": "sh-organization-client:build:development"
             },
             "local": {
-              "browserTarget": "sh-provider-client:build:local"
+              "browserTarget": "sh-organization-client:build:local"
             },
             "local-pure": {
-              "browserTarget": "sh-provider-client:build:local-pure"
+              "browserTarget": "sh-organization-client:build:local-pure"
             }
           },
           "defaultConfiguration": "local"
@@ -205,7 +205,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "sh-provider-client:build"
+            "browserTarget": "sh-organization-client:build"
           }
         },
         "test": {
@@ -230,5 +230,5 @@
       }
     }
   },
-  "defaultProject": "sh-provider-client"
+  "defaultProject": "sh-organization-client"
 }
