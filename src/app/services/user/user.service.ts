@@ -20,7 +20,7 @@ export class UserService {
     return user as User;
   }
 
-  getDefaultRoute(userRole: UserRole): string {
+  static getDefaultRoute(userRole: UserRole): string {
     if (userRole === UserRole.ORG_ADMIN) {
       return '/app/admin'
     }
