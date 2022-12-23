@@ -185,6 +185,14 @@
       </div>
     </div>
     <div class="col-md-12 mb-4">
+      <label for="staff-role" class="form-label col-12">Staff Role</label>
+      <select [ngModel]="staffDetails.staffType" (ngModelChange)="setSelect('staffType', { value: $event })" class="form-select form-control-muted" id="staff-role" placeholder="Select Staff Role" required>
+        <option hidden [value]="''" selected disabled>Enter Staff Role</option>
+        <option value='therapist'>Therapist</option>
+        <option value='org_admin'>Admin</option>
+      </select>
+    </div>
+    <div class="col-md-12 mb-4">
       <label for="email" class="form-label col-12">Staff Email</label>
       <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
         [ngModel]="staffDetails.email" (input)="setInput('email', $event)" required>
@@ -193,14 +201,12 @@
       <div class="row">
         <div class="col-md-4">
           <label for="countryCode" class="form-label col-12">Country Code</label>
-          <mat-form-field id="countryCode" appearance="standard" class="col-12 condition_select form-control-muted">
-            <mat-select [ngModel]="staffDetails.phoneCountryCode" placeholder="Country Code"
-              (selectionChange)="setSelect('phoneCountryCode', $event)" required>
-              <mat-option value='+1'>+1 USA</mat-option>
-              <mat-option value='+1'>+1 Canada</mat-option>
-              <mat-option value='+91'>+91 India</mat-option>
-            </mat-select>
-          </mat-form-field>
+          <select [ngModel]="staffDetails.phoneCountryCode" (ngModelChange)="setSelect('phoneCountryCode', { value: $event })" class="form-select form-control-muted" id="staff-role" placeholder="Select Country Code">
+            <option hidden [value]="''" selected disabled>Enter Country Code</option>
+            <option value='+1'>+1 USA</option>
+            <option value='+1'>+1 Canada</option>
+            <option value='+91'>+91 India</option>
+          </select>
         </div>
         <div class="col-md-8">
           <label for="mobile" class="form-label col-12">Staff Phone Number</label>
@@ -212,14 +218,6 @@
     <div class="col-md-12 mb-4">
       <div class="row">
         <div class="col-md-6">
-          <!-- <label for="staffType" class="form-label col-12">Staff Role</label> -->
-          <mat-form-field id="staffType" appearance="standard" class="col-12 condition_select form-control-muted">
-            <mat-select [ngModel]="staffDetails.staffType" placeholder="Staff Role"
-              (selectionChange)="setSelect('staffType', $event)" required>
-              <mat-option value='therapist'>Therapist</mat-option>
-              <mat-option value='org_admin'>Admin</mat-option>
-            </mat-select>
-          </mat-form-field>
           <p *ngIf="addNewStaffStatus" class="mx-2 py-2"
             [ngClass]="addNewStaffStatus.status === 'success' ? 'text-success' : 'text-danger'">
             {{addNewStaffStatus.text}}</p>
