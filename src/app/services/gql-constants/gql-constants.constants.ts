@@ -414,4 +414,14 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
   }
 }
 `,
+
+  GET_SUBCRIPTION_PLAN: `
+  query GetSubscriptionPlan($organizationId: uuid!) {
+    subscription_plans(where: {organization: {_eq: $organizationId}}) {
+      id
+      requirePaymentDetails
+      subscriptionFee
+      trialPeriod
+    }
+  }`
 };

@@ -11,23 +11,30 @@
             </div>
             <div class="col-6 d-flex align-items-end justify-content-end">
               <button *ngIf="currentTab === 'Customization' && !customizable" (click)="customizable=true"
-                class="btn btn-primary"><i class="bi bi-pencil-square"></i>
-                &nbsp; Customize</button>
+                class="btn btn-primary"><i class="bi bi-pencil-square mx-2"></i>
+                Customize</button>
 
               <button *ngIf="currentTab === 'Customization' && customizable" (click)="saveCustomization()"
-                [disabled]="changesInCustomizationTab" class="btn btn-primary"><i class="bi bi-check-lg"></i>
-                &nbsp; Done</button>
+                [disabled]="changesInCustomizationTab" class="btn btn-primary mx-2"><i class="bi bi-check-lg"></i>
+                Done</button>
 
               <button *ngIf="currentTab === 'Users and Access' " (click)="openAddMemberModal()"
-                class="btn btn-primary"><i class="bi bi-plus-lg"></i>
-                &nbsp; Add Members</button>
+                class="btn btn-primary"><i class="bi bi-plus-lg mx-2"></i>
+                Add Members</button>
 
             </div>
           </div>
-          <ul class="nav nav-tabs">
+          <ul *ngIf="currentTab !== 'Billing'" class="nav nav-tabs">
             <li *ngFor="let tab of tabs" class="nav-item" (click)="setCurrentTab(tab)" style="cursor: pointer">
               <p class="nav-link" [ngClass]="{'active' : currentTab === tab}">
                 {{tab}}
+              </p>
+            </li>
+          </ul>
+          <ul *ngIf="currentTab === 'Billing'" class="nav nav-tabs">
+            <li *ngFor="let tab of billingTabs" class="nav-item" (click)="setCurrentBillingTab(tab)" style="cursor: pointer">
+              <p class="nav-link" [ngClass]="{'active' : currentBillingTab === tab}">
+                {{tab | titlecase}}
               </p>
             </li>
           </ul>
@@ -43,6 +50,6 @@
 <main [ngSwitch]="currentTab" class="px-3 px-lg-7">
   <app-customization *ngSwitchCase="'Customization'" (changesMade)="handleChangeEvent($event)"
     [customizable]="customizable"></app-customization>
-  <app-billing *ngSwitchCase="'Billing'"></app-billing>
+  <app-billing *ngSwitchCase="'Billing'" [tab]="currentBillingTab"></app-billing>
   <app-users-access *ngSwitchCase="'Users and Access'"></app-users-access>
 </main>
