@@ -28,6 +28,7 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
 import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
 import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 import { SessionComponent } from './pages/session/session.component';
+import { UserService } from './services/user/user.service';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
 const routes: Routes = [
@@ -55,8 +56,8 @@ const routes: Routes = [
         label: 'Home',
         info: 'Home',
         routeInterceptor: (routeLink: any, breadcrumb: any) => {
-          //console.log(breadcrumb);
-          return '/app/dashboard';
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          return UserService.getDefaultRoute(user.type);
         },
       },
     },

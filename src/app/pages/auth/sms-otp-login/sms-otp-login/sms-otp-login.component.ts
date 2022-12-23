@@ -214,7 +214,7 @@ export class SmsOtpLoginComponent {
       if (this.inviteCode) {
         this.router.navigate(['/app/admin/add-organization']);
       } else {
-        const defaultRoute = this.userService.getDefaultRoute(userRole);
+        const defaultRoute = UserService.getDefaultRoute(userRole);
         this.router.navigate([defaultRoute]);
       }
     }
@@ -274,7 +274,7 @@ export class SmsOtpLoginComponent {
       orgId: orgId,
     });
     console.log('user set successfully');
-    const route = this.userService.getDefaultRoute(userRole as UserRole);
+    const route = UserService.getDefaultRoute(userRole as UserRole);
     this.router.navigate([route]);
   }
 

@@ -16,7 +16,7 @@ export class DefaultRouteGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const user = this.userService.get();
-    const defaultRoute = this.userService.getDefaultRoute(user.type);
+    const defaultRoute = UserService.getDefaultRoute(user.type);
     this.router.navigate([defaultRoute]);
     return true
   }
