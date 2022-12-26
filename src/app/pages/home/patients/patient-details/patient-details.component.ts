@@ -20,7 +20,6 @@ import {
   DashboardState,
   Game,
   Patient,
-  Session,
 } from 'src/app/pointmotion';
 import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
 import { groupBy as lodashGroupBy, capitalize } from 'lodash';
@@ -29,6 +28,7 @@ import { OwlOptions } from 'ngx-owl-carousel-o';
 import { Store } from '@ngrx/store';
 import { dashboard } from 'src/app/store/actions/dashboard.actions';
 import { Subscription } from 'rxjs';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 export class Captain {
   careplanByCareplan: string;
@@ -149,6 +149,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     public eventEmitterService: EventEmitterService,
     private store: Store<{ dashboard: DashboardState }>,
+    private breadcrumbService: BreadcrumbService,
   ) {
     this.endDate = new Date();
     this.startDate = this.endDate;
@@ -267,6 +268,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       { patientId: this.patientId }
     );
     this.patientIdentifier = patient.patient[0].nickname;
+    this.breadcrumbService.set('@patientName', this.patientIdentifier);
   }
 
   async GetAssignedCarePlan() {
