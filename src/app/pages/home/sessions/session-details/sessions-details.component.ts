@@ -9,6 +9,7 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { environment } from 'src/environments/environment';
 import { capitalize } from 'lodash';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
 
 @Component({
@@ -55,7 +56,8 @@ export class SessionsDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-    private graphqlService: GraphqlService
+    private graphqlService: GraphqlService,
+    private breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnInit() {
@@ -72,6 +74,9 @@ export class SessionsDetailsComponent implements OnInit {
           gameId: this.gameId,
         }
       );
+
+      const patientNickName = gameDetails.game_by_pk.patientByPatient.nickname;
+      this.breadcrumbService.set('@patientName', patientNickName);
 
       this.gameDetails = gameDetails.game_by_pk;
 

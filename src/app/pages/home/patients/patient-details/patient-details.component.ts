@@ -151,6 +151,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     private store: Store<{ dashboard: DashboardState }>,
     private breadcrumbService: BreadcrumbService,
   ) {
+    this.breadcrumbService.set('@patientName', '...');
     this.endDate = new Date();
     this.startDate = this.endDate;
 

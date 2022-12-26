@@ -60,6 +60,12 @@ export const GqlConstants = {
       createdAt
       id
       patient
+      patientByPatient {
+        identifier
+        nickname
+        firstName
+        lastName
+      }
       repsCompleted
       totalDuration
       calibrationDuration

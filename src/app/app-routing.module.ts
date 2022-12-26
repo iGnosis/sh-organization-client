@@ -75,17 +75,26 @@ const routes: Routes = [
       {
         path: 'patients',
         data: { breadcrumb: 'Patients' },
-        component: PatientsComponent,
         children: [
           {
+            path: '',
+            pathMatch: 'full',
+            component: PatientsComponent
+          },
+          {
             path: ':id',
-            component: PatientDetailsComponent,
             data: {
               breadcrumb: {
+                // alias later gets replaced with patient's nickname
                 alias: 'patientName'
               }
             },
             children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                component: PatientDetailsComponent,
+              },
               {
                 path: 'game/:id',
                 component: SessionsDetailsComponent,
