@@ -9,18 +9,9 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { environment } from 'src/environments/environment';
 import { capitalize } from 'lodash';
 import { OwlOptions } from 'ngx-owl-carousel-o';
+import { BreadcrumbService } from 'xng-breadcrumb';
 
-type GameObj = {
-  calibrationDuration: number;
-  createdAt: string;
-  endedAt: string;
-  game: string;
-  id: string;
-  patient: string;
-  repsCompleted: number;
 
-  totalDuration: string;
-};
 @Component({
   selector: 'app-sessions-details',
   templateUrl: './sessions-details.component.html',
@@ -65,7 +56,8 @@ export class SessionsDetailsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private analyticsService: AnalyticsService,
-    private graphqlService: GraphqlService
+    private graphqlService: GraphqlService,
+    private breadcrumbService: BreadcrumbService,
   ) {}
 
   ngOnInit() {
@@ -83,6 +75,9 @@ export class SessionsDetailsComponent implements OnInit {
         }
       );
 
+      const patientNickName = gameDetails.game_by_pk.patientByPatient.nickname;
+      this.breadcrumbService.set('@patientName', patientNickName);
+
       this.gameDetails = gameDetails.game_by_pk;
 
       this.totalDuration = this.getDurationInMinutes(this.gameDetails.totalDuration);
@@ -97,128 +92,8 @@ export class SessionsDetailsComponent implements OnInit {
       if (game === 'sit_stand_achieve' || 'beat_boxer') {
         this.initInitiationTimeChart(id, game);
       }
-
-      // this.analyticsService
-      //   .getAnalytics([this.gameId])
-      //   .subscribe((sessionAnalytics: any) => {
-      //     let performanceRatio = 0;
-      //     let totalEventsPerSession = 0;
-      //     let avgReactionTime = 0;
-      //     const session = sessionAnalytics[this.gameId!];
-      //     this.gameDetails.sessionAnalytics = session;
-      //     for (const activity in session) {
-      //       for (const event of session[activity].events) {
-      //         // console.log('event:', event)
-      //         performanceRatio += event.score * 100;
-      //         avgReactionTime += event.reactionTime;
-      //         totalEventsPerSession++;
-      //       }
-      //     }
-      //     performanceRatio = performanceRatio / totalEventsPerSession;
-      //     performanceRatio = Math.round(performanceRatio * 100) / 100;
-      //     this.gameDetails.totalPerformanceRatio = performanceRatio;
-      //     this.gameDetails.avgReactionTime = parseFloat(
-      //       (avgReactionTime / totalEventsPerSession).toFixed(2)
-      //     );
-
-      //     console.log(this.gameId, this.gameDetails);
-      //     this.initPatientConditions();
-
-      //     this.initReactionChart(this.gameDetails);
-      //     this.initAchievementChart(this.gameDetails);
-
-      //     // prepare activity level-analytics
-      //     for (const activityId in this.gameDetails.sessionAnalytics) {
-      //       const activity = {
-      //         id: activityId,
-      //         createdAt: 1,
-      //         name: '',
-      //         prompt: 'Visual, Auditory',
-      //         duration: 0,
-      //         durationInStr: '',
-      //         reps: 10,
-      //         correctMotions: 8,
-      //         achievementRatio: 80,
-      //         reactionTime: 4000,
-      //         events: [],
-      //       };
-
-      //       const activityEvents: Array<ActivityEvent> =
-      //         this.gameDetails.sessionAnalytics[activityId].events;
-      //       activity.events =
-      //         this.gameDetails.sessionAnalytics[activityId].events;
-
-      //       if (
-      //         !activityEvents ||
-      //         !Array.isArray(activityEvents) ||
-      //         !activityEvents.length
-      //       ) {
-      //         return;
-      //       }
-
-      //       if (activityEvents[0].activityName && activityEvents[0].createdAt) {
-      //         activity.name = activityEvents[0].activityName;
-      //         activity.createdAt = activityEvents[0].createdAt;
-      //       }
-
-      //       // edge case -- handle later
-      //       if (activityEvents.length === 1) {
-      //         activity.duration = 60000 / 1000;
-      //       } else {
-      //         const minTime = activityEvents[0].createdAt;
-      //         const maxTime =
-      //           activityEvents[activityEvents.length - 1].createdAt;
-      //         if (minTime && maxTime) {
-      //           activity.duration = (maxTime - minTime) / 1000; // duration in seconds
-      //           activity.durationInStr = this.secondsToTime(activity.duration);
-      //         }
-      //       }
-
-      //       let totalNumEvents = 0;
-      //       let incorrectMotions = 0;
-      //       let totalReactionTime = 0;
-      //       for (const event of activityEvents) {
-      //         // build this below JSON struct and append it to the array
-      //         if (event.reactionTime) {
-      //           totalReactionTime += event.reactionTime;
-      //         }
-      //         if (event.score === 0) {
-      //           incorrectMotions++;
-      //         }
-      //         totalNumEvents++;
-      //       }
-
-      //       activity.reps = totalNumEvents;
-      //       activity.correctMotions = totalNumEvents - incorrectMotions;
-      //       activity.achievementRatio = parseFloat(
-      //         ((activity.correctMotions / totalNumEvents) * 100).toFixed(2)
-      //       );
-      //       activity.reactionTime = parseFloat(
-      //         (totalReactionTime / totalNumEvents).toFixed(2)
-      //       );
-
-      //       this.activityDetails.push(activity);
-      //     }
-      //     this.fetchSessionCompletionRatio(this.gameId);
-      //   });
     });
   }
-
-  // initPatientConditions() {
-  //   const conditions = this.gameDetails.patientByPatient.medicalConditions;
-  //   for (const condition in conditions) {
-  //     if (conditions[condition] === true) {
-  //       this.patientConditions += `${condition}, `;
-  //     }
-  //   }
-
-  //   if (this.patientConditions) {
-  //     this.patientConditions = this.patientConditions.slice(
-  //       0,
-  //       this.patientConditions.length - 2
-  //     );
-  //   }
-  // }
 
   /**
    * Takes in the time (in seconds) and converts it into an object with minutes and seconds

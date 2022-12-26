@@ -75,7 +75,34 @@ const routes: Routes = [
       {
         path: 'patients',
         data: { breadcrumb: 'Patients' },
-        component: PatientsComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: PatientsComponent
+          },
+          {
+            path: ':id',
+            data: {
+              breadcrumb: {
+                // alias later gets replaced with patient's nickname
+                alias: 'patientName'
+              }
+            },
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                component: PatientDetailsComponent,
+              },
+              {
+                path: 'game/:id',
+                component: SessionsDetailsComponent,
+                data: { breadcrumb: 'Activity' },
+              }
+            ]
+          }
+        ]
       },
       {
         path: 'patients/new',
@@ -83,19 +110,6 @@ const routes: Routes = [
         data: { breadcrumb: 'New Patient' },
       },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      {
-        path: 'patients/:id',
-        component: PatientDetailsComponent,
-        data: { breadcrumb: 'Patient' },
-        // children: [
-        //   {
-        //     path: 'session/:id',
-        //     data: { breadcrumb: "Session Details" },
-        //     component: SessionsDetailsComponent,
-        //   },
-        // ]
-      },
-
       {
         path: 'care-plans',
         data: { breadcrumb: 'Care Plans' },
@@ -120,13 +134,6 @@ const routes: Routes = [
       //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
-      // { path: 'sessions', component: SessionsDetailsComponent },
-      {
-        path: 'game/:id',
-        component: SessionsDetailsComponent,
-        data: { breadcrumb: 'Activity' },
-      },
-
       { path: 'account', component: AccountComponent },
       {
         path: 'user-details/:type/:id',
