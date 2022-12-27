@@ -322,6 +322,7 @@ export const GqlConstants = {
         firstName
         lastName
         type
+        email
       }
   }`,
   GET_PATIENTS: `

@@ -1,120 +1,123 @@
-<div acl feature="customization" class="container-xl mb-5">
+<div acl feature="customization" class="container-xl">
 
-  <div class="row mt-5">
-    <div *ngIf="!customizable" class='mt-5 col-md-10 offset-md-1 justify-content-start'>
-      <p class="h4 text-black">Organization Avatar</p>
-      <img class="logo-img mt-5 rounded-circle" [src]="orgLogoUrl" alt="organization-logo">
-    </div>
+  <div class="card  mb-5 py-4 mx-md-2 mt-10">
+    <div class="row mt-5">
+      <div *ngIf="!customizable" class='mt-5 col-md-10 offset-md-1 justify-content-start'>
+        <p class="h4 text-black">Organization Avatar</p>
+        <img class="logo-img mt-5 rounded-circle" [src]="orgLogoUrl" alt="organization-logo">
+      </div>
 
-    <div *ngIf="customizable" classs="mt-5">
-      <div class="row mb-4">
-        <div class="col-md-10 offset-md-1">
-          <p class="h4 text-black">Logo</p>
-          <p>Upload your logo to reflect your brand image throughout the platform.</p>
+      <div *ngIf="customizable" classs="mt-5">
+        <div class="row mb-4">
+          <div class="col-md-10 offset-md-1">
+            <p class="h4 text-black">Logo</p>
+            <p>Upload your logo to reflect your brand image throughout the platform.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-10 offset-md-1">
+            <div class="row custom-card p-4 mx-1">
+              <div class="col-md-1">
+                <img class="logo-circle md" [src]="orgLogoUrl" alt="organization-logo" />
+              </div>
+              <div class="col-md-7 d-flex align-items-center">
+                Please use a picture that is atleast 98x98 px and 4MB or less. Accepted file formats are JPEG and PNG.
+              </div>
+              <div class="col-md-4 d-flex align-items-center justify-content-center">
+                <input hidden type="file" accept="image/*" #uploader (change)="uploadLogo($event)" />
+                <button class="btn btn-secondary" (click)="uploader.click()">
+                  <i class="bi bi-chat mx-2"></i>
+                  Change Logo</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </div>
+
+    <div class="my-10">
       <div class="row">
         <div class="col-md-10 offset-md-1">
-          <div class="row custom-card p-4 mx-1">
-            <div class="col-md-1">
-              <img class="logo-circle md" [src]="orgLogoUrl" alt="organization-logo" />
-            </div>
-            <div class="col-md-7 d-flex align-items-center">
-              Please use a picture that is atleast 98x98 px and 4MB or less. Accepted file formats are JPEG and PNG.
-            </div>
-            <div class="col-md-4 d-flex align-items-center justify-content-center">
-              <input hidden type="file" accept="image/*" #uploader (change)="uploadLogo($event)" />
-              <button class="btn btn-secondary" (click)="uploader.click()">
-                <i class="bi bi-chat mx-2"></i>
-                Change Logo</button>
-            </div>
-          </div>
+          <label class="h4 text-black">Brand Colors</label>
+          <p *ngIf="customizable">Update your brand colours on Sound Health by using the colour picker or the Hex code
+            below. This will help your
+            users identify with the product better.</p>
         </div>
       </div>
-    </div>
-  </div>
 
-  <div class="my-10">
-    <div class="row">
-      <div class="col-md-10 offset-md-1">
-        <label class="h4 text-black">Brand Colors</label>
-        <p *ngIf="customizable">Update your brand colours on Sound Health by using the colour picker or the Hex code
-          below. This will help your
-          users identify with the product better.</p>
+      <div class="row mt-5">
+        <div class='row'>
+          <div class='col-md-10 offset-md-1 mb-5'>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="primary" class="form-label d-block">Primary Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('primary', $event)"
+                    [ngModel]="customizationOptions.colors!.primary | hexToColor " [ngxMatColorPicker]="primary"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="primary"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #primary></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label for="secondary" class="form-label d-block">Secondary Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('secondary', $event)"
+                    [ngModel]="customizationOptions.colors!.secondary | hexToColor " [ngxMatColorPicker]="secondary"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="secondary"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #secondary></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label for="tertiary" class="form-label d-block">Info Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('info', $event)"
+                    [ngModel]="customizationOptions.colors!.info | hexToColor " [ngxMatColorPicker]="tertiary"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="tertiary"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #tertiary></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class='col-md-10 offset-md-1'>
+            <div class="row">
+              <div class="col-md-4">
+                <label for="success" class="form-label d-block">Success Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('success', $event)"
+                    [ngModel]="customizationOptions.colors!.success | hexToColor " [ngxMatColorPicker]="success"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="success"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #success></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label for="warning" class="form-label d-block">Warning Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('warning', $event)"
+                    [ngModel]="customizationOptions.colors!.warning | hexToColor " [ngxMatColorPicker]="warning"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="warning"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #warning></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-4">
+                <label for="danger" class="form-label d-block">Danger Color</label>
+                <mat-form-field>
+                  <input matInput (ngModelChange)="setColor('danger', $event)"
+                    [ngModel]="customizationOptions.colors!.danger | hexToColor " [ngxMatColorPicker]="danger"
+                    [disabled]="!customizable">
+                  <ngx-mat-color-toggle matSuffix [for]="danger"></ngx-mat-color-toggle>
+                  <ngx-mat-color-picker #danger></ngx-mat-color-picker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="row mt-5">
-      <div class='row'>
-        <div class='col-md-10 offset-md-1 mb-5'>
-          <div class="row">
-            <div class="col-md-4">
-              <label for="primary" class="form-label d-block">Primary Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('primary', $event)"
-                  [ngModel]="customizationOptions.colors!.primary | hexToColor " [ngxMatColorPicker]="primary"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="primary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #primary></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <label for="secondary" class="form-label d-block">Secondary Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('secondary', $event)"
-                  [ngModel]="customizationOptions.colors!.secondary | hexToColor " [ngxMatColorPicker]="secondary"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="secondary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #secondary></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <label for="tertiary" class="form-label d-block">Info Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('info', $event)"
-                  [ngModel]="customizationOptions.colors!.info | hexToColor " [ngxMatColorPicker]="tertiary"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="tertiary"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #tertiary></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-        <div class='col-md-10 offset-md-1'>
-          <div class="row">
-            <div class="col-md-4">
-              <label for="success" class="form-label d-block">Success Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('success', $event)"
-                  [ngModel]="customizationOptions.colors!.success | hexToColor " [ngxMatColorPicker]="success"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="success"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #success></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <label for="warning" class="form-label d-block">Warning Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('warning', $event)"
-                  [ngModel]="customizationOptions.colors!.warning | hexToColor " [ngxMatColorPicker]="warning"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="warning"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #warning></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-            <div class="col-md-4">
-              <label for="danger" class="form-label d-block">Danger Color</label>
-              <mat-form-field>
-                <input matInput (ngModelChange)="setColor('danger', $event)"
-                  [ngModel]="customizationOptions.colors!.danger | hexToColor " [ngxMatColorPicker]="danger"
-                  [disabled]="!customizable">
-                <ngx-mat-color-toggle matSuffix [for]="danger"></ngx-mat-color-toggle>
-                <ngx-mat-color-picker #danger></ngx-mat-color-picker>
-              </mat-form-field>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>

@@ -45,6 +45,7 @@ export class UsersAccessComponent implements OnInit {
     lastName: string;
     id: string;
     type: string;
+    email: string;
   }[];
 
   patientList: {
@@ -71,9 +72,9 @@ export class UsersAccessComponent implements OnInit {
     phoneCountryCode: string;
     staffType: 'org_admin' | 'therapist' | '';
   }> = {
-    phoneCountryCode: '',
-    staffType: '',
-  };
+      phoneCountryCode: '',
+      staffType: '',
+    };
 
   addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
@@ -114,7 +115,8 @@ export class UsersAccessComponent implements OnInit {
 
   async initTables() {
     const staff = await this.gqlService.gqlRequest(GqlConstants.GET_STAFF);
-    this.staffList = staff.staff;
+
+    this.staffList = staff.staff.filter((staff: { email: string; }) => staff.email != undefined);
 
     const patients = await this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENTS
