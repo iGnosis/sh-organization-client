@@ -768,6 +768,11 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       }]
     };
     const options: ChartOptions = {
+      elements: {
+        line: {
+          tension: 0.3,
+        }
+      },
       responsive: true,
       plugins: {
         legend: {
