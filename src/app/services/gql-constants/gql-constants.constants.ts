@@ -105,6 +105,12 @@ export const GqlConstants = {
       }
     }
   }`,
+  GET_PATIENT_MOOD: `query FetchPatientMood($patientId: uuid!, $startDate: timestamptz!, $endDate: timestamptz!) {
+    checkin(where: {type: {_eq: mood}, patient: {_eq: $patientId}, createdAt: {_gte: $startDate, _lte: $endDate}}, order_by: {createdAt: asc}) {
+      createdAt
+      mood: value
+    }
+  }`,
   GET_LATEST_GAMES: `
   query LatestGames($offset: Int!, $limit: Int!) {
     game(order_by: {createdAt: desc}, offset: $offset, limit: $limit, where: {endedAt: {_is_null: false}}) {

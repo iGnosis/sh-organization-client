@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IChart, SessionData } from 'src/app/pointmotion';
 import { environment } from '../../../environments/environment';
 import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
@@ -77,13 +76,7 @@ export class ChartService {
     createdAt: string;
     mood: string;
   }>> {
-    const query = `query FetchPatientMood($patientId: uuid!, $startDate: timestamptz!, $endDate: timestamptz!) {
-      checkin(where: {type: {_eq: mood}, patient: {_eq: $patientId}, createdAt: {_gte: $startDate, _lte: $endDate}}, order_by: {createdAt: asc}) {
-        createdAt
-        mood: value
-      }
-    }`
-    const resp = await this.gqlService.client.request(query, { startDate, endDate, patientId });
+    const resp = await this.gqlService.client.request(GqlConstants.GET_PATIENT_MOOD, { startDate, endDate, patientId });
     return resp.checkin;
   }
 }
