@@ -73,49 +73,17 @@ export class ChartService {
     );
   }
 
-
-  // here, we do things that are painful to do with plain SQL.
-  transformifyData(chartResults: IChart[]): SessionData {
-    const patientObject: any = {};
-
-    // build session
-    for (const item of chartResults) {
-      if (item.session) {
-        patientObject[item.session] = {};
+  async patientMoodVariationChart(startDate: Date, endDate: Date, patientId: string): Promise<Array<{
+    createdAt: string;
+    mood: string;
+  }>> {
+    const query = `query FetchPatientMood($patientId: uuid!, $startDate: timestamptz!, $endDate: timestamptz!) {
+      checkin(where: {type: {_eq: mood}, patient: {_eq: $patientId}, createdAt: {_gte: $startDate, _lte: $endDate}}, order_by: {createdAt: asc}) {
+        createdAt
+        mood: value
       }
-    }
-
-    // build activity
-    for (const sessionId in patientObject) {
-      // console.log(session)
-      for (const item of chartResults) {
-        if (sessionId == item.session && item.activity) {
-          patientObject[sessionId][item.activity] = {};
-        }
-      }
-    }
-
-    // build events
-    for (const sessionId in patientObject) {
-      for (const activityId in patientObject[sessionId]) {
-        for (const item of chartResults) {
-          if (sessionId == item.session && activityId == item.activity) {
-            if (patientObject[sessionId][activityId].events == undefined) {
-              patientObject[sessionId][activityId]['events'] = [];
-            }
-
-            patientObject[sessionId][activityId]['events'].push({
-              activityName: item.activity_name,
-              taskName: item.task_name,
-              reactionTime: item.reaction_time,
-              createdAt: item.created_at,
-              score: item.score,
-            });
-          }
-        }
-      }
-    }
-    console.log('chart.service:tranformifyData:', patientObject);
-    return patientObject;
+    }`
+    const resp = await this.gqlService.client.request(query, { startDate, endDate, patientId });
+    return resp.checkin;
   }
 }
