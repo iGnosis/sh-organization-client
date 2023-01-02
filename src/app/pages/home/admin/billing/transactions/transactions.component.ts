@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { firstValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { JwtService } from '../../../../../services/jwt/jwt.service';
 
@@ -25,7 +27,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     'downloadReport',
   ];
 
-  constructor(private jwtService: JwtService) { }
+  constructor(private jwtService: JwtService, private http: HttpClient) { }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.tableOnePaginator;
   }
@@ -132,19 +134,18 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
 
       const token = this.jwtService.getToken();
       const headers = {
-        method: 'POST',
-        body: JSON.stringify({
-          startDate: startOfMonth,
-          endDate: endOfMonth,
-        }),
-        headers: {
-          responseType: 'arraybuffer',
-          Authorization: `Bearer ${token}`,
-        },
+        responseType: 'arraybuffer',
+        Authorization: `Bearer ${token}`,
       };
       const url = `${environment.servicesEndpoint}/organization-payment/report`;
-
-      const report = await fetch(url, headers).then((res: any) => res.blob());
+      
+      const report = await firstValueFrom(this.http.post(url, {
+        startDate: startOfMonth,
+        endDate: endOfMonth,
+      }, {
+        headers,
+        responseType: 'blob',
+      }));
       if (!report) return;
       const downloadUrl = window.URL.createObjectURL(report);
   
