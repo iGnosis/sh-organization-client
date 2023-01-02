@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { environment } from 'src/environments/environment';
+import { JwtService } from '../../../../../services/jwt/jwt.service';
 
 type Transaction = {
   createdAt: string;
@@ -23,7 +25,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     'downloadReport',
   ];
 
-  constructor() { }
+  constructor(private jwtService: JwtService) { }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.tableOnePaginator;
   }
@@ -120,6 +122,34 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
 
 
     ];
+  }
+
+  async downloadReport() {
+    try {
+      const token = this.jwtService.getToken();
+      const headers = {
+        headers: {
+          responseType: 'arraybuffer',
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const url = `${environment.servicesEndpoint}/organization-payment/report`;
+
+      const report = await fetch(url, headers).then((res: any) => res.blob());
+      if (!report) return;
+      const downloadUrl = window.URL.createObjectURL(report);
+  
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.setAttribute('download', 'financial-report.txt');
+  
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
   }
 
 }
