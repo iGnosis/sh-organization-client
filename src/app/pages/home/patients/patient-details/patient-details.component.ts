@@ -3,7 +3,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Chart, ChartConfiguration } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
 import { MatSort } from '@angular/material/sort';
@@ -86,6 +86,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   isRowsChecked = false;
   achievementChart: Chart;
   engagementChart: Chart;
+  moodVariationChart: Chart;
 
   startDate: Date;
   endDate: Date;
@@ -180,11 +181,14 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         console.log('patientId:', this.patientId);
         await this.fetchSessions();
 
-        this.changeAchievementChart('start', this.startDate);
-        this.changeAchievementChart('end', this.endDate);
+        this.updateCharts('start', this.startDate!, 'achievement');
+        this.updateCharts('end', this.endDate!, 'achievement');
 
-        this.changeEngagementChart('start', this.startDate);
-        this.changeEngagementChart('end', this.endDate);
+        this.updateCharts('start', this.startDate!, 'engagement');
+        this.updateCharts('end', this.endDate!, 'engagement');
+
+        this.updateCharts('start', this.startDate!, 'mood');
+        this.updateCharts('end', this.endDate!, 'mood');
       }
     });
   }
@@ -203,11 +207,14 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     if (range == 0) this.startDate = this.endDate;
 
     if (this.patientId) {
-      this.changeAchievementChart('start', this.startDate!);
-      this.changeAchievementChart('end', this.endDate!);
+      this.updateCharts('start', this.startDate!, 'achievement');
+      this.updateCharts('end', this.endDate!, 'achievement');
 
-      this.changeEngagementChart('start', this.startDate!);
-      this.changeEngagementChart('end', this.endDate!);
+      this.updateCharts('start', this.startDate!, 'engagement');
+      this.updateCharts('end', this.endDate!, 'engagement');
+
+      this.updateCharts('start', this.startDate!, 'mood');
+      this.updateCharts('end', this.endDate!, 'mood');
     }
   }
 
@@ -615,18 +622,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
 
     const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    console.log(startDate, endDate);
-
-    console.dir({
-      startDate,
-      endDate,
-      userTimezone,
-      patientId: this.patientId!,
-      chartType: 'avgAchievementRatio',
-      groupBy: 'day',
-      isGroupByGames: true,
-    });
-
     const achievementRatioData =
       await this.chartService.fetchPatientChartableData(
         startDate.toISOString(),
@@ -654,8 +649,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }[] = achievementRatioData.patientChart.data.results;
 
     const groupByGame = lodashGroupBy(chartResults, 'game');
-    console.log('groupByGame::', groupByGame);
-
     const generatedDates = this.generateDates(startDate, endDate);
 
     generatedDates.forEach((date) => {
@@ -707,8 +700,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       });
     }
 
-    console.log(dataSet);
-
     data.datasets = dataSet;
 
     // data.labels.push(result.createdAt.split('T')[0].split('-')[2]);
@@ -726,6 +717,133 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         this.achievementChart.destroy();
       }
       this.achievementChart = new Chart(ctx, config);
+    }
+  }
+
+  async initMoodVariationsChart(startDate: Date, endDate: Date) {
+    const moodData = await this.chartService.patientMoodVariationChart(startDate, endDate, this.patientId!)
+    console.log('moodData:', moodData);
+
+    const moodToNumber: {
+      [key: string]: number;
+    } = {
+      'irritated': 0,
+      'anxious': 1,
+      'okay': 2,
+      'happy': 3,
+      'daring': 4
+    }
+
+    const moodToColor: {
+      [key: string]: string
+    } = {
+      'irritated': '#CD001A',
+      'anxious': '#CD001A',
+      'okay': '#F6BE00',
+      'happy': '#00873E',
+      'daring': '#00873E'
+    }
+
+    const numberToMood: {
+      [key: number]: string;
+    } = {
+      0: '😡 irritated',
+      1: '😖 anxious',
+      2: '😐 okay',
+      3: '😀 happy',
+      4: '😊 daring'
+    }
+
+    const data: ChartData = {
+      labels: moodData.map(mood => mood.createdAt.split('T')[0].split('-')[2]),
+      datasets: [{
+        label: 'Mood',
+        data: moodData.map(mood => moodToNumber[mood.mood]),
+        pointBackgroundColor: moodData.map(mood => moodToColor[mood.mood]),
+        pointRadius: 6,
+        pointHoverRadius: 10,
+        fill: true,
+        backgroundColor: "rgba(173, 216, 230, 0.6)",
+        borderColor: 'rgba(70, 130, 180, 0.5)',
+      }]
+    };
+    const options: ChartOptions = {
+      elements: {
+        line: {
+          tension: 0.3,
+        }
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          displayColors: false,
+          bodyFont: {
+            size: 22,
+          },
+          caretSize: 15,
+          callbacks: {
+            label: function (tooltipItem: any) {
+              return numberToMood[tooltipItem.raw as number];
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Feelings',
+            font: {
+              size: 18,
+            },
+          },
+          ticks: {
+            callback: function (value) {
+              return numberToMood[value as number];
+            },
+            font: {
+              size: 16
+            }
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Day',
+            font: {
+              size: 18,
+            },
+            padding: 12,
+            color: '#000000',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+            color: '#000066',
+          },
+        },
+      }
+    }
+
+    const config: ChartConfiguration = {
+      type: 'line',
+      data: data,
+      options: options
+    };
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('moodVariationsChart')
+    );
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.moodVariationChart != null) {
+        this.moodVariationChart.destroy();
+      }
+      this.moodVariationChart = new Chart(ctx, config);
     }
   }
 
@@ -747,61 +865,37 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.router.navigate(['/app/game/', sessionId]);
   }
 
-  engagementStartDate: Date;
-  engagementEndDate?: Date;
-  changeEngagementChart(type: 'start' | 'end', date: Date) {
+  chartStartDate: Date;
+  chartEndDate?: Date;
+  updateCharts(type: 'start' | 'end', date: Date, chartType: 'achievement' | 'engagement' | 'mood') {
     date = new Date(date)
     console.log(`${type}: ${date}`);
     if (!date) return;
     switch (type) {
       case 'start':
-        if (date !== this.engagementStartDate) {
+        if (date !== this.chartStartDate) {
           date.setHours(0, 0, 0, 0);
-          this.engagementStartDate = date;
-          this.engagementEndDate = undefined;
+          this.chartStartDate = date;
+          this.chartEndDate = undefined;
         }
         break;
       case 'end':
-        if (date !== this.engagementEndDate) {
+        if (date !== this.chartEndDate) {
           date.setHours(24, 0, 0, 0);
-          this.engagementEndDate = date;
+          this.chartEndDate = date;
         }
         break;
     }
-    if (this.engagementStartDate && this.engagementEndDate) {
-      this.initEngagementChart(
-        this.engagementStartDate.toISOString(),
-        this.engagementEndDate.toISOString()
-      );
-    }
-  }
-
-  achievementStartDate: Date;
-  achievementEndDate?: Date;
-  changeAchievementChart(type: 'start' | 'end', date: Date) {
-    console.log(`${type}: ${date}`);
-    if (!date) return;
-
-    switch (type) {
-      case 'start':
-        if (date !== this.achievementStartDate) {
-          date.setHours(0, 0, 0, 0);
-          this.achievementStartDate = date;
-          this.achievementEndDate = undefined;
-        }
-        break;
-      case 'end':
-        if (date !== this.achievementEndDate) {
-          this.achievementEndDate = date;
-        }
-        break;
-    }
-
-    if (this.achievementStartDate && this.achievementEndDate) {
-      this.initAchievementChart(
-        this.achievementStartDate,
-        this.achievementEndDate
-      );
+    if (this.chartStartDate && this.chartEndDate) {
+      if (chartType === 'engagement') {
+        this.initEngagementChart(this.chartStartDate.toISOString(), this.chartEndDate.toISOString());
+      }
+      if (chartType === 'achievement') {
+        this.initAchievementChart(this.chartStartDate, this.chartEndDate)
+      }
+      if (chartType === 'mood') {
+        this.initMoodVariationsChart(this.chartStartDate, this.chartEndDate)
+      }
     }
   }
 
@@ -827,17 +921,17 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       }
     });
 
-    if (this.achievementEndDate && this.achievementStartDate) {
+    if (this.chartStartDate && this.chartEndDate) {
       if (filters.length === 0 || (filters.length === 1 && filters.includes('all_activities'))) {
         this.initAchievementChart(
-          this.achievementStartDate,
-          this.achievementEndDate,
+          this.chartStartDate,
+          this.chartEndDate,
         );
       }
       else {
         this.initAchievementChart(
-          this.achievementStartDate,
-          this.achievementEndDate,
+          this.chartStartDate,
+          this.chartEndDate,
           filters
         );
       }

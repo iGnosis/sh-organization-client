@@ -16,7 +16,7 @@
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
         <div class="staff-entry row py-md-4 py-lg-4" *ngFor="let staff of staffList">
           <div class="col-md-6">
-            <p class="h4 details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
+            <p class="text-dark details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
             <p class="text-gray">{{staff.type.split('_').join(' ')| titlecase}}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
