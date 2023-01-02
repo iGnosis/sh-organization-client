@@ -124,10 +124,19 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     ];
   }
 
-  async downloadReport() {
+  async downloadReport(billingPeriod: string) {
     try {
+      const billingDate = new Date(billingPeriod);
+      const startOfMonth = new Date(billingDate.getFullYear(), billingDate.getMonth(), 1);
+      const endOfMonth = new Date(billingDate.getFullYear(), billingDate.getMonth() + 1, 0);
+
       const token = this.jwtService.getToken();
       const headers = {
+        method: 'POST',
+        body: JSON.stringify({
+          startDate: startOfMonth,
+          endDate: endOfMonth,
+        }),
         headers: {
           responseType: 'arraybuffer',
           Authorization: `Bearer ${token}`,
