@@ -309,10 +309,12 @@ export const GqlConstants = {
   // run as org_admin
   CREATE_NEW_PATIENT: `
   mutation InsertPatient($firstName: String!, $lastName: String!, $namePrefix: String!, $email: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
-  insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
-    email
-  }
-}
+    insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+      user {
+        email
+      }
+    }
+  }  
 `,
   CREATE_NEW_STAFF: `
     mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
