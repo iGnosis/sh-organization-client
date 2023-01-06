@@ -1,0 +1,7 @@
+@import '../../variables';
+
+.navbar-vertical.navbar-dark .navbar-nav .nav-link.active {
+    i {
+        color: $primary_color;
+    }
+}
