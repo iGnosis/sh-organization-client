@@ -10,9 +10,12 @@
             <div class="row">
               <div class="col-6">
                 <p *ngIf="patientDetails && patientDetails.firstName && patientDetails.lastName && patientDetails.namePrefix && !isEditable"
-                  class="h1 mb-0 ls-tight text-primary heading_text mt-5">{{patientDetails.namePrefix +'
+                  class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{patientDetails.namePrefix +'
                   '+patientDetails.firstName+ ' '+
                   patientDetails.lastName}}</p>
+                <p *ngIf="staffDetails && !isEditable" class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{
+                  staffDetails.firstName && staffDetails.firstName}} {{staffDetails.lastName&&
+                  staffDetails.lastName}}</p>
 
                 <p *ngIf="isEditable" class="h1 mb-0 ls-tight text-primary heading_text mt-5">
                   Edit {{userType | titlecase}} Details
@@ -40,15 +43,16 @@
     </div>
   </header>
   <!-- Main content -->
-  <main class="h-screen flex-grow-1 overflow-y-lg-auto px-md-3 px-lg-7 py-7">
+  <main class="max-h-screen flex-grow-1 overflow-y-lg-auto px-md-3 px-lg-7 py-7">
 
     <div *ngIf="userType === 'patient' && !isEditable" class="container-xl">
       <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
         <div class="p-md-6 p-sm-4 ">
-          <div class="h3 mb-md-8 mb-sm-4 p-sm-2">Contact Information</div>
-          <div class="row mb-md-8 px-4 gap-md-6">
+          <div class="h3 mb-md-6 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-4 px-4 gap-md-2">
             <div *ngIf="patientDetails.firstName || patientDetails.lastName" class="col-md-12">
-              <p class="h4 text-muted">Patient Name: <span class="h3 text-dark mx-6">{{patientDetails.namePrefix &&
+              <p class=" muted-heading text-muted font-regular">Patient Name: <span
+                  class="muted-headingmx-2 font-semibold" style="color: #1A202C;">{{patientDetails.namePrefix &&
                   patientDetails.namePrefix}}
                   {{patientDetails.firstName &&patientDetails.firstName}} {{patientDetails.lastName &&
                   patientDetails.lastName}}</span>
@@ -56,13 +60,15 @@
             </div>
 
             <div *ngIf="patientDetails.email" class="col-md-12">
-              <p class="h4 text-muted">Patient E-mail: <span class="h3 text-dark mx-6">{{patientDetails.email}}</span>
+              <p class="muted-heading text-muted font-regular">Patient E-mail: <span
+                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.email}}</span>
               </p>
             </div>
 
             <div *ngIf="patientDetails.phoneCountryCode && patientDetails.phoneNumber" class="col-md-12">
-              <p class="h4 text-muted">Patinet Phone No:<span
-                  class="h3 text-dark mx-6">{{patientDetails.phoneCountryCode + patientDetails.phoneNumber}}</span>
+              <p class="muted-heading text-muted font-regular">Patinet Phone No:<span
+                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.phoneCountryCode +
+                  patientDetails.phoneNumber}}</span>
               </p>
             </div>
           </div>
@@ -135,28 +141,32 @@
     <div *ngIf="userType === 'staff' && !isEditable" class="container-xl">
       <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
         <div class="p-md-6 p-sm-4 ">
-          <div class="h2 mb-md-8 mb-sm-4 p-sm-2">Contact Information</div>
-          <div class="row mb-md-8 px-4 gap-md-6">
+          <div class="h3 mb-md-6 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-4 px-4 gap-md-2">
             <div class="col-md-12" *ngIf="staffDetails.firstName || staffDetails.lastName">
-              <p class="h4 text-muted">Staff Name: <span class="h3 text-dark mx-6">{{
+              <p class="muted-heading font-regular text-muted">Staff Name: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{
                   staffDetails.firstName && staffDetails.firstName}} {{staffDetails.lastName&&
                   staffDetails.lastName}}</span>
               </p>
             </div>
 
             <div class="col-md-12" *ngIf="staffDetails.type">
-              <p class="h4 text-muted">Staff Role: <span class="h3 text-dark mx-6">{{staffDetails.type.split('_').join('
+              <p class="muted-heading font-regular text-muted">Staff Role: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.type.split('_').join('
                   ') | titlecase}}</span>
               </p>
             </div>
 
             <div class="col-md-12" *ngIf="staffDetails.email">
-              <p class="h4 text-muted">Staff E-mail: <span class="h3 text-dark mx-6">{{staffDetails.email}}</span>
+              <p class="muted-heading font-regular text-muted">Staff E-mail: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.email}}</span>
               </p>
             </div>
 
             <div *ngIf="staffDetails.phoneCountryCode && staffDetails.phoneNumber" class="col-md-12">
-              <p class="h4 text-muted">Patinet Phone No:<span class="h3 text-dark mx-6">{{staffDetails.phoneCountryCode
+              <p class="muted-heading font-regular text-muted">Patient Phone No:<span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.phoneCountryCode
                   +
                   staffDetails.phoneNumber}}</span>
               </p>
@@ -186,9 +196,9 @@
           <div class="mb-md-8 mb-sm-4">
             <div class="row">
               <div class="col-md-6">
-                <label for="staffType" class="form-label col-12">Staff Type</label>
+                <label for="staffType" class="form-label col-12">Staff Role</label>
                 <mat-form-field id="staffType" appearance="standard" class="col-12 condition_select form-control-muted">
-                  <mat-select [ngModel]="staffDetails.type" placeholder="Staff Type"
+                  <mat-select [ngModel]="staffDetails.type" placeholder="Staff Role"
                     (selectionChange)="setSelect('staff', 'type',$event)" required>
                     <mat-option value='therapist'>Therapist</mat-option>
                     <mat-option value='org_admin'>Organization Admin</mat-option>

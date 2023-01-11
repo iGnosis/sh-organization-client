@@ -20,16 +20,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'sh-provider-client'`, () => {
+  it(`should have as title 'sh-organization-client'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('sh-provider-client');
+    expect(app.title).toEqual('sh-organization-client');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('sh-provider-client app is running!');
+    expect(compiled.querySelector('.content span')?.textContent).toContain('sh-organization-client app is running!');
   });
 });

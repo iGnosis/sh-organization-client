@@ -37,13 +37,4 @@ export class SignInComponent implements OnInit {
     //   this.errors = error.error.message
     // })
   }
-
-  next() {
-    this.router.navigate(['/app/dashboard'])
-  }
-
-  forgotPassword() {
-    this.router.navigate(['/public/auth/forgot-password'])
-  }
-
 }

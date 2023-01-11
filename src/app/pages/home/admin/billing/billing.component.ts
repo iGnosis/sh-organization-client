@@ -1,61 +1,30 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { SubscriptionsComponent } from './subscriptions/subscriptions.component';
 
+type BillingTab = 'subscriptions' | 'transactions';
 @Component({
   selector: 'app-billing',
   templateUrl: './billing.component.html',
   styleUrls: ['./billing.component.scss'],
 })
 export class BillingComponent implements OnInit {
-  constructor() {}
+  constructor() { }
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  @Input() tab: BillingTab;
 
-  dataSource: MatTableDataSource<{
-    createdAt: string;
-    billingPeriod: string;
-    revenue: string;
-    downloadReportId: string;
-  }>;
-
-  displayedColumns = [
-    'createdAt',
-    'billingPeriod',
-    'revenue',
-    'downloadReport',
-  ];
+  currentTab: BillingTab = 'subscriptions';
+  tabs: BillingTab[] = ['subscriptions', 'transactions'];
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource([
-      {
-        billingPeriod: '2021-01-01',
-        createdAt: '2021-02-01',
-        revenue: '$100',
-        downloadReportId: '123',
-      },
-      {
-        billingPeriod: '2021-01-01',
-
-        createdAt: '2021-02-01',
-        revenue: '$100',
-        downloadReportId: '123',
-      },
-      {
-        billingPeriod: '2021-01-01',
-        createdAt: '2021-02-01',
-        revenue: '$100',
-        downloadReportId: '123',
-      },
-      {
-        billingPeriod: '2021-01-01',
-
-        createdAt: '2021-02-01',
-        revenue: '$100',
-        downloadReportId: '123',
-      },
-    ]);
   }
+
+  setCurrentTab(tab: BillingTab) {
+    this.currentTab = tab;
+  }
+
+
+
 }

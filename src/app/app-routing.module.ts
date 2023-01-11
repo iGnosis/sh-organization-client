@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreateCareplanComponent } from './components/careplan/create-careplan/create-careplan.component';
+import { DefaultRouteGuard } from './guards/default-route.guard';
 import { InviteGuard } from './guards/invite-guard';
 import { PrivateGuard } from './guards/private-guard';
 import { PublicGuard } from './guards/public-guard';
@@ -27,11 +28,11 @@ import { SessionsDetailsComponent } from './pages/home/sessions/session-details/
 import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
 import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 import { SessionComponent } from './pages/session/session.component';
+import { UserService } from './services/user/user.service';
 import { CallbackComponent } from './widgets/fhir/callback/callback.component';
 
-
 const routes: Routes = [
-  { path: '', redirectTo: 'app/dashboard', pathMatch: 'full' },
+  { path: '', canActivate: [DefaultRouteGuard], pathMatch: 'full', children: [] },
   { path: 'invite/patient', component: AddPatientComponent },
   { path: 'invite/staff', component: AddStaffComponent },
   { path: 'invite/:inviteCode', canActivate: [InviteGuard], children: [] },
@@ -55,8 +56,8 @@ const routes: Routes = [
         label: 'Home',
         info: 'Home',
         routeInterceptor: (routeLink: any, breadcrumb: any) => {
-          //console.log(breadcrumb);
-          return '/app/dashboard';
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          return UserService.getDefaultRoute(user.type);
         },
       },
     },
@@ -74,7 +75,34 @@ const routes: Routes = [
       {
         path: 'patients',
         data: { breadcrumb: 'Patients' },
-        component: PatientsComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: PatientsComponent
+          },
+          {
+            path: ':id',
+            data: {
+              breadcrumb: {
+                // alias later gets replaced with patient's nickname
+                alias: 'patientName'
+              }
+            },
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                component: PatientDetailsComponent,
+              },
+              {
+                path: 'game/:id',
+                component: SessionsDetailsComponent,
+                data: { breadcrumb: 'Activity' },
+              }
+            ]
+          }
+        ]
       },
       {
         path: 'patients/new',
@@ -82,19 +110,6 @@ const routes: Routes = [
         data: { breadcrumb: 'New Patient' },
       },
       { path: 'patients/:id/care-plan', component: PatientAddComponent },
-      {
-        path: 'patients/:id',
-        component: PatientDetailsComponent,
-        data: { breadcrumb: 'Patient' },
-        // children: [
-        //   {
-        //     path: 'session/:id',
-        //     data: { breadcrumb: "Session Details" },
-        //     component: SessionsDetailsComponent,
-        //   },
-        // ]
-      },
-
       {
         path: 'care-plans',
         data: { breadcrumb: 'Care Plans' },
@@ -119,14 +134,13 @@ const routes: Routes = [
       //{ path: 'care-plans/new', component: CreateCareplanComponent },
       { path: 'activities', component: ActivitiesComponent },
       { path: 'activities/:id', component: ActivitiesDetailsComponent },
-      // { path: 'sessions', component: SessionsDetailsComponent },
-      {
-        path: 'game/:id',
-        component: SessionsDetailsComponent,
-        data: { breadcrumb: 'Activity' },
-      },
-
       { path: 'account', component: AccountComponent },
+      {
+        path: 'user-details/:type/:id',
+        component: UserDetailsComponent,
+        data: { breadcrumb: 'User Details' },
+        pathMatch: 'full',
+      },
       {
         path: 'admin',
         data: { breadcrumb: 'Admin' },

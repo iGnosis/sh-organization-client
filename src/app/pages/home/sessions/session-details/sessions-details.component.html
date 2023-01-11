@@ -17,7 +17,7 @@
                       <span class="h4 font-bold mb-0">{{ totalDuration.minutes }} minutes {{ totalDuration.seconds }} seconds</span>
                     </div>
                     <div class="col-auto">
-                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #7895FF;">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #2F51AE;">
                         <i class="bi bi-hourglass-split"></i>
                       </div>
                     </div>
@@ -32,7 +32,7 @@
                       <span class="h4 font-bold mb-0">{{ movementDuration.minutes }} minutes {{ movementDuration.seconds }} seconds</span>
                     </div>
                     <div class="col-auto">
-                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #FFADBA">
+                      <div class="icon icon-shape text-white text-lg rounded-circle" style="background-color: #FFA2AD">
                         <i class="bi bi-clock-history"></i>
                       </div>
                     </div>
@@ -41,31 +41,16 @@
             </div>
           </div>
         </div>
-        <div class="row col-4">
-          <div class="card">
-            <!-- Image -->
-            <div class="p-2">
-              <img src="../../../../../assets/images/session-details.png" alt="..." class="card-img">
-            </div>
-            <div class="card-body px-2 py-4">
-              <div class="info">
-                <h2 class="h4">Identifer: {{ gameDetails.patient }}</h2>
-                <span class="d-block text-muted text-sm font-semibold">Activity Date: {{ gameDetails.createdAt | date
-                  }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 
   <!-- Charts -->
-  <div class="mt-8">
-    <div class="row mx-5">
-      <owl-carousel-o [options]="customOptions">
-        <ng-template carouselSlide>
-          <div class="card h-full mx-2">
+  <div class="my-8">
+    <div class="row">
+      <!-- <owl-carousel-o [options]="customOptions">
+        <ng-template carouselSlide> -->
+          <div class="col card h-full mx-2">
             <div class="card-body">
               <div class="card-header">
                 <h2 style="color: #000066;">Achievement Ratio</h2><br>
@@ -73,9 +58,8 @@
               <canvas class="chart-canvas" id="sessionAchievementChart" width="500" height="500"></canvas>
             </div>
           </div>
-        </ng-template>  
-        <ng-template carouselSlide>
-            <div class="card mx-2 h-full">
+        <!-- <ng-template carouselSlide>
+            <div class="col card mx-2 h-full">
               <div class="card-body p-5">
                 <div class="card-header py-0">
                   <h2 style="color: #000066;">Initiation Time</h2>
@@ -125,7 +109,7 @@
                     </div>
                   </div>
                 </div>
-                <!-- <canvas class="chart-canvas" id="sessionInitiationTimeChart" width="500" height="500"></canvas> -->
+                <canvas class="chart-canvas" id="sessionInitiationTimeChart" width="500" height="500"></canvas>
               </div>
             </div>
         </ng-template>
@@ -138,13 +122,14 @@
               <div class="card-body"></div>
             </div>
           </div>
-        </ng-template>  
+        </ng-template>
       </owl-carousel-o>
+     </ng-template> -->
     </div>
   </div>
 
   <!-- Notes -->
-  <div class="card my-5">
+  <!-- <div class="card my-5">
     <div class="card-body">
       <div class="row">
         <div class="col-lg-10">
@@ -162,5 +147,5 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </div>

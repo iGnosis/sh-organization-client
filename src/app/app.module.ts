@@ -45,6 +45,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
 import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
@@ -78,6 +79,17 @@ import { AddPatientComponent } from './pages/invite/add-patient/add-patient.comp
 import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
 import { ArchiveMemberModalComponent } from './components/archive-member-modal/archive-member-modal.component';
 import { UserDetailsComponent } from './pages/home/admin/user-details/user-details.component';
+import { InvitePatientModalComponent } from './components/invite-patient-modal/invite-patient-modal.component';
+import { AddPatientModalComponent } from './components/add-patient-modal/add-patient-modal.component';
+import { AccessControlDirective } from './guards/access-control.directive';
+import { PrimaryModalComponent } from './components/primary-modal/primary-modal.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { dashboardReducer } from './store/reducers/dashboard.reducer';
+import { TimeagoModule } from 'ngx-timeago';
+import { SubscriptionsComponent } from './pages/home/admin/billing/subscriptions/subscriptions.component';
+import { TransactionsComponent } from './pages/home/admin/billing/transactions/transactions.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -130,6 +142,12 @@ import { UserDetailsComponent } from './pages/home/admin/user-details/user-detai
     AddStaffComponent,
     ArchiveMemberModalComponent,
     UserDetailsComponent,
+    InvitePatientModalComponent,
+    AddPatientModalComponent,
+    AccessControlDirective,
+    PrimaryModalComponent,
+    SubscriptionsComponent,
+    TransactionsComponent,
   ],
   imports: [
     BrowserModule,
@@ -155,9 +173,18 @@ import { UserDetailsComponent } from './pages/home/admin/user-details/user-detai
     MatInputModule,
     BreadcrumbModule,
     MatDialogModule,
+    MatSnackBarModule,
     CarouselModule,
     Ng2SearchPipeModule,
     NgxMatColorPickerModule,
+    StoreModule.forRoot({
+      dashboard: dashboardReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      name: 'Organization Portal',
+      logOnly: environment.production,
+    }),
+    TimeagoModule.forRoot(),
     // PerfectScrollbarModule
   ],
   providers: [

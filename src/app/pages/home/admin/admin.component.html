@@ -1,9 +1,13 @@
 <header class="px-3 px-lg-7 pt-7 custom_header">
   <div class="container-xl">
     <div>
-      <div class="row custom_alignment p-5">
+      <div class="row custom_alignment px-5 pt-5">
         <div class="col-md-12 col-12 mb-3 mb-md-0">
-          <xng-breadcrumb separator=">"></xng-breadcrumb>
+          <xng-breadcrumb separator=">">
+              <ng-container *xngBreadcrumbItem="let breadcrumb">
+                <ng-container>{{ breadcrumb }}</ng-container>
+              </ng-container>
+          </xng-breadcrumb>
           <router-outlet></router-outlet>
           <div class="row">
             <div class="col-6">
@@ -11,16 +15,16 @@
             </div>
             <div class="col-6 d-flex align-items-end justify-content-end">
               <button *ngIf="currentTab === 'Customization' && !customizable" (click)="customizable=true"
-                class="btn btn-primary"><i class="bi bi-pencil-square"></i>
-                &nbsp; Customize</button>
+                class="btn btn-primary"><i class="bi bi-pencil-square mx-2"></i>
+                Customize</button>
 
               <button *ngIf="currentTab === 'Customization' && customizable" (click)="saveCustomization()"
-                [disabled]="changesInCustomizationTab" class="btn btn-primary"><i class="bi bi-check-lg"></i>
-                &nbsp; Done</button>
+                [disabled]="changesInCustomizationTab" class="btn btn-primary mx-2"><i class="bi bi-check-lg"></i>
+                Done</button>
 
               <button *ngIf="currentTab === 'Users and Access' " (click)="openAddMemberModal()"
-                class="btn btn-primary"><i class="bi bi-plus-lg"></i>
-                &nbsp; Add Members</button>
+                class="btn btn-primary"><i class="bi bi-plus-lg mx-2"></i>
+                Add Members</button>
 
             </div>
           </div>
@@ -43,6 +47,6 @@
 <main [ngSwitch]="currentTab" class="px-3 px-lg-7">
   <app-customization *ngSwitchCase="'Customization'" (changesMade)="handleChangeEvent($event)"
     [customizable]="customizable"></app-customization>
-  <app-billing *ngSwitchCase="'Billing'"></app-billing>
+  <app-billing *ngSwitchCase="'Billing'" [tab]="currentBillingTab"></app-billing>
   <app-users-access *ngSwitchCase="'Users and Access'"></app-users-access>
 </main>

@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { Chart, ChartConfiguration } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { fromEvent, map, merge, of, Subscription } from 'rxjs';
+import { DashboardState } from 'src/app/pointmotion';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { dashboard } from 'src/app/store/actions/dashboard.actions';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -27,15 +30,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { label: 'Past 7 days', range: 7 },
     { label: 'Past 14 days', range: 14 },
     { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
   ];
   selectedDateRange = 0;
 
   showEmptyState = false;
+  dateSubscription: Subscription;
 
-  constructor(private graphqlService: GraphqlService) {
+  constructor(
+    private graphqlService: GraphqlService,
+    private store: Store<{
+      dashboard: DashboardState;
+    }>
+  ) {
     this.currentDate = new Date();
     this.previousDate = this.currentDate;
     console.log('Environment ', environment.name);
+
+    this.dateSubscription = this.store.select('dashboard').subscribe(async (state) => {
+      this.selectedDateRange = this.dateFilter.findIndex(
+        (item) => item.range === state.dateRange
+      );
+      await this.updateChartTimeline(state.dateRange);
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -46,6 +64,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.networkStatusSubscription.unsubscribe();
+    this.dateSubscription.unsubscribe();
   }
 
   getNetworkStatus() {
@@ -61,11 +80,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  async setDateFilter(idx: number) {
-    this.selectedDateRange = idx;
-
-    const range = this.dateFilter[this.selectedDateRange].range;
-
+  async updateChartTimeline(range: number) {
     this.previousDate = new Date(this.currentDate);
     this.previousDate.setDate(this.previousDate.getDate() - range);
 
@@ -75,9 +90,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     await this.initPatientOverviewChart();
   }
 
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
+    await this.updateChartTimeline(range);
+  }
+
   async initPatientAdherenceChart() {
 
-    const result = await this.graphqlService.client.request(
+    const result = await this.graphqlService.gqlRequest(
       GqlConstants.GET_PATIENT_ADHERENCE_CHART,
       {
         startDate: this.previousDate.toISOString(),
@@ -120,6 +143,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           legend: {
             position: 'bottom',
             labels: {
+              padding: 22,
               font: {
                 size: 16
               }
@@ -130,7 +154,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
               size: 26,
               weight: 'bold'
             },
-            color: ['#000066', '#ffffff']
+            color: ['#000066', '#ffffff'],
+            display: function (context) {
+              return context.dataset.data[context.dataIndex] !== 0
+            }
           }
         }
       },
@@ -149,7 +176,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async initPatientOverviewChart() {
 
-    const result = await this.graphqlService.client.request(
+    const result = await this.graphqlService.gqlRequest(
       GqlConstants.GET_PATIENT_OVERVIEW_CHART,
       {
         startDate: this.previousDate.toISOString(),
@@ -157,8 +184,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     );
 
-
-    const chartData = 
+    const max_size = 50;
+    const chartData =
       !result.patientOverviewChart || !result.patientOverviewChart.data.length ? [
         {
           pid: '',
@@ -166,13 +193,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
           y: 0,
           r: 0,
         }
-      ] 
+      ]
       : result.patientOverviewChart.data.map((item: any) => {
         return {
           pid: item.patient,
-          x: item.engagementRatio * 100,
+          nickname: item.nickname,
+          x: (item.engagementRatio * 100).toFixed(2),
           y: item.avgAchievementPercentage,
-          r: item.gamesPlayedCount,
+          r: item.gamesPlayedCount > max_size ? max_size : item.gamesPlayedCount,
         };
       });
 
@@ -215,6 +243,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         plugins: {
           legend: {
             position: 'bottom',
+            align: 'start',
             labels: {
               font: {
                 size: 14
@@ -239,7 +268,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
             },
             caretSize: 15,
             callbacks: {
-              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].pid,
+              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].nickname,
               label: function (tooltipItem: any) {
                 const dataIndex = tooltipItem.dataIndex
                 const data = tooltipItem.dataset.data[dataIndex]

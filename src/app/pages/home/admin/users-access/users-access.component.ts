@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { BehaviorSubject, timeout } from 'rxjs';
+import { BehaviorSubject, Subject, timeout } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { phone as validatePhone } from 'phone';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -15,6 +15,7 @@ import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.const
 import { GraphQLError } from 'graphql-request/dist/types';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 import { Route, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users-access',
@@ -22,7 +23,7 @@ import { Route, Router } from '@angular/router';
   styleUrls: ['./users-access.component.scss'],
 })
 export class UsersAccessComponent implements OnInit {
-  addMemberModalValue: string | undefined = undefined;
+  addMemberModalValue: string | undefined = 'patient';
   @ViewChild('addMemberModal') addMemberModal: TemplateRef<any>;
   @ViewChild('invitePatient') invitePatientModal: TemplateRef<any>;
   @ViewChild('inviteStaff') inviteStaffModal: TemplateRef<any>;
@@ -39,12 +40,12 @@ export class UsersAccessComponent implements OnInit {
   toggleLinkExpiry = false;
   expiryDate: string | undefined = undefined;
 
-  // TODO: fetch data from the backend
   staffList: {
     firstName: string;
     lastName: string;
     id: string;
     type: string;
+    email: string;
   }[];
 
   patientList: {
@@ -69,20 +70,36 @@ export class UsersAccessComponent implements OnInit {
     email: string;
     phoneNumber: string;
     phoneCountryCode: string;
-    staffType: 'org_admin' | 'therapist';
-  }> = {};
+    staffType: 'org_admin' | 'therapist' | '';
+  }> = {
+      phoneCountryCode: '',
+      staffType: '',
+    };
 
-  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+  addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
-  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string }> =
+  addNewPatientStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
+
+  addPatientModalState: Subject<boolean> = new Subject<boolean>();
+  invitePatientModalState: Subject<boolean> = new Subject<boolean>();
+
+  patientEmail!: string;
+  staffEmail!: string;
+  staffRole = "org_admin";
+  throttledSendInviteViaEmail: (...args: any[]) => void;
 
   constructor(
     private modalService: NgbModal,
     private clipboard: Clipboard,
     private gqlService: GraphqlService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private _snackBar: MatSnackBar,
+  ) {
+    this.throttledSendInviteViaEmail = this.throttle(() => {
+      this.sendInviteViaEmail();
+    }, 1000);
+  }
 
   ngOnInit(): void {
     this.initTables();
@@ -91,17 +108,17 @@ export class UsersAccessComponent implements OnInit {
       if (status === 'copied') {
         setTimeout(() => {
           this.copyStatusSubject.next('copy');
-        }, 1000);
+        }, 2000);
       }
     });
   }
 
   async initTables() {
-    const staff = await this.gqlService.client.request(GqlConstants.GET_STAFF);
-    console.log(staff);
-    this.staffList = staff.staff;
+    const staff = await this.gqlService.gqlRequest(GqlConstants.GET_STAFF);
 
-    const patients = await this.gqlService.client.request(
+    this.staffList = staff.staff.filter((staff: { email: string; }) => staff.email != undefined);
+
+    const patients = await this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENTS
     );
     this.patientList = patients.patient;
@@ -166,7 +183,7 @@ export class UsersAccessComponent implements OnInit {
 
   async addNewStaff() {
     try {
-      await this.gqlService.client.request(GqlConstants.CREATE_NEW_STAFF, {
+      await this.gqlService.gqlRequest(GqlConstants.CREATE_NEW_STAFF, {
         firstName: this.staffDetails.firstName,
         lastName: this.staffDetails.lastName,
         email: this.staffDetails.email,
@@ -197,39 +214,6 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  async addNewPatient() {
-    try {
-      await this.gqlService.client.request(GqlConstants.CREATE_NEW_PATIENT, {
-        firstName: this.patientDetails.firstName,
-        lastName: this.patientDetails.lastName,
-        email: this.patientDetails.email,
-        phoneNumber: this.patientDetails.phoneNumber,
-        phoneCountryCode: this.patientDetails.phoneCountryCode,
-        namePrefix: this.patientDetails.namePrefix,
-      });
-
-      this.addNewPatientStatus = {
-        status: 'success',
-        text: 'Added new Patient successfully.',
-      };
-
-      setTimeout(() => {
-        this.addNewPatientStatus = {};
-      }, 3000);
-
-      this.patientDetails = {};
-    } catch (err) {
-      console.log('Error::', err);
-      this.addNewPatientStatus = {
-        status: 'error',
-        text: 'Failed to add new Patient.',
-      };
-      setTimeout(() => {
-        this.addNewPatientStatus = {};
-      }, 3000);
-    }
-  }
-
   openArchiveMemberModal(id: string, name: string, type: 'patient' | 'staff') {
     const modalRef = this.modalService.open(ArchiveMemberModalComponent);
     modalRef.componentInstance.name = name;
@@ -248,17 +232,15 @@ export class UsersAccessComponent implements OnInit {
       this.clipboard.copy(text);
       this.copyStatusSubject.next('copied');
     }
+    this._snackBar.open('Copied to clipboard', 'Dismiss', {
+      duration: 2000,
+    });
   }
 
-  async generateShareableLink(
-    type: 'staff' | 'patient',
-    willExpireIn?: 'in1Day' | 'in1Week' | 'in2Weeks'
-  ) {
-    // TODO: generate sharable link with the new expiry date
-
+  async generateShareableLink(type: 'staff' | 'patient') {
     if (type === 'patient') {
       try {
-        const code = await this.gqlService.client.request(
+        const code = await this.gqlService.gqlRequest(
           GqlConstants.INVITE_PATIENT,
           {}
         );
@@ -270,7 +252,7 @@ export class UsersAccessComponent implements OnInit {
       }
     } else {
       try {
-        const code = await this.gqlService.client.request(
+        const code = await this.gqlService.gqlRequest(
           GqlConstants.INVITE_STAFF,
           {
             staffType: 'therapist',
@@ -285,28 +267,17 @@ export class UsersAccessComponent implements OnInit {
     }
   }
 
-  patientEmail!: string;
-  staffEmail!: string;
-  async sendInviteViaEmail(type: 'staff' | 'patient') {
-    if (type === 'patient') {
-      try {
-        await this.gqlService.client.request(GqlConstants.INVITE_PATIENT, {
-          shouldSendEmail: true,
-          email: this.patientEmail,
-        });
-      } catch (err) {
-        console.log('Error::', err);
-      }
-    } else {
-      try {
-        await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
-          shouldSendEmail: true,
-          email: this.staffEmail,
-          staffType: 'therapist',
-        });
-      } catch (err) {
-        console.log('Error::', err);
-      }
+  async sendInviteViaEmail() {
+    try {
+      await this.gqlService.client.request(GqlConstants.INVITE_STAFF, {
+        shouldSendEmail: true,
+        email: this.staffEmail,
+        staffType: this.staffRole,
+      });
+    } catch (err) {
+      console.log('Error::', err);
+    } finally {
+      this.modalService.dismissAll();
     }
   }
 
@@ -360,37 +331,37 @@ export class UsersAccessComponent implements OnInit {
   }
 
   setInput(
-    type: 'patient' | 'staff',
     inputType: 'firstName' | 'lastName' | 'email' | 'phoneNumber',
     evt: Event
   ) {
     const element = evt.target as HTMLInputElement;
-    if (type === 'patient') {
-      this.patientDetails[inputType] = element.value;
-      this.enableSaveButton = this.validateFields('patient');
-    } else {
-      this.staffDetails[inputType] = element.value;
-      this.enableSaveButton = this.validateFields('staff');
-    }
+    this.staffDetails[inputType] = element.value;
+    this.enableSaveButton = this.validateFields('staff');
   }
 
   setSelect(
-    type: 'patient' | 'staff',
     inputType: 'phoneCountryCode' | 'staffType' | 'namePrefix',
-    selectChange: MatSelectChange
+    selectChange: any
   ) {
-    if (type === 'patient') {
-      if (inputType === 'staffType') return;
-      this.patientDetails[inputType] = selectChange.value;
-      this.enableSaveButton = this.validateFields('patient');
-    } else {
-      if (inputType === 'namePrefix') return;
-      this.staffDetails[inputType] = selectChange.value;
-      this.enableSaveButton = this.validateFields('staff');
-    }
+    if (inputType === 'namePrefix') return;
+    this.staffDetails[inputType] = selectChange.value;
+    this.enableSaveButton = this.validateFields('staff');
   }
 
   redirectToDetailsPage(type: 'staff' | 'patient', id: string) {
     this.router.navigate(['app/admin/user-details', type, id]);
+  }
+
+  throttle(fn: any, wait = 500) {
+    let isCalled = false;
+    return function (...args: any[]) {
+      if (!isCalled) {
+        fn(...args);
+        isCalled = true;
+        setTimeout(function () {
+          isCalled = false;
+        }, wait);
+      }
+    };
   }
 }

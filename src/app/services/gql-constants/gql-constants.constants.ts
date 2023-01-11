@@ -1,25 +1,13 @@
 export const GqlConstants = {
-  GET_ALL_PATIENTS: `query PatientList {
-    patient_aggregate(where: {nickname: {_is_null: false}}) {
-      aggregate {
-        count
-      }
-    }
+  GET_ALL_PATIENTS: `
+  query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
     patient(where: {nickname: {_is_null: false}}) {
       id
       createdAt
       nickname
-      preferredGenres
-      games(order_by: {createdAt: desc}, limit: 1, where: {endedAt: {_is_null: false}}) {
+      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
         createdAt
         game
-      }
-      games_aggregate {
-        aggregate {
-          sum {
-            totalDuration
-          }
-        }
       }
     }
   }`,
@@ -47,21 +35,24 @@ export const GqlConstants = {
         id
     }
   }`,
-  GET_GAMES: `query GetGames($offset: Int, $limit: Int, $patientId: uuid) {
-        game_aggregate(where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
-          aggregate {
-            count
-          }
-        }
-        game(order_by: {createdAt: desc}, limit: $limit, offset: $offset, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
-          id
-          game
-          createdAt
-          endedAt
-          totalDuration
-        }
-      }`,
-
+  GET_GAMES: `query GetGames($patientId: uuid) {
+    game(order_by: {createdAt: desc}, where: {patient: {_eq: $patientId}, endedAt: {_is_null: false}}) {
+      id
+      game
+      createdAt
+      endedAt
+      totalDuration
+    }
+    aggregate_analytics(where: {patient: {_eq: $patientId}, key: {_eq: "avgAchievementRatio"}}, order_by: {createdAt: desc}) {
+      game
+      createdAt
+      organizationId
+      patient
+      key
+      value
+      noOfSamples
+    }
+  }`,
   GET_GAME_BY_PK: `query GetGameByPK($gameId: uuid!) {
     game_by_pk(id: $gameId) {
       game
@@ -69,6 +60,12 @@ export const GqlConstants = {
       createdAt
       id
       patient
+      patientByPatient {
+        identifier
+        nickname
+        firstName
+        lastName
+      }
       repsCompleted
       totalDuration
       calibrationDuration
@@ -101,10 +98,17 @@ export const GqlConstants = {
     patientOverviewChart(startDate: $startDate, endDate: $endDate) {
       data {
         patient
+        nickname
         gamesPlayedCount
         engagementRatio
         avgAchievementPercentage
       }
+    }
+  }`,
+  GET_PATIENT_MOOD: `query FetchPatientMood($patientId: uuid!, $startDate: timestamptz!, $endDate: timestamptz!) {
+    checkin(where: {type: {_eq: mood}, patient: {_eq: $patientId}, createdAt: {_gte: $startDate, _lte: $endDate}}, order_by: {createdAt: asc}) {
+      createdAt
+      mood: value
     }
   }`,
   GET_LATEST_GAMES: `
@@ -242,7 +246,13 @@ export const GqlConstants = {
       }
     }
   }`,
-
+  MOCK_LOGIN: `query MockLogin($userRole: StaffType!) {
+    mockStaffJwt(userRole: $userRole) {
+      data {
+        jwt
+      }
+    }
+  }`,
   GAME_ACHIEVEMENT_CHART: `query GameAchievementRatio($gameId: ID!) {
   gameAchievementRatio(gameId: $gameId) {
     data {
@@ -299,10 +309,12 @@ export const GqlConstants = {
   // run as org_admin
   CREATE_NEW_PATIENT: `
   mutation InsertPatient($firstName: String!, $lastName: String!, $namePrefix: String!, $email: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
-  insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
-    email
-  }
-}
+    insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+      user {
+        email
+      }
+    }
+  }  
 `,
   CREATE_NEW_STAFF: `
     mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
@@ -313,13 +325,14 @@ export const GqlConstants = {
 
   GET_STAFF: `
   query GetStaff {
-  staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}) {
-    id
-    firstName
-    lastName
-    type
-  }
-}`,
+    staff(where: {_or: [{type: {_eq: org_admin}}, {type: {_eq: therapist}}]}, order_by: {firstName: asc}) {
+        id
+        firstName
+        lastName
+        type
+        email
+      }
+  }`,
   GET_PATIENTS: `
   query GetPatients {
   patient {
@@ -409,4 +422,30 @@ export const GqlConstants = {
     }
   }
 }`,
+
+  GET_ORG_CONFIG: `
+query GetOrganizationConfig {
+  organization {
+    configuration
+    logoUrl
+  }
+}
+`,
+  UPDATE_ORG_CONFIG: `
+mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
+  update_organization_by_pk(pk_columns: {id: $id}, _append: {configuration: $configuration}) {
+    configuration(path: "theme")
+  }
+}
+`,
+
+  GET_SUBCRIPTION_PLAN: `
+  query GetSubscriptionPlan($organizationId: uuid!) {
+    subscription_plans(where: {organization: {_eq: $organizationId}}) {
+      id
+      requirePaymentDetails
+      subscriptionFee
+      trialPeriod
+    }
+  }`
 };

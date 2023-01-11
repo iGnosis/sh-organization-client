@@ -16,7 +16,7 @@ export class UserDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private gqlService: GraphqlService
-  ) {}
+  ) { }
 
   enableSaveButton = false;
   isEditable = false;
@@ -40,6 +40,12 @@ export class UserDetailsComponent implements OnInit {
   }> = {};
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      const edit: boolean = params['edit'];
+      if (edit) {
+        this.isEditable = edit;
+      }
+    });
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       const userId: string | null = params.get('id');
       const userType: ('staff' | 'patient') | null = params.get('type') as
