@@ -656,6 +656,18 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     });
 
     const dataSet = [];
+    const gameColor: {[key: string]: string} = {
+      sit_stand_achieve: 'rgba(225, 162, 173, 0.1)',
+      beat_boxer: 'rgba(1, 127, 110, 0.1)',
+      sound_explorer: 'rgba(255, 176, 0, 0.1)',
+      moving_tones: 'rgba(85, 204, 171, 0.1)',
+    }
+    const gameBorderColor: {[key: string]: string} = {
+      sit_stand_achieve: 'rgb(225, 162, 173)',
+      beat_boxer: 'rgb(1, 127, 110)',
+      sound_explorer: 'rgb(255, 176, 0)',
+      moving_tones: 'rgb(85, 204, 171)',
+    }
 
     for (const game in groupByGame) {
       // filtering the games
@@ -696,7 +708,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         data,
         fill: true,
         tension: 0.1,
-        // borderColor: '#0ff011',
+        borderColor: gameBorderColor[game],
+        backgroundColor: gameColor[game],
+        pointBackgroundColor: gameBorderColor[game],
       });
     }
 
