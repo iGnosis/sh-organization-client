@@ -16,11 +16,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
-import {
-  DashboardState,
-  Game,
-  Patient,
-} from 'src/app/pointmotion';
+import { DashboardState, Game, Patient } from 'src/app/pointmotion';
 import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
 import { groupBy as lodashGroupBy, capitalize } from 'lodash';
 import * as moment from 'moment';
@@ -61,6 +57,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   getActivityCount: number;
   getEstimatedActivityDuration: number;
   engagementChartFilter?: string = undefined;
+
+  showEmptyState = false;
 
   availableGames = [
     'all_activities',
@@ -150,18 +148,20 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     private modalService: NgbModal,
     public eventEmitterService: EventEmitterService,
     private store: Store<{ dashboard: DashboardState }>,
-    private breadcrumbService: BreadcrumbService,
+    private breadcrumbService: BreadcrumbService
   ) {
     this.breadcrumbService.set('@patientName', '...');
     this.endDate = new Date();
     this.startDate = this.endDate;
 
-    this.dateSubscription = this.store.select('dashboard').subscribe(async (state) => {
-      this.selectedDateRange = this.dateFilter.findIndex(
-        (item) => item.range === state.dateRange
-      );
-      await this.updateChartTimeline(state.dateRange);
-    });
+    this.dateSubscription = this.store
+      .select('dashboard')
+      .subscribe(async (state) => {
+        this.selectedDateRange = this.dateFilter.findIndex(
+          (item) => item.range === state.dateRange
+        );
+        await this.updateChartTimeline(state.dateRange);
+      });
   }
 
   ngOnDestroy(): void {
@@ -247,11 +247,14 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     );
 
     const games = resp.game;
+    if (games && games.length === 0) {
+      this.showEmptyState = true;
+    }
     const aggregatedAnalytics = resp.aggregate_analytics;
 
     const mergedArr = games.map((itm: any) => ({
-      ...aggregatedAnalytics.find((item: any) => (item.game === itm.id) && item),
-      ...itm
+      ...aggregatedAnalytics.find((item: any) => item.game === itm.id && item),
+      ...itm,
     }));
 
     mergedArr.forEach((val: any) => {
@@ -269,7 +272,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    }, 100)
+    }, 100);
 
     const patient = await this.graphqlService.client.request(
       GqlConstants.GET_PATIENT_IDENTIFIER,
@@ -656,18 +659,18 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     });
 
     const dataSet = [];
-    const gameColor: {[key: string]: string} = {
+    const gameColor: { [key: string]: string } = {
       sit_stand_achieve: 'rgba(225, 162, 173, 0.1)',
       beat_boxer: 'rgba(1, 127, 110, 0.1)',
       sound_explorer: 'rgba(255, 176, 0, 0.1)',
       moving_tones: 'rgba(85, 204, 171, 0.1)',
-    }
-    const gameBorderColor: {[key: string]: string} = {
+    };
+    const gameBorderColor: { [key: string]: string } = {
       sit_stand_achieve: 'rgb(225, 162, 173)',
       beat_boxer: 'rgb(1, 127, 110)',
       sound_explorer: 'rgb(255, 176, 0)',
       moving_tones: 'rgb(85, 204, 171)',
-    }
+    };
 
     for (const game in groupByGame) {
       // filtering the games
@@ -735,28 +738,32 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
   }
 
   async initMoodVariationsChart(startDate: Date, endDate: Date) {
-    const moodData = await this.chartService.patientMoodVariationChart(startDate, endDate, this.patientId!)
+    const moodData = await this.chartService.patientMoodVariationChart(
+      startDate,
+      endDate,
+      this.patientId!
+    );
     console.log('moodData:', moodData);
 
     const moodToNumber: {
       [key: string]: number;
     } = {
-      'irritated': 0,
-      'anxious': 1,
-      'okay': 2,
-      'happy': 3,
-      'daring': 4
-    }
+      irritated: 0,
+      anxious: 1,
+      okay: 2,
+      happy: 3,
+      daring: 4,
+    };
 
     const moodToColor: {
-      [key: string]: string
+      [key: string]: string;
     } = {
-      'irritated': '#CD001A',
-      'anxious': '#CD001A',
-      'okay': '#F6BE00',
-      'happy': '#00873E',
-      'daring': '#00873E'
-    }
+      irritated: '#CD001A',
+      anxious: '#CD001A',
+      okay: '#F6BE00',
+      happy: '#00873E',
+      daring: '#00873E',
+    };
 
     const numberToMood: {
       [key: number]: string;
@@ -765,27 +772,31 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       1: '😖 anxious',
       2: '😐 okay',
       3: '😀 happy',
-      4: '😊 daring'
-    }
+      4: '😊 daring',
+    };
 
     const data: ChartData = {
-      labels: moodData.map(mood => mood.createdAt.split('T')[0].split('-')[2]),
-      datasets: [{
-        label: 'Mood',
-        data: moodData.map(mood => moodToNumber[mood.mood]),
-        pointBackgroundColor: moodData.map(mood => moodToColor[mood.mood]),
-        pointRadius: 6,
-        pointHoverRadius: 10,
-        fill: true,
-        backgroundColor: "rgba(173, 216, 230, 0.6)",
-        borderColor: 'rgba(70, 130, 180, 0.5)',
-      }]
+      labels: moodData.map(
+        (mood) => mood.createdAt.split('T')[0].split('-')[2]
+      ),
+      datasets: [
+        {
+          label: 'Mood',
+          data: moodData.map((mood) => moodToNumber[mood.mood]),
+          pointBackgroundColor: moodData.map((mood) => moodToColor[mood.mood]),
+          pointRadius: 6,
+          pointHoverRadius: 10,
+          fill: true,
+          backgroundColor: 'rgba(173, 216, 230, 0.6)',
+          borderColor: 'rgba(70, 130, 180, 0.5)',
+        },
+      ],
     };
     const options: ChartOptions = {
       elements: {
         line: {
           tension: 0.3,
-        }
+        },
       },
       responsive: true,
       plugins: {
@@ -820,8 +831,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
               return numberToMood[value as number];
             },
             font: {
-              size: 16
-            }
+              size: 16,
+            },
           },
         },
         x: {
@@ -841,13 +852,13 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
             color: '#000066',
           },
         },
-      }
-    }
+      },
+    };
 
     const config: ChartConfiguration = {
       type: 'line',
       data: data,
-      options: options
+      options: options,
     };
     const canvas = <HTMLCanvasElement>(
       document.getElementById('moodVariationsChart')
@@ -881,8 +892,12 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
 
   chartStartDate: Date;
   chartEndDate?: Date;
-  updateCharts(type: 'start' | 'end', date: Date, chartType: 'achievement' | 'engagement' | 'mood') {
-    date = new Date(date)
+  updateCharts(
+    type: 'start' | 'end',
+    date: Date,
+    chartType: 'achievement' | 'engagement' | 'mood'
+  ) {
+    date = new Date(date);
     console.log(`${type}: ${date}`);
     if (!date) return;
     switch (type) {
@@ -902,13 +917,16 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }
     if (this.chartStartDate && this.chartEndDate) {
       if (chartType === 'engagement') {
-        this.initEngagementChart(this.chartStartDate.toISOString(), this.chartEndDate.toISOString());
+        this.initEngagementChart(
+          this.chartStartDate.toISOString(),
+          this.chartEndDate.toISOString()
+        );
       }
       if (chartType === 'achievement') {
-        this.initAchievementChart(this.chartStartDate, this.chartEndDate)
+        this.initAchievementChart(this.chartStartDate, this.chartEndDate);
       }
       if (chartType === 'mood') {
-        this.initMoodVariationsChart(this.chartStartDate, this.chartEndDate)
+        this.initMoodVariationsChart(this.chartStartDate, this.chartEndDate);
       }
     }
   }
@@ -936,13 +954,12 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     });
 
     if (this.chartStartDate && this.chartEndDate) {
-      if (filters.length === 0 || (filters.length === 1 && filters.includes('all_activities'))) {
-        this.initAchievementChart(
-          this.chartStartDate,
-          this.chartEndDate,
-        );
-      }
-      else {
+      if (
+        filters.length === 0 ||
+        (filters.length === 1 && filters.includes('all_activities'))
+      ) {
+        this.initAchievementChart(this.chartStartDate, this.chartEndDate);
+      } else {
         this.initAchievementChart(
           this.chartStartDate,
           this.chartEndDate,

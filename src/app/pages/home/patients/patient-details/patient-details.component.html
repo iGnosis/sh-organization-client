@@ -15,15 +15,19 @@
               <span>Select Dates</span>
             </a> -->
             <div class="dropdown">
-              <button class="btn btn-primary position-relative w-40 text-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-primary position-relative w-40 text-start" type="button" id="dropdownMenuButton"
+                data-bs-toggle="dropdown" aria-expanded="false">
                 {{ dateFilter[selectedDateRange].label }}
-                <span class="position-absolute top-1/2 end-3 translate-middle-y"><i class="bi bi-chevron-down"></i></span>
+                <span class="position-absolute top-1/2 end-3 translate-middle-y"><i
+                    class="bi bi-chevron-down"></i></span>
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                 <form>
-                  <div *ngFor="let filter of dateFilter; let i=index" class="dropdown-item py-1 d-flex align-items-center">
+                  <div *ngFor="let filter of dateFilter; let i=index"
+                    class="dropdown-item py-1 d-flex align-items-center">
                     <div class="text-lg">
-                      <input class="form-check-input" type="checkbox" id={{filter.label}} value="i" aria-label="..." [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
+                      <input class="form-check-input" type="checkbox" id={{filter.label}} value="i" aria-label="..."
+                        [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
                     </div>
                     <div class="ms-3 me-5">
                       <label class="clickable" for={{filter.label}}>{{ filter.label }}</label>
@@ -49,7 +53,12 @@
 
 <!-- Charts -->
 <div class="container mt-8">
-  <div class="row mx-5">
+  <div *ngIf="showEmptyState" class="d-flex flex-column align-items-center py-10">
+    <img src="/assets/images/start_session_infographic.png" alt="empty inbox">
+    <h2 class="text-black text-center my-10">{{patientIdentifier}} has not started any activities yet.</h2>
+    <!-- <button class="btn btn-primary w-64" >Start New Session</button> -->
+  </div>
+  <div *ngIf="!showEmptyState" class="row mx-5">
     <owl-carousel-o [options]="customOptions">
       <ng-template carouselSlide>
         <div class="card h-full mx-2">
@@ -90,9 +99,11 @@
             <div class="card-header">
               <h4 style="color: #000066;">Achievement Ratio</h4>
               <div class="dropdown mt-2">
-                <button class="btn btn-sm btn-neutral dropdown-toggle w-48 d-flex justify-content-between align-items-center" type="button" id="dropdownMenuButton"
-                  data-bs-toggle="dropdown" aria-expanded="false">
-                  {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All Activities'}}
+                <button
+                  class="btn btn-sm btn-neutral dropdown-toggle w-48 d-flex justify-content-between align-items-center"
+                  type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{(engagementChartFilter && engagementChartFilter.split('_').join(' ') | titlecase) || 'All
+                  Activities'}}
                 </button>
                 <div class="dropdown-menu mt-3 w-48" aria-labelledby="dropdownMenuButton">
                   <form id="filterAchievementRationForm" (ngSubmit)="filterAchievementRatioChart($event)">
@@ -141,7 +152,8 @@
     </owl-carousel-o>
   </div>
 </div>
-<div class="container-xl mt-5" *ngIf="dataSource && dataSource.data && dataSource.data.length==0 && noSessionAssignedPlan==0">
+<div class="container-xl mt-5"
+  *ngIf="dataSource && dataSource.data && dataSource.data.length==0 && noSessionAssignedPlan==0">
   <div class="p-5 assigned_care_plan_card">
     <div class="row custom_alignment">
       <div class="col-12 mb-3 mb-md-0">
@@ -519,7 +531,8 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
       </table>
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons aria-label="Select page of periodic elements"></mat-paginator>
+      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons
+        aria-label="Select page of periodic elements"></mat-paginator>
     </div>
   </div>
 </div>
