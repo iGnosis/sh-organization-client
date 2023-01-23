@@ -314,7 +314,7 @@ export const GqlConstants = {
         email
       }
     }
-  }  
+  }
 `,
   CREATE_NEW_STAFF: `
     mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
@@ -438,7 +438,6 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
   }
 }
 `,
-
   GET_SUBCRIPTION_PLAN: `
   query GetSubscriptionPlan($organizationId: uuid!) {
     subscription_plans(where: {organization: {_eq: $organizationId}}) {
@@ -447,5 +446,13 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
       subscriptionFee
       trialPeriod
     }
-  }`
+  }`,
+  GET_BILLING_HISTORY: `
+  query GetBillingHistory($organization: uuid!) {
+  billing_history(order_by: {createdAt: desc_nulls_last}, where: {organization: {_eq: $organization}}) {
+    createdAt
+    id
+    revenue
+  }
+}`,
 };

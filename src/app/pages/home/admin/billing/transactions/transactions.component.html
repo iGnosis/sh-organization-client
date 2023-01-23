@@ -17,7 +17,7 @@
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef> Report Generated On </th>
         <td mat-cell *matCellDef="let element" class="clicked_class">
-          <span class="text-heading font-semibold mx-8"> {{element.createdAt}} </span>
+          <span class="text-heading font-semibold mx-8"> {{getDateStr(element.createdAt)}} </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="billingPeriod">
