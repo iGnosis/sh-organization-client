@@ -57,7 +57,8 @@
           <div class="mb-md-8 mb-sm-4">
             <label for="email" class="form-label col-12">Patient Email</label>
             <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
-              (input)="setInput('email', $event)">
+            (input)="setInput('email', $event)">
+            <mat-error *ngIf="isEmailTaken">Email address is taken</mat-error>
           </div>
 
           <div class="mb-md-8 mb-sm-4">
@@ -77,6 +78,7 @@
                 <label for="mobile" class="form-label col-12">Patient Phone Number</label>
                 <input id="mobile" type="number" class="form-control form-control-muted"
                   placeholder="Enter phone number" (input)="setInput('phoneNumber',$event)">
+                <mat-error *ngIf="isPhoneTaken">Phone number is taken</mat-error>
               </div>
             </div>
           </div>

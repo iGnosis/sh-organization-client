@@ -82,7 +82,8 @@ export class AddStaffComponent implements OnInit {
   saveUserDetails() {
     if (!this.validateFields()) return;
 
-    this.gqlService.gqlRequest(GqlConstants.CREATE_STAFF, {
+    this.gqlService
+      .gqlRequest(GqlConstants.CREATE_STAFF, {
         firstName: this.staffDetails.firstName,
         lastName: this.staffDetails.lastName,
         email: this.staffDetails.email,

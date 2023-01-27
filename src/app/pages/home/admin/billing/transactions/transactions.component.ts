@@ -127,7 +127,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
 
       const link = document.createElement('a');
       link.href = downloadUrl;
-      link.setAttribute('download', 'financial-report.txt');
+      link.setAttribute('download', 'financial-report.csv');
 
       document.body.appendChild(link);
       link.click();
