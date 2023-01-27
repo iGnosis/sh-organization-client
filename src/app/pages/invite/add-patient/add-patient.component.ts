@@ -11,6 +11,10 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
   styleUrls: ['./add-patient.component.scss'],
 })
 export class AddPatientComponent implements OnInit {
+
+  isPhoneTaken = false;
+  isEmailTaken = false;
+
   constructor(
     private route: ActivatedRoute,
     private gqlService: GraphqlService
@@ -84,11 +88,9 @@ export class AddPatientComponent implements OnInit {
     this.enableSaveButton = this.validateFields();
   }
 
-  saveUserDetails() {
+  async saveUserDetails() {
     if (!this.validateFields()) return;
-
-    this.gqlService
-      .gqlRequest(GqlConstants.CREATE_PATIENT, {
+    const resp = await this.gqlService.gqlRequest(GqlConstants.CREATE_PATIENT, {
         firstName: this.patientDetails.firstName,
         lastName: this.patientDetails.lastName,
         namePrefix: this.patientDetails.namePrefix,
@@ -96,13 +98,16 @@ export class AddPatientComponent implements OnInit {
         phoneCountryCode: this.patientDetails.phoneCountryCode,
         phoneNumber: this.patientDetails.phoneNumber,
         inviteCode: this.patientDetails.inviteCode,
-      }, false)
-      .then(() => {
-        //TODO: redirect to signIn ?? as the user is now registered with the org
-        console.log('success, redirect to signin');
-      })
-      .catch((err) => {
-        console.log('Error::', err);
-      });
+      }, false);
+
+      if (resp.toString().toLowerCase().includes('email address already taken')) {
+        this.isEmailTaken = true;
+        this.isPhoneTaken = false;
+        return;
+    } else if (resp.toString().toLowerCase().includes('phone number already taken')) {
+        this.isEmailTaken = false;
+        this.isPhoneTaken = true;
+        return;
+    }
   }
 }
