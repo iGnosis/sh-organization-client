@@ -81,15 +81,15 @@ export class AddStaffComponent implements OnInit {
   saveUserDetails() {
     if (!this.validateFields()) return;
 
-    this.gqlService.publicClient
-      .request(GqlConstants.CREATE_STAFF, {
+    this.gqlService
+      .gqlRequest(GqlConstants.CREATE_STAFF, {
         firstName: this.staffDetails.firstName,
         lastName: this.staffDetails.lastName,
         email: this.staffDetails.email,
         phoneNumber: this.staffDetails.phoneNumber,
         phoneCountryCode: this.staffDetails.phoneCountryCode,
         inviteCode: this.staffDetails.inviteCode,
-      })
+      }, false)
       .then(() => {
         // TODO: redirect to orgPortal login ??
         console.log('Staff created successfully');

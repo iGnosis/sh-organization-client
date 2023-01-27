@@ -252,9 +252,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }
     const aggregatedAnalytics = resp.aggregate_analytics;
 
-    const mergedArr = games.map((itm: any) => ({
-      ...aggregatedAnalytics.find((item: any) => item.game === itm.id && item),
-      ...itm,
+    const mergedArr = games.map((game: any) => ({
+      ...aggregatedAnalytics.find((analytics: any) => analytics.game === game.id && analytics),
+      ...game,
     }));
 
     mergedArr.forEach((val: any) => {

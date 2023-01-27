@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import { ActivatedRoute } from '@angular/router';
-import { phone as validatePhone, PhoneResult } from 'phone';
+import { phone as validatePhone } from 'phone';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -87,8 +87,8 @@ export class AddPatientComponent implements OnInit {
   saveUserDetails() {
     if (!this.validateFields()) return;
 
-    this.gqlService.publicClient
-      .request(GqlConstants.CREATE_PATIENT, {
+    this.gqlService
+      .gqlRequest(GqlConstants.CREATE_PATIENT, {
         firstName: this.patientDetails.firstName,
         lastName: this.patientDetails.lastName,
         namePrefix: this.patientDetails.namePrefix,
@@ -96,7 +96,7 @@ export class AddPatientComponent implements OnInit {
         phoneCountryCode: this.patientDetails.phoneCountryCode,
         phoneNumber: this.patientDetails.phoneNumber,
         inviteCode: this.patientDetails.inviteCode,
-      })
+      }, false)
       .then(() => {
         //TODO: redirect to signIn ?? as the user is now registered with the org
         console.log('success, redirect to signin');
