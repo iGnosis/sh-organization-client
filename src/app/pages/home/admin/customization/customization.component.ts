@@ -53,7 +53,6 @@ export class CustomizationComponent implements OnInit {
       const theme = resp.organization[0].configuration.theme;
       this.orgLogoUrl = resp.organization[0].logoUrl;
       console.log('orgLogoUrl::', this.orgLogoUrl);
-      console.log('orgLogoUrl::', this.orgLogoUrl);
       if (theme) {
         this.customizationOptions = {
           ...theme,
@@ -88,7 +87,6 @@ export class CustomizationComponent implements OnInit {
   }
 
   checkIfChangesAreMade(): void {
-    console.log(this.customizationOptions);
     const changesMade: boolean =
       JSON.stringify(this.customizationOptions) !==
         JSON.stringify(this.oldData) || !!this.imageList;

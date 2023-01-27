@@ -898,7 +898,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     chartType: 'achievement' | 'engagement' | 'mood'
   ) {
     date = new Date(date);
-    console.log(`${type}: ${date}`);
     if (!date) return;
     switch (type) {
       case 'start':

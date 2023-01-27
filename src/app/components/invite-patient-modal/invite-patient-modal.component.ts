@@ -59,10 +59,10 @@ export class InvitePatientModalComponent implements OnInit {
         shouldSendEmail: true,
         email: this.patientEmail,
       });
+      this.modal.dismissAll();
     } catch (err) {
       console.log('Error::', err);
     } finally {
-      this.modal.dismiss();
     }
   }
 
