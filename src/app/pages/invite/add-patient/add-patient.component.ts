@@ -87,8 +87,7 @@ export class AddPatientComponent implements OnInit {
   saveUserDetails() {
     if (!this.validateFields()) return;
 
-    this.gqlService.publicClient
-      .request(GqlConstants.CREATE_PATIENT, {
+    this.gqlService.gqlRequest(GqlConstants.CREATE_PATIENT, {
         firstName: this.patientDetails.firstName,
         lastName: this.patientDetails.lastName,
         namePrefix: this.patientDetails.namePrefix,
@@ -96,7 +95,7 @@ export class AddPatientComponent implements OnInit {
         phoneCountryCode: this.patientDetails.phoneCountryCode,
         phoneNumber: this.patientDetails.phoneNumber,
         inviteCode: this.patientDetails.inviteCode,
-      })
+      }, false)
       .then(() => {
         //TODO: redirect to signIn ?? as the user is now registered with the org
         console.log('success, redirect to signin');
