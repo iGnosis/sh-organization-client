@@ -84,7 +84,6 @@ export class UserDetailsComponent implements OnInit {
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     if (type === 'patient') {
-      console.log(this.patientDetails);
       if (
         !this.patientDetails.firstName ||
         !this.patientDetails.lastName ||

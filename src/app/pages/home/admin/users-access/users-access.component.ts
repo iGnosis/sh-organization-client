@@ -274,10 +274,27 @@ export class UsersAccessComponent implements OnInit {
         email: this.staffEmail,
         staffType: this.staffRole,
       });
+
+      this.addNewStaffStatus = {
+        status: 'success',
+        text: 'Invite link sent successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+        this.modalService.dismissAll();
+      }, 3000);
     } catch (err) {
       console.log('Error::', err);
-    } finally {
-      this.modalService.dismissAll();
+
+      this.addNewStaffStatus = {
+        status: 'error',
+        text: err.message,
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
     }
   }
 
@@ -286,7 +303,6 @@ export class UsersAccessComponent implements OnInit {
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     if (type === 'patient') {
-      console.log(this.patientDetails);
       if (
         !this.patientDetails.firstName ||
         !this.patientDetails.lastName ||

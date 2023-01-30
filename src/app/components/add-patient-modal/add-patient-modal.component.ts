@@ -91,7 +91,6 @@ export class AddPatientModalComponent implements OnInit {
     const emailRegex =
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
-      console.log(this.patientDetails);
       if (
         !this.patientDetails.firstName ||
         !this.patientDetails.lastName ||

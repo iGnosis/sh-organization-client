@@ -1,5 +1,6 @@
 import { Clipboard } from '@angular/cdk/clipboard';
 import { Component, Input, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
@@ -21,7 +22,8 @@ export class InvitePatientModalComponent implements OnInit {
   throttledSendInviteViaEmail: (...args: any[]) => void;
   constructor(
     private gqlService: GraphqlService,
-    private clipboard: Clipboard
+    private clipboard: Clipboard,
+    private modalService: NgbModal
   ) {
     this.throttledSendInviteViaEmail = this.throttle(() => {
       this.sendInviteViaEmail();
@@ -59,10 +61,9 @@ export class InvitePatientModalComponent implements OnInit {
         shouldSendEmail: true,
         email: this.patientEmail,
       });
+      this.modalService.dismissAll();
     } catch (err) {
       console.log('Error::', err);
-    } finally {
-      this.modal.dismiss();
     }
   }
 
