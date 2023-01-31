@@ -318,7 +318,7 @@ export const GqlConstants = {
 `,
   CREATE_NEW_STAFF: `
     mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
-  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: invited, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
+  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: active, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
     email
   }
 }`,

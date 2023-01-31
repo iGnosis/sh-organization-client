@@ -202,10 +202,15 @@ export class SmsOtpLoginComponent {
         accessTokenData['https://hasura.io/jwt/claims'][
         'x-hasura-default-role'
         ];
+      const orgId =
+        accessTokenData['https://hasura.io/jwt/claims'][
+          'x-hasura-organization-id'
+        ];
 
       this.userService.set({
         id: userId,
         type: userRole,
+        orgId: orgId,
       });
       console.log('user set successfully');
 
