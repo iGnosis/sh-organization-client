@@ -90,6 +90,7 @@ import { dashboardReducer } from './store/reducers/dashboard.reducer';
 import { TimeagoModule } from 'ngx-timeago';
 import { SubscriptionsComponent } from './pages/home/admin/billing/subscriptions/subscriptions.component';
 import { TransactionsComponent } from './pages/home/admin/billing/transactions/transactions.component';
+import { SupportFabComponent } from './components/support-fab/support-fab.component';
 // import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 // import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 // import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -148,6 +149,7 @@ import { TransactionsComponent } from './pages/home/admin/billing/transactions/t
     PrimaryModalComponent,
     SubscriptionsComponent,
     TransactionsComponent,
+    SupportFabComponent,
   ],
   imports: [
     BrowserModule,

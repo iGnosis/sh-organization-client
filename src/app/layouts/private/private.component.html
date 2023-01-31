@@ -24,7 +24,8 @@
         <!-- Navigation -->
         <ul class="navbar-nav">
           <li acl nav="dashboard" class="nav-item">
-            <a class="nav-link" role="button" routerLink="/app/dashboard" [routerLinkActive]="['bg-white', 'text-primary', 'active']">
+            <a class="nav-link" role="button" routerLink="/app/dashboard"
+              [routerLinkActive]="['bg-white', 'text-primary', 'active']">
               <i class="bi bi-house"></i> Dashboard
             </a>
           </li>
@@ -88,3 +89,6 @@
 <ng-template #logoutModal let-modal>
   <primary-modal [modal]="modal" [modalConfig]="logoutModalConfig"></primary-modal>
 </ng-template>
+
+
+<app-support-fab></app-support-fab>
