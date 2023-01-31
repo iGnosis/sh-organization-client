@@ -7,7 +7,7 @@
   align-items: center;
   user-select: none;
   position: absolute;
-  bottom: 30px;
+  bottom: 100px;
   right: 30px;
   &:hover {
     cursor: pointer;
@@ -70,7 +70,7 @@
         font-size: 30px;
       }
       .btn-text {
-        color: white;
+        color: $info;
       }
     }
     .icon {
@@ -90,7 +90,7 @@
   white-space: nowrap;
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--border-light);
+  color: #fff;
 }
 
 .overlay {
