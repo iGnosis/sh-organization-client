@@ -41,17 +41,17 @@
         </p>
       </div>
       <div class="col-md-6 d-flex justify-content-end align-items-center gap-3">
-        <button class="btn btn-secondary text-info bg-white btn-border" (click)="openInvitePatientModal()"> <i
+        <button *ngIf="!isPublicSignupEnabled" class="btn btn-secondary text-info bg-white btn-border" (click)="openInvitePatientModal()"> <i
             class="bi bi-plus-lg mx-2"></i>Invite Patient</button>
         <button class="btn btn-secondary text-info bg-white btn-border" (click)="openAddPatientModal()"> <i
             class="bi bi-plus-lg mx-2"></i>Add New
           Patient</button>
       </div>
-      <!-- <div class="col-md-12">
-        <mat-checkbox>
+      <div class="col-md-12">
+        <mat-checkbox [checked]="!isPublicSignupEnabled" (change)="togglePublicSignup($event)">
           <p class="h4 text-info checkbox-text mx-2">Allow only invitational sign-ups</p>
         </mat-checkbox>
-      </div> -->
+      </div>
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
         <div class="staff-entry row py-md-3 py-lg-3" *ngFor="let patient of patientList">
           <div class="col-md-6 d-flex align-items-center">
@@ -80,7 +80,7 @@
   </div>
   <div class="modal-body py-2">
     <div class="row">
-      <div acl feature="add_patient" class="col-md-6 offset-md-2 py-4 d-flex">
+      <div acl feature="add_patient" *ngIf="isPublicSignupEnabled" class="col-md-6 offset-md-2 py-4 d-flex">
         <input class="form-check-input w-5 h-5 my-auto" (click)="handleMemberSelect($event)" type="radio" value="patient"
           name="addMember" id="addPatient" [checked]="addMemberModalValue == 'patient'">
         <label class="form-check-label h3 mx-4"

@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { TemplateRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
+import { ApiService } from 'src/app/services/api/api.service';
 import { PatientsListComponent } from './patients-list/patients-list.component';
 
 @Component({
@@ -41,6 +42,8 @@ export class PatientsComponent implements OnInit, AfterViewInit {
   @ViewChild(PatientsListComponent)
   patientsListComponent: PatientsListComponent;
 
+  isPublicSignupEnabled: boolean;
+
   async setDateFilter(idx: number) {
     this.selectedDateRange = idx;
     this.dateRange = this.dateFilter[idx].range;
@@ -49,13 +52,19 @@ export class PatientsComponent implements OnInit, AfterViewInit {
       this.patientsListComponent.reloadPatientList(this.dateFilter[idx].range);
   }
 
-  constructor(private modalService: NgbModal) {}
+  constructor(private modalService: NgbModal, private apiService: ApiService) {
+    this.getPublicSignup();
+  }
   ngAfterViewInit(): void {
 
     this.setDateFilter(3);
   }
 
   async ngOnInit() {}
+
+  async getPublicSignup() {
+    this.isPublicSignupEnabled = await this.apiService.getPublicSignup();
+  }
 
   openInvitePatientModal() {
     this.modalService.open(this.invitePatientModal, {
