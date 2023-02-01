@@ -7,7 +7,6 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -17,6 +16,7 @@ import { Store } from '@ngrx/store';
 import { map, Observable, Subject, Subscription } from 'rxjs';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 import { DashboardState, Patient } from 'src/app/pointmotion';
+import { ApiService } from 'src/app/services/api/api.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -72,13 +72,18 @@ export class PatientsListComponent implements OnInit {
   addPatientModalState: Subject<boolean> = new Subject<boolean>();
   invitePatientModalState: Subject<boolean> = new Subject<boolean>();
 
+  isPublicSignupEnabled: boolean;
+
   constructor(
     private router: Router,
     private graphqlService: GraphqlService,
     private _liveAnnouncer: LiveAnnouncer,
     private store: Store<{ dashboard: DashboardState }>,
-    private modalService: NgbModal
-  ) {}
+    private modalService: NgbModal,
+    private apiService: ApiService
+  ) {
+    this.getPublicSignup();
+  }
 
   async ngOnInit(): Promise<void> {
     this.dateSubscription = this.store
@@ -101,6 +106,10 @@ export class PatientsListComponent implements OnInit {
     this.dataSource.paginator = this.tableOnePaginator;
     // let element : HTMLElement = document.getElementsByClassName(".patients_table tbody tr") as unknown as HTMLElement;
     // element.click();
+  }
+
+  async getPublicSignup() {
+    this.isPublicSignupEnabled = await this.apiService.getPublicSignup();
   }
 
   applyFilter(event: Event) {

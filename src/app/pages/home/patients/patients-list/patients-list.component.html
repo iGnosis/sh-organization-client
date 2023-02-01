@@ -39,7 +39,7 @@
         <h6>Patient List</h6>
       </div>
       <div *ngIf="showButtons" class="col-md-6 col-12 text-md-end d-flex justify-content-end">
-        <div class="mx-1">
+        <div class="mx-1" *ngIf="!isPublicSignupEnabled">
           <a (click)="openInvitePatientModal()" class="btn d-inline-flex btn-sm btn-outline-primary mx-1 ">
             <span class=" pe-2">
               <i class="bi bi-plus "></i>

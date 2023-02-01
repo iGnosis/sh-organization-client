@@ -449,10 +449,22 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
   }`,
   GET_BILLING_HISTORY: `
   query GetBillingHistory($organization: uuid!) {
-  billing_history(order_by: {createdAt: desc_nulls_last}, where: {organization: {_eq: $organization}}) {
-    createdAt
-    id
-    revenue
-  }
-}`,
+    billing_history(order_by: {createdAt: desc_nulls_last}, where: {organization: {_eq: $organization}}) {
+      createdAt
+      id
+      revenue
+    }
+  }`,
+  SET_PUBLIC_SIGNUP: `
+  mutation SetPublicSignup($id: uuid!, $isPublicSignUpEnabled: Boolean = false) {
+    update_organization_by_pk(pk_columns: {id: $id}, _set: {isPublicSignUpEnabled: $isPublicSignUpEnabled}) {
+      isPublicSignUpEnabled
+    }
+  }`,
+  GET_PUBLIC_SIGNUP: `
+  query GetPublicSignupStatus {
+    organization {
+      isPublicSignUpEnabled
+    }
+  }`,  
 };

@@ -33,7 +33,7 @@
               </form>
             </div>
           </div>
-          <div class="mx-1">
+          <div class="mx-1" *ngIf="!isPublicSignupEnabled">
             <a (click)="openInvitePatientModal()" class="btn d-inline-flex btn-sm btn-primary mx-1 ">
               <span class=" pe-2">
                 <i class="bi bi-plus "></i>
