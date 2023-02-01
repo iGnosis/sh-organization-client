@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { ActivatedRoute } from '@angular/router';
-import { phone as validatePhone, PhoneResult } from 'phone';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
+import { phone as validatePhone } from 'phone';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 
@@ -13,7 +14,9 @@ import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 export class AddStaffComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
-    private gqlService: GraphqlService
+    private gqlService: GraphqlService,
+    private router: Router,
+    private _snackBar: MatSnackBar,
   ) {}
 
   ngOnInit(): void {
@@ -81,18 +84,23 @@ export class AddStaffComponent implements OnInit {
   saveUserDetails() {
     if (!this.validateFields()) return;
 
-    this.gqlService.publicClient
-      .request(GqlConstants.CREATE_STAFF, {
+    this.gqlService
+      .gqlRequest(GqlConstants.CREATE_STAFF, {
         firstName: this.staffDetails.firstName,
         lastName: this.staffDetails.lastName,
         email: this.staffDetails.email,
         phoneNumber: this.staffDetails.phoneNumber,
         phoneCountryCode: this.staffDetails.phoneCountryCode,
         inviteCode: this.staffDetails.inviteCode,
-      })
+      }, false)
       .then(() => {
-        // TODO: redirect to orgPortal login ??
+        this._snackBar.open('Staff created successfully. Redirecting... ', undefined, {
+          duration: 2000,
+        });
         console.log('Staff created successfully');
+        setTimeout(() => {
+          this.router.navigate(['/public/auth/sign-in']);
+        }, 2000);
       })
       .catch((err) => {
         console.log('Error::', err);

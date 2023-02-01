@@ -1,3 +1,5 @@
+@import './../../../../_variables.scss';
+
 .custom-card {
   display: flex;
   background-color: #ffffff;
@@ -10,6 +12,8 @@
   width: 150px;
   height: 150px;
   object-fit: contain;
+  background-color: $primary;
+  padding: 16px;
 }
 
 .logo-circle {

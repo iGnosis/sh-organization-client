@@ -21,7 +21,9 @@ export class AuthService {
       }
     }`
     const resp = await this.gqlService.gqlRequest(query);
-    window.sessionStorage.setItem('rbac', JSON.stringify(resp.fetchUserRbac.data as HasuraRbac));
+    if (resp && resp.fetchUserRbac) {
+      window.sessionStorage.setItem('rbac', JSON.stringify(resp.fetchUserRbac.data as HasuraRbac));
+    }
   }
 
   async getRbac(): Promise<Rbac> {

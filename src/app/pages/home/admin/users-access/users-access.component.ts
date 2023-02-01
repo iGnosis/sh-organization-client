@@ -1,21 +1,19 @@
 import {
   Component,
-  Input,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { BehaviorSubject, Subject, timeout } from 'rxjs';
-import { MatSelectChange } from '@angular/material/select';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { phone as validatePhone } from 'phone';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { GraphQLError } from 'graphql-request/dist/types';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from 'src/app/services/api/api.service';
 
 @Component({
   selector: 'app-users-access',
@@ -45,6 +43,7 @@ export class UsersAccessComponent implements OnInit {
     lastName: string;
     id: string;
     type: string;
+    email: string;
   }[];
 
   patientList: {
@@ -71,9 +70,9 @@ export class UsersAccessComponent implements OnInit {
     phoneCountryCode: string;
     staffType: 'org_admin' | 'therapist' | '';
   }> = {
-    phoneCountryCode: '',
-    staffType: '',
-  };
+      phoneCountryCode: '',
+      staffType: '',
+    };
 
   addNewStaffStatus: Partial<{ status: 'success' | 'error'; text: string; }> =
     {};
@@ -86,6 +85,8 @@ export class UsersAccessComponent implements OnInit {
   patientEmail!: string;
   staffEmail!: string;
   staffRole = "org_admin";
+
+  isPublicSignupEnabled: boolean;
   throttledSendInviteViaEmail: (...args: any[]) => void;
 
   constructor(
@@ -94,7 +95,9 @@ export class UsersAccessComponent implements OnInit {
     private gqlService: GraphqlService,
     private router: Router,
     private _snackBar: MatSnackBar,
+    private apiService: ApiService,
   ) {
+    this.initPublicSignup();
     this.throttledSendInviteViaEmail = this.throttle(() => {
       this.sendInviteViaEmail();
     }, 1000);
@@ -112,9 +115,19 @@ export class UsersAccessComponent implements OnInit {
     });
   }
 
+  async initPublicSignup() {
+    this.isPublicSignupEnabled = await this.apiService.getPublicSignup();
+  }
+
+  async togglePublicSignup(event: any) {
+    this.isPublicSignupEnabled = !event.checked;
+    await this.apiService.setPublicSignup(!event.checked);
+  }
+
   async initTables() {
     const staff = await this.gqlService.gqlRequest(GqlConstants.GET_STAFF);
-    this.staffList = staff.staff;
+
+    this.staffList = staff.staff.filter((staff: { email: string; }) => staff.email != undefined);
 
     const patients = await this.gqlService.gqlRequest(
       GqlConstants.GET_PATIENTS
@@ -272,10 +285,27 @@ export class UsersAccessComponent implements OnInit {
         email: this.staffEmail,
         staffType: this.staffRole,
       });
+
+      this.addNewStaffStatus = {
+        status: 'success',
+        text: 'Invite link sent successfully.',
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+        this.modalService.dismissAll();
+      }, 3000);
     } catch (err) {
       console.log('Error::', err);
-    } finally {
-      this.modalService.dismissAll();
+
+      this.addNewStaffStatus = {
+        status: 'error',
+        text: err.message,
+      };
+
+      setTimeout(() => {
+        this.addNewStaffStatus = {};
+      }, 3000);
     }
   }
 
@@ -284,7 +314,6 @@ export class UsersAccessComponent implements OnInit {
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
 
     if (type === 'patient') {
-      console.log(this.patientDetails);
       if (
         !this.patientDetails.firstName ||
         !this.patientDetails.lastName ||
