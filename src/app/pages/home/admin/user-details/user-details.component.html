@@ -1,0 +1,244 @@
+<div class="bg-surface-secondary">
+
+  <header class="px-3 px-lg-7 pt-7 custom_header">
+    <div class="container-xl">
+      <div>
+        <div class="row custom_alignment p-5">
+          <div class="col-md-12 col-12 mb-3 mb-md-0">
+            <xng-breadcrumb separator=">"></xng-breadcrumb>
+            <router-outlet></router-outlet>
+            <div class="row">
+              <div class="col-6">
+                <p *ngIf="patientDetails && patientDetails.firstName && patientDetails.lastName && patientDetails.namePrefix && !isEditable"
+                  class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{patientDetails.namePrefix +'
+                  '+patientDetails.firstName+ ' '+
+                  patientDetails.lastName}}</p>
+                <p *ngIf="staffDetails && !isEditable" class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{
+                  staffDetails.firstName && staffDetails.firstName}} {{staffDetails.lastName&&
+                  staffDetails.lastName}}</p>
+
+                <p *ngIf="isEditable" class="h1 mb-0 ls-tight text-primary heading_text mt-5">
+                  Edit {{userType | titlecase}} Details
+                </p>
+              </div>
+              <div class="col-6 d-flex align-items-end justify-content-end">
+                <button *ngIf="!isEditable" (click)="isEditable = true" class="btn btn-primary"><i
+                    class="bi bi-pencil-square mx-2"></i>
+                  Edit {{userType | titlecase}} Details </button>
+
+                <button *ngIf="isEditable"
+                  (click)="userType === 'staff' ? updateStaffDetails() : updatePatientDetails()" class="btn btn-primary"
+                  [disabled]="!enableSaveButton"><i class="bi bi-pencil-square mx-2"></i>
+                  Save Changes </button>
+              </div>
+            </div>
+            <ul class="nav nav-tabs">
+            </ul>
+          </div>
+          <!-- Actions -->
+          <div class="col-md-6 col-12 text-md-end">
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Main content -->
+  <main class="max-h-screen flex-grow-1 overflow-y-lg-auto px-md-3 px-lg-7 py-7">
+
+    <div *ngIf="userType === 'patient' && !isEditable" class="container-xl">
+      <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+        <div class="p-md-6 p-sm-4 ">
+          <div class="h3 mb-md-6 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-4 px-4 gap-md-2">
+            <div *ngIf="patientDetails.firstName || patientDetails.lastName" class="col-md-12">
+              <p class=" muted-heading text-muted font-regular">Patient Name: <span
+                  class="muted-headingmx-2 font-semibold" style="color: #1A202C;">{{patientDetails.namePrefix &&
+                  patientDetails.namePrefix}}
+                  {{patientDetails.firstName &&patientDetails.firstName}} {{patientDetails.lastName &&
+                  patientDetails.lastName}}</span>
+              </p>
+            </div>
+
+            <div *ngIf="patientDetails.email" class="col-md-12">
+              <p class="muted-heading text-muted font-regular">Patient E-mail: <span
+                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.email}}</span>
+              </p>
+            </div>
+
+            <div *ngIf="patientDetails.phoneCountryCode && patientDetails.phoneNumber" class="col-md-12">
+              <p class="muted-heading text-muted font-regular">Patinet Phone No:<span
+                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.phoneCountryCode +
+                  patientDetails.phoneNumber}}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="userType === 'patient' && isEditable && patientDetails" class="container-xl">
+      <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+        <div class="p-md-6 p-sm-4 ">
+          <div class="h3 mb-md-8 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-8">
+            <div class="col-md-2 col-sm-2">
+              <label for="prefix" class="form-label col-12">Prefix</label>
+              <mat-form-field id="prefix" appearance="standard" class="col-12 condition_select form-control-muted">
+                <mat-select [ngModel]="patientDetails.namePrefix" placeholder="Prefix"
+                  (selectionChange)="setSelect('patient','namePrefix',$event)">
+                  <mat-option value='Mr.'>Mr.</mat-option>
+                  <mat-option value='Mrs.'>Mrs.</mat-option>
+                  <mat-option value='Ms.'>Ms.</mat-option>
+                  <mat-option value='Dr.'>Dr.</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-5 mb-sm-4 col-sm-10">
+              <label for="fname" class="form-label col-12">First Name</label>
+              <input [ngModel]="patientDetails.firstName" (input)="setInput('patient','firstName', $event)" id="fname"
+                type="text" class="form-control form-control-muted" required placeholder="Enter first name">
+            </div>
+            <div class="col-md-5 mb-sm-4 col-sm-12">
+              <label for="lname" class="form-label col-12">Last Name</label>
+              <input [ngModel]="patientDetails.lastName" id="lname" (input)="setInput('patient','lastName', $event)"
+                type="text" class="form-control form-control-muted" placeholder="Enter last name" required>
+            </div>
+          </div>
+          <div class="mb-md-8 mb-sm-4">
+            <label for="email" class="form-label col-12">Patient Email</label>
+            <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
+              [ngModel]="patientDetails.email" (input)="setInput('patient','email', $event)">
+          </div>
+
+          <div class="mb-md-8 mb-sm-4">
+            <div class="row">
+              <div class="col-md-2">
+                <label for="countryCode" class="form-label col-12">Country Code</label>
+                <mat-form-field id="countryCode" appearance="standard"
+                  class="col-12 condition_select form-control-muted">
+                  <mat-select [ngModel]="patientDetails.phoneCountryCode" placeholder="Country Code"
+                    (selectionChange)="setSelect('patient','phoneCountryCode',$event)">
+                    <mat-option value='+1'>+1 USA</mat-option>
+                    <mat-option value='+1'>+1 Canada</mat-option>
+                    <mat-option value='+91'>+91 India</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <label for="mobile" class="form-label col-12">Patient Phone Number</label>
+                <input [ngModel]="patientDetails.phoneNumber" id="mobile" type="number"
+                  class="form-control form-control-muted" placeholder="Enter phone number"
+                  (input)="setInput('patient','phoneNumber',$event)">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div *ngIf="userType === 'staff' && !isEditable" class="container-xl">
+      <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+        <div class="p-md-6 p-sm-4 ">
+          <div class="h3 mb-md-6 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-4 px-4 gap-md-2">
+            <div class="col-md-12" *ngIf="staffDetails.firstName || staffDetails.lastName">
+              <p class="muted-heading font-regular text-muted">Staff Name: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{
+                  staffDetails.firstName && staffDetails.firstName}} {{staffDetails.lastName&&
+                  staffDetails.lastName}}</span>
+              </p>
+            </div>
+
+            <div class="col-md-12" *ngIf="staffDetails.type">
+              <p class="muted-heading font-regular text-muted">Staff Role: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.type.split('_').join('
+                  ') | titlecase}}</span>
+              </p>
+            </div>
+
+            <div class="col-md-12" *ngIf="staffDetails.email">
+              <p class="muted-heading font-regular text-muted">Staff E-mail: <span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.email}}</span>
+              </p>
+            </div>
+
+            <div *ngIf="staffDetails.phoneCountryCode && staffDetails.phoneNumber" class="col-md-12">
+              <p class="muted-heading font-regular text-muted">Patient Phone No:<span style="color: #1A202C;"
+                  class="muted-heading font-semibold mx-2">{{staffDetails.phoneCountryCode
+                  +
+                  staffDetails.phoneNumber}}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="userType === 'staff' && isEditable && staffDetails" class="container-xl">
+      <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">
+        <div class="p-md-6 p-sm-4 ">
+          <div class="h3 mb-md-8 mb-sm-4 p-sm-2">Contact Information</div>
+          <div class="row mb-md-8">
+            <div class="col-md-6 mb-sm-4 col-sm-10">
+              <label for="fname" class="form-label col-12">First Name</label>
+              <input [ngModel]="staffDetails.firstName" (input)="setInput('staff','firstName', $event)" id="fname"
+                type="text" class="form-control form-control-muted" required placeholder="Enter First name">
+            </div>
+            <div class="col-md-6 mb-sm-4 col-sm-10">
+              <label for="lname" class="form-label col-12">Last Name</label>
+              <input [ngModel]="staffDetails.lastName" (input)="setInput('staff','lastName', $event)" id="lname"
+                type="text" class="form-control form-control-muted" required placeholder="Enter Last name">
+            </div>
+          </div>
+          <div class="mb-md-8 mb-sm-4">
+            <div class="row">
+              <div class="col-md-6">
+                <label for="staffType" class="form-label col-12">Staff Role</label>
+                <mat-form-field id="staffType" appearance="standard" class="col-12 condition_select form-control-muted">
+                  <mat-select [ngModel]="staffDetails.type" placeholder="Staff Role"
+                    (selectionChange)="setSelect('staff', 'type',$event)" required>
+                    <mat-option value='therapist'>Therapist</mat-option>
+                    <mat-option value='org_admin'>Organization Admin</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-6">
+                <label for="email" class="form-label col-12">Staff Email</label>
+                <input [ngModel]="staffDetails.email" id="email" type="email" class="form-control form-control-muted"
+                  placeholder="Enter email" (input)="setInput('staff','email', $event)" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-md-8 mb-sm-4">
+            <div class="row">
+              <div class="col-md-2">
+                <label for="countryCode" class="form-label col-12">Country Code</label>
+                <mat-form-field id="countryCode" appearance="standard"
+                  class="col-12 condition_select form-control-muted">
+                  <mat-select [ngModel]="staffDetails.phoneCountryCode" placeholder="Country Code"
+                    (selectionChange)="setSelect('staff', 'phoneCountryCode',$event)" required>
+                    <mat-option value='+1'>+1 USA</mat-option>
+                    <mat-option value='+1'>+1 Canada</mat-option>
+                    <mat-option value='+91'>+91 India</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-10">
+                <label for="mobile" class="form-label col-12">Staff Phone Number</label>
+                <input [ngModel]="staffDetails.phoneNumber" id="mobile" type="number"
+                  class="form-control form-control-muted" placeholder="Enter phone number"
+                  (input)="setInput('staff','phoneNumber',$event)" required>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</div>

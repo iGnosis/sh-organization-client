@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IChart, SessionData } from 'src/app/pointmotion';
 import { environment } from '../../../environments/environment';
 import { GqlConstants } from '../gql-constants/gql-constants.constants';
 import { GraphqlService } from '../graphql/graphql.service';
@@ -73,49 +72,11 @@ export class ChartService {
     );
   }
 
-
-  // here, we do things that are painful to do with plain SQL.
-  transformifyData(chartResults: IChart[]): SessionData {
-    const patientObject: any = {};
-
-    // build session
-    for (const item of chartResults) {
-      if (item.session) {
-        patientObject[item.session] = {};
-      }
-    }
-
-    // build activity
-    for (const sessionId in patientObject) {
-      // console.log(session)
-      for (const item of chartResults) {
-        if (sessionId == item.session && item.activity) {
-          patientObject[sessionId][item.activity] = {};
-        }
-      }
-    }
-
-    // build events
-    for (const sessionId in patientObject) {
-      for (const activityId in patientObject[sessionId]) {
-        for (const item of chartResults) {
-          if (sessionId == item.session && activityId == item.activity) {
-            if (patientObject[sessionId][activityId].events == undefined) {
-              patientObject[sessionId][activityId]['events'] = [];
-            }
-
-            patientObject[sessionId][activityId]['events'].push({
-              activityName: item.activity_name,
-              taskName: item.task_name,
-              reactionTime: item.reaction_time,
-              createdAt: item.created_at,
-              score: item.score,
-            });
-          }
-        }
-      }
-    }
-    console.log('chart.service:tranformifyData:', patientObject);
-    return patientObject;
+  async patientMoodVariationChart(startDate: Date, endDate: Date, patientId: string): Promise<Array<{
+    createdAt: string;
+    mood: string;
+  }>> {
+    const resp = await this.gqlService.client.request(GqlConstants.GET_PATIENT_MOOD, { startDate, endDate, patientId });
+    return resp.checkin;
   }
 }

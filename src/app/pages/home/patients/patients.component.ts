@@ -1,77 +1,94 @@
-import { Component, OnInit, ViewChild   } from '@angular/core';
-import { Router } from '@angular/router';
-import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { GraphqlService } from 'src/app/services/graphql/graphql.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import {ChangeDetectorRef } from '@angular/core';
-import {MatSort, Sort, SortDirection} from '@angular/material/sort';
-import {LiveAnnouncer} from '@angular/cdk/a11y';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatCheckboxModule} from '@angular/material/checkbox';
-import { MatTableFilter } from 'mat-table-filter';
-import {FormControl} from '@angular/forms';
-export class Captain {
-  identifier: string;
-  surname: string;
-  medicalConditions : any;
-  therapist : string;
-}
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { TemplateRef } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject } from 'rxjs';
+import { ApiService } from 'src/app/services/api/api.service';
+import { PatientsListComponent } from './patients-list/patients-list.component';
 
-export class SpaceCraft {
-  identifier: string;
-  medicalConditions : any;
-  isConstitutionClass: boolean;
-  captain: Captain;
-  therapist : string;
-}
 @Component({
   selector: 'app-patients',
   templateUrl: './patients.component.html',
-  styleUrls: ['./patients.component.scss']
+  styleUrls: ['./patients.component.scss'],
 })
+export class PatientsComponent implements OnInit, AfterViewInit {
+  @ViewChild('invitePatient') invitePatientModal: TemplateRef<any>;
+  @ViewChild('addPatient') addPatientModal: TemplateRef<any>;
+  addPatientModalState: Subject<boolean> = new Subject<boolean>();
+  invitePatientModalState: Subject<boolean> = new Subject<boolean>();
 
-export class PatientsComponent implements OnInit {
-  
-  
-  allMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  selectedMedicalConditions = ["Parkinson's", "Huntington's", "Alzheimer's", "Others"];
-  
-  
-  
-  constructor() { }
+  allMedicalConditions = [
+    "Parkinson's",
+    "Huntington's",
+    "Alzheimer's",
+    'Others',
+  ];
+  selectedMedicalConditions = [
+    "Parkinson's",
+    "Huntington's",
+    "Alzheimer's",
+    'Others',
+  ];
 
-  async ngOnInit() {
-    
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
+  ];
+  selectedDateRange = 3;
+  dateRange = 30;
+  @ViewChild(PatientsListComponent)
+  patientsListComponent: PatientsListComponent;
+
+  isPublicSignupEnabled: boolean;
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    this.dateRange = this.dateFilter[idx].range;
+
+    this.patientsListComponent &&
+      this.patientsListComponent.reloadPatientList(this.dateFilter[idx].range);
+  }
+
+  constructor(private modalService: NgbModal, private apiService: ApiService) {
+    this.getPublicSignup();
+  }
+  ngAfterViewInit(): void {
+
+    this.setDateFilter(3);
+  }
+
+  async ngOnInit() {}
+
+  async getPublicSignup() {
+    this.isPublicSignupEnabled = await this.apiService.getPublicSignup();
+  }
+
+  openInvitePatientModal() {
+    this.modalService.open(this.invitePatientModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.invitePatientModalState.next(false);
+        return true;
+      },
+    });
+
+    this.invitePatientModalState.next(true);
+  }
+
+  openAddPatientModal() {
+    this.modalService.open(this.addPatientModal, {
+      size: 'lg',
+      beforeDismiss: () => {
+        this.addPatientModalState.next(false);
+        return true;
+      },
+    });
   }
 
   selectDataSegment(condition: string) {
-    this.selectedMedicalConditions = [condition]
-    // this.reloadPatientList({})
+    this.selectedMedicalConditions = [condition];
   }
-  // isAllSelected() {
-  //   const numSelected = this.selection.selected.length;
-  // const numRows = this.dataSource.data.length;
-  // return numSelected == numRows;
-  // }
-
-  // /** Selects all rows if they are not all selected; otherwise clear selection. */
-  // masterToggle() {
-  //   console.log("selected");
-  //   this.isAllSelected()?
-  //   this.selection.clear() :
-  //     this.dataSource.data.forEach(row => this.selection.select(row));
-  // }
-  
-  
-  
 }
-// export interface PeriodicElement {
-//   total_count: number;
-//   identifier: string;
-//   medical_condition: any;
-//   last_session: Date;
-//   sessions : number;
-//   therapist : string;
-//   actions : any;
-// }

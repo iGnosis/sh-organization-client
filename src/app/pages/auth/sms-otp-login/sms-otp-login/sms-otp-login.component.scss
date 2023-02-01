@@ -2,7 +2,7 @@
 
 .main {
   height: 100vh;
-  background-image: radial-gradient(#44444d, #414149, #29292f);
+  background-color: #ffffff;
 }
 .login-form {
   width: 350px;
@@ -12,6 +12,10 @@
   transform: translate(-50%, -50%);
   border-radius: 10px;
   overflow: hidden;
+  min-width: 512px;
+  background-color: #edf2f7;
+  box-shadow: 0px 0px 1px rgba(12, 26, 75, 0.24),
+    0px 3px 8px -1px rgba(50, 50, 71, 0.05);
 
   .spinner {
     color: $primary;
@@ -23,24 +27,23 @@
     background-color: #ff3e00;
     color: white;
     text-align: center;
+    font-size: 16px;
+    padding: 4px 0px;
   }
 }
 
 .pmc-logo {
-  background-color: #dddddd;
   vertical-align: middle;
   text-align: center;
 
   img {
     width: auto;
-    height: 60px;
+    height: 38px;
   }
 }
 
 .input-form {
-  background-color: #ffffff;
   vertical-align: middle;
-  text-align: center;
 
   .guide-text {
     font-size: 12px;
@@ -54,9 +57,54 @@
 .terms {
   font-size: 12px;
   text-align: center;
-  background-color: #dddddd;
+  a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 }
 
 .submit-btn {
+  width: 100%;
   background-color: $primary;
+  color: #ffffff;
+  padding: 16px 24px;
+  margin: 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.continue-btn {
+  width: 100%;
+  background-color: $primary;
+  color: #ffffff;
+  padding: 12px 24px;
+  margin: 0px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.easy-singin {
+  vertical-align: middle;
+  background-color: #fafafa;
+  border-radius: 6px;
+}
+.clickable {
+  cursor: pointer;
+}
+.custom-radio-labels {
+  font-size: 14px;
+}
+.custom-continue-button {
+  font-size: 12px;
+  line-height: 14px;
+}
+
+.custom-icon {
+  font-size: 24px;
+  text-align: right;
+}
+
+.go-back-btn {
+  vertical-align: middle;
+  font-size: 16px;
 }

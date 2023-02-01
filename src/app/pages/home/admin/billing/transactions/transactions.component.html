@@ -1,0 +1,47 @@
+<div class="container-xl my-5">
+  <div class="mx-md-4 mx-sm-2 rounded-top bg-light p-5">
+    <div class="row">
+      <div class="col">
+        <div class="h3">Billing History</div>
+      </div>
+    </div>
+  </div>
+  <div class="mx-md-4 mx-sm-2 table-responsive">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 transactions_table">
+      <ng-container matColumnDef="label_star">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <i class="bi bi-star custom_star_color"></i>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="createdAt">
+        <th mat-header-cell *matHeaderCellDef> Report Generated On </th>
+        <td mat-cell *matCellDef="let element" class="clicked_class">
+          <span class="text-heading font-semibold mx-8"> {{getDateStr(element.createdAt)}} </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="billingPeriod">
+        <th mat-header-cell *matHeaderCellDef> Billing Period </th>
+        <td mat-cell *matCellDef="let element" class="clicked_class">
+          <span class="text-heading font-semibold"> {{element.billingPeriod}} </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="revenue">
+        <th mat-header-cell *matHeaderCellDef> Revenue </th>
+        <td mat-cell *matCellDef="let element" class="clicked_class">
+          <span class="text-heading font-semibold"> {{"$ " +element.revenue}} </span>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="downloadReport">
+        <th mat-header-cell *matHeaderCellDef> Download Report </th>
+        <td mat-cell *matCellDef="let element" class="clicked_class">
+          <button (click)="downloadReport(element.createdAt)" class="btn btn-light text-primary py-1 px-1"><span class="bi bi-download mx-2"></span> Download
+            Report</button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
+    </table>
+    <mat-paginator [pageSize]="10" #TableOnePaginator="matPaginator" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

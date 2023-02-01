@@ -1,3 +1,5 @@
+import { UserRole } from './users.enum';
+
 export class Activity {
   id?: string;
   createdAt?: number; // unix epoch time in milliseconds
@@ -71,25 +73,21 @@ export class Patient {
   sessions?: Array<Session>;
   sessions_aggregate: any;
   primaryTherapistUser?: Therapist;
+  games?: { [key: string]: any }[];
 }
 export class User {
   id: string;
   email: string;
-  password: string;
   createdAt: Date;
   updatedAt: Date;
   lastActive: Date;
   firstName: string;
   lastName: string;
-  type: string;
+  type: UserRole;
   status: string;
-  provider: string;
   phoneCountryCode: string;
   phoneNumber: string;
-  auth: {
-    otp: number;
-    issuedAt: number;
-  };
+  orgId: string;
 }
 declare class PatientFrom {
   userFrom?: Patient;
@@ -204,9 +202,96 @@ export class EngagementRatio {
 }
 
 export type Environment = {
+  organizationName: string;
   name: string;
   production: boolean;
   gqlEndpoint: string;
   servicesEndpoint: string;
   activityEndpoint: string;
 };
+
+export type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
+export type BrandColorType =
+  | 'primary'
+  | 'secondary'
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger';
+
+export type TypeFace = 'Abel' | 'Inter' | 'Roboto' | 'Open Sans';
+export type Tabs = 'Customization' | 'Billing' | 'Users and Access';
+
+// export type Tabs = {
+//   feature: string;
+//   name: 'Customization' | 'Billing' | 'Users and Access';
+// }
+
+export interface Theme {
+  colors?: {
+    [key: string]: any;
+  };
+  font?: {
+    family: string;
+    url: string;
+  };
+  logoUrl?: string;
+}
+
+export class JwtToken {
+  id: string;
+  iat: number;
+  exp: number;
+  'https://hasura.io/jwt/claims': {
+    'x-hasura-allowed-roles': UserRole[];
+    'x-hasura-default-role': UserRole;
+    'x-hasura-user-id': string;
+    'x-hasura-organization-id': string;
+  };
+}
+
+interface Rule {
+  title: string;
+  description: string;
+  key: string;
+  access: UserRole[];
+}
+
+interface RouteRule {
+  title: string;
+  description: string;
+  path: string;
+  rules: Rule[];
+}
+
+interface UiRbac {
+  navigationBar: Rule[];
+  routes: RouteRule[];
+}
+
+interface HasuraRbac {
+  select_permissions: string[];
+  insert_permissions: string[];
+  update_permissions: string[];
+  delete_permissions: boolean;
+  table: string;
+}
+
+export interface Rbac {
+  uiRbac: UiRbac;
+  hasuraRbac: HasuraRbac[];
+}
+
+export interface ModalConfig {
+  type?: 'primary' | 'warning';
+  title?: string;
+  body?: string;
+  closeButtonLabel?: string;
+  submitButtonLabel?: string;
+  onClose?(): Promise<boolean> | boolean | void;
+  onSubmit?(): Promise<boolean> | boolean | void;
+}
+
+export interface DashboardState {
+  dateRange: number;
+}
