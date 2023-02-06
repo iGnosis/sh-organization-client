@@ -208,6 +208,7 @@ export type Environment = {
   gqlEndpoint: string;
   servicesEndpoint: string;
   activityEndpoint: string;
+  websocketEndpoint: string;
 };
 
 export type OrganizationType = 'hospital' | 'clinic' | 'seniorHomeFacility';
