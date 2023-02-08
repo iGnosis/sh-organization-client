@@ -204,7 +204,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         };
       });
 
-      console.log('Patient Overview Chart ', chartData);
 
     const data = {
       datasets: [

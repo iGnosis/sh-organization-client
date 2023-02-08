@@ -12,7 +12,6 @@ export class EventEmitterService {
     SentPatientID(patientId:any){
       setTimeout(() => {
         this.ReceivedPatientID.emit(patientId);
-       console.log(patientId,"emitter called");
       }, 100);
     }
     SentCarePlanID(careplanId:any,patientList:any){

@@ -178,7 +178,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || '';
       if (this.patientId) {
-        console.log('patientId:', this.patientId);
         await this.fetchSessions();
 
         this.updateCharts('start', this.startDate!, 'achievement');
@@ -290,7 +289,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
     // this.getCarePlanCount = this.activeCarePlans.length;
-    console.log(this.dataSource.data.length, 'length');
     if (this.activeCarePlans.length > 0) {
       this.getActivityCount =
         this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
@@ -470,15 +468,10 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     const chartResults: { [dateWithTimeZone: string]: number } =
       engagementRatioData.patientChart.data.results;
 
-    console.log('initEngagementChart:results:', chartResults);
-
     for (const key in chartResults) {
       data.labels.push(key.split('T')[0].split('-')[2]);
       data.datasets[0].data.push(chartResults[key]);
     }
-
-    console.log('initEngagementChart:labels:', data.labels);
-    console.log('initEngagementChart:dataset:', data.datasets[0].data);
 
     // data.datasets[0].careplanNames = engagementRatioData.map(
     //   (result: EngagementRatio) => result.careplanName
@@ -612,7 +605,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
             callbacks: {
               label: function (tooltipItem: any) {
                 // console.log('tooltipItem:', tooltipItem);
-                const data = tooltipItem.dataset.data[tooltipItem.dataIndex];
                 // const successRatio =
                 //   tooltipItem.dataset.data[tooltipItem.dataIndex];
                 return ` ${tooltipItem.dataset.label} - ${data}%`;
@@ -635,8 +627,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         'day',
         true
       );
-
-    console.log('achievementRatioData::', achievementRatioData);
 
     let games: string[];
     if (!filter) {
@@ -743,7 +733,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       endDate,
       this.patientId!
     );
-    console.log('moodData:', moodData);
 
     const moodToNumber: {
       [key: string]: number;

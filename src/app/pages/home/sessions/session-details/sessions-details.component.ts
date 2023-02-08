@@ -83,8 +83,6 @@ export class SessionsDetailsComponent implements OnInit {
       this.totalDuration = this.getDurationInMinutes(this.gameDetails.totalDuration);
       this.movementDuration = this.getDurationInMinutes(this.gameDetails.calibrationDuration);
 
-      console.log('gameDetails:', this.gameDetails);
-
       this.initAchievementChart(this.gameDetails.id);
 
       const { game, id } = this.gameDetails;
@@ -271,8 +269,6 @@ export class SessionsDetailsComponent implements OnInit {
       response.gameAchievementRatio.data;
 
     const backgroundColor = ['#00BD3E', '#718096'];
-
-    console.log('gameAchievementRatio', response);
 
     const data = {
       labels: gameAchievementRatioData.labels,
