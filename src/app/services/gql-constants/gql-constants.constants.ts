@@ -1,16 +1,18 @@
 export const GqlConstants = {
   GET_ALL_PATIENTS: `
-  query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
-    patient(where: {nickname: {_is_null: false}}) {
-      id
+query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
+  patient {
+    id
+    createdAt
+    nickname
+    firstName
+    identifier
+    games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
       createdAt
-      nickname
-      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
-        createdAt
-        game
-      }
+      game
     }
-  }`,
+  }
+}`,
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
     patient_by_pk(id: $patientId) {
       createdAt
@@ -466,5 +468,5 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
     organization {
       isPublicSignUpEnabled
     }
-  }`,  
+  }`,
 };
