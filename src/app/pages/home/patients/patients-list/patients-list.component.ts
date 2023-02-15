@@ -152,13 +152,13 @@ export class PatientsListComponent implements OnInit {
       this.patientListSubscription = this.transformPatientList(
         patientListResponse
       ).subscribe((patientsWithActiveDays: any[]) => {
+        // // removing patients that are not active
+        // const filteredPatientsWithActiveDays = patientsWithActiveDays.filter(
+        //   (patient) => patient.lastActive
+        // );
+        // resolve(filteredPatientsWithActiveDays || []);
 
-        // removing patients that are not active
-        const filteredPatientsWithActiveDays = patientsWithActiveDays.filter(
-          (patient) => patient.lastActive
-        );
-
-        resolve(filteredPatientsWithActiveDays || []);
+        resolve(patientsWithActiveDays || []);
       });
     });
   }
