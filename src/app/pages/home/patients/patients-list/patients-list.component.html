@@ -81,7 +81,7 @@
       <ng-container matColumnDef="nickname">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Identifier </th>
         <td mat-cell *matCellDef="let element" class="clicked_class" routerLink="/app/patients/{{element.id}}">
-          <span class="text-heading font-semibold"> {{element.nickname}} </span>
+          <span class="text-heading font-semibold"> {{element.nickname || element.firstName || 'Anonymous'}} </span>
         </td>
       </ng-container>
       <ng-container matColumnDef="lastActive">
