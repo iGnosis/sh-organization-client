@@ -296,3 +296,14 @@ export interface ModalConfig {
 export interface DashboardState {
   dateRange: number;
 }
+
+export type DashboardMetricGroup = 'conversion' | 'engagement' | 'retention';
+
+export interface DashboardMetric {
+  title: string;
+  newCount: number | string;
+  showPercentageChange: boolean;
+  isPercentageIncrease?: boolean;
+  percentageChange?: number;
+  icon?: string;
+}

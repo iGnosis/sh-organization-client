@@ -42,39 +42,47 @@
 
 <!-- Main content -->
 <main class="pb-7">
-  <!-- Put Charts here -->
   <div class="container mt-8 mb-8">
-    <div *ngIf="showEmptyState" class="d-flex flex-column align-items-center">
-      <img src="/assets/images/empty_inbox.png" alt="empty inbox">
-      <h2 class="text-black text-center my-10">Your Dashboard looks empty<br>Let’s get started.</h2>
-      <button class="btn btn-primary w-64" routerLink="/app/patients">Add Patients</button>
+    <div class="mb-4">
+      <h3>Dashboard</h3>
+      <div class="border-top my-5"></div>
     </div>
-    <div *ngIf="!showEmptyState" class="row">
-      <div class="col-md-6">
-        <div class="card h-full">
-          <div class="card-body">
-            <div class="card-header">
-              <h3 class="text-primary">Patient Adherence</h3>
-              <h6 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h6>
+    <div class="rounded-top bg-light p-3">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="{{selectedMetricGroup === 'conversion' ? 'nav-link active' : 'nav-link'}}" (click)="getMetrics('conversion')">Conversion</a>
+        </li>
+        <li class="nav-item">
+          <a class="{{selectedMetricGroup === 'engagement' ? 'nav-link active' : 'nav-link'}}" id="nav-engagement" (click)="getMetrics('engagement')">Engagement</a>
+        </li>
+        <li class="nav-item">
+          <a class="{{selectedMetricGroup === 'retention' ? 'nav-link active' : 'nav-link'}}" id="nav-retention" (click)="getMetrics('retention')">Retention</a>
+        </li>
+      </ul>
+      <div class="row mt-4">
+        <div *ngFor="let metricCard of metricCards" class="col">
+          <div class="card">
+            <div class="card-body rounded">
+              <div class="row">
+                <div class="col">
+                  <span class="h6 font-semibold text-muted text-sm d-block mb-2">{{metricCard.title}}</span>
+                  <span class="h3 font-bold mb-0">{{ metricCard.newCount }}</span>
+                  <span *ngIf="metricCard.percentageChange && metricCard.isPercentageIncrease" class="text-success">
+                    <i class="m-2 bi bi-arrow-up-circle-fill me-1"></i>{{metricCard.percentageChange}}%
+                  </span>
+                  <span *ngIf="metricCard.percentageChange && !metricCard.isPercentageIncrease" class="text-danger">
+                    <i class="m-2 bi bi-arrow-down-circle-fill me-1"></i>{{metricCard.percentageChange}}%
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape text-lg rounded-circle ellipse">
+                    <img style="height: 32px;" src="{{metricCard.icon}}" alt="">
+                  </div>
+                </div>
+              </div>
             </div>
-            <canvas class="chart-canvas" id="patientAdherenceChart" width="500" height="500"></canvas>
           </div>
         </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-header">
-              <h3 class="text-primary">Patient Overview</h3>
-              <h6 class="text-primary my-2">Date: {{ previousDate != currentDate ? (previousDate | date) + ' - ' : '' }}{{ currentDate | date }}</h6>
-              <i>Bubble Radius is proportional to the number of activities done by the patient.</i>
-            </div>
-            <canvas class="chart-canvas" id="patientOverviewChart" width="500" height="500"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-12">
-        <!-- <patient-goals-heatmap></patient-goals-heatmap> -->
       </div>
     </div>
   </div>
