@@ -21,10 +21,22 @@
   font-size: 3rem;
 }
 
+.card-body {
+  background-color: #FAFAFA;
+}
+
 .chart-canvas {
   max-height: 40vh;
 }
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.ellipse {
+  width: 56px;
+  height: 56px;
+  left: 224px;
+  top: 8px;
+  background-color: #ECECF9;
 }
