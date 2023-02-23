@@ -49,13 +49,13 @@
     </div>
     <div class="rounded-top bg-light p-3">
       <ul class="nav nav-tabs">
-        <li class="nav-item">
+        <li class="nav-item cursor-pointer">
           <a class="{{selectedMetricGroup === 'conversion' ? 'nav-link active' : 'nav-link'}}" (click)="getMetrics('conversion')">Conversion</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item cursor-pointer">
           <a class="{{selectedMetricGroup === 'engagement' ? 'nav-link active' : 'nav-link'}}" id="nav-engagement" (click)="getMetrics('engagement')">Engagement</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item cursor-pointer">
           <a class="{{selectedMetricGroup === 'retention' ? 'nav-link active' : 'nav-link'}}" id="nav-retention" (click)="getMetrics('retention')">Retention</a>
         </li>
       </ul>
