@@ -44,6 +44,7 @@ export class TesterVideoModalComponent implements OnInit, AfterViewInit {
     videoElement.style.width = '768px';
     videoElement.style.height = '432px';
 
+
     videoElement.src = videoUrl;
     videoElement.autoplay = true;
     videoElement.muted = false;
