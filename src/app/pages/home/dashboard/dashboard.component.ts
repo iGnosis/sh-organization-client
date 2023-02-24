@@ -130,7 +130,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
     else if (metricGroup === 'retention') {
       const resp: DashboardGqlResp[]  = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_RETENTION, { startDate: this.previousDate, endDate: this.currentDate });
       const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
-      const stickinessResp = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_STICKINESS_METRIC, { startDate: today, endDate: today })
+      const todayEnd = new Date(new Date().setHours(24, 0, 0, 0)).toISOString();
+      const stickinessResp = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_STICKINESS_METRIC, { startDate: today, endDate: todayEnd })
       this.metricCards = [];
       for (const [_, data] of Object.entries(resp)) {
         this.metricCards.push(this.buildMetricCardObject(data.data));
