@@ -549,4 +549,22 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
       }
     }
   }`,
+  GET_TESTING_VIDEOS: `
+  query GetTesterVideos($patientId: uuid!) {
+  tester_videos(where: {patient: {_eq: $patientId}}, order_by: {startedAt: desc}) {
+    id
+    startedAt
+    endedAt
+  }
+}
+`,
+  VIEW_TESTING_VIDEOS: `
+  query ViewTesterRecording($recordingId: String!) {
+  viewTesterRecording(recordingId: $recordingId) {
+    data {
+      configUrl
+      videoUrl
+    }
+  }
+}`,
 };
