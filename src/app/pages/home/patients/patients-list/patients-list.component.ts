@@ -17,7 +17,6 @@ import { map, Observable, Subject, Subscription } from 'rxjs';
 import { ArchiveMemberModalComponent } from 'src/app/components/archive-member-modal/archive-member-modal.component';
 import { DashboardState, Patient } from 'src/app/pointmotion';
 import { ApiService } from 'src/app/services/api/api.service';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { UserService } from 'src/app/services/user/user.service';
@@ -84,7 +83,6 @@ export class PatientsListComponent implements OnInit {
     private store: Store<{ dashboard: DashboardState }>,
     private modalService: NgbModal,
     private apiService: ApiService,
-    private authService: AuthService,
     private userService: UserService
   ) {
     this.getPublicSignup();
@@ -241,22 +239,8 @@ export class PatientsListComponent implements OnInit {
     });
   }
 
-  async checkPatientDetailsAccess() {
+  checkPatientDetailsAccess() {
     const currentUserRole = this.userService.get().type;
-    if (!currentUserRole) {
-      window.localStorage.clear();
-      this.router.navigate(['/']);
-    }
-
-    const rbac = await this.authService.getRbac();
-    if (!rbac || !rbac.uiRbac || Object.keys(rbac.uiRbac).length === 0) return
-
-    rbac.uiRbac.routes.forEach(route => {
-      route.rules.forEach(rule => {
-        if (rule.key === 'patients_list' && rule.access.includes(currentUserRole)) {
-          this.disablePatientDetails = false
-        }
-      })
-    })
+    this.disablePatientDetails = currentUserRole === 'org_admin';
   }
 }
