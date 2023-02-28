@@ -43,6 +43,7 @@ export class JwtService {
   }
 
   setToken(token: string) {
+    console.log('token::', token);
     localStorage.setItem('accessToken', token);
   }
 
