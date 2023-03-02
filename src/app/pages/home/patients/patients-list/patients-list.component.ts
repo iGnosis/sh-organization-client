@@ -19,6 +19,7 @@ import { DashboardState, Patient } from 'src/app/pointmotion';
 import { ApiService } from 'src/app/services/api/api.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-patients-list',
@@ -73,6 +74,7 @@ export class PatientsListComponent implements OnInit {
   invitePatientModalState: Subject<boolean> = new Subject<boolean>();
 
   isPublicSignupEnabled: boolean;
+  disablePatientDetails = true;
 
   constructor(
     private router: Router,
@@ -80,9 +82,11 @@ export class PatientsListComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     private store: Store<{ dashboard: DashboardState }>,
     private modalService: NgbModal,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private userService: UserService
   ) {
     this.getPublicSignup();
+    this.checkPatientDetailsAccess();
   }
 
   async ngOnInit(): Promise<void> {
@@ -233,5 +237,10 @@ export class PatientsListComponent implements OnInit {
         return true;
       },
     });
+  }
+
+  checkPatientDetailsAccess() {
+    const currentUserRole = this.userService.get().type;
+    this.disablePatientDetails = currentUserRole === 'org_admin';
   }
 }
