@@ -6,5 +6,6 @@ export const environment: Environment = {
   name: 'prod',
   gqlEndpoint: 'https://api.prod.pointmotioncontrol.com/v1/graphql',
   servicesEndpoint: 'https://services.prod.pointmotioncontrol.com',
-  activityEndpoint: 'https://session.imnf.pointmotioncontrol.com'
+  activityEndpoint: 'https://session.imnf.pointmotioncontrol.com',
+  websocketEndpoint: 'wss://services.prod.pointmotioncontrol.com',
 };
