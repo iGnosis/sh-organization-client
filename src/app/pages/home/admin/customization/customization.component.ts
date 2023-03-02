@@ -80,7 +80,6 @@ export class CustomizationComponent implements OnInit {
     const element = event.currentTarget as HTMLInputElement;
     const fileList: FileList | null = element.files;
     if (fileList) {
-      console.log('FileUpload -> files', fileList);
       this.imageList = fileList;
     }
     this.checkIfChangesAreMade();
@@ -120,7 +119,6 @@ export class CustomizationComponent implements OnInit {
           'Content-Type': image.type,
         }),
       });
-      console.log(putResult);
     }
   }
 

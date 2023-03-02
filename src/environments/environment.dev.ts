@@ -6,5 +6,6 @@ export const environment: Environment = {
   name: 'dev',
   gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
   servicesEndpoint: 'https://services.dev.pointmotioncontrol.com',
-  activityEndpoint: 'https://session.dev.pointmotioncontrol.com'
+  activityEndpoint: 'https://session.dev.pointmotioncontrol.com',
+  websocketEndpoint: 'wss://services.dev.pointmotioncontrol.com',
 };

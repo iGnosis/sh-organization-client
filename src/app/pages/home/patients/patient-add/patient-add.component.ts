@@ -90,7 +90,6 @@ export class PatientAddComponent implements OnInit {
         }
       })
 
-    console.log(response);
     this.id = response.insert_patient_one.id
     this.router.navigate([`/app/patients/${this.id}/care-plan`])
   }

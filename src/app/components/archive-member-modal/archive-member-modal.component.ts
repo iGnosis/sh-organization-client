@@ -25,14 +25,12 @@ export class ArchiveMemberModalComponent implements OnInit {
     id: string,
     type: 'patient' | 'staff'
   ): Promise<number | GraphQLError> {
-    console.log('archive:member:id::', id);
     if (type === 'patient') {
       try {
         const archivedId: { update_patient_by_pk: { id: number } } =
           await this.gqlSevice.client.request(GqlConstants.ARCHIVE_PATIENT, {
             patientId: id,
           });
-        console.log('archived::patient:', archivedId.update_patient_by_pk.id);
         this.activeModal.close('Archive click');
         return archivedId.update_patient_by_pk.id;
       } catch (err) {
@@ -45,7 +43,6 @@ export class ArchiveMemberModalComponent implements OnInit {
           await this.gqlSevice.client.request(GqlConstants.ARCHIVE_STAFF, {
             staffId: id,
           });
-        console.log('archived::staff:', archivedId.update_staff_by_pk.id);
         this.activeModal.close('Archive click');
         return archivedId.update_staff_by_pk.id;
       } catch (err) {

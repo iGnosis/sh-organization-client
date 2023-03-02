@@ -160,7 +160,6 @@ export class UserDetailsComponent implements OnInit {
 
   async updatePatientDetails() {
     try {
-      console.log(this.patientDetails);
       await this.gqlService.client
         .request(GqlConstants.UPDATE_PATIENT_BY_PK, {
           id: this.userId,

@@ -74,7 +74,6 @@ export class CarePlanService {
 
 
   async create(careplan: CarePlan) {
-    console.log(careplan)
     const mutation = gql`mutation InsertCarePlan($careplan: careplan_insert_input!) {
       insert_careplan_one(object: $careplan) {
         id

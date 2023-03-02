@@ -1,16 +1,18 @@
 export const GqlConstants = {
   GET_ALL_PATIENTS: `
-  query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
-    patient(where: {nickname: {_is_null: false}}) {
-      id
+query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
+  patient {
+    id
+    createdAt
+    nickname
+    firstName
+    identifier
+    games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
       createdAt
-      nickname
-      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
-        createdAt
-        game
-      }
+      game
     }
-  }`,
+  }
+}`,
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
     patient_by_pk(id: $patientId) {
       createdAt
@@ -466,5 +468,103 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
     organization {
       isPublicSignUpEnabled
     }
-  }`,  
+  }`,
+  DASHBOARD_CONVERSION: `query DashboardConversion($startDate: String!, $endDate: String!) {
+    newUsers: dashboardConversion(type: new_users, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    activationMilestone: dashboardConversion(type: activation_milestone, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    activationRate: dashboardConversion(type: activation_rate, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_ENGAGEMENT: `query DashboardEngagement($startDate: String!, $endDate: String!) {
+    avgUserEngagement: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: avg_user_engagement) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    avgActivitiesPlayed: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: avg_activities_played) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    adoptionRate: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: adoption_rate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_RETENTION: `query DashboardRetention($startDate: String!, $endDate: String!) {
+    activeUsers: dashboardRetention(startDate: $startDate, endDate: $endDate, type: active_users) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    totalActiveUsers: dashboardRetention(startDate: $startDate, endDate: $endDate, type: total_users) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_STICKINESS_METRIC: `query DashboardStickinessMetric($startDate: String!, $endDate: String!) {
+    stickiness: dashboardRetention(startDate: $startDate, endDate: $endDate, type: stickiness) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  GET_TESTING_VIDEOS: `
+  query GetTesterVideos($patientId: uuid!) {
+  tester_videos(where: {patient: {_eq: $patientId}}, order_by: {startedAt: desc}) {
+    id
+    startedAt
+    endedAt
+  }
+}
+`,
+  VIEW_TESTING_VIDEOS: `
+  query ViewTesterRecording($recordingId: String!) {
+  viewTesterRecording(recordingId: $recordingId) {
+    data {
+      configUrl
+      videoUrl
+    }
+  }
+}`,
 };

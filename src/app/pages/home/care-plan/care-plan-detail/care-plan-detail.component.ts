@@ -95,7 +95,6 @@ public hovered: boolean;
     this.eventEmitterService.SentCarePlanID(this.carePlan,this.patientList);
   }
   async removeCareplanFromPatient(getpatientId: string, modalContent: any) {
-    console.log(getpatientId)
     this.modalService.open(modalContent)
     this.getPatientId = getpatientId
   }

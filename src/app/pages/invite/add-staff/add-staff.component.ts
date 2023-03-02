@@ -105,6 +105,5 @@ export class AddStaffComponent implements OnInit {
       .catch((err) => {
         console.log('Error::', err);
       });
-    console.log(this.staffDetails);
   }
 }

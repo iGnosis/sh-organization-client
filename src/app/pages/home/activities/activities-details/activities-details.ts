@@ -27,8 +27,6 @@ export class ActivitiesDetailsComponent implements OnInit {
       })
 
       this.activityId = params.get('id') || ''
-      console.log('activityId:', this.activityId)
-      console.log('activityDetails:', this.activityDetails)
 
       // init charts here
       this.initReactionTimeChart()
@@ -47,9 +45,6 @@ export class ActivitiesDetailsComponent implements OnInit {
 
     const achievementData = this.activityDetails?.events?.map((event: ActivityEvent) => event.score! * 100)
     const taskName = this.activityDetails?.events?.map((event: ActivityEvent) => event.taskName)
-
-    console.log('initAchievementChart:labels', labels)
-    console.log('initAchievementChart:achievementData', achievementData)
 
     const data: any = {
       labels,
@@ -161,9 +156,6 @@ export class ActivitiesDetailsComponent implements OnInit {
       }
       return '#1ac452' // danger color
     })
-
-    console.log('initReactionChart:labels:', labels)
-    console.log('initReactionChart:reactionData:', reactionData)
 
     const data: any = {
       labels,
