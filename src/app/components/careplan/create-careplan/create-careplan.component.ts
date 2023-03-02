@@ -44,7 +44,6 @@ export class CreateCareplanComponent implements OnInit {
 
   async ngOnInit() {
     this.activitiesList = await this.activityService.getAll()
-    console.log(this.activitiesList)
   }
 
   addActivityToCarePlan(activity:any) {
@@ -52,7 +51,6 @@ export class CreateCareplanComponent implements OnInit {
     if(activity.selected) {
       // Make it compliant to GraphQL response
       this.careplan.careplan_activities?.push({activityByActivity: activity, reps:1})
-      console.log(this.careplan.careplan_activities);
     } else {
       // Find the index of the activity
       this.removeActivityFromList(activity)
@@ -71,11 +69,6 @@ export class CreateCareplanComponent implements OnInit {
         return false
       }
     }) ?? -1 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing_operator
-    console.log('removeActivityFromList');
-    console.log('this.careplan.careplan_activities', this.careplan.careplan_activities);
-    console.log('activity', activity);
-    // debugger
-    console.log('idx', idx);
     
     if (idx !== -1) {
       this.careplan.careplan_activities?.splice(idx, 1)  

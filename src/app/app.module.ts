@@ -45,6 +45,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { AvatarComponent } from './widgets/avatar/avatar.component';
 import { PatientsListComponent } from './pages/home/patients/patients-list/patients-list.component';
 import { CarouselModule } from 'ngx-owl-carousel-o';
@@ -55,12 +56,49 @@ import { SafePipe } from './pipes/safe/safe.pipe';
 import { AddCareplan } from './pages/home/patients/add-careplan/add-careplan-popup.component';
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { AddPatient } from './pages/home/care-plan/add-patient/add-patient-popup.component';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true
-};
+import { AccountComponent } from './pages/home/account/account.component';
+import { CallbackComponent } from './widgets/fhir/callback/callback.component';
+import { SmsOtpLoginComponent } from './pages/auth/sms-otp-login/sms-otp-login/sms-otp-login.component';
+import { PatientsHeatmapComponent } from './pages/home/patients/patients-heatmap/patients-heatmap.component';
+import { AdminComponent } from './pages/home/admin/admin.component';
+import { CustomizationComponent } from './pages/home/admin/customization/customization.component';
+import { BillingComponent } from './pages/home/admin/billing/billing.component';
+import { UsersAccessComponent } from './pages/home/admin/users-access/users-access.component';
+import {
+  MatColorFormats,
+  MAT_COLOR_FORMATS,
+  NgxMatColorPickerModule,
+  NGX_MAT_COLOR_FORMATS,
+} from '@angular-material-components/color-picker';
+import { LatestSessionsComponent } from './pages/home/patients/latest-sessions/latest-sessions.component';
+import { RelativeTimePipe } from './pipes/relative-time/relative-time.pipe';
+import { HexToColorPipe } from './pipes/hex-to-color/hex-to-color.pipe';
+import { AddOrganizationComponent } from './pages/home/admin/add-organization/add-organization.component';
+import { InviteGuard } from './guards/invite-guard';
+import { AddPatientComponent } from './pages/invite/add-patient/add-patient.component';
+import { AddStaffComponent } from './pages/invite/add-staff/add-staff.component';
+import { ArchiveMemberModalComponent } from './components/archive-member-modal/archive-member-modal.component';
+import { UserDetailsComponent } from './pages/home/admin/user-details/user-details.component';
+import { InvitePatientModalComponent } from './components/invite-patient-modal/invite-patient-modal.component';
+import { AddPatientModalComponent } from './components/add-patient-modal/add-patient-modal.component';
+import { AccessControlDirective } from './guards/access-control.directive';
+import { PrimaryModalComponent } from './components/primary-modal/primary-modal.component';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'src/environments/environment';
+import { dashboardReducer } from './store/reducers/dashboard.reducer';
+import { TimeagoModule } from 'ngx-timeago';
+import { SubscriptionsComponent } from './pages/home/admin/billing/subscriptions/subscriptions.component';
+import { TransactionsComponent } from './pages/home/admin/billing/transactions/transactions.component';
+import { SupportFabComponent } from './components/support-fab/support-fab.component';
+import { TesterVideoModalComponent } from './components/tester-video-modal/tester-video-modal.component';
+// import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+// import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+// import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+// const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+//   suppressScrollX: true
+// };
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,8 +127,31 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AddCareplan,
     SessionComponent,
     SafePipe,
-    AddPatient
-
+    AddPatient,
+    AccountComponent,
+    CallbackComponent,
+    SmsOtpLoginComponent,
+    PatientsHeatmapComponent,
+    AdminComponent,
+    CustomizationComponent,
+    BillingComponent,
+    UsersAccessComponent,
+    LatestSessionsComponent,
+    RelativeTimePipe,
+    HexToColorPipe,
+    AddOrganizationComponent,
+    AddPatientComponent,
+    AddStaffComponent,
+    ArchiveMemberModalComponent,
+    UserDetailsComponent,
+    InvitePatientModalComponent,
+    AddPatientModalComponent,
+    AccessControlDirective,
+    PrimaryModalComponent,
+    SubscriptionsComponent,
+    TransactionsComponent,
+    SupportFabComponent,
+    TesterVideoModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -116,19 +177,31 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatInputModule,
     BreadcrumbModule,
     MatDialogModule,
+    MatSnackBarModule,
     CarouselModule,
     Ng2SearchPipeModule,
-    PerfectScrollbarModule
+    NgxMatColorPickerModule,
+    StoreModule.forRoot({
+      dashboard: dashboardReducer,
+    }),
+    StoreDevtoolsModule.instrument({
+      name: 'Organization Portal',
+      logOnly: environment.production,
+    }),
+    TimeagoModule.forRoot(),
+    // PerfectScrollbarModule
   ],
   providers: [
     PrivateGuard,
     PublicGuard,
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    InviteGuard,
+    { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS },
 
+    // {
+    //   provide: PERFECT_SCROLLBAR_CONFIG,
+    //   useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    // }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

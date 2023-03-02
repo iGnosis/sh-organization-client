@@ -2,11 +2,41 @@
   max-height: 300px;
   overflow: scroll;
 }
+.bi-bell {
+  position: relative;
+}
+.bi-bell.show-badge::after {
+  content: '';
+  position: absolute;
+  top: 45%;
+  right: 0;
+  transform: translateY(-50%);
+  padding: 6px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}
 
 .card-title {
   font-size: 3rem;
 }
 
+.card-body {
+  background-color: #FAFAFA;
+}
+
 .chart-canvas {
   max-height: 40vh;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.ellipse {
+  width: 56px;
+  height: 56px;
+  left: 224px;
+  top: 8px;
+  background-color: #ECECF9;
 }

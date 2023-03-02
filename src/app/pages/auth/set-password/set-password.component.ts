@@ -28,14 +28,12 @@ export class SetPasswordComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.code = params.get('code') || ''
-      console.log(this.code)
     })
   }
 
   resetPassword() {
     this.errors = []
     this.authService.reset(this.code, this.password).subscribe((data:any) => {
-      console.log(data);
       this.jwtService.setToken(data.token)
       this.userService.set(data.user)
       this.next()

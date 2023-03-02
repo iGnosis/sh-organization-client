@@ -8,10 +8,11 @@
         <input type="text" class="form-control search_in_popup mt-5" placeholder="Search Care Plans" aria-label="Search" aria-describedby="" [(ngModel)]="searchText">
       </div>
     </div>
-    <perfect-scrollbar style="max-height: 400px;" [config]="config" class="scroll-container" fxFlex="auto"[scrollIndicators]="true">
+    <!-- <perfect-scrollbar style="max-height: 400px;" [config]="config" class="scroll-container" fxFlex="auto"[scrollIndicators]="true"> -->
       <div class="mt-5">
           <div class="list-group list-group-flush">
               <div class="list-group-item d-flex align-items-center px-0" *ngFor="let active_careplans of all_careplans| filter:searchText">
+                <img src="assets/images/person-plus.svg">
                   <div class="flex-fill ms-4">
                       <a class="d-block h6 mb-1">{{active_careplans.identifier}}</a>
                   </div>
@@ -21,5 +22,5 @@
               </div>
           </div>
       </div>
-    </perfect-scrollbar>
+    <!-- </perfect-scrollbar> -->
   </div>

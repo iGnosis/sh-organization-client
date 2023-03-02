@@ -27,7 +27,7 @@ module.exports = function (config) {
       suppressAll: true, // removes the duplicated traces
     },
     coverageReporter: {
-      dir: join(__dirname, "./coverage/sh-provider-client"),
+      dir: join(__dirname, "./coverage/sh-organization-client"),
       subdir: ".",
       reporters: [{ type: "html" }, { type: "text-summary" }],
     },

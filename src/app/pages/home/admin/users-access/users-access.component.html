@@ -1,0 +1,240 @@
+<div class="container-xl">
+  <div acl feature="list_staff_members" class="card mt-sm-4 mt-md-10">
+    <div class="col-md-11 mx-auto row pt-md-4 pt-lg-6">
+      <div class="col-md-6 d-flex align-items-center">
+        <p class="h3">
+          Staff Members
+        </p>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end align-items-center gap-3">
+        <button class="btn btn-secondary text-info bg-white btn-border" (click)="openInviteStaffModal()"> <i
+            class="bi bi-plus-lg mx-2"></i>Invite Staff</button>
+        <button class="btn btn-secondary text-info bg-white btn-border" (click)="openAddStaffModal()"> <i
+            class="bi bi-plus-lg mx-2"></i>Add
+          Staff Member</button>
+      </div>
+      <div class="col-md-12 staff-members my-md-4 verticalLineTop">
+        <div class="staff-entry row py-md-4 py-lg-4" *ngFor="let staff of staffList">
+          <div class="col-md-6">
+            <p class="text-dark details-name">{{staff.firstName + ' ' + staff.lastName}}</p>
+            <p class="text-gray">{{staff.type.split('_').join(' ')| titlecase}}</p>
+          </div>
+          <div class="col-md-6 d-flex align-items-center justify-content-end">
+            <button type="button" (click)="redirectToDetailsPage('staff', staff.id)"
+              class="mx-lg-3 mx-md-2 details-button">View
+              Staff Details</button>
+            <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
+            <button type="button" class="mx-lg-3 mx-md-2 text-warning details-button"
+              (click)="openArchiveMemberModal(staff.id, staff.firstName + ' ' + staff.lastName, 'staff')">Archive Staff
+              Member</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div acl feature="list_patients" class="card my-sm-4 my-md-10">
+    <div class="col-md-11 mx-auto row pt-md-4 pt-lg-6 ">
+      <div class="col-md-6 d-flex align-items-center">
+        <p class="h3">
+          Patients
+        </p>
+      </div>
+      <div class="col-md-6 d-flex justify-content-end align-items-center gap-3">
+        <button *ngIf="!isPublicSignupEnabled" class="btn btn-secondary text-info bg-white btn-border" (click)="openInvitePatientModal()"> <i
+            class="bi bi-plus-lg mx-2"></i>Invite Patient</button>
+        <button class="btn btn-secondary text-info bg-white btn-border" (click)="openAddPatientModal()"> <i
+            class="bi bi-plus-lg mx-2"></i>Add New
+          Patient</button>
+      </div>
+      <div class="col-md-12">
+        <mat-checkbox [checked]="!isPublicSignupEnabled" (change)="togglePublicSignup($event)">
+          <p class="h4 text-info checkbox-text mx-2">Allow only invitational sign-ups</p>
+        </mat-checkbox>
+      </div>
+      <div class="col-md-12 staff-members my-md-4 verticalLineTop">
+        <div class="staff-entry row py-md-3 py-lg-3" *ngFor="let patient of patientList">
+          <div class="col-md-6 d-flex align-items-center">
+            <p class="h4 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
+          </div>
+          <div class="col-md-6 d-flex align-items-center justify-content-end">
+            <button type="button" (click)="redirectToDetailsPage('patient',patient.id)"
+              class="mx-lg-3 mx-md-2 details-button">View Patient Details</button>
+            <hr style="width: 2px; height: 20px; display: inline-block; background: #CBD5E0;">
+            <button type="button" class="mx-lg-3 mx-md-2 text-danger details-button"
+              (click)="openArchiveMemberModal(patient.id, patient.firstName +' '+ patient.lastName, 'patient')">Archive
+              Patient</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #addMemberModal let-modal>
+  <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+      class="bi bi-x-lg"></i></button>
+  <div class="modal-header d-flex justify-content-center">
+    <p class="h2 modal-title text-primary"><i class="bi bi-plus-lg mx-2"></i>Add Members</p>
+  </div>
+  <div class="modal-body py-2">
+    <div class="row">
+      <div acl feature="add_patient" *ngIf="isPublicSignupEnabled" class="col-md-6 offset-md-2 py-4 d-flex">
+        <input class="form-check-input w-5 h-5 my-auto" (click)="handleMemberSelect($event)" type="radio" value="patient"
+          name="addMember" id="addPatient" [checked]="addMemberModalValue == 'patient'">
+        <label class="form-check-label h3 mx-4"
+          [ngClass]="addMemberModalValue !== 'patient'? 'text-muted': 'text-primary'" for="addPatient">
+          Add Patient
+        </label>
+      </div>
+
+      <div acl feature="add_staff" class="col-md-8 offset-md-2 py-4 d-flex">
+        <input class="form-check-input w-5 h-5 my-auto" (click)="handleMemberSelect($event)" type="radio" value="staff" name="addMember"
+          id="addStaffMember" [checked]="addMemberModalValue == 'staff'">
+        <label class="form-check-label h3 mx-4 align-items-middle"
+          [ngClass]="addMemberModalValue !== 'staff' ? 'text-muted': 'text-primary'" for="addStaffMember">
+          Add Staff Member
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer d-flex align-items-center justify-content-center">
+    <button type="button" class="btn btn-info" style="min-width: 250px;" [disabled]="addMemberModalValue === undefined"
+      (click)="addMemberModalValue === 'staff' ? openInviteStaffModal() : openInvitePatientModal()">Next</button>
+  </div>
+</ng-template>
+
+<ng-template #inviteStaff let-modal>
+  <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+      class="bi bi-x-lg"></i></button>
+  <div class="row px-8 py-6">
+    <div class="col-md-12 mb-8">
+      <p class="h2 modal-title text-primary col-12">Send Form</p>
+      <p class="text-black col-12">Send an invite or custom link to the staff member to enter details.</p>
+    </div>
+    <div class="col-md-12 row verticle-line-top mb-6 pe-0">
+      <div class=" col-md-9">
+        <input [(ngModel)]="staffEmail" type="text" class="form-control form-control-muted" placeholder="Enter email" />
+      </div>
+      <div class="col-md-3 pe-0">
+        <button (click)="throttledSendInviteViaEmail()" class="btn btn-info w-full">Send Invite</button>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <p class="h3 text-primary my-1">Link</p>
+      <div *ngIf="shareableLink" class="input-group shadow-none" [class.copied]="copyStatusSubject.getValue() === 'copied'">
+        <input type="text" class="form-control border-none" [value]="shareableLink" readonly>
+        <div class="input-group-append">
+          <button class="btn btn-link-primary shadow-none" type="button" [class.text-success]="copyStatusSubject.getValue() === 'copied'"
+            (click)="copyToClipboard(shareableLink)">{{copyStatusSubject.getValue()|
+            titlecase}}</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <mat-checkbox class="mx-2" [(ngModel)]="toggleLinkExpiry">
+        <p class="h5 text-black checkbox-text mx-2">Link Expiry</p>
+      </mat-checkbox>
+      <div *ngIf="toggleLinkExpiry" class="my-4">
+        <label for="expiryDate" class="form-label col-12">Choose Expiry Date</label>
+        <mat-form-field appearance="fill" class="col-12 condition_select">
+          <mat-select placeholder="Choose Expiry Date" [ngModel]="expiryDate"
+            (ngModelChange)="generateShareableLink('staff')">
+            <mat-option value='in1Day'>In 1 day</mat-option>
+            <mat-option value='in1Week'>In 1 week</mat-option>
+            <mat-option value='in2Weeks'>In 2 weeks</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <hr class="hr" />
+    <div class="col-md-12">
+      <div class="">
+        <label class="form-label font-bold" for="staff-role">Select Staff Role<span class="text-danger">*</span></label>
+        <select [(ngModel)]="staffRole" class="form-select form-control-muted" id="staff-role" placeholder="Select Staff role">
+          <option selected disabled value="">Select Staff Role</option>
+          <option value="org_admin">Organization Admin</option>
+          <option value="therapist">Therapist</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #addStaff let-modal>
+  <button type="button" class="custom-btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"><i
+      class="bi bi-x-lg"></i></button>
+  <div class="row px-8 py-8">
+    <div class="col-md-12 mb-8">
+      <p class="h3 text-primary">Add New Staff Member</p>
+    </div>
+    <div class="col-md-12 mb-4">
+      <div class="row">
+        <div class="col-md-6 col-sm-10">
+          <label for="fname" class="form-label col-12">First Name</label>
+          <input [ngModel]="staffDetails.firstName" (input)="setInput('firstName', $event)" id="fname"
+            type="text" class="form-control form-control-muted" required placeholder="Enter First name">
+        </div>
+        <div class="col-md-6 col-sm-10">
+          <label for="lname" class="form-label col-12">Last Name</label>
+          <input [ngModel]="staffDetails.lastName" (input)="setInput('lastName', $event)" id="lname" type="text"
+            class="form-control form-control-muted" required placeholder="Enter Last name">
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <label for="staff-role" class="form-label col-12">Staff Role</label>
+      <select [ngModel]="staffDetails.staffType" (ngModelChange)="setSelect('staffType', { value: $event })" class="form-select form-control-muted" id="staff-role" placeholder="Select Staff Role" required>
+        <option hidden [value]="''" selected disabled>Enter Staff Role</option>
+        <option value='therapist'>Therapist</option>
+        <option value='org_admin'>Admin</option>
+      </select>
+    </div>
+    <div class="col-md-12 mb-4">
+      <label for="email" class="form-label col-12">Staff Email</label>
+      <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
+        [ngModel]="staffDetails.email" (input)="setInput('email', $event)" required>
+    </div>
+    <div class="col-md-12 mb-8">
+      <div class="row">
+        <div class="col-md-4">
+          <label for="countryCode" class="form-label col-12">Country Code</label>
+          <select [ngModel]="staffDetails.phoneCountryCode" (ngModelChange)="setSelect('phoneCountryCode', { value: $event })" class="form-select form-control-muted" id="staff-role" placeholder="Select Country Code">
+            <option hidden [value]="''" selected disabled>Enter Country Code</option>
+            <option value='+1'>+1 USA</option>
+            <option value='+1'>+1 Canada</option>
+            <option value='+91'>+91 India</option>
+          </select>
+        </div>
+        <div class="col-md-8">
+          <label for="mobile" class="form-label col-12">Staff Phone Number</label>
+          <input id="mobile" [ngModel]="staffDetails.phoneNumber" type="number" class="form-control form-control-muted"
+            placeholder="Enter phone number" (input)="setInput('phoneNumber', $event)" required>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <div class="row">
+        <div class="col-md-6">
+          <p *ngIf="addNewStaffStatus" class="mx-2 py-2"
+            [ngClass]="addNewStaffStatus.status === 'success' ? 'text-success' : 'text-danger'">
+            {{addNewStaffStatus.text}}</p>
+        </div>
+        <div class="col-md-6 d-flex justify-content-end align-items-end">
+          <button class="btn btn-info" (click)="addNewStaff()" [disabled]="!enableSaveButton">Add New Staff
+            Member</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #invitePatient let-modal>
+  <invite-patient-modal [modal]="modal" [modalState]="invitePatientModalState"></invite-patient-modal>
+</ng-template>
+
+<ng-template #addPatient let-modal>
+  <add-patient-modal [modal]="modal" [modalState]="addPatientModalState"></add-patient-modal>
+</ng-template>

@@ -19,12 +19,12 @@ html {
   cursor: pointer;
 }
 
-
 .assigned_care_plan_row {
   .careplan_details {
     position: relative;
 
-    .remove, .start-session {
+    .remove,
+    .start-session {
       position: absolute;
       font-size: 16px;
       cursor: pointer;
@@ -41,7 +41,45 @@ html {
     }
   }
 
-  .careplan:hover .remove, .careplan:hover .start-session{ 
+  .careplan:hover .remove,
+  .careplan:hover .start-session {
     display: inline;
+  }
+}
+
+::ng-deep {
+  .owl-stage {
+    display: flex;
+  }
+  .owl-nav {
+    z-index: -1;
+    position: absolute;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .owl-theme .owl-nav [class*="owl-"] {
+    color: #000;
+    font-size: 2rem;
+    background: none;
+    position: relative;
+  }
+  .owl-prev {
+    left: -3rem;
+  }
+  .owl-next {
+    right: -3rem;
+  }
+}
+
+.details-button {
+  background-color: transparent;
+  color: #2f51ae;
+  font-size: 14px;
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 }

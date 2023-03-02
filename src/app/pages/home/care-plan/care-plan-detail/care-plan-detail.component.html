@@ -34,6 +34,7 @@
 <!-- Main content -->
 <main>
   <div class="px-3 px-lg-7 pt-7 pb-7 mb-5 bg-light mt-5">
+  <div class="container-xl">
   <h2 class="activities-title">Activities</h2>
   <owl-carousel-o [options]="customOptions" class="activities-carousel">
     <ng-template carouselSlide *ngFor="let careplan_activity_list of activityList;let count = index">
@@ -59,12 +60,27 @@
     </div></ng-template>
   </owl-carousel-o>
   </div>
+</div>
+
   <div class="px-3 px-lg-7 pt-7 mb-5 bg-light mt-5 pb-7">
+    <div class="container-xl">
     <div class="row custom_alignment">
-    <div class="col-md-6 col-12 mb-3 mb-md-0">
+      <div class="col-12 mb-3 mb-md-0" *ngIf="patientList.length == 0">
+        <h1 class="h2 mb-0 ls-tight mt-5">Active Patients</h1>
+      <div class="no_careplan_notice_alignment">
+      <img src="/assets/images/no_assigned.svg" />
+        <h2 class="active_care_plan_card_title mt-5 no_careplan_title">No Patients added for {{carePlanName}}</h2>
+        <div class="mx-n1 mt-7">
+          <a (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
+          <mat-icon>add</mat-icon><span>Add New</span>
+        </a>
+        </div>
+      </div>
+      </div>
+    <div class="col-md-6 col-12 mb-3 mb-md-0" *ngIf="patientList.length != 0">
       <h1 class="h2 mb-0 ls-tight mt-5">Active Patients</h1>
     </div>
-    <div class="col-md-6 col-12 text-md-end">
+    <div class="col-md-6 col-12 text-md-end" *ngIf="patientList.length != 0">
       <div class="mx-n1">
         <a (click)="openAddPatientDialog()" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 assigned_care_plan_button">
           <mat-icon>add</mat-icon><span>Add New</span>
@@ -75,9 +91,11 @@
   <div class="row custom_alignment g-7 active-patients mt-5">
     <div *ngFor="let patient_list of patientList;let i = index" class="col-sm-6">
     <div class="care-plan-detail p-5" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true,'alignment-class':isShowCareplan}">
-      <div class="col-sm-6 px-5" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true}">
-        <h6>{{patient_list.patientByPatient.identifier}}</h6>
+      <div class="col-sm-6 px-5 careplan-content" [ngClass]="{'count-class': i >= 6,'hide-class':isShowCareplan==true}">
+        <h6><a routerLink="/app/patients/{{patient_list.patientByPatient.id}}">{{patient_list.patientByPatient.identifier}}</a></h6>
         <span *ngFor="let medical_conditions of patient_list.patientByPatient.medicalConditions | keyvalue">{{medical_conditions.key}} </span>
+        <!-- <span class="start-session" ngbPopover="Start a New Session With Care Plan" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-play text-primary"></i></span> -->
+        <span class="remove" (click)="removeCareplanFromPatient(patient_list.patientByPatient.id, confirmDeletion)" ngbPopover="Remove Care Plan from Patient" triggers="mouseenter:mouseleave"> <i class="fa fa-solid fa-trash text-danger"></i></span>
       </div>
       <div class="col-sm-6 inner-avatar-align p-5">
         <div class="col-2">
@@ -93,5 +111,15 @@
   <a *ngIf="isShowToggle"(click)="isShowCareplan = !isShowCareplan" class="toggle-patients">{{ isShowCareplan ? 'See More': 'See Less' }}</a>
   </div>
     </div>
+  </div>
   </main>
 
+  <ng-template #confirmDeletion let-modal>
+    <div class="modal-body">
+      <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+      <div class="text-end mt-2">
+        <button type="button" class="btn btn-sm btn-danger me-5" (click)="confirmRemoveCarePlan()">Yes, Remove</button>
+        <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+      </div>
+    </div>
+  </ng-template>

@@ -17,14 +17,18 @@ export class PatientAddComponent implements OnInit {
   medicalConditionsList: any = []
   selectedMedicalConditions: any = []
   dropdownSettings: IDropdownSettings = {}
-  availableGenres: any = []
-  selectedGenres: any = []
   showCarePlans = true
 
   availableCarePlans: any = []
   selectedCarePlans: any = []
 
-  identifier?: string
+  patient : {
+    identifier?: string,
+    email?: string,
+    phoneNumber?: string, 
+    careGiverEmail?: string,
+    careGiverPhoneNumber?: string
+  } = {}
   stage = 1
   id?: string
 
@@ -53,13 +57,6 @@ export class PatientAddComponent implements OnInit {
       { id: 2, name: `Alzheimer's` },
       { id: 4, name: `Others` },
     ];
-    this.availableGenres = [
-      { id: 1, name: 'Rock' },
-      { id: 1, name: 'Classical' },
-      { id: 1, name: 'Jazz' },
-      { id: 1, name: 'Pop' },
-      { name: 'Others' }
-    ]
     this.dropdownSettings = {
       singleSelection: false,
       idField: 'name',
@@ -73,7 +70,7 @@ export class PatientAddComponent implements OnInit {
 
   async addPatient() {
 
-    if (!this.identifier) {
+    if (!this.patient.identifier) {
       this.toastService.showDanger('Please add an identifier for the patient.')
       return
     }
@@ -82,22 +79,17 @@ export class PatientAddComponent implements OnInit {
     const preferredGenres: any = {}
 
     this.selectedMedicalConditions.map((x: any) => { medicalConditions[x.name] = true })
-    this.selectedGenres.map((x: any) => { preferredGenres[x.name] = true })
 
-    const patient = {
-      identifier: this.identifier,
-      medicalConditions,
-      preferredGenres
-    }
+    const patient = Object.assign({}, this.patient, { medicalConditions } );
 
     const response = await this.patientService.insertPatient(patient)
       .catch((error) => {
+        console.log(error)
         if (error.message.includes('Uniqueness violation')) {
           this.toastService.showDanger('Identifier already in use, please use a different identifier.')
         }
       })
 
-    console.log(response);
     this.id = response.insert_patient_one.id
     this.router.navigate([`/app/patients/${this.id}/care-plan`])
   }

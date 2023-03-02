@@ -1,9 +1,11 @@
 import { Environment } from "src/app/pointmotion";
 
 export const environment: Environment = {
-  name: 'prod',
+  organizationName: 'pointmotion',
   production: true,
-  gqlEndpoint: 'https://api.dev.pointmotioncontrol.com/v1/graphql',
-  servicesEndpoint: 'https://services.dev.pointmotioncontrol.com',
-  activityEndpoint: 'https://session.dev.pointmotioncontrol.com'
+  name: 'prod',
+  gqlEndpoint: 'https://api.prod.pointmotioncontrol.com/v1/graphql',
+  servicesEndpoint: 'https://services.prod.pointmotioncontrol.com',
+  activityEndpoint: 'https://session.prod.pointmotioncontrol.com',
+  websocketEndpoint: 'wss://services.prod.pointmotioncontrol.com',
 };

@@ -1,25 +1,31 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { AnalyticsService } from 'src/app/services/analytics/analytics.service';
 import { GraphqlService } from 'src/app/services/graphql/graphql.service';
 import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
-import { Chart } from 'chart.js';
+import { Chart, ChartConfiguration, ChartData, ChartOptions } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { ChartService } from 'src/app/services/chart/chart.service';
-import { MatSort, Sort, SortDirection } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatTableFilter } from 'mat-table-filter';
-import {SelectionModel} from '@angular/cdk/collections';
-import {MatDialog} from '@angular/material/dialog';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatDialog } from '@angular/material/dialog';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { StartSessionPopUp } from '../start-session/start-session-popup.component';
 import { EventEmitterService } from 'src/app/services/eventemitter/event-emitter.service';
 import { CarePlanService } from 'src/app/services/care-plan/care-plan.service';
 import { SessionService } from 'src/app/services/session/session.service';
-import { AchievementRatio, EngagementRatio, Patient, Session } from 'src/app/pointmotion';
+import { DashboardState, Game, Patient } from 'src/app/pointmotion';
 import { AddCareplan } from '../add-careplan/add-careplan-popup.component';
+import { groupBy as lodashGroupBy, capitalize } from 'lodash';
+import * as moment from 'moment';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+import { Store } from '@ngrx/store';
+import { dashboard } from 'src/app/store/actions/dashboard.actions';
+import { Subscription } from 'rxjs';
+import { BreadcrumbService } from 'xng-breadcrumb';
+import { TesterVideoModalComponent } from 'src/app/components/tester-video-modal/tester-video-modal.component';
 
 export class Captain {
   careplanByCareplan: string;
@@ -39,20 +45,30 @@ export class SpaceCraft {
 @Component({
   selector: 'app-patient-details',
   templateUrl: './patient-details.component.html',
-  styleUrls: ['./patient-details.component.scss']
+  styleUrls: ['./patient-details.component.scss'],
 })
-
-export class PatientDetailsComponent implements OnInit {
+export class PatientDetailsComponent implements OnInit, OnDestroy {
   isShowDiv = true;
   selected: any;
   isShowFilter = true;
   allowMultiSelect: boolean | undefined;
   initialSelection: unknown[] | undefined;
   activeCarePlans: any | undefined;
-  patientIdentifier: any | undefined;
+  patientIdentifier: string;
   getActivityCount: number;
   getEstimatedActivityDuration: number;
-  // getCarePlanCount : number;
+  engagementChartFilter?: string = undefined;
+
+  showEmptyState = false;
+
+  availableGames = [
+    'all_activities',
+    'sit_stand_achieve',
+    'beat_boxer',
+    'sound_explorer',
+    'moving_tones',
+  ];
+  activityFilterOptions = this.availableGames;
 
   toggleFilterDiv() {
     this.isShowFilter = !this.isShowFilter;
@@ -61,33 +77,81 @@ export class PatientDetailsComponent implements OnInit {
     this.isShowDiv = !this.isShowDiv;
   }
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild('dataSourceSort') dataSourceSort: MatSort = new MatSort();
+  @ViewChild('dataSourcePaginator') dataSourcePaginator: MatPaginator;
+  @ViewChild('videoDataSourceSort') videoDataSourceSort: MatSort =
+    new MatSort();
+  @ViewChild('videoDataSourcePaginator') videoDataSourcePaginator: MatPaginator;
+  dataSource: MatTableDataSource<Game>;
+  videoDataSource: MatTableDataSource<{
+    id: string;
+    startedAt: string;
+    endedAt: string;
+    duration: number;
+  }>;
+  videoTableDisplayColumns: string[] = [
+    // 'total_count',
+    'startedAt',
+    'endedAt',
+    'duration',
+    'view_recording',
+  ];
 
   searchValue: any;
-  itemsPerPage = 10
-  currentPage = 1
-  isRowsChecked = false
-  achievementChart: any
-  engagementChart: any
-  startDate?: Date
-  endDate?: Date
-  noSessionAssignedPlan: number
-  // code for mat tab starts here
-  @ViewChild('TableOnePaginator', { static: true }) tableOnePaginator: MatPaginator;
+  isRowsChecked = false;
+  achievementChart: Chart;
+  engagementChart: Chart;
+  moodVariationChart: Chart;
+
+  startDate: Date;
+  endDate: Date;
+
+  dateSubscription: Subscription;
+  noSessionAssignedPlan: number;
   selection: any;
   row: any;
-  dataSource: any = new MatTableDataSource();
   filterEntity: SpaceCraft;
   filterType: MatTableFilter;
-  displayedColumns: string[] = ['total_count', 'label_star', 'careplanByCareplan', 'activity_type', 'timeDuration', 'createdAt', 'totalPerformanceRatio', 'activity_action'];
-  // displayedColumns: string[] = ['total_count','label_star', 'care_plan', 'activity_type', 'activity_time','activity_date','activity_performance','activity_action'];
-  // code for mat tab ends here
+  displayedColumns: string[] = [
+    'total_count',
+    'activity_type',
+    'timeDuration',
+    'createdAt',
+    'game',
+    'avgAchievementRatio',
+    'activity_action',
+  ];
+  patientId?: string;
+  details?: Patient;
+  totalGamesCount?: number;
+  gameDetails: Array<Game>;
+  selectedCarePlanId: string;
 
-  patientId?: string
-  details?: Patient
-  totalSessionsCount?: number
-  sessionDetails?: Array<Session>
-  selectedCarePlanId: string
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
+  ];
+  selectedDateRange = 0;
+
+  customOptions: OwlOptions = {
+    loop: false,
+    dots: false,
+    navSpeed: 700,
+    responsive: {
+      940: {
+        items: 2,
+      },
+    },
+    nav: true,
+    navText: [
+      '<i class="bi bi-chevron-left"></i>',
+      '<i class="bi bi-chevron-right"></i>',
+    ],
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -97,49 +161,93 @@ export class PatientDetailsComponent implements OnInit {
     private graphqlService: GraphqlService,
     private sessionService: SessionService,
     private chartService: ChartService,
-    private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private modalService: NgbModal,
-    public eventEmitterService: EventEmitterService
-  ) { }
+    public eventEmitterService: EventEmitterService,
+    private store: Store<{ dashboard: DashboardState }>,
+    private breadcrumbService: BreadcrumbService
+  ) {
+    this.breadcrumbService.set('@patientName', '...');
+    this.endDate = new Date();
+    this.startDate = this.endDate;
 
-  //@ViewChild('callStartNewSessionModal') callStartNewSessionModal: TemplateRef<any>;
+    this.dateSubscription = this.store
+      .select('dashboard')
+      .subscribe(async (state) => {
+        this.selectedDateRange = this.dateFilter.findIndex(
+          (item) => item.range === state.dateRange
+        );
+        await this.updateChartTimeline(state.dateRange);
+      });
+  }
 
-  ngOnInit() {
+  ngOnDestroy(): void {
+    this.dateSubscription.unsubscribe();
+  }
 
-    this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
+  async ngOnInit() {
+    this.selection = new SelectionModel(
+      this.allowMultiSelect,
+      this.initialSelection
+    );
     this.filterEntity = new SpaceCraft();
     this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
-      this.patientId = params.get('id') || ''
+      this.patientId = params.get('id') || '';
       if (this.patientId) {
-        console.log('patientId:', this.patientId);
-        // this.eventEmitterService.SentPatientID({data:this.patientId});
-        this.fetchSessions(0)
-        this.GetAssignedCarePlan()
+        await this.fetchSessions();
+        await this.fetchTestingVideos(this.patientId);
 
-        // TODO: remove this when events are being sent properly from activity site.
-        // And when you have date picker implemented.
-        this.startDate = new Date('2022-01-01T08:10:35.797Z')
-        this.endDate = new Date('2023-04-30T08:10:35.797Z')
+        this.updateCharts('start', this.startDate!, 'achievement');
+        this.updateCharts('end', this.endDate!, 'achievement');
 
-        // by default, get data for past 7 days
-        // this.endDate = new Date()
-        // this.startDate = new Date(new Date().setDate(new Date().getDate() - 7))
-        this.initAchievementChart(this.startDate.toISOString(), this.endDate.toISOString())
+        this.updateCharts('start', this.startDate!, 'engagement');
+        this.updateCharts('end', this.endDate!, 'engagement');
 
-        // init dummy charts
-        this.initEngagementChart(this.startDate.toISOString(), this.endDate.toISOString())
+        this.updateCharts('start', this.startDate!, 'mood');
+        this.updateCharts('end', this.endDate!, 'mood');
       }
-    })
+    });
   }
-  openDialog() {
-    const dialogRef = this.dialog.open(StartSessionPopUp);
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-    this.eventEmitterService.SentPatientID(this.patientId);
+
+  ngAfterViewInit() {
+    if (this.dataSource) {
+      this.dataSource.paginator = this.dataSourcePaginator;
+      this.dataSource.sort = this.dataSourceSort;
+    }
+
+    if (this.videoDataSource) {
+      this.videoDataSource.paginator = this.videoDataSourcePaginator;
+      this.videoDataSource.sort = this.videoDataSourceSort;
+    }
   }
+
+  async updateChartTimeline(range: number) {
+    this.startDate = new Date(this.endDate);
+    this.startDate.setDate(this.startDate.getDate() - range);
+
+    if (range == 0) this.startDate = this.endDate;
+
+    if (this.patientId) {
+      this.updateCharts('start', this.startDate!, 'achievement');
+      this.updateCharts('end', this.endDate!, 'achievement');
+
+      this.updateCharts('start', this.startDate!, 'engagement');
+      this.updateCharts('end', this.endDate!, 'engagement');
+
+      this.updateCharts('start', this.startDate!, 'mood');
+      this.updateCharts('end', this.endDate!, 'mood');
+    }
+  }
+
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    const range = this.dateFilter[this.selectedDateRange].range;
+
+    this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
+    await this.updateChartTimeline(range);
+  }
+
   openCarePlanDialog() {
     const dialogRef = this.dialog.open(AddCareplan);
     // dialogRef.afterClosed().subscribe(result => {
@@ -147,210 +255,186 @@ export class PatientDetailsComponent implements OnInit {
     // });
     this.eventEmitterService.SentPatientID(this.patientId);
   }
-  announceSortChange(sortState: Sort) {
-    // This example uses English messages. If your application supports
-    // multiple language, you would internationalize these strings.
-    // Furthermore, you can customize the message to add additional
-    // details about the values being sorted.
-    if (sortState.direction) {
-      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
-    } else {
-      this._liveAnnouncer.announce('Sorting cleared');
-    }
-  }
 
   openCarePlanDetails(id: string) {
-    this.router.navigate(['/app/care-plans/', id])
+    this.router.navigate(['/app/care-plans/', id]);
   }
 
-  async fetchSessions(offset: number) {
-    // we need to show sessions of a patient.
-    let sessions = await this.graphqlService.client.request(GqlConstants.GET_SESSIONS,
+  async fetchSessions() {
+    const resp = await this.graphqlService.client.request(
+      GqlConstants.GET_GAMES,
       {
         patientId: this.patientId,
-        limit: this.itemsPerPage,
-        offset
       }
-    )
+    );
 
-    console.log('offset:', offset)
-    console.log('fetchSessions:', sessions)
+    const games = resp.game;
+    if (games && games.length === 0) {
+      this.showEmptyState = true;
+    }
+    const aggregatedAnalytics = resp.aggregate_analytics;
 
-    const totalSessionsCount = sessions.session_aggregate.aggregate.count
-    console.log('fetchSessions:totalSessionsCount:', totalSessionsCount)
-    this.totalSessionsCount = totalSessionsCount
+    const mergedArr = games.map((game: any) => ({
+      ...aggregatedAnalytics.find(
+        (analytics: any) => analytics.game === game.id && analytics
+      ),
+      ...game,
+    }));
 
-    // Array of sessions
-    sessions = sessions.session
-
-    if (!sessions) return
-
-    sessions.forEach((val: Session) => {
-      // work out time duration
+    mergedArr.forEach((val: any) => {
+      val.avgAchievementRatio = parseFloat((val.value * 100).toFixed(2));
       if (val.createdAt && val.endedAt) {
-        const createdAtMilliSec: number = new Date(val.createdAt).getTime()
-        const endedAtMilliSec: number = new Date(val.endedAt).getTime()
-        const seconds = (endedAtMilliSec - createdAtMilliSec) / 1000
-        val.timeDuration = this.secondsToString(seconds)
+        val.timeDuration = this.analyticsService.calculateTimeDuration(
+          val.createdAt,
+          val.endedAt
+        );
       }
-    })
+    });
 
-    this.sessionDetails = sessions
+    this.gameDetails = mergedArr;
+    this.dataSource = new MatTableDataSource(mergedArr);
+    setTimeout(() => {
+      this.dataSource.paginator = this.dataSourcePaginator;
+      this.dataSource.sort = this.dataSourceSort;
+    }, 100);
 
-    // fetching analytics data for sessions
-    const sessionIds = sessions.map((session: Session) => session.id)
-    console.log('fetchSessions:sessionIds:', sessionIds)
-
-    this.analyticsService.getAnalytics(sessionIds).subscribe((sessionAnalytics: any) => {
-      console.log('fetchSessions:getAnalytics:', sessionAnalytics)
-
-      sessions.forEach((val: Session) => {
-        if (val.id && val.id in sessionAnalytics) {
-          let performanceRatio = 0
-          let totalEventsPerSession = 0
-          let avgReactionTime = 0
-
-          const session = sessionAnalytics[val.id]
-          val.sessionAnalytics = session
-
-          for (const activity in session) {
-            for (const event of session[activity].events) {
-              // console.log('event:', event)
-              performanceRatio += event.score * 100
-              avgReactionTime += event.reactionTime
-              totalEventsPerSession++
-            }
-          }
-          performanceRatio = performanceRatio / totalEventsPerSession
-          performanceRatio = Math.round(performanceRatio * 100) / 100
-          val.totalPerformanceRatio = performanceRatio
-          val.avgReactionTime = parseFloat((avgReactionTime / totalEventsPerSession).toFixed(2))
-        }
-      })
-
-      this.sessionDetails = sessions
-      console.log('sessionDetails:', this.sessionDetails)
-    })
-    this.dataSource.data = this.sessionDetails;
-    //console.log(this.dataSource.data, ">>>>>>>");
-
-    const identifier_response = await this.graphqlService.client.request(GqlConstants.GET_PATIENT_IDENTIFIER, { patientId: this.patientId })
-    this.patientIdentifier = identifier_response.patient[0].identifier;
-    //console.log(this.patient_identifier,'getpatient');
-
-    //console.log(this.active_careplans[0].careplanByCareplan.careplan_activities_aggregate.aggregate.count,'getcount')
+    const patient = await this.graphqlService.client.request(
+      GqlConstants.GET_PATIENT_IDENTIFIER,
+      { patientId: this.patientId }
+    );
+    this.patientIdentifier = patient.patient[0].nickname;
+    this.breadcrumbService.set('@patientName', this.patientIdentifier);
   }
-  async GetAssignedCarePlan(){
-    const response = await this.graphqlService.client.request(GqlConstants.GET_ACTIVE_PLANS, { patient: this.patientId })
+
+  async GetAssignedCarePlan() {
+    const response = await this.graphqlService.client.request(
+      GqlConstants.GET_ACTIVE_PLANS,
+      { patient: this.patientId }
+    );
     this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
     // this.getCarePlanCount = this.activeCarePlans.length;
-    console.log(this.dataSource.data.length, "length");
     if (this.activeCarePlans.length > 0) {
-      this.getActivityCount = this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
-      this.getEstimatedActivityDuration = this.activeCarePlans[0].careplanByCareplan.estimatedDuration;
+      this.getActivityCount =
+        this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
+      this.getEstimatedActivityDuration =
+        this.activeCarePlans[0].careplanByCareplan.estimatedDuration;
     }
 
     if (this.getActivityCount == 0 && this.dataSource.data.length == 0) {
       this.noSessionAssignedPlan = 1;
-    }
-    else {
+    } else {
       this.noSessionAssignedPlan = 0;
     }
   }
 
-  async openRemoveCareplanFromPatientModal(careplan: string, modalContent: any) {
-    this.modalService.open(modalContent)
-    this.selectedCarePlanId = careplan
+  async openRemoveCareplanFromPatientModal(
+    careplan: string,
+    modalContent: any
+  ) {
+    this.modalService.open(modalContent);
+    this.selectedCarePlanId = careplan;
   }
 
   async removeCarePlanFromPatient(modal: NgbModal) {
     if (this.patientId) {
-      await this.carePlanService.detachCarePlan(this.patientId, [this.selectedCarePlanId])
-      this.modalService.dismissAll()
+      await this.carePlanService.detachCarePlan(this.patientId, [
+        this.selectedCarePlanId,
+      ]);
+      this.modalService.dismissAll();
       window.location.reload();
     } else {
-      throw new Error('patientId not initialized')
+      throw new Error('patientId not initialized');
     }
   }
 
   async startSessionFromCareplan() {
     if (this.patientId) {
-      const session = await this.sessionService.new(this.patientId, this.selectedCarePlanId)
+      const session = await this.sessionService.new(
+        this.patientId,
+        this.selectedCarePlanId
+      );
       if (session.insert_session_one && session.insert_session_one.id) {
-        this.router.navigate(['/session/', session.insert_session_one.id])
+        this.router.navigate(['/session/', session.insert_session_one.id]);
       }
     } else {
-      throw new Error('patientId not initialized')
+      throw new Error('patientId not initialized');
     }
-    this.modalService.dismissAll()
+    this.modalService.dismissAll();
   }
 
-  async openStartSessionFromCareplanModal(careplan: string, modalContent?: any) {
-    this.modalService.open(modalContent)
-    this.selectedCarePlanId = careplan
+  async openStartSessionFromCareplanModal(
+    careplan: string,
+    modalContent?: any
+  ) {
+    this.modalService.open(modalContent);
+    this.selectedCarePlanId = careplan;
   }
 
-  initEngagementChart(startDate: string, endDate: string) {
-    const data = {
+  async initEngagementChart(startDate: string, endDate: string) {
+    const data: any = {
       labels: [],
-      datasets: [{
-        data: [],
-        careplanNames: [], // need this for tooltips
-        backgroundColor: '#000066',
-        fill: true,
-        label: 'Completion Ratio'
-      }]
-    }
+      datasets: [
+        {
+          data: [],
+          careplanNames: [], // need this for tooltips
+          backgroundColor: '#2F51AE',
+          fill: true,
+          label: 'Completion Ratio',
+        },
+      ],
+    };
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'bar',
       data: data,
       plugins: [ChartDataLabels],
       options: {
-        beginAtZero: true,
         responsive: true,
         scales: {
           y: {
+            beginAtZero: true,
             max: 100,
             title: {
               display: true,
               text: 'Session Completion',
+              color: '#000000',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              padding: 12,
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
-                size: 14
+                size: 14,
               },
               stepSize: 20,
-              color: '#000066'
-            }
+              color: '#000066',
+            },
           },
           x: {
             title: {
               display: true,
               text: 'Day',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              color: '#000000',
+              padding: 12,
             },
             ticks: {
               font: {
-                size: 14
+                size: 14,
               },
-              color: '#000066'
-            }
-          }
+              color: '#000066',
+            },
+          },
         },
         plugins: {
           // hide Label 'success ratio'
           legend: {
-            display: false
+            display: false,
           },
           datalabels: {
             anchor: 'end',
@@ -358,8 +442,8 @@ export class PatientDetailsComponent implements OnInit {
             offset: 10,
             color: 'white',
             font: {
-              size: 14
-            }
+              size: 14,
+            },
           },
           title: {
             display: false,
@@ -367,83 +451,102 @@ export class PatientDetailsComponent implements OnInit {
             text: 'Reaction Time',
             fullSize: true,
             font: {
-              size: 28
-            }
+              size: 28,
+            },
           },
           tooltip: {
             titleFont: {
-              size: 16
+              size: 16,
             },
             bodyFont: {
-              size: 16
+              size: 16,
             },
             caretSize: 15,
             callbacks: {
               label: function (tooltipItem: any) {
                 // console.log('tooltipItem:', tooltipItem)
-                const careplanName = tooltipItem.dataset.careplanNames[tooltipItem.dataIndex]
-                const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex]
-                return `${careplanName} - ${successRatio.toFixed(2)}%`
-              }
-            }
-          }
-        }
-      }
+                const careplanName =
+                  tooltipItem.dataset.careplanNames[tooltipItem.dataIndex];
+                const successRatio =
+                  tooltipItem.dataset.data[tooltipItem.dataIndex];
+                return `${successRatio.toFixed(2)}%`;
+              },
+            },
+          },
+        },
+      },
+    };
+
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    const engagementRatioData =
+      await this.chartService.fetchPatientChartableData(
+        startDate,
+        endDate,
+        userTimezone,
+        this.patientId!,
+        'avgEngagementRatio',
+        'day',
+        false
+      );
+
+    const chartResults: { [dateWithTimeZone: string]: number } =
+      engagementRatioData.patientChart.data.results;
+
+    for (const key in chartResults) {
+      data.labels.push(key.split('T')[0].split('-')[2]);
+      data.datasets[0].data.push(chartResults[key]);
     }
 
-    this.chartService.getEngagementPerPatient(
-      this.patientId!,
-      startDate,
-      endDate
-    ).subscribe((results: any) => {
-      console.log('initEngagementChart:results:', results)
+    // data.datasets[0].careplanNames = engagementRatioData.map(
+    //   (result: EngagementRatio) => result.careplanName
+    // );
 
-      // work out labels
-      data.labels = results.map((result: EngagementRatio) => {
-        const createdAtDate = new Date(result.sessionCreatedAt!)
-        return createdAtDate.toISOString().substring(0, 10)
-      })
-      // console.log('initEngagementChart:labels:', data.labels)
-
-      // work out datasets
-      data.datasets[0].data = results.map((result: EngagementRatio) => result.engagementRatio! * 100)
-      data.datasets[0].careplanNames = results.map((result: EngagementRatio) => result.careplanName)
-
-      const engagementChartElm = document.getElementById('engagementChart')
-      if (engagementChartElm) {
-        // @ts-ignore: TypeScript headache - fix later
-        const ctx = document.getElementById('engagementChart').getContext('2d')
-        if (ctx) {
-          // @ts-ignore: TypeScript headache - fix later
-          this.engagementChart = new Chart(ctx, config)
-        }
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('engagementChart')
+    );
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.engagementChart != null) {
+        this.engagementChart.destroy();
       }
-    })
+      this.engagementChart = new Chart(ctx, config);
+    }
   }
 
-  initAchievementChart(startDate: string, endDate: string) {
-    const data = {
+  async initAchievementChart(
+    startDate: Date,
+    endDate: Date,
+    filter?: string[]
+  ) {
+    const data: any = {
       labels: [],
-      datasets: [{
-        data: [],
-        careplanNames: [], // need this for tooltips
-        pointRadius: 5,
-        backgroundColor: '#000066',
-        borderColor: '#000066',
-        pointBackgroundColor: '#000066',
-        tension: 0.1,
-        fill: false,
-        label: 'Success Ratio',
-        clip: false,
-      }]
-    }
+      datasets: [
+        {
+          data: [],
+          careplanNames: [], // need this for tooltips
+          pointRadius: 5,
+          backgroundColor: '#000066',
+          borderColor: '#000066',
+          pointBackgroundColor: '#000066',
+          tension: 0.1,
+          fill: false,
+          label: 'Success Ratio',
+          clip: false,
+        },
+      ],
+    };
 
-    const config = {
+    const config: ChartConfiguration = {
       type: 'line',
       data: data,
       options: {
-        hitRadius: 30,
-        hoverRadius: 12,
+        elements: {
+          point: {
+            hitRadius: 30,
+            hoverRadius: 12,
+          },
+        },
         responsive: true,
         // making object array readable for ChartJS
         // parsing: {
@@ -460,40 +563,52 @@ export class PatientDetailsComponent implements OnInit {
               display: true,
               text: '% of correct motions',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              color: '#000000',
+              padding: 12,
             },
             ticks: {
-              callback: (value: number) => `${value}%`,
+              callback: (value: any) => `${value}%`,
               font: {
-                size: 14
+                size: 14,
               },
               stepSize: 20,
-              color: '#000066'
-            }
+              color: '#000066',
+            },
           },
           x: {
             title: {
               display: true,
               text: 'Day',
               font: {
-                size: 18
+                size: 18,
               },
-              padding: 12
+              padding: 12,
+              color: '#000000',
             },
             ticks: {
               font: {
-                size: 14
+                size: 14,
               },
-              color: '#000066'
-            }
-          }
+              color: '#000066',
+            },
+          },
         },
         plugins: {
           // hide Label 'success ratio'
           legend: {
-            display: false
+            labels: {
+              color: '#000000',
+              padding: 12,
+              font: {
+                size: 14,
+                weight: '500',
+              },
+            },
+            display: true,
+            position: 'bottom',
+            align: 'center',
           },
           title: {
             display: false,
@@ -501,98 +616,419 @@ export class PatientDetailsComponent implements OnInit {
             text: 'Achievement Ratio:',
             fullSize: true,
             font: {
-              size: 28
-            }
+              size: 28,
+            },
           },
           tooltip: {
             titleFont: {
-              size: 16
+              size: 16,
             },
             bodyFont: {
-              size: 16
+              size: 16,
             },
             caretSize: 15,
             callbacks: {
               label: function (tooltipItem: any) {
-                // console.log('tooltipItem:', tooltipItem)
-                const careplanName = tooltipItem.dataset.careplanNames[tooltipItem.dataIndex]
-                const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex]
-                return `${careplanName} - ${successRatio.toFixed(2)}%`
-              }
-            }
-          }
-        }
-      }
-    }
+                // console.log('tooltipItem:', tooltipItem);
+                // const successRatio =
+                //   tooltipItem.dataset.data[tooltipItem.dataIndex];
+                return ` ${tooltipItem.dataset.label} - ${data}%`;
+              },
+            },
+          },
+        },
+      },
+    };
 
-    // fetching chart data
-    this.chartService.getAchievementPerPatient(
-      this.patientId!,
-      startDate,
-      endDate
-    ).subscribe((results: any) => {
-      console.log('initAchievementChart:results:', results)
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      // work out labels
-      data.labels = results.map((result: AchievementRatio) => {
-        const createdAtDate = new Date(result.createdAt!)
-        return createdAtDate.toISOString().substring(0, 10)
-      })
-      // console.log('initAchievementChart:labels:', data.labels)
+    const achievementRatioData =
+      await this.chartService.fetchPatientChartableData(
+        startDate.toISOString(),
+        endDate.toISOString(),
+        userTimezone,
+        this.patientId!,
+        'avgAchievementRatio',
+        'day',
+        true
+      );
 
-      // work out datasets
-      data.datasets[0].data = results.map((result: AchievementRatio) => result.avgAchievement! * 100)
-      data.datasets[0].careplanNames = results.map((result: AchievementRatio) => result.careplanName)
-
-      const achievementChartElm = document.getElementById('achievementChart')
-      if (achievementChartElm) {
-        // @ts-ignore: TypeScript headache - fix later
-        const ctx = <HTMLCanvasElement>document.getElementById('achievementChart').getContext('2d')!
-        if (ctx) {
-          // @ts-ignore: TypeScript headache - fix later
-          this.achievementChart = new Chart(ctx, config)
-        }
-      }
-    })
-  }
-
-  secondsToString(seconds: number): string {
-    const numMinutes = Math.floor((((seconds % 31536000) % 86400) % 3600) / 60)
-    return `${numMinutes} minutes`
-  }
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.tableOnePaginator;
-    localStorage.getItem("reload");
-  }
-  toogleRowsCheck() {
-    const formCheckinputs = document.querySelectorAll('.row-check-input')
-    if (this.isRowsChecked) {
-      formCheckinputs.forEach(arr => {
-        arr.removeAttribute('checked')
-      })
+    let games: string[];
+    if (!filter) {
+      games = this.availableGames;
     } else {
-      formCheckinputs.forEach(arr => {
-        arr.setAttribute('checked', '')
-      })
+      games = filter;
     }
-    this.isRowsChecked = !this.isRowsChecked
+
+    const chartResults: {
+      avgAchievementPercentage: number;
+      game: string;
+      createdAt: string;
+    }[] = achievementRatioData.patientChart.data.results;
+
+    const groupByGame = lodashGroupBy(chartResults, 'game');
+    const generatedDates = this.generateDates(startDate, endDate);
+
+    generatedDates.forEach((date) => {
+      data.labels.push(date.split('T')[0].split('-')[2]);
+    });
+
+    const dataSet = [];
+    const gameColor: { [key: string]: string } = {
+      sit_stand_achieve: 'rgba(225, 162, 173, 0.1)',
+      beat_boxer: 'rgba(1, 127, 110, 0.1)',
+      sound_explorer: 'rgba(255, 176, 0, 0.1)',
+      moving_tones: 'rgba(85, 204, 171, 0.1)',
+    };
+    const gameBorderColor: { [key: string]: string } = {
+      sit_stand_achieve: 'rgb(225, 162, 173)',
+      beat_boxer: 'rgb(1, 127, 110)',
+      sound_explorer: 'rgb(255, 176, 0)',
+      moving_tones: 'rgb(85, 204, 171)',
+    };
+
+    for (const game in groupByGame) {
+      // filtering the games
+      if (!games.includes(game)) {
+        continue;
+      }
+
+      const data: (number | null)[] = [];
+
+      const existingDates = groupByGame[game].map((val) =>
+        new Date(val.createdAt).toISOString()
+      );
+      const stripDates = existingDates.map((val) => val.split('T')[0]);
+
+      generatedDates.forEach((gDate) => {
+        if (!stripDates.includes(gDate)) {
+          data.push(0);
+        } else {
+          groupByGame[game].forEach((game) => {
+            const strippedDate = new Date(game.createdAt)
+              .toISOString()
+              .split('T')[0];
+            if (
+              new Date(gDate).getTime() - new Date(strippedDate).getTime() ===
+              0
+            ) {
+              data.push(game.avgAchievementPercentage);
+            }
+          });
+        }
+      });
+
+      dataSet.push({
+        label: game
+          .split('_')
+          .map((str) => capitalize(str))
+          .join(' '),
+        data,
+        fill: true,
+        tension: 0.1,
+        borderColor: gameBorderColor[game],
+        backgroundColor: gameColor[game],
+        pointBackgroundColor: gameBorderColor[game],
+      });
+    }
+
+    data.datasets = dataSet;
+
+    // data.labels.push(result.createdAt.split('T')[0].split('-')[2]);
+
+    // data.datasets[0].careplanNames = results.map(
+    //   (result: AchievementRatio) => result.careplanName
+    // );
+
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('achievementChart')
+    );
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.achievementChart != null) {
+        this.achievementChart.destroy();
+      }
+      this.achievementChart = new Chart(ctx, config);
+    }
   }
 
-  async pageChanged(pageNumber: any) {
-    console.log('pageChanged:', pageNumber)
-    await this.fetchSessions((pageNumber - 1) * this.itemsPerPage)
-    this.currentPage = pageNumber
+  async initMoodVariationsChart(startDate: Date, endDate: Date) {
+    const moodData = await this.chartService.patientMoodVariationChart(
+      startDate,
+      endDate,
+      this.patientId!
+    );
+
+    const moodToNumber: {
+      [key: string]: number;
+    } = {
+      irritated: 0,
+      anxious: 1,
+      okay: 2,
+      happy: 3,
+      daring: 4,
+    };
+
+    const moodToColor: {
+      [key: string]: string;
+    } = {
+      irritated: '#CD001A',
+      anxious: '#CD001A',
+      okay: '#F6BE00',
+      happy: '#00873E',
+      daring: '#00873E',
+    };
+
+    const numberToMood: {
+      [key: number]: string;
+    } = {
+      0: '😡 irritated',
+      1: '😖 anxious',
+      2: '😐 okay',
+      3: '😀 happy',
+      4: '😊 daring',
+    };
+
+    const data: ChartData = {
+      labels: moodData.map(
+        (mood) => mood.createdAt.split('T')[0].split('-')[2]
+      ),
+      datasets: [
+        {
+          label: 'Mood',
+          data: moodData.map((mood) => moodToNumber[mood.mood]),
+          pointBackgroundColor: moodData.map((mood) => moodToColor[mood.mood]),
+          pointRadius: 6,
+          pointHoverRadius: 10,
+          fill: true,
+          backgroundColor: 'rgba(173, 216, 230, 0.6)',
+          borderColor: 'rgba(70, 130, 180, 0.5)',
+        },
+      ],
+    };
+    const options: ChartOptions = {
+      elements: {
+        line: {
+          tension: 0.3,
+        },
+      },
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          displayColors: false,
+          bodyFont: {
+            size: 22,
+          },
+          caretSize: 15,
+          callbacks: {
+            label: function (tooltipItem: any) {
+              return numberToMood[tooltipItem.raw as number];
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Feelings',
+            font: {
+              size: 18,
+            },
+          },
+          ticks: {
+            callback: function (value) {
+              return numberToMood[value as number];
+            },
+            font: {
+              size: 16,
+            },
+          },
+        },
+        x: {
+          title: {
+            display: true,
+            text: 'Day',
+            font: {
+              size: 18,
+            },
+            padding: 12,
+            color: '#000000',
+          },
+          ticks: {
+            font: {
+              size: 14,
+            },
+            color: '#000066',
+          },
+        },
+      },
+    };
+
+    const config: ChartConfiguration = {
+      type: 'line',
+      data: data,
+      options: options,
+    };
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById('moodVariationsChart')
+    );
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      if (this.moodVariationChart != null) {
+        this.moodVariationChart.destroy();
+      }
+      this.moodVariationChart = new Chart(ctx, config);
+    }
   }
 
-  changeSessionsChart() {
-    const sessionVal = (<HTMLInputElement>document.getElementById('sessionVal')).value
-    console.log('changeFinancials:', sessionVal)
-    this.achievementChart.config.options.parsing.yAxisKey = `data.${sessionVal}`
-    this.achievementChart.update()
+  toogleRowsCheck() {
+    const formCheckinputs = document.querySelectorAll('.row-check-input');
+    if (this.isRowsChecked) {
+      formCheckinputs.forEach((arr) => {
+        arr.removeAttribute('checked');
+      });
+    } else {
+      formCheckinputs.forEach((arr) => {
+        arr.setAttribute('checked', '');
+      });
+    }
+    this.isRowsChecked = !this.isRowsChecked;
   }
 
-  openSessionDetailsPage(sessionId: string, sessionDetails: any) {
-    this.router.navigate(['/app/sessions/', sessionId], { queryParams: { sessionDetails: JSON.stringify(sessionDetails) } })
+  openSessionDetailsPage(sessionId: string) {
+    this.router.navigate(['/app/game/', sessionId]);
+  }
+
+  chartStartDate: Date;
+  chartEndDate?: Date;
+  updateCharts(
+    type: 'start' | 'end',
+    date: Date,
+    chartType: 'achievement' | 'engagement' | 'mood'
+  ) {
+    date = new Date(date);
+    if (!date) return;
+    switch (type) {
+      case 'start':
+        if (date !== this.chartStartDate) {
+          date.setHours(0, 0, 0, 0);
+          this.chartStartDate = date;
+          this.chartEndDate = undefined;
+        }
+        break;
+      case 'end':
+        if (date !== this.chartEndDate) {
+          date.setHours(24, 0, 0, 0);
+          this.chartEndDate = date;
+        }
+        break;
+    }
+    if (this.chartStartDate && this.chartEndDate) {
+      if (chartType === 'engagement') {
+        this.initEngagementChart(
+          this.chartStartDate.toISOString(),
+          this.chartEndDate.toISOString()
+        );
+      }
+      if (chartType === 'achievement') {
+        this.initAchievementChart(this.chartStartDate, this.chartEndDate);
+      }
+      if (chartType === 'mood') {
+        this.initMoodVariationsChart(this.chartStartDate, this.chartEndDate);
+      }
+    }
+  }
+
+  generateDates(startDate: Date, endDate: Date) {
+    const mStartDate = moment(startDate);
+    const mEndDate = moment(endDate);
+    const generateDates = [];
+
+    while (mStartDate.isBefore(mEndDate)) {
+      generateDates.push(mStartDate.format('YYYY-MM-DD'));
+      mStartDate.add(1, 'day');
+    }
+    return generateDates;
+  }
+
+  filterAchievementRatioChart(event: SubmitEvent) {
+    event.preventDefault();
+    const filters: string[] = [];
+    const form = document.querySelector('#filterAchievementRationForm')!;
+    Array.from(form.querySelectorAll('input')).forEach(function (input) {
+      if (input.checked) {
+        filters.push(input.value);
+      }
+    });
+
+    if (this.chartStartDate && this.chartEndDate) {
+      if (
+        filters.length === 0 ||
+        (filters.length === 1 && filters.includes('all_activities'))
+      ) {
+        this.initAchievementChart(this.chartStartDate, this.chartEndDate);
+      } else {
+        this.initAchievementChart(
+          this.chartStartDate,
+          this.chartEndDate,
+          filters
+        );
+      }
+    }
+  }
+
+  async fetchTestingVideos(patientId: string) {
+    const resp: {
+      tester_videos: { id: string; startedAt: string; endedAt: string }[];
+    } = await this.graphqlService.gqlRequest(
+      GqlConstants.GET_TESTING_VIDEOS,
+      {
+        patientId,
+      },
+      true
+    );
+    console.log(resp.tester_videos);
+
+    const modifiedArr = resp.tester_videos.map((video) => {
+      return {
+        duration:
+          (new Date(video.endedAt).getTime() -
+            new Date(video.startedAt).getTime()) /
+          1000,
+        ...video,
+      };
+    });
+
+    this.videoDataSource = new MatTableDataSource(modifiedArr);
+
+    setTimeout(() => {
+      this.videoDataSource.paginator = this.videoDataSourcePaginator;
+      this.videoDataSource.sort = this.videoDataSourceSort;
+    }, 100);
+  }
+
+  openVideoModal(recordingId: string) {
+    const modalRef = this.modalService.open(TesterVideoModalComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.recordingId = recordingId;
+  }
+
+  getDuration(duration?: number) {
+    if (!duration) return;
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = Math.floor((duration % 3600) % 60);
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${seconds}s`;
+    } else {
+      return `${minutes}m ${seconds}s`;
+    }
   }
 }

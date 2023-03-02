@@ -1,97 +1,35 @@
-<!-- Header -->
-<header class="px-3 px-lg-7 pt-7 custom_header">
-  <div class="container-xl">
-    <div>
-      <div class="row custom_alignment p-5">
-        <div class="col-md-6 col-12 mb-3 mb-md-0">
-          <!-- Title -->
-          <xng-breadcrumb separator=">"></xng-breadcrumb>
-          <router-outlet></router-outlet>
-          <h1 class="h2 mb-0 ls-tight heading_text mt-5">Dashboard</h1>
-          <!-- <avatar text="YA" [bgAuto]="true" size="lg"></avatar> -->
-        </div>
-        <!-- Actions -->
-        <div class="col-md-6 col-12 text-md-end">
-          <div class="mx-n1">
-            <!-- <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 ">
-              <span class=" pe-2">
-                <i class="bi bi-plus "></i>
-              </span>
-              <span>Add Patient</span>
-            </a> -->
-          </div>
-        </div>
-      </div>
-      <!-- Nav -->
-      <!-- {{ selectedMedicalConditions | json }} -->
-      <!-- <ul class="nav nav-tabs overflow-x mt-2">
-        <li class="nav-item">
-          <a (click)="selectedMedicalConditions = allMedicalConditions" class="nav-link font-regular active"
-            [ngClass]="{'active': selectedMedicalConditions.length > 1}">All
-          </a>
-        </li>
-        <li class="nav-item" *ngFor="let condition of allMedicalConditions">
-          <a role="button" (click)="selectDataSegment(condition)"
-            [ngClass]="{'active': selectedMedicalConditions.length == 1 && selectedMedicalConditions[0] == condition}"
-            class="nav-link font-regular">
-            {{condition}}
-          </a>
-        </li>
-      </ul> -->
-    </div>
-  </div>
-</header>
-
-<!-- Welcome Dr. Kevin Card -->
-<div class="container pt-5" style="display: none;">
-  <div class="card shadow-inset shadow-6 pt-5 pb-5">
+<div class="container pt-5">
+  <div class="card shadow-inset shadow-sm pt-5 pb-5">
     <div class="container">
       <div class="row">
         <div class="col-lg-5">
+          <xng-breadcrumb separator=">"></xng-breadcrumb>
           <div class="row">
             <div class="col">
-              <h1 class="h1 mt-5" style="color: #000066;">Welcome Dr. Kevin</h1>
-              <span>Date: <b>{{ this.currentDate | date }}</b></span>
+              <span class="text-black">Date: <b>{{ this.currentDate | date: 'MM/dd/yyyy' }}</b></span>
             </div>
           </div>
         </div>
-        <div class="col-lg-3 mt-8">
-          <div class="row">
-            <div class="col-lg-8">
-              <button class="btn btn-primary">
-                Select Dates
-              </button>
-            </div>
-            <div class="col">
-              <h2><i class="bi bi-bell"></i></h2>
-            </div>
-          </div>
-        </div>
-        <div class="col">
-          <div class="card border shadow-6">
-            <div class="row">
-              <div class="col-lg-6">
-                <img class="rounded" alt="..."
-                  src="https://images.unsplash.com/photo-1612531385476-a86dc00daf9a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80">
-              </div>
-              <div class="col mt-8">
-                <div class="row">
-                  <div class="col-lg-1">
-                    <i style="color: #00BD3E" class="bi bi-circle-fill"></i>
-                  </div>
-                  <div class="col">
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <h4>Dr. Kevin</h4>
+        <div class="col-lg-6 mt-8">
+          <div class="row justify-content-end">
+            <div class="col d-flex justify-content-end">
+              <!-- Dropdown -->
+              <div *ngIf="!showEmptyState" class="dropdown">
+                <button class="btn btn-primary position-relative w-40 text-start" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ dateFilter[selectedDateRange].label }}
+                  <span class="position-absolute top-1/2 end-3 translate-middle-y"><i class="bi bi-chevron-down"></i></span>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <form>
+                    <div *ngFor="let filter of dateFilter; let i=index" class="dropdown-item py-1 d-flex align-items-center">
+                      <div class="text-lg">
+                        <input class="form-check-input" type="checkbox" id={{filter.label}} value="i" aria-label="..." [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
                       </div>
-                      <div class="col mt-2">
-                        <a style="color: #2F51AE" class="text-decoration-none" href="#">
-                          View Profile
-                          <i class="bi bi-arrow-right-square-fill"></i>
-                        </a>
+                      <div class="ms-3 me-5">
+                        <label class="cursor-pointer" for={{filter.label}}>{{ filter.label }}</label>
                       </div>
                     </div>
-                  </div>
+                  </form>
                 </div>
               </div>
             </div>
@@ -103,32 +41,52 @@
 </div>
 
 <!-- Main content -->
-<main class="px-3 px-lg-7 py-7">
-  <!-- Put Charts here -->
+<main class="pb-7">
   <div class="container mt-8 mb-8">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-header">
-              <h4 style="color: #000066;">Patient Adherence</h4>
+    <div class="mb-4">
+      <h3>Dashboard</h3>
+      <div class="border-top my-5"></div>
+    </div>
+    <div class="rounded-top bg-light p-3">
+      <ul class="nav nav-tabs">
+        <li class="nav-item cursor-pointer">
+          <a class="{{selectedMetricGroup === 'conversion' ? 'nav-link active' : 'nav-link'}}" (click)="getMetrics('conversion')">Conversion</a>
+        </li>
+        <li class="nav-item cursor-pointer">
+          <a class="{{selectedMetricGroup === 'engagement' ? 'nav-link active' : 'nav-link'}}" id="nav-engagement" (click)="getMetrics('engagement')">Engagement</a>
+        </li>
+        <li class="nav-item cursor-pointer">
+          <a class="{{selectedMetricGroup === 'retention' ? 'nav-link active' : 'nav-link'}}" id="nav-retention" (click)="getMetrics('retention')">Retention</a>
+        </li>
+      </ul>
+      <div class="row mt-4">
+        <div *ngFor="let metricCard of metricCards" class="col">
+          <div class="card">
+            <div class="card-body rounded">
+              <div class="row">
+                <div class="col">
+                  <span class="h6 font-semibold text-muted text-sm d-block mb-2">{{metricCard.title}}</span>
+                  <span class="h3 font-bold mb-0">{{ metricCard.newCount }}</span>
+                  <span *ngIf="metricCard.percentageChange && metricCard.isPercentageIncrease" class="text-success">
+                    <i class="m-2 bi bi-arrow-up-circle-fill me-1"></i>{{metricCard.percentageChange}}%
+                  </span>
+                  <span *ngIf="metricCard.percentageChange && !metricCard.isPercentageIncrease" class="text-danger">
+                    <i class="m-2 bi bi-arrow-down-circle-fill me-1"></i>{{metricCard.percentageChange}}%
+                  </span>
+                </div>
+                <div class="col-auto">
+                  <div class="icon icon-shape text-lg rounded-circle ellipse">
+                    <img style="height: 32px;" src="{{metricCard.icon}}" alt="">
+                  </div>
+                </div>
+              </div>
             </div>
-            <canvas class="chart-canvas" id="patientAdherence" width="500" height="500"></canvas>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <div class="card-body">
-            <div class="card-header">
-              <h4 style="color: #000066;">Patient Overview</h4>
-            </div>
-            <canvas class="chart-canvas" id="patientOverview" width="500" height="500"></canvas>
           </div>
         </div>
       </div>
     </div>
   </div>
+  <latest-sessions class="mt-5"></latest-sessions>
   <!-- Container -->
-  <app-patients-list class="mt-5"></app-patients-list>
+  <app-patients-list [showButtons]="true" class="mt-5"></app-patients-list>
 </main>

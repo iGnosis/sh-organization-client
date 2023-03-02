@@ -11,7 +11,7 @@ export class PatientService {
   }
 
   // TODO make it more strictly typed
-  insertPatient(patient: any) {
+  async insertPatient(patient: any) {
     return this.graphqlService.client.request(GqlConstants.INSERT_PATIENT, patient)
   }
 }

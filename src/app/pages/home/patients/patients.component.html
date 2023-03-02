@@ -11,9 +11,38 @@
           <!-- <avatar text="YA" [bgAuto]="true" size="lg"></avatar> -->
         </div>
         <!-- Actions -->
-        <div class="col-md-6 col-12 text-md-end">
-          <div class="mx-n1">
-            <a routerLink="/app/patients/new" class="btn d-inline-flex btn-sm custom_btn_class btn-primary mx-1 ">
+        <div class="col-md-6 col-12 text-md-end d-flex justify-content-end">
+          <div class="dropdown mx-1">
+            <button class="btn btn-primary btn-sm mx-1 position-relative w-40 text-start" type="button"
+              id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ dateFilter[selectedDateRange].label }}
+              <span class="position-absolute top-1/2 end-3 translate-middle-y"><i class="bi bi-chevron-down"></i></span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <form>
+                <div *ngFor="let filter of dateFilter; let i=index"
+                  class="dropdown-item py-1 d-flex align-items-center">
+                  <div class="text-lg">
+                    <input class="form-check-input" type="checkbox" id={{filter.label}} value="i" aria-label="..."
+                      [checked]="selectedDateRange == i" (change)="setDateFilter(i)">
+                  </div>
+                  <div class="ms-3 me-5">
+                    <label class="cursor-pointer" for={{filter.label}}>{{ filter.label }}</label>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="mx-1" *ngIf="!isPublicSignupEnabled">
+            <a (click)="openInvitePatientModal()" class="btn d-inline-flex btn-sm btn-primary mx-1 ">
+              <span class=" pe-2">
+                <i class="bi bi-plus "></i>
+              </span>
+              <span>Invite Patient</span>
+            </a>
+          </div>
+          <div class="mx-1">
+            <a (click)="openAddPatientModal()" class="btn d-inline-flex btn-sm btn-primary mx-1 ">
               <span class=" pe-2">
                 <i class="bi bi-plus "></i>
               </span>
@@ -43,5 +72,13 @@
 </header>
 <!-- Main content -->
 <main class="px-3 px-lg-7 py-7">
-  <app-patients-list></app-patients-list>
+  <app-patients-list [selectedDateRange]="dateRange"></app-patients-list>
 </main>
+
+<ng-template #invitePatient let-modal>
+  <invite-patient-modal [modal]="modal" [modalState]="invitePatientModalState"></invite-patient-modal>
+</ng-template>
+
+<ng-template #addPatient let-modal>
+  <add-patient-modal [modal]="modal" [modalState]="addPatientModalState"></add-patient-modal>
+</ng-template>

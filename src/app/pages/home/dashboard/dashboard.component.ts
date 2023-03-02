@@ -1,214 +1,190 @@
-import { Component, OnInit } from '@angular/core';
-import { Chart, ChartConfiguration } from 'chart.js';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { fromEvent, map, merge, of, Subscription } from 'rxjs';
+import { DashboardMetric, DashboardMetricGroup, DashboardState } from 'src/app/pointmotion';
+import { GqlConstants } from 'src/app/services/gql-constants/gql-constants.constants';
+import { GraphqlService } from 'src/app/services/graphql/graphql.service';
+import { dashboard } from 'src/app/store/actions/dashboard.actions';
 import { environment } from 'src/environments/environment';
+
+interface DashboardGqlResp {
+  metric: string;
+  data: DashboardGqlRespData
+}
+
+interface DashboardGqlRespData {
+  metric: string;
+  newCount: number | string;
+  percentageChange: number;
+  showPercentageChange: boolean;
+}
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  currentDate: Date;
+  previousDate: Date;
 
-  patientAdherenceCtx: any
-  patientAdherenceCanvas: HTMLCanvasElement
-  currentDate: Date
+  isOnline = false;
+  networkStatusSubscription: Subscription;
 
-  constructor() {
-    this.currentDate = new Date();
+  dateFilter: { label: string; range: number }[] = [
+    { label: 'Today', range: 0 },
+    { label: 'Past 7 days', range: 7 },
+    { label: 'Past 14 days', range: 14 },
+    { label: 'Past 30 days', range: 30 },
+    { label: 'Past 90 days', range: 90 },
+    { label: 'Past 180 days', range: 180 },
+  ];
+  selectedDateRange = 0;
+
+  showEmptyState = false;
+  dateSubscription: Subscription;
+
+  metricCards: DashboardMetric[] = [];
+  selectedMetricGroup: DashboardMetricGroup = 'conversion';
+
+  constructor(
+    private graphqlService: GraphqlService,
+    private store: Store<{
+      dashboard: DashboardState;
+    }>
+  ) {
+    this.currentDate = new Date(new Date().setHours(24, 0, 0, 0)); // nearest midnight in future
+    this.previousDate = new Date(new Date().setHours(0, 0, 0, 0)); // nearest midnight in the past
     console.log('Environment ', environment.name);
+
+    this.dateSubscription = this.store.select('dashboard').subscribe(async (state) => {
+      this.selectedDateRange = this.dateFilter.findIndex(
+        (item) => item.range === state.dateRange
+      );
+      await this.updateChartTimeline(state.dateRange);
+    });
   }
 
-  ngOnInit(): void {
-    this.initPatientAdherenceChart();
-    this.initPatientOverviewChart();
+  async ngOnInit(): Promise<void> {
+    this.getNetworkStatus();
   }
 
-  initPatientAdherenceChart() {
-    const data = {
-      labels: ['Active Patients', 'Inactive Patients'],
-      datasets: [
-        {
-          data: [11, 4],
-          backgroundColor: ['#ffa2ad', '#2f51ae'],
-          borderWidth: 0,
-          hoverOffset: 4,
-        },
-      ],
-    };
-    const config: ChartConfiguration = {
-      type: 'pie',
-      data: data,
-      options: {
-        plugins: {
-          tooltip: {
-            enabled: false
-          },
-          legend: {
-            position: 'bottom',
-            labels: {
-              font: {
-                size: 16
-              }
-            }
-          },
-          datalabels: {
-            font: {
-              size: 26,
-              weight: 'bold'
-            },
-            color: ['#000066', '#ffffff']
-          }
-        }
-      },
-      plugins: [ChartDataLabels]
-    };
-    this.patientAdherenceCanvas = <HTMLCanvasElement>(document.getElementById('patientAdherence'));
-    this.patientAdherenceCtx = this.patientAdherenceCanvas.getContext('2d');
+  ngOnDestroy(): void {
+    this.networkStatusSubscription.unsubscribe();
+    this.dateSubscription.unsubscribe();
+  }
 
-    if (this.patientAdherenceCtx) {
-      new Chart(this.patientAdherenceCtx, config);
+  getNetworkStatus() {
+    this.isOnline = navigator.onLine;
+    this.networkStatusSubscription = merge(
+      of(null),
+      fromEvent(window, 'online'),
+      fromEvent(window, 'offline')
+    )
+      .pipe(map(() => navigator.onLine))
+      .subscribe(status => {
+        this.isOnline = status;
+      });
+  }
+
+  async updateChartTimeline(range: number) {
+    console.log('updateChartTimeline::range::', range);
+    this.previousDate = new Date(this.currentDate);
+    this.previousDate.setDate(this.previousDate.getDate() - range);
+
+    if (range == 0) {
+      this.previousDate = new Date(new Date().setHours(0, 0, 0, 0)); // nearest midnight in the past
     }
+    console.log('currentDate::', this.currentDate);
+    console.log('previousDate::', this.previousDate);
+    this.metricCards = [];
+    await this.getMetrics(this.selectedMetricGroup);
   }
 
-  initPatientOverviewChart() {
-    const data = {
-      datasets: [{
-        label: 'Dementia',
-        data: [
-          { x: 20, y: 30, r: 10, pid: 'anakin' },
-          { x: 40, y: 10, r: 25, pid: 'obiwan' },
-          { x: 55, y: 47, r: 18, pid: 'leia' }
-        ],
-        backgroundColor: '#2f51ae',
-        clip: false
-      },
-      {
-        label: 'Alzheimers',
-        data: [
-          { x: 80, y: 30, r: 10, pid: 'han' },
-          { x: 80, y: 10, r: 15, pid: 'leia' }
-        ],
-        backgroundColor: '#007f6e',
-        clip: false
-      },
-      {
-        label: 'Parkinsons',
-        data: [
-          { x: 100, y: 10, r: 10, pid: 'obiwan' },
-          { x: 42, y: 90, r: 15, pid: 'leia' }
-        ],
-        backgroundColor: '#ffa2ad',
-        clip: false
-      }]
-    };
+  async setDateFilter(idx: number) {
+    this.selectedDateRange = idx;
+    const range = this.dateFilter[this.selectedDateRange].range;
+    this.store.dispatch(dashboard.setDateRange({ dateRange: range }));
+  }
 
-    const quadrants = {
-      id: 'quadrants',
-      beforeDraw(chart: Chart, args: any, options: any) {
-        const { ctx, chartArea: { left, top, right, bottom }, scales: { x, y } } = chart;
-        const midX = x.getPixelForValue(50);
-        const midY = y.getPixelForValue(50);
-        ctx.save();
-        ctx.fillStyle = options.topLeft;
-        ctx.fillRect(left, top, midX - left, midY - top);
-        ctx.fillStyle = options.topRight;
-        ctx.fillRect(midX, top, right - midX, midY - top);
-        ctx.fillStyle = options.bottomRight;
-        ctx.fillRect(midX, midY, right - midX, bottom - midY);
-        ctx.fillStyle = options.bottomLeft;
-        ctx.fillRect(left, midY, midX - left, bottom - midY);
-        ctx.restore();
+  async getMetrics(metricGroup: DashboardMetricGroup) {
+    console.log('getMetrics:: ', metricGroup);
+    this.selectedMetricGroup = metricGroup;
+
+    if (metricGroup === 'conversion') {
+      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_CONVERSION, { startDate: this.previousDate, endDate: this.currentDate });
+      this.metricCards = [];
+      for (const [_, data] of Object.entries(resp)) {
+        this.metricCards.push(this.buildMetricCardObject(data.data));
       }
-    };
-
-    const config: any = {
-      type: 'bubble',
-      data: data,
-      options: {
-        plugins: {
-          legend: {
-            position: 'right',
-            labels: {
-              font: {
-                size: 14
-              },
-              padding: 8
-            }
-          },
-          quadrants: {
-            topLeft: '#fff7e5',
-            topRight: '#f0faf4',
-            bottomRight: '#fff7e4',
-            bottomLeft: '#fdebeb',
-          },
-          tooltip: {
-            events: ["click"],
-            displayColors: false,
-            titleFont: {
-              size: 16
-            },
-            bodyFont: {
-              size: 16
-            },
-            caretSize: 15,
-            callbacks: {
-              title: (tooltipItem: any) => tooltipItem[0].dataset.data[tooltipItem[0].dataIndex].pid,
-              label: function (tooltipItem: any) {
-                const dataIndex = tooltipItem.dataIndex
-                const data = tooltipItem.dataset.data[dataIndex]
-                return `Number of Activities: ${data.r}`
-              },
-              afterLabel: (tooltipItem: any) => {
-                const sessionCompletionStr = `Session Completion Rate: ${tooltipItem.dataset.data[tooltipItem.dataIndex].x}%`
-                const achievementRatioStr = `Achievement Ratio: ${tooltipItem.dataset.data[tooltipItem.dataIndex].y}%`
-                return sessionCompletionStr + '\n' + achievementRatioStr
-              },
-            }
-          }
-        },
-        scales: {
-          y: {
-            max: 100,
-            beginAtZero: true,
-            ticks: {
-              stepSize: 20,
-            },
-            title: {
-              display: true,
-              padding: 12,
-              text: 'Achievement Ratio',
-              font: {
-                size: 16,
-                weight: 'bold'
-              }
-            }
-          },
-          x: {
-            max: 100,
-            beginAtZero: true,
-            ticks: {
-              stepSize: 20,
-            },
-            title: {
-              display: true,
-              padding: 12,
-              text: 'Session Completion',
-              font: {
-                size: 16,
-                weight: 'bold'
-              }
-            }
-          }
-        }
-      },
-      plugins: [quadrants]
-    };
-
-    const canvas = <HTMLCanvasElement>(document.getElementById('patientOverview'));
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      new Chart(ctx, config);
     }
+
+    else if (metricGroup === 'engagement') {
+      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_ENGAGEMENT, { startDate: this.previousDate, endDate: this.currentDate });
+      this.metricCards = [];
+      for (const [_, data] of Object.entries(resp)) {
+        this.metricCards.push(this.buildMetricCardObject(data.data));
+      }
+    }
+
+    else if (metricGroup === 'retention') {
+      const resp: DashboardGqlResp[]  = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_RETENTION, { startDate: this.previousDate, endDate: this.currentDate });
+      const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
+      const todayEnd = new Date(new Date().setHours(24, 0, 0, 0)).toISOString();
+      const stickinessResp = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_STICKINESS_METRIC, { startDate: today, endDate: todayEnd })
+      this.metricCards = [];
+      for (const [_, data] of Object.entries(resp)) {
+        this.metricCards.push(this.buildMetricCardObject(data.data));
+      }
+      this.metricCards.push(this.buildMetricCardObject(stickinessResp.stickiness.data));
+    }
+  }
+
+  buildMetricCardObject(data: DashboardGqlRespData): DashboardMetric  {
+    if (data.metric === 'avg_user_engagement') {
+      data.newCount = `${data.newCount} mins`;
+    }
+
+    const obj: DashboardMetric = {
+      // eg. converts string 'new_users' to 'New Users'
+      title: data.metric.split('_').map(str => str.charAt(0).toUpperCase() + str.slice(1)).join(' '),
+      newCount: data.newCount,
+      showPercentageChange: data.showPercentageChange,
+    }
+
+    switch (data.metric) {
+      case 'new_users':
+        obj.icon = 'assets/icons/dashboard/new_users.png'
+        break;
+      case 'activation_milestone':
+        obj.icon = 'assets/icons/dashboard/mission.png'
+        break;
+      case 'avg_user_engagement':
+        obj.icon = 'assets/icons/dashboard/meeting_time.png'
+        break;
+      case 'avg_activities_played':
+        obj.icon = 'assets/icons/dashboard/joystick.png'
+        break;
+      case 'active_users':
+        obj.icon = 'assets/icons/dashboard/jump.png'
+        break;
+      case 'total_users':
+        obj.icon = 'assets/icons/dashboard/staff.png'
+        break;
+      case 'activation_rate':
+      case 'adoption_rate':
+      case 'stickiness':
+        obj.icon = 'assets/icons/dashboard/account.png'
+        break;
+      default:
+        obj.icon = 'assets/icons/dashboard/new_users.png'
+        break;
+    }
+
+    if (data.showPercentageChange) {
+      data.percentageChange > 0 ? obj.isPercentageIncrease = true : obj.isPercentageIncrease = false;
+      obj.percentageChange = Math.abs(data.percentageChange);
+    }
+    return obj;
   }
 }
