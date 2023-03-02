@@ -25,6 +25,7 @@ import { Store } from '@ngrx/store';
 import { dashboard } from 'src/app/store/actions/dashboard.actions';
 import { Subscription } from 'rxjs';
 import { BreadcrumbService } from 'xng-breadcrumb';
+import { TesterVideoModalComponent } from 'src/app/components/tester-video-modal/tester-video-modal.component';
 
 export class Captain {
   careplanByCareplan: string;
@@ -76,9 +77,25 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.isShowDiv = !this.isShowDiv;
   }
 
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild('dataSourceSort') dataSourceSort: MatSort = new MatSort();
+  @ViewChild('dataSourcePaginator') dataSourcePaginator: MatPaginator;
+  @ViewChild('videoDataSourceSort') videoDataSourceSort: MatSort =
+    new MatSort();
+  @ViewChild('videoDataSourcePaginator') videoDataSourcePaginator: MatPaginator;
   dataSource: MatTableDataSource<Game>;
+  videoDataSource: MatTableDataSource<{
+    id: string;
+    startedAt: string;
+    endedAt: string;
+    duration: number;
+  }>;
+  videoTableDisplayColumns: string[] = [
+    // 'total_count',
+    'startedAt',
+    'endedAt',
+    'duration',
+    'view_recording',
+  ];
 
   searchValue: any;
   isRowsChecked = false;
@@ -178,8 +195,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || '';
       if (this.patientId) {
-        console.log('patientId:', this.patientId);
         await this.fetchSessions();
+        await this.fetchTestingVideos(this.patientId);
 
         this.updateCharts('start', this.startDate!, 'achievement');
         this.updateCharts('end', this.endDate!, 'achievement');
@@ -195,8 +212,13 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     if (this.dataSource) {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.dataSourcePaginator;
+      this.dataSource.sort = this.dataSourceSort;
+    }
+
+    if (this.videoDataSource) {
+      this.videoDataSource.paginator = this.videoDataSourcePaginator;
+      this.videoDataSource.sort = this.videoDataSourceSort;
     }
   }
 
@@ -253,7 +275,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     const aggregatedAnalytics = resp.aggregate_analytics;
 
     const mergedArr = games.map((game: any) => ({
-      ...aggregatedAnalytics.find((analytics: any) => analytics.game === game.id && analytics),
+      ...aggregatedAnalytics.find(
+        (analytics: any) => analytics.game === game.id && analytics
+      ),
       ...game,
     }));
 
@@ -270,8 +294,8 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.gameDetails = mergedArr;
     this.dataSource = new MatTableDataSource(mergedArr);
     setTimeout(() => {
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.dataSourcePaginator;
+      this.dataSource.sort = this.dataSourceSort;
     }, 100);
 
     const patient = await this.graphqlService.client.request(
@@ -290,7 +314,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.activeCarePlans = response.patient[0].patient_careplans;
     //console.log(this.active_careplans.length,"length");
     // this.getCarePlanCount = this.activeCarePlans.length;
-    console.log(this.dataSource.data.length, 'length');
     if (this.activeCarePlans.length > 0) {
       this.getActivityCount =
         this.activeCarePlans[0].careplanByCareplan?.careplan_activities_aggregate?.aggregate?.count;
@@ -470,15 +493,10 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     const chartResults: { [dateWithTimeZone: string]: number } =
       engagementRatioData.patientChart.data.results;
 
-    console.log('initEngagementChart:results:', chartResults);
-
     for (const key in chartResults) {
       data.labels.push(key.split('T')[0].split('-')[2]);
       data.datasets[0].data.push(chartResults[key]);
     }
-
-    console.log('initEngagementChart:labels:', data.labels);
-    console.log('initEngagementChart:dataset:', data.datasets[0].data);
 
     // data.datasets[0].careplanNames = engagementRatioData.map(
     //   (result: EngagementRatio) => result.careplanName
@@ -612,7 +630,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
             callbacks: {
               label: function (tooltipItem: any) {
                 // console.log('tooltipItem:', tooltipItem);
-                const data = tooltipItem.dataset.data[tooltipItem.dataIndex];
                 // const successRatio =
                 //   tooltipItem.dataset.data[tooltipItem.dataIndex];
                 return ` ${tooltipItem.dataset.label} - ${data}%`;
@@ -635,8 +652,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
         'day',
         true
       );
-
-    console.log('achievementRatioData::', achievementRatioData);
 
     let games: string[];
     if (!filter) {
@@ -743,7 +758,6 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
       endDate,
       this.patientId!
     );
-    console.log('moodData:', moodData);
 
     const moodToNumber: {
       [key: string]: number;
@@ -965,6 +979,56 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
           filters
         );
       }
+    }
+  }
+
+  async fetchTestingVideos(patientId: string) {
+    const resp: {
+      tester_videos: { id: string; startedAt: string; endedAt: string }[];
+    } = await this.graphqlService.gqlRequest(
+      GqlConstants.GET_TESTING_VIDEOS,
+      {
+        patientId,
+      },
+      true
+    );
+    console.log(resp.tester_videos);
+
+    const modifiedArr = resp.tester_videos.map((video) => {
+      return {
+        duration:
+          (new Date(video.endedAt).getTime() -
+            new Date(video.startedAt).getTime()) /
+          1000,
+        ...video,
+      };
+    });
+
+    this.videoDataSource = new MatTableDataSource(modifiedArr);
+
+    setTimeout(() => {
+      this.videoDataSource.paginator = this.videoDataSourcePaginator;
+      this.videoDataSource.sort = this.videoDataSourceSort;
+    }, 100);
+  }
+
+  openVideoModal(recordingId: string) {
+    const modalRef = this.modalService.open(TesterVideoModalComponent, {
+      size: 'lg',
+      centered: true,
+    });
+    modalRef.componentInstance.recordingId = recordingId;
+  }
+
+  getDuration(duration?: number) {
+    if (!duration) return;
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = Math.floor((duration % 3600) % 60);
+    if (hours > 0) {
+      return `${hours}h ${minutes}m ${seconds}s`;
+    } else {
+      return `${minutes}m ${seconds}s`;
     }
   }
 }

@@ -29,8 +29,7 @@ export class AddCareplan implements OnInit {
 
   ngOnInit() {
     this.eventEmitterService.ReceivedPatientID.subscribe((data:any) => {
-this.patientId=data;
-console.log(this.patientId);
+      this.patientId=data;
       this.fetchActiveCareplans();
 });
 
@@ -62,11 +61,8 @@ console.log(this.patientId);
         }
       }
     }
-    console.log(this.careplans_list);
-    console.log(this.patients_careplan.length);
   }
   async removeCareplanFromPatient(getcareplan: string, modalContent: any) {
-    console.log(getcareplan)
     this.modalService.open(modalContent)
     this.selectedCarePlanId = getcareplan
     localStorage.removeItem("reload");
@@ -79,7 +75,6 @@ console.log(this.patientId);
   }
 
   async addCarePlan(getcareplan: string) {
-    console.log(getcareplan,'>>>>')
     const addcareplan = await this.graphqlService.client.request(GqlConstants.POST_SESSION_ADDED_DATA, { patient: this.patientId, careplan: getcareplan })
     if (
       addcareplan &&
@@ -90,7 +85,6 @@ console.log(this.patientId);
       addcareplan.insert_patient_careplan.returning[0].id
     ) {
       const sessionId = addcareplan.insert_patient_careplan.returning[0].careplan
-      console.log('createSessionAndRedirect:sessionId', sessionId)
       return sessionId
     }
     window.location.reload();

@@ -437,7 +437,8 @@
       </div>
     </div>
     <div class="table-responsive">
-      <table class="table table-hover table-nowrap patients_detail_table" mat-table [dataSource]="dataSource" matSort>
+      <table class="table table-hover table-nowrap patients_detail_table" mat-table [dataSource]="dataSource" matSort
+        #dataSourceSort="matSort">
         <ng-container matColumnDef="total_count">
           <th mat-header-cell *matHeaderCellDef class="custom_table_header">
             <div class="form-check">
@@ -531,11 +532,72 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_hover"></tr>
       </table>
-      <mat-paginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons
+      <mat-paginator #dataSourcePaginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons
         aria-label="Select page of periodic elements"></mat-paginator>
     </div>
   </div>
 </div>
+
+
+<div class="container-xl mt-5">
+  <div class="session_table" *ngIf="videoDataSource && videoDataSource.data && videoDataSource.data.length!=0">
+    <div class="rounded-top bg-light p-5 custom_rounded_top">
+      <div class="row">
+        <div class="col">
+          <h6>Testing Videos</h6>
+        </div>
+        <div class="col text-end">
+        </div>
+      </div>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover table-nowrap patients_detail_table" mat-table [dataSource]="videoDataSource"
+        matSort #videoDataSourceSort="matSort">
+        <ng-container matColumnDef="total_count">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header">
+            <div class="form-check">
+              <mat-checkbox (change)="$event ? selection.toggle(row) : null" class="custom_checkbox"></mat-checkbox>
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div class="form-check">
+              <mat-checkbox class="custom_checkbox" [checked]="selection.isSelected(row)"></mat-checkbox>
+            </div>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="startedAt">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Started At</th>
+          <td mat-cell *matCellDef="let element" class="clicked_class">
+            <span>{{ element.startedAt | date: 'MMM d, y, h:mm a' }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="endedAt">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Ended At</th>
+          <td mat-cell *matCellDef="let element" class="clicked_class">
+            <span>{{ (element.endedAt | date: 'MMM d, y, h:mm a') || 'In Progress' }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="duration">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header" mat-sort-header>Duration</th>
+          <td mat-cell *matCellDef="let element" class="clicked_class">
+            <span>{{ getDuration(element.duration) || 'In Progress' }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="view_recording">
+          <th mat-header-cell *matHeaderCellDef class="custom_table_header">View Recording</th>
+          <td mat-cell *matCellDef="let element" class="clicked_class">
+            <span (click)="openVideoModal(element.id)" class="details-button">View Recording</span>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="videoTableDisplayColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: videoTableDisplayColumns;" class="row_hover"></tr>
+      </table>
+      <mat-paginator #videoDataSourcePaginator [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 50]" showFirstLastButtons
+        aria-label="Select page of periodic elements"></mat-paginator>
+    </div>
+  </div>
+</div>
+
 
 <ng-template #confirmDeletion let-modal>
   <div class="modal-body">
@@ -547,6 +609,19 @@
     </div>
   </div>
 </ng-template>
+
+
+<ng-template #playTesterVideo let-modal>
+  <div class="modal-body">
+    <p>Are you sure? This will remove the Care Plan from the Patient.</p>
+    <div class="text-end mt-2">
+      <button type="button" class="btn btn-sm btn-danger me-5" (click)="removeCarePlanFromPatient(modal)">Yes,
+        Remove</button>
+      <button type="button" class="btn btn-sm btn-light" (click)="modal.close('Close click')">No, Cancel</button>
+    </div>
+  </div>
+</ng-template>
+
 
 <ng-template #confirmStartSession let-modal>
   <div class="modal-body">

@@ -4,5 +4,6 @@ export const environment = {
   name: 'stage',
   gqlEndpoint: 'https://api.stage.pointmotioncontrol.com/v1/graphql',
   servicesEndpoint: 'https://services.stage.pointmotioncontrol.com',
-  activityEndpoint: 'https://session.stage.pointmotioncontrol.com'
+  activityEndpoint: 'https://session.stage.pointmotioncontrol.com',
+  websocketEndpoint: 'wss://services.stage.pointmotioncontrol.com',
 };
