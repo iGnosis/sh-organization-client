@@ -11,6 +11,9 @@ query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
       createdAt
       game
     }
+    subscriptionBySubscription {
+      status
+    }
   }
 }`,
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
@@ -565,6 +568,18 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
       configUrl
       videoUrl
     }
+  }
+}`,
+  SUBSCRIPTION_STATUS: `
+  query SubscriptionStatus($subscriptionId: String!) {
+  subscriptions(where: {subscriptionId: {_eq: $subscriptionId}}) {
+    status
+  }
+}`,
+  GET_SUBSCRIPTION_ID: `
+  query GetSubscriptionId($patientId: uuid!) {
+  patient_by_pk(id: $patientId){
+    subscription
   }
 }`,
 };

@@ -56,6 +56,7 @@ export class PatientsListComponent implements OnInit {
     'lastActive',
     'activities',
     'activeDays',
+    'subscription_status',
     'actions',
   ];
   dataSource = new MatTableDataSource();
@@ -156,6 +157,8 @@ export class PatientsListComponent implements OnInit {
       this.patientListSubscription = this.transformPatientList(
         patientListResponse
       ).subscribe((patientsWithActiveDays: any[]) => {
+        console.log('patientsList::', patientsWithActiveDays);
+
         // // removing patients that are not active
         // const filteredPatientsWithActiveDays = patientsWithActiveDays.filter(
         //   (patient) => patient.lastActive

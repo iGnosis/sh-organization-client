@@ -69,6 +69,7 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     'moving_tones',
   ];
   activityFilterOptions = this.availableGames;
+  subscriptionStatus!: string;
 
   toggleFilterDiv() {
     this.isShowFilter = !this.isShowFilter;
@@ -194,9 +195,38 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     this.filterEntity.captain = new Captain();
     this.route.paramMap.subscribe(async (params: ParamMap) => {
       this.patientId = params.get('id') || '';
+
       if (this.patientId) {
-        await this.fetchSessions();
-        await this.fetchTestingVideos(this.patientId);
+        try {
+          await this.fetchSessions();
+          await this.fetchTestingVideos(this.patientId);
+
+          const subscriptionIdResp = await this.graphqlService.gqlRequest(
+            GqlConstants.GET_SUBSCRIPTION_ID,
+            {
+              patientId: this.patientId,
+            },
+            true
+          );
+
+          if (subscriptionIdResp.patient_by_pk.subscription) {
+            const resp = await this.graphqlService.gqlRequest(
+              GqlConstants.SUBSCRIPTION_STATUS,
+              {
+                subscriptionId: subscriptionIdResp.patient_by_pk.subscription,
+              },
+              true
+            );
+
+            this.subscriptionStatus = resp.subscriptions[0].status;
+            console.log('resp', resp.subscriptions[0].status);
+          } else {
+            // TODO: handle this case in the UI.
+            this.subscriptionStatus = 'not_subscribed';
+          }
+        } catch (err) {
+          console.log('Err::', err);
+        }
 
         this.updateCharts('start', this.startDate!, 'achievement');
         this.updateCharts('end', this.endDate!, 'achievement');

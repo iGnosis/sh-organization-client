@@ -3,10 +3,36 @@
   <div class="container-xl">
     <div>
       <div class="row custom_alignment pb-5">
-        <div *ngIf="gameDetails" class="col-md-6 col-12 mb-3 mb-md-0">
+        <div *ngIf="gameDetails" [ngSwitch]="subscriptionStatus" class="col-md-6 col-12 mb-3 mb-md-0">
           <!-- Title -->
           <xng-breadcrumb separator=">"></xng-breadcrumb>
           <h1 class="h2 mb-0 ls-tight mt-5">{{ patientIdentifier }}</h1>
+
+          <p *ngSwitchCase="'active'" class="mb-0 ls-tight text-subscription-sucess">
+            <i class="bi bi-check-circle-fill mr-2"></i>
+            <span class="mx-2">{{'Active Subscription'}}</span>
+          </p>
+
+          <p *ngSwitchCase="'trial_period'" class="mb-0 ls-tight text-warning">
+            <i class="bi bi-clock-fill mr-2"></i>
+            <span class="mx-2">{{'Trial Period'}}</span>
+          </p>
+
+          <p *ngSwitchCase="'payment_pending'" class="mb-0 ls-tight text-warning">
+            <i class="bi bi-clock-fill mr-2"></i>
+            <span class="mx-2">{{'Payment Pending'}}</span>
+          </p>
+
+          <p *ngSwitchCase="'cancelled'" class="mb-0 ls-tight text-warning">
+            <i class="bi bi-x-circle-fill mr-2"></i>
+            <span class="mx-2">{{'Subscription Cancelled'}}</span>
+          </p>
+
+          <p *ngSwitchCase="'paused'" class="mb-0 ls-tight text-info">
+            <i class="bi bi-pause-circle-fill mr-2"></i>
+            <span class="mx-2">{{'Subscription Paused'}}</span>
+          </p>
+
         </div>
         <!-- Actions -->
         <div class="col-md-6 col-12 text-md-end">
