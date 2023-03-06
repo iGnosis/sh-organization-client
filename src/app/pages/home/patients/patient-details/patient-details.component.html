@@ -13,9 +13,9 @@
             <span class="mx-2">{{'Active Subscription'}}</span>
           </p>
 
-          <p *ngSwitchCase="'trial_period'" class="mb-0 ls-tight text-warning">
-            <i class="bi bi-clock-fill mr-2"></i>
-            <span class="mx-2">{{'Trial Period'}}</span>
+          <p *ngSwitchCase="'trial_period'" class="mb-0 ls-tight text-subscription-sucess">
+            <i class="bi bi-check-circle-fill mr-2"></i>
+            <span class="mx-2">{{'Active Subscription (Free Trial)'}}</span>
           </p>
 
           <p *ngSwitchCase="'payment_pending'" class="mb-0 ls-tight text-warning">
