@@ -601,11 +601,9 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
             caretSize: 15,
             callbacks: {
               label: function (tooltipItem: any) {
-                // console.log('tooltipItem:', tooltipItem);
-                const data = tooltipItem.dataset.data[tooltipItem.dataIndex];
-                // const successRatio =
-                //   tooltipItem.dataset.data[tooltipItem.dataIndex];
-                return ` ${tooltipItem.dataset.label} - ${data}%`;
+                // console.log('tooltipItem.dataset:', tooltipItem.dataset);
+                const successRatio = tooltipItem.dataset.data[tooltipItem.dataIndex];
+                return ` ${tooltipItem.dataset.label} - ${successRatio}%`;
               },
             },
           },
