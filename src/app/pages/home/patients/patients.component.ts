@@ -48,8 +48,9 @@ export class PatientsComponent implements OnInit, AfterViewInit {
     this.selectedDateRange = idx;
     this.dateRange = this.dateFilter[idx].range;
 
-    this.patientsListComponent &&
+    if (this.patientsListComponent) {
       this.patientsListComponent.reloadPatientList(this.dateFilter[idx].range);
+    }
   }
 
   constructor(private modalService: NgbModal, private apiService: ApiService) {

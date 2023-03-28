@@ -1,21 +1,20 @@
 export const GqlConstants = {
-  GET_ALL_PATIENTS: `
-query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
-  patient {
-    id
-    createdAt
-    nickname
-    firstName
-    identifier
-    games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
+  GET_ALL_PATIENTS: `query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
+    patient {
+      id
       createdAt
-      game
+      nickname
+      firstName: pii_firstName
+      identifier
+      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
+        createdAt
+        game
+      }
+      subscriptionBySubscription {
+        status
+      }
     }
-    subscriptionBySubscription {
-      status
-    }
-  }
-}`,
+  }`,
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
     patient_by_pk(id: $patientId) {
       createdAt

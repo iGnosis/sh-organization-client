@@ -164,7 +164,6 @@ export class PatientsListComponent implements OnInit {
         //   (patient) => patient.lastActive
         // );
         // resolve(filteredPatientsWithActiveDays || []);
-
         resolve(patientsWithActiveDays || []);
       });
     });
@@ -182,10 +181,13 @@ export class PatientsListComponent implements OnInit {
             }
             return acc;
           }, []).length;
+
           const lastActive = patient.games[0]
             ? patient.games[0].createdAt
             : null;
+
           const activities = patient.games.length;
+
           return {
             ...patient,
             activeDays,
