@@ -37,9 +37,9 @@ export class LatestSessionsComponent implements OnInit {
       const [key, value] = entry;
       return {
         id: key,
-        nickname: value[0]?.patientByPatient.nickname,
-        firstName: value[0]?.patientByPatient.firstName,
-        lastName: value[0]?.patientByPatient.lastName,
+        nickname: value[0]?.patientByPatient.nickname.value,
+        firstName: value[0]?.patientByPatient.firstName.value,
+        lastName: value[0]?.patientByPatient.lastName.value,
         games: value.map((game: any) => ({
           id: game.id,
           name: game.game.replace(/_/g, ' '),

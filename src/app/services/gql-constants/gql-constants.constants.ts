@@ -123,9 +123,9 @@ export const GqlConstants = {
       createdAt
       patientByPatient {
         id
-        nickname
-        firstName
-        lastName
+        nickname: pii_nickname
+        firstName: pii_firstName
+        lastName: pii_lastName
       }
     }
   }
@@ -340,8 +340,8 @@ export const GqlConstants = {
   GET_PATIENTS: `
   query GetPatients {
   patient {
-    firstName
-    lastName
+    firstName: pii_firstName
+    lastName: pii_lastName
     id
   }
 }
@@ -375,11 +375,11 @@ export const GqlConstants = {
   GET_PATIENT_BY_PK: `
   query GetPatientByPK($id: uuid!) {
   patient_by_pk(id: $id) {
-    email
-    firstName
-    lastName
+    email: pii_email
+    firstName: pii_firstName
+    lastName: pii_lastName
     namePrefix
-    phoneNumber
+    phoneNumber: pii_phoneNumber
     phoneCountryCode
   }
 }`,

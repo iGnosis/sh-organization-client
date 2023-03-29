@@ -22,11 +22,19 @@ export class UserDetailsComponent implements OnInit {
   isEditable = false;
 
   patientDetails: Partial<{
-    firstName: string;
-    lastName: string;
     namePrefix: string;
-    email: string;
-    phoneNumber: string;
+    firstName: {
+      value: string;
+    };
+    lastName: {
+      value: string;
+    };
+    email: {
+      value: string;
+    };
+    phoneNumber: {
+      value: string
+    };
     phoneCountryCode: string;
   }> = {};
 
@@ -93,11 +101,11 @@ export class UserDetailsComponent implements OnInit {
         !this.patientDetails.namePrefix
       ) {
         return false;
-      } else if (!emailRegex.test(this.patientDetails.email)) {
+      } else if (!emailRegex.test(this.patientDetails.email.value)) {
         return false;
       } else if (
         !validatePhone(
-          `${this.patientDetails.phoneCountryCode}${this.patientDetails.phoneNumber}`
+          `${this.patientDetails.phoneCountryCode}${this.patientDetails.phoneNumber.value}`
         ).isValid
       ) {
         return false;
@@ -134,7 +142,7 @@ export class UserDetailsComponent implements OnInit {
   ) {
     const element = evt.target as HTMLInputElement;
     if (type === 'patient') {
-      this.patientDetails[inputType] = element.value;
+      this.patientDetails[inputType]!.value = element.value;
       this.enableSaveButton = this.validateFields('patient');
     } else {
       this.staffDetails[inputType] = element.value;
@@ -163,7 +171,12 @@ export class UserDetailsComponent implements OnInit {
       await this.gqlService.client
         .request(GqlConstants.UPDATE_PATIENT_BY_PK, {
           id: this.userId,
-          ...this.patientDetails,
+          email: this.patientDetails.email?.value,
+          namePrefix: this.patientDetails.namePrefix,
+          firstName: this.patientDetails.firstName?.value,
+          lastName: this.patientDetails.lastName?.value,
+          phoneCountryCode: this.patientDetails.phoneCountryCode,
+          phoneNumber: this.patientDetails.phoneNumber?.value,
         })
         .then(() => {
           this.isEditable = false;

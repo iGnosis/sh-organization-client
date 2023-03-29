@@ -11,8 +11,8 @@
               <div class="col-6">
                 <p *ngIf="patientDetails && patientDetails.firstName && patientDetails.lastName && patientDetails.namePrefix && !isEditable"
                   class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{patientDetails.namePrefix +'
-                  '+patientDetails.firstName+ ' '+
-                  patientDetails.lastName}}</p>
+                  '+patientDetails.firstName.value + ' '+
+                  patientDetails.lastName.value}}</p>
                 <p *ngIf="staffDetails && !isEditable" class="h2 mb-0 ls-tight text-primary heading_text mt-5">{{
                   staffDetails.firstName && staffDetails.firstName}} {{staffDetails.lastName&&
                   staffDetails.lastName}}</p>
@@ -52,23 +52,22 @@
           <div class="row mb-md-4 px-4 gap-md-2">
             <div *ngIf="patientDetails.firstName || patientDetails.lastName" class="col-md-12">
               <p class=" muted-heading text-muted font-regular">Patient Name: <span
-                  class="muted-headingmx-2 font-semibold" style="color: #1A202C;">{{patientDetails.namePrefix &&
-                  patientDetails.namePrefix}}
-                  {{patientDetails.firstName &&patientDetails.firstName}} {{patientDetails.lastName &&
-                  patientDetails.lastName}}</span>
+                  class="muted-headingmx-2 font-semibold" style="color: #1A202C;">{{patientDetails.namePrefix}}
+                  {{patientDetails.firstName && patientDetails.firstName.value}} {{patientDetails.lastName &&
+                  patientDetails.lastName.value}}</span>
               </p>
             </div>
 
             <div *ngIf="patientDetails.email" class="col-md-12">
-              <p class="muted-heading text-muted font-regular">Patient E-mail: <span
-                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.email}}</span>
+              <p class="muted-heading text-muted font-regular">Patient E-mail:<span
+                  class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.email.value}}</span>
               </p>
             </div>
 
             <div *ngIf="patientDetails.phoneCountryCode && patientDetails.phoneNumber" class="col-md-12">
               <p class="muted-heading text-muted font-regular">Patinet Phone No:<span
                   class="muted-heading mx-2 font-semibold" style="color: #1A202C;">{{patientDetails.phoneCountryCode +
-                  patientDetails.phoneNumber}}</span>
+                  patientDetails.phoneNumber.value}}</span>
               </p>
             </div>
           </div>
@@ -95,19 +94,19 @@
             </div>
             <div class="col-md-5 mb-sm-4 col-sm-10">
               <label for="fname" class="form-label col-12">First Name</label>
-              <input [ngModel]="patientDetails.firstName" (input)="setInput('patient','firstName', $event)" id="fname"
+              <input [ngModel]="patientDetails.firstName?.value" (input)="setInput('patient','firstName', $event)" id="fname"
                 type="text" class="form-control form-control-muted" required placeholder="Enter first name">
             </div>
             <div class="col-md-5 mb-sm-4 col-sm-12">
               <label for="lname" class="form-label col-12">Last Name</label>
-              <input [ngModel]="patientDetails.lastName" id="lname" (input)="setInput('patient','lastName', $event)"
+              <input [ngModel]="patientDetails.lastName?.value" id="lname" (input)="setInput('patient','lastName', $event)"
                 type="text" class="form-control form-control-muted" placeholder="Enter last name" required>
             </div>
           </div>
           <div class="mb-md-8 mb-sm-4">
             <label for="email" class="form-label col-12">Patient Email</label>
             <input id="email" type="email" class="form-control form-control-muted" placeholder="Enter email"
-              [ngModel]="patientDetails.email" (input)="setInput('patient','email', $event)">
+              [ngModel]="patientDetails.email?.value" (input)="setInput('patient','email', $event)">
           </div>
 
           <div class="mb-md-8 mb-sm-4">
@@ -126,7 +125,7 @@
               </div>
               <div class="col-md-10">
                 <label for="mobile" class="form-label col-12">Patient Phone Number</label>
-                <input [ngModel]="patientDetails.phoneNumber" id="mobile" type="number"
+                <input [ngModel]="patientDetails.phoneNumber?.value" id="mobile" type="number"
                   class="form-control form-control-muted" placeholder="Enter phone number"
                   (input)="setInput('patient','phoneNumber',$event)">
               </div>
@@ -135,8 +134,6 @@
         </div>
       </div>
     </div>
-
-
 
     <div *ngIf="userType === 'staff' && !isEditable" class="container-xl">
       <div class="mx-md-4 mx-sm-2 card custom-box-shadow p-sm-2">

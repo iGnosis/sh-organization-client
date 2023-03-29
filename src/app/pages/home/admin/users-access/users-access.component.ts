@@ -47,10 +47,16 @@ export class UsersAccessComponent implements OnInit {
   }[];
 
   patientList: {
-    firstName: string;
-    lastName: string;
+    firstName: {
+      value: string;
+    };
+    lastName: {
+      value: string
+    };
     id: string;
-    email: string;
+    email: {
+      value: string;
+    };
   }[];
 
   patientDetails: Partial<{

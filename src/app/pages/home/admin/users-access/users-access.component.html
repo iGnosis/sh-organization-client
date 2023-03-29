@@ -55,7 +55,7 @@
       <div class="col-md-12 staff-members my-md-4 verticalLineTop">
         <div class="staff-entry row py-md-3 py-lg-3" *ngFor="let patient of patientList">
           <div class="col-md-6 d-flex align-items-center">
-            <p class="h4 details-name">{{patient.firstName +' '+ patient.lastName }}</p>
+            <p class="h4 details-name">{{patient.firstName.value +' '+ patient.lastName.value }}</p>
           </div>
           <div class="col-md-6 d-flex align-items-center justify-content-end">
             <button type="button" (click)="redirectToDetailsPage('patient',patient.id)"
