@@ -25,7 +25,8 @@ interface DashboardGqlRespData {
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  currentDate: Date;
+  now: Date;
+  todayEndDate: Date;
   previousDate: Date;
 
   isOnline = false;
@@ -53,7 +54,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       dashboard: DashboardState;
     }>
   ) {
-    this.currentDate = new Date(new Date().setHours(24, 0, 0, 0)); // nearest midnight in future
+    this.now = new Date();
+    this.todayEndDate = new Date(new Date().setHours(24, 0, 0, 0)); // nearest midnight in future
     this.previousDate = new Date(new Date().setHours(0, 0, 0, 0)); // nearest midnight in the past
     console.log('Environment ', environment.name);
 
@@ -89,13 +91,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async updateChartTimeline(range: number) {
     console.log('updateChartTimeline::range::', range);
-    this.previousDate = new Date(this.currentDate);
+    this.previousDate = new Date(this.todayEndDate);
     this.previousDate.setDate(this.previousDate.getDate() - range);
 
     if (range == 0) {
       this.previousDate = new Date(new Date().setHours(0, 0, 0, 0)); // nearest midnight in the past
     }
-    console.log('currentDate::', this.currentDate);
+    console.log('todayEndDate::', this.todayEndDate);
     console.log('previousDate::', this.previousDate);
     this.metricCards = [];
     await this.getMetrics(this.selectedMetricGroup);
@@ -112,7 +114,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.selectedMetricGroup = metricGroup;
 
     if (metricGroup === 'conversion') {
-      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_CONVERSION, { startDate: this.previousDate, endDate: this.currentDate });
+      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_CONVERSION, { startDate: this.previousDate, endDate: this.todayEndDate });
       this.metricCards = [];
       for (const [_, data] of Object.entries(resp)) {
         this.metricCards.push(this.buildMetricCardObject(data.data));
@@ -120,7 +122,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     else if (metricGroup === 'engagement') {
-      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_ENGAGEMENT, { startDate: this.previousDate, endDate: this.currentDate });
+      const resp: DashboardGqlResp[] = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_ENGAGEMENT, { startDate: this.previousDate, endDate: this.todayEndDate });
       this.metricCards = [];
       for (const [_, data] of Object.entries(resp)) {
         this.metricCards.push(this.buildMetricCardObject(data.data));
@@ -128,7 +130,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     else if (metricGroup === 'retention') {
-      const resp: DashboardGqlResp[]  = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_RETENTION, { startDate: this.previousDate, endDate: this.currentDate });
+      const resp: DashboardGqlResp[]  = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_RETENTION, { startDate: this.previousDate, endDate: this.todayEndDate });
       const today = new Date(new Date().setHours(0, 0, 0, 0)).toISOString();
       const todayEnd = new Date(new Date().setHours(24, 0, 0, 0)).toISOString();
       const stickinessResp = await this.graphqlService.gqlRequest(GqlConstants.DASHBOARD_STICKINESS_METRIC, { startDate: today, endDate: todayEnd })
