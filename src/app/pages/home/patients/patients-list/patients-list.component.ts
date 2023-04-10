@@ -130,9 +130,14 @@ export class PatientsListComponent implements OnInit {
   }
 
   async reloadPatientList(dateRange: number) {
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - dateRange);
+
+    if (dateRange === 0) dateRange = 1;
+
+    console.log('reloadPatientList:dateRange:', dateRange);
+    const now = new Date();
+    const todayStartDate = new Date(new Date().setHours(0, 0, 0, 0)); // nearest midnight in the past
+
+    todayStartDate.setDate(todayStartDate.getDate() - dateRange);
 
     this.dataSource.data = await new Promise((resolve, reject) => {
       const patientListResponse = new Observable((observer) => {
@@ -140,8 +145,8 @@ export class PatientsListComponent implements OnInit {
           .gqlRequest(
             GqlConstants.GET_ALL_PATIENTS,
             {
-              startDate: startDate.toISOString(),
-              endDate: endDate.toISOString(),
+              startDate: todayStartDate.toISOString(),
+              endDate: now.toISOString(),
             },
             true
           )
