@@ -173,12 +173,6 @@ export const GqlConstants = {
       patient
     }
   }`,
-
-  GET_PATIENT_IDENTIFIER: `query GetPatientIdentifier($patientId: uuid) {
-    patient(where: {id: {_eq: $patientId}}) {
-      nickname
-    }
-  }`,
   GETCAREPLANDETAILS: `query GetCarePlanDetails($careplan: uuid = "40f81454-c97d-42bc-b20f-829cc3d2728e") {
     careplan(where: {id: {_eq: $careplan}}) {
       name
