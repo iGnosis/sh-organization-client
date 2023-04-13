@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HasuraRbac, Rbac } from 'src/app/pointmotion';
 import { environment } from '../../../environments/environment'
 import { GraphqlService } from '../graphql/graphql.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,14 @@ import { GraphqlService } from '../graphql/graphql.service';
 export class AuthService {
 
   baseURL = ''
-  constructor(private http: HttpClient, private gqlService: GraphqlService) {
+  private logoutTimer: any;
+  private logoutInactivityDurationMins = 15;
+
+  constructor(
+    private http: HttpClient,
+    private gqlService: GraphqlService,
+    private router: Router,
+  ) {
     this.baseURL = environment.servicesEndpoint
   }
 
@@ -35,11 +43,28 @@ export class AuthService {
     return rbac ? JSON.parse(rbac) : {};
   }
 
+  logout() {
+    localStorage.clear()
+    this.router.navigate(['/public/auth/sign-in'])
+  }
+
   requestResetLink(email: string) {
     return this.http.post(this.baseURL+'/auth/request-password-reset-link', {email})
   }
 
   reset(code: string, password: string) {
     return this.http.post(this.baseURL+'/auth/reset-password', {code, password})
+  }
+
+  startLogoutTimer() {
+    this.logoutTimer = setTimeout(() => {
+      console.log('logging out due to inactivity');
+      this.logout();
+    }, this.logoutInactivityDurationMins * 60 * 1000);
+  }
+
+  resetLogoutTimer() {
+    clearTimeout(this.logoutTimer);
+    this.startLogoutTimer();
   }
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthService } from './services/auth/auth.service';
 import { SocketService } from './services/socket/socket.service';
 import { ThemeService } from './services/theme/theme.service';
@@ -18,6 +18,13 @@ export class AppComponent {
     this.themeService.setTheme();
     this.authService.initRbac();
     this.overrideConsole();
+  }
+
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:keydown', ['$event'])
+  @HostListener('window:touchstart', ['$event'])
+  onUserActivity(event: MouseEvent | KeyboardEvent | TouchEvent) {
+    this.authService.resetLogoutTimer();
   }
 
   overrideConsole() {

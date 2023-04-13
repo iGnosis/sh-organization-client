@@ -1,11 +1,11 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { ActivatedRoute, Event, NavigationEnd, NavigationStart, Router } from '@angular/router';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { filter, Subscription, take } from 'rxjs';
+import { Event, NavigationEnd, Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { take } from 'rxjs';
 import { ModalConfig } from 'src/app/pointmotion';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { SocketService } from 'src/app/services/socket/socket.service';
 import { ThemeService } from 'src/app/services/theme/theme.service';
-import { InvitePatientComponent } from 'src/app/widgets/modal/invite-patient/invite-patient.component';
 
 @Component({
   selector: 'app-private',
@@ -17,7 +17,13 @@ export class PrivateComponent implements OnInit {
   logoutModalConfig: ModalConfig;
   @ViewChild('logoutModal') logoutModal: TemplateRef<any>;
 
-  constructor(private themeService: ThemeService, private router: Router, private modalService: NgbModal, private socketService: SocketService) {
+  constructor(
+    private themeService: ThemeService,
+    private router: Router,
+    private modalService: NgbModal,
+    private socketService: SocketService,
+    private authService: AuthService,
+  ) {
     this.themeService.logoSubject.pipe(take(1)).subscribe((url) => this.logoUrl = url);
     this.logoutModalConfig = {
       type: 'primary',
@@ -42,17 +48,12 @@ export class PrivateComponent implements OnInit {
 
   }
 
-  // invitePatient() {
-  //   const modalRef = this.modalService.open(InvitePatientComponent)
-  // }
-
   openLogoutModal() {
     this.modalService.open(this.logoutModal, { centered: true, size: 'md' })
   }
 
   logout() {
-    localStorage.clear()
-    this.router.navigate(['/public/auth/sign-in'])
+    this.authService.logout();
     this.modalService.dismissAll()
   }
 }
