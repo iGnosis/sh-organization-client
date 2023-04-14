@@ -299,11 +299,26 @@ export class PatientDetailsComponent implements OnInit, OnDestroy {
     }, 100);
 
     const patient = await this.graphqlService.client.request(
-      GqlConstants.GET_PATIENT_IDENTIFIER,
-      { patientId: this.patientId }
+      GqlConstants.GET_PATIENT_BY_PK,
+      { id: this.patientId }
     );
-    this.patientIdentifier = patient.patient[0].nickname;
-    this.breadcrumbService.set('@patientName', this.patientIdentifier);
+
+    const nickname = patient.patient_by_pk.nickname;
+    const firstName = patient.patient_by_pk.firstName;
+
+    if (nickname) {
+      this.breadcrumbService.set('@patientName', nickname);
+      this.patientIdentifier = nickname;
+      console.log(
+        'setting breadcrumbService.patientName to nickname ' + nickname
+      );
+    } else if (firstName) {
+      this.breadcrumbService.set('@patientName', firstName);
+      this.patientIdentifier = firstName;
+      console.log(
+        'setting breadcrumbService.patientName to firstName ' + firstName
+      );
+    }
   }
 
   async GetAssignedCarePlan() {
