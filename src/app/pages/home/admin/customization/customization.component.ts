@@ -53,7 +53,6 @@ export class CustomizationComponent implements OnInit {
       const theme = resp.organization[0].configuration.theme;
       this.orgLogoUrl = resp.organization[0].logoUrl;
       console.log('orgLogoUrl::', this.orgLogoUrl);
-      console.log('orgLogoUrl::', this.orgLogoUrl);
       if (theme) {
         this.customizationOptions = {
           ...theme,
@@ -81,14 +80,12 @@ export class CustomizationComponent implements OnInit {
     const element = event.currentTarget as HTMLInputElement;
     const fileList: FileList | null = element.files;
     if (fileList) {
-      console.log('FileUpload -> files', fileList);
       this.imageList = fileList;
     }
     this.checkIfChangesAreMade();
   }
 
   checkIfChangesAreMade(): void {
-    console.log(this.customizationOptions);
     const changesMade: boolean =
       JSON.stringify(this.customizationOptions) !==
         JSON.stringify(this.oldData) || !!this.imageList;
@@ -122,7 +119,6 @@ export class CustomizationComponent implements OnInit {
           'Content-Type': image.type,
         }),
       });
-      console.log(putResult);
     }
   }
 

@@ -1,7 +1,7 @@
 <div class="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
   <!-- Vertical Navbar -->
   <nav
-    class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-dark bg-primary border-end-lg"
+    class="navbar show navbar-vertical h-lg-screen navbar-expand-lg px-0 py-3 py-lg-0 navbar-dark bg-primary border-none"
     id="navbarVertical">
     <div class="container-fluid">
       <!-- Toggler -->
@@ -24,12 +24,13 @@
         <!-- Navigation -->
         <ul class="navbar-nav">
           <li acl nav="dashboard" class="nav-item">
-            <a class="nav-link" role="button" routerLink="/app/dashboard">
+            <a class="nav-link" role="button" routerLink="/app/dashboard"
+              [routerLinkActive]="['bg-white', 'text-primary', 'active']">
               <i class="bi bi-house"></i> Dashboard
             </a>
           </li>
-          <li acl nav="patients" class="nav-item">
-            <a class="nav-link" routerLink="/app/patients">
+          <li class="nav-item">
+            <a class="nav-link" routerLink="/app/patients" [routerLinkActive]="['bg-white', 'text-primary', 'active']">
               <i class="bi bi-people"></i> Patients
             </a>
           </li>
@@ -39,7 +40,7 @@
             </a>
           </li> -->
           <li acl nav="administration" class="nav-item">
-            <a class="nav-link" routerLink="/app/admin">
+            <a class="nav-link" routerLink="/app/admin" [routerLinkActive]="['bg-white', 'text-primary', 'active']">
               <i class="bi bi-buildings"></i> Administration
             </a>
           </li>
@@ -66,7 +67,7 @@
         <!-- User (md) -->
         <ul class="navbar-nav mb-5">
           <li acl nav="account" class="nav-item">
-            <a class="nav-link" routerLink="/app/account">
+            <a class="nav-link" routerLink="/app/account" [routerLinkActive]="['bg-white', 'text-primary', 'active']">
               <i class="bi bi-person"></i> Account
             </a>
           </li>
@@ -88,3 +89,6 @@
 <ng-template #logoutModal let-modal>
   <primary-modal [modal]="modal" [modalConfig]="logoutModalConfig"></primary-modal>
 </ng-template>
+
+
+<app-support-fab></app-support-fab>

@@ -1,0 +1,116 @@
+@import "./../../variables";
+
+.fab-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  user-select: none;
+  position: absolute;
+  bottom: 30px;
+  right: 30px;
+  &:hover {
+    cursor: pointer;
+  }
+  &.active {
+    height: 100%;
+    .sub-button:nth-child(2) {
+      transform: translateY(-80px);
+    }
+    .sub-button:nth-child(3) {
+      transform: translateY(-160px);
+    }
+    .sub-button:nth-child(4) {
+      transform: translateY(-240px);
+    }
+    .sub-button:nth-child(5) {
+      transform: translateY(-320px);
+    }
+    .sub-button:nth-child(6) {
+      transform: translateY(-320px);
+    }
+  }
+  .fab {
+    position: relative;
+    height: 60px;
+    width: 60px;
+    background-color: $info;
+    border-radius: 50%;
+    z-index: 3;
+    .fab-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+      border-radius: 50%;
+      .icon {
+        color: white;
+      }
+    }
+  }
+  .sub-button {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    bottom: 10px;
+    // right: 10px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 2;
+    &:hover {
+      cursor: pointer;
+      background-color: $info;
+      .icon {
+        color: white;
+        font-size: 30px;
+      }
+      .btn-text {
+        color: #ffffff;
+      }
+    }
+    .icon {
+      color: $info;
+      font-size: 26px;
+    }
+  }
+}
+
+.btn-text {
+  position: absolute;
+  right: 140%;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fafafa;
+}
+
+.fab-container .fab-opt .btn-text {
+  color: #fafafa;
+}
+.fab-container:hover .fab-opt:not(:hover) .btn-text {
+  color: #cbd5e0;
+}
+.fab-container .fab:hover ~ .fab-opt .btn-text {
+  color: #ffffff;
+}
+
+.overlay {
+  display: none;
+}
+.overlay.active {
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 1;
+}

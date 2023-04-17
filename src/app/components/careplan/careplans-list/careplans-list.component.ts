@@ -31,7 +31,6 @@ export class CareplansListComponent implements OnInit {
     // }
 
     const allCareplans = await this.careplanService.getAll()
-    console.log('allCareplans:', allCareplans)
     allCareplans.forEach((careplan: any) => {
       if (assignedCareplansIds.includes(careplan.id)) {
         careplan.selected = true

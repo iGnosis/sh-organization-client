@@ -7,7 +7,6 @@ import { JwtService } from '../jwt/jwt.service';
 })
 export class GraphqlService {
   public client: GraphQLClient;
-  public publicClient: GraphQLClient;
   private additionalHeaders: {[key: string]: any} = {
     'x-pointmotion-user-type': 'staff',
     'x-organization-name': environment.organizationName

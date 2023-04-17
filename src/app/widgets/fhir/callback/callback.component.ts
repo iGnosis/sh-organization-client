@@ -31,8 +31,6 @@ export class CallbackComponent implements OnInit {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
       }).subscribe(response => {
-        console.log(response);
-        
       })
     }
   }

@@ -36,7 +36,6 @@ export class SubscriptionsComponent implements OnInit {
       true
     );
     this.subscriptionPlan = resp.subscription_plans[0];
-    console.log('subscription::plan::', resp.subscription_plans[0]);
   }
   saveSubscriptionPlanChanges() {}
 }

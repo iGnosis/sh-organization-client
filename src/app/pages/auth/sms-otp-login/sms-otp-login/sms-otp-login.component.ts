@@ -87,11 +87,8 @@ export class SmsOtpLoginComponent {
 
       this.countryCode = this.countryCode ? this.countryCode.trim() : '';
       this.phoneNumber = this.phoneNumber ? this.phoneNumber.trim() : '';
-      console.log('submit:countryCode:', this.countryCode);
-      console.log('submit:phoneNumber:', this.phoneNumber);
 
       const phoneObj = phone(`${this.countryCode}${this.phoneNumber}`);
-      console.log(phoneObj);
 
       if (!phoneObj.isValid) {
         this.formErrorMsg = ('Phone number is not valid');
@@ -173,7 +170,6 @@ export class SmsOtpLoginComponent {
     // call API to validate the code
     else if (this.step === 1) {
       this.otpCode = event.target.otpCode.value;
-      console.log('submit:otpCode:', this.otpCode);
 
       // you should get back JWT in success response.
       const resp = await this.graphQlService.gqlRequest(
@@ -202,10 +198,15 @@ export class SmsOtpLoginComponent {
         accessTokenData['https://hasura.io/jwt/claims'][
         'x-hasura-default-role'
         ];
+      const orgId =
+        accessTokenData['https://hasura.io/jwt/claims'][
+          'x-hasura-organization-id'
+        ];
 
       this.userService.set({
         id: userId,
         type: userRole,
+        orgId: orgId,
       });
       console.log('user set successfully');
 
@@ -250,14 +251,12 @@ export class SmsOtpLoginComponent {
     }
 
     const userRole = this.mockLoginUserRole;
-    console.log('mock login:', userRole);
 
     const resp = await this.graphQlService.gqlRequest(
       GqlConstants.MOCK_LOGIN,
       { userRole },
       false
     );
-    console.log(resp);
     const token = resp.mockStaffJwt.data.jwt;
 
     this.jwtService.setToken(token);

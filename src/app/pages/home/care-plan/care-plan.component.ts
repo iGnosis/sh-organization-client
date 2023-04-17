@@ -27,7 +27,6 @@ export class CarePlanComponent implements OnInit {
   async ngOnInit() {
     this.careplans = await this.careplanService.getAll();
     this.dataSource.data=this.careplans;
-    console.log(this.dataSource.data);
     this.selection = new SelectionModel(this.allowMultiSelect, this.initialSelection);
     this.dataSource.paginator = this.tableOnePaginator;
     this.dataSource.sort = this.sort;
@@ -44,6 +43,5 @@ export class CarePlanComponent implements OnInit {
   }
 
   onCarePlansSelected(careplans: any) {
-    console.log(careplans)
   }
 }

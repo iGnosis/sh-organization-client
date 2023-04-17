@@ -1,16 +1,18 @@
 export const GqlConstants = {
   GET_ALL_PATIENTS: `
-  query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
-    patient(where: {nickname: {_is_null: false}}) {
-      id
+query PatientList($startDate: timestamptz!, $endDate: timestamptz!) {
+  patient {
+    id
+    createdAt
+    nickname
+    firstName
+    identifier
+    games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
       createdAt
-      nickname
-      games(order_by: {createdAt: desc}, where: {endedAt: {_is_null: false, _lte: $endDate}, createdAt: {_gte: $startDate}}) {
-        createdAt
-        game
-      }
+      game
     }
-  }`,
+  }
+}`,
   GET_PATIENT_CAREPLANS: `query GetPatientCarePlans($patientId: uuid!) {
     patient_by_pk(id: $patientId) {
       createdAt
@@ -103,6 +105,12 @@ export const GqlConstants = {
         engagementRatio
         avgAchievementPercentage
       }
+    }
+  }`,
+  GET_PATIENT_MOOD: `query FetchPatientMood($patientId: uuid!, $startDate: timestamptz!, $endDate: timestamptz!) {
+    checkin(where: {type: {_eq: mood}, patient: {_eq: $patientId}, createdAt: {_gte: $startDate, _lte: $endDate}}, order_by: {createdAt: asc}) {
+      createdAt
+      mood: value
     }
   }`,
   GET_LATEST_GAMES: `
@@ -303,14 +311,16 @@ export const GqlConstants = {
   // run as org_admin
   CREATE_NEW_PATIENT: `
   mutation InsertPatient($firstName: String!, $lastName: String!, $namePrefix: String!, $email: String!, $phoneCountryCode: String!, $phoneNumber: String!) {
-  insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
-    email
+    insert_patient_one(object: {firstName: $firstName, lastName: $lastName, namePrefix: $namePrefix, email: $email, phoneCountryCode: $phoneCountryCode, phoneNumber: $phoneNumber}) {
+      user {
+        email
+      }
+    }
   }
-}
 `,
   CREATE_NEW_STAFF: `
     mutation InsertStaff($firstName: String!, $lastName: String!, $type: user_type_enum!, $email: String!, $phoneNumber: String!, $phoneCountryCode: String!) {
-  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: invited, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
+  insert_staff_one(object: {firstName: $firstName, lastName: $lastName, status: active, type: $type, email: $email, phoneNumber: $phoneNumber, phoneCountryCode: $phoneCountryCode}) {
     email
   }
 }`,
@@ -322,6 +332,7 @@ export const GqlConstants = {
         firstName
         lastName
         type
+        email
       }
   }`,
   GET_PATIENTS: `
@@ -429,7 +440,6 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
   }
 }
 `,
-
   GET_SUBCRIPTION_PLAN: `
   query GetSubscriptionPlan($organizationId: uuid!) {
     subscription_plans(where: {organization: {_eq: $organizationId}}) {
@@ -438,5 +448,123 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
       subscriptionFee
       trialPeriod
     }
-  }`
+  }`,
+  GET_BILLING_HISTORY: `
+  query GetBillingHistory($organization: uuid!) {
+    billing_history(order_by: {createdAt: desc_nulls_last}, where: {organization: {_eq: $organization}}) {
+      createdAt
+      id
+      revenue
+    }
+  }`,
+  SET_PUBLIC_SIGNUP: `
+  mutation SetPublicSignup($id: uuid!, $isPublicSignUpEnabled: Boolean = false) {
+    update_organization_by_pk(pk_columns: {id: $id}, _set: {isPublicSignUpEnabled: $isPublicSignUpEnabled}) {
+      isPublicSignUpEnabled
+    }
+  }`,
+  GET_PUBLIC_SIGNUP: `
+  query GetPublicSignupStatus {
+    organization {
+      isPublicSignUpEnabled
+    }
+  }`,
+  DASHBOARD_CONVERSION: `query DashboardConversion($startDate: String!, $endDate: String!) {
+    newUsers: dashboardConversion(type: new_users, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    activationMilestone: dashboardConversion(type: activation_milestone, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    activationRate: dashboardConversion(type: activation_rate, startDate: $startDate, endDate: $endDate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_ENGAGEMENT: `query DashboardEngagement($startDate: String!, $endDate: String!) {
+    avgUserEngagement: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: avg_user_engagement) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    avgActivitiesPlayed: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: avg_activities_played) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    adoptionRate: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: adoption_rate) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_RETENTION: `query DashboardRetention($startDate: String!, $endDate: String!) {
+    activeUsers: dashboardRetention(startDate: $startDate, endDate: $endDate, type: active_users) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+    totalActiveUsers: dashboardRetention(startDate: $startDate, endDate: $endDate, type: total_users) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  DASHBOARD_STICKINESS_METRIC: `query DashboardStickinessMetric($startDate: String!, $endDate: String!) {
+    stickiness: dashboardRetention(startDate: $startDate, endDate: $endDate, type: stickiness) {
+      data {
+        metric
+        newCount
+        percentageChange
+        showPercentageChange
+      }
+    }
+  }`,
+  GET_TESTING_VIDEOS: `
+  query GetTesterVideos($patientId: uuid!) {
+  tester_videos(where: {patient: {_eq: $patientId}}, order_by: {startedAt: desc}) {
+    id
+    startedAt
+    endedAt
+  }
+}
+`,
+  VIEW_TESTING_VIDEOS: `
+  query ViewTesterRecording($recordingId: String!) {
+  viewTesterRecording(recordingId: $recordingId) {
+    data {
+      configUrl
+      videoUrl
+    }
+  }
+}`,
 };

@@ -32,9 +32,6 @@ export class AdminComponent implements OnInit {
     this.currentTab = tabName;
     console.log('set::tab::', tabName);
     this.breadCrumbService.set('/app/admin', tabName);
-    this.breadCrumbService.breadcrumbs$.subscribe((bc) => {
-      console.log(bc);
-    });
   }
 
   setCustomizable() {
