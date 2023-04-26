@@ -472,6 +472,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
     activationMilestone: dashboardConversion(type: activation_milestone, startDate: $startDate, endDate: $endDate) {
@@ -480,6 +481,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
     activationRate: dashboardConversion(type: activation_rate, startDate: $startDate, endDate: $endDate) {
@@ -488,6 +490,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
   }`,
@@ -498,6 +501,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
     avgActivitiesPlayed: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: avg_activities_played) {
@@ -506,6 +510,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
     adoptionRate: dashboardEngagement(startDate: $startDate, endDate: $endDate, type: adoption_rate) {
@@ -514,6 +519,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
   }`,
@@ -524,6 +530,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
     totalActiveUsers: dashboardRetention(startDate: $startDate, endDate: $endDate, type: total_users) {
@@ -532,6 +539,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
   }`,
@@ -542,6 +550,7 @@ mutation UpdateCustomizationConfig($id: uuid!, $configuration: jsonb!) {
         newCount
         percentageChange
         showPercentageChange
+        tooltip
       }
     }
   }`,

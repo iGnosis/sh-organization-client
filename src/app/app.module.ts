@@ -43,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { BreadcrumbModule } from 'xng-breadcrumb';
 import { MatDialogModule } from '@angular/material/dialog';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
@@ -178,6 +179,7 @@ import { TesterVideoModalComponent } from './components/tester-video-modal/teste
     BreadcrumbModule,
     MatDialogModule,
     MatSnackBarModule,
+    MatTooltipModule,
     CarouselModule,
     Ng2SearchPipeModule,
     NgxMatColorPickerModule,

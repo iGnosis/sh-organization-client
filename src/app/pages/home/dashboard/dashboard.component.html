@@ -61,7 +61,7 @@
       </ul>
       <div class="row mt-4">
         <div *ngFor="let metricCard of metricCards" class="col">
-          <div class="card">
+          <div class="card" [matTooltip]="metricCard.tooltip || ''">
             <div class="card-body rounded">
               <div class="row">
                 <div class="col">

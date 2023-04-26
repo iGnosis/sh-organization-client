@@ -17,6 +17,7 @@ interface DashboardGqlRespData {
   newCount: number | string;
   percentageChange: number;
   showPercentageChange: boolean;
+  tooltip: string;
 }
 
 @Component({
@@ -152,6 +153,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       title: data.metric.split('_').map(str => str.charAt(0).toUpperCase() + str.slice(1)).join(' '),
       newCount: data.newCount,
       showPercentageChange: data.showPercentageChange,
+      tooltip: data.tooltip,
     }
 
     switch (data.metric) {

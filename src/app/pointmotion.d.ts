@@ -306,4 +306,5 @@ export interface DashboardMetric {
   isPercentageIncrease?: boolean;
   percentageChange?: number;
   icon?: string;
+  tooltip: string;
 }
