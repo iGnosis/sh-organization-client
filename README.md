@@ -5,6 +5,10 @@ This repository contains the front-end code for Sound Health Organization Client
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.0.3
 ## Getting Started
 
+### Requirements
+
+[Node.js](https://nodejs.org/en) >= v12.22
+
 ### Local setup
 
 1. Use the package manager [npm](https://www.npmjs.com/) to install the required dependencies
