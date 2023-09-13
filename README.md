@@ -15,10 +15,10 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ```bash
 npm install
 ```
-2. Copy the `environment.ts` file for the local environment into `src/environments/local/environment.local.default.ts` and make necessary changes to the environment variables
+2. Make necessary changes to the environment variables in `src/environments/local/environment.local.pure.ts`
 3. You can start the local server by running the following command:
 ```bash
-npm start
+npm run start:local-pure
 ```
 This will start the local server, and you can access the application in your web browser at http://localhost:4200
 
